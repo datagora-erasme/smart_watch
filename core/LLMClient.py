@@ -515,22 +515,3 @@ def get_mistral_response_format(schema: Dict[str, Any]) -> Dict[str, Any]:
     return {
         "type": "json_object",
     }
-
-
-# Exemple d'utilisation
-if __name__ == "__main__":
-    # Test Local
-    try:
-        local_client = llm_local(base_url="https://api.erasme.homes/v1", model="gemma3")
-        response = local_client.send_message("Écris-moi un haiku")
-        print("Réponse Local:", response)
-    except Exception as e:
-        print(f"Erreur Local: {e}")
-
-    # Test Mistral
-    try:
-        mistral_client = llm_mistral(model="mistral-large-latest")
-        response = mistral_client.send_message("Écris-moi un haiku")
-        print("Réponse Mistral:", response)
-    except Exception as e:
-        print(f"Erreur Mistral: {e}")
