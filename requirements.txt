@@ -1,0 +1,8 @@
+polars
+html_to_markdown
+lxml
+dotenv
+urllib3
+requests
+mistralai
+jinja2

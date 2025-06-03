@@ -1,0 +1,283 @@
+{
+  "type": "object",
+  "properties": {
+    "horaires_lieux_publics": {
+      "type": "object",
+      "description": "Structure complète des horaires d'un lieu public",
+      "properties": {
+        "metadata": {
+          "type": "object",
+          "description": "Métadonnées du lieu",
+          "properties": {
+            "identifiant": {
+              "type": "string",
+              "description": "Identifiant unique du lieu"
+            },
+            "nom": {
+              "type": "string",
+              "description": "Nom de l'établissement"
+            },
+            "type_lieu": {
+              "type": "string",
+              "description": "Type de lieu (Mairie, École, etc.)"
+            },
+            "url": {
+              "type": "string",
+              "description": "URL de la page analysée"
+            },
+            "timezone": {
+              "type": "string",
+              "description": "Fuseau horaire",
+              "default": "Europe/Paris"
+            }
+          },
+          "additionalProperties": false,
+          "required": ["identifiant", "nom", "type_lieu", "url"]
+        },
+        "periodes": {
+          "type": "object",
+          "description": "Différentes périodes d'horaires",
+          "properties": {
+            "hors_vacances_scolaires": {
+              "type": "object",
+              "description": "Horaires normaux hors vacances",
+              "properties": {
+                "active": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "label": {
+                  "type": "string",
+                  "default": "Période hors vacances scolaires"
+                },
+                "condition": {
+                  "type": "string",
+                  "default": "default"
+                },
+                "osm_syntax": {
+                  "type": "string",
+                  "description": "Syntaxe OSM générée"
+                },
+                "horaires": {
+                  "$ref": "#/definitions/horaires_hebdomadaires"
+                }
+              },
+              "additionalProperties": false,
+              "required": ["active", "horaires"]
+            },
+            "vacances_scolaires_general": {
+              "type": "object",
+              "description": "Horaires pendant toutes les vacances scolaires",
+              "properties": {
+                "active": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "label": {
+                  "type": "string",
+                  "default": "Toutes vacances scolaires"
+                },
+                "condition": {
+                  "type": "string",
+                  "default": "SH"
+                },
+                "osm_syntax": {
+                  "type": "string"
+                },
+                "horaires": {
+                  "$ref": "#/definitions/horaires_hebdomadaires"
+                }
+              },
+              "additionalProperties": false
+            },
+            "vacances_specifiques": {
+              "type": "object",
+              "description": "Horaires pour des vacances spécifiques",
+              "patternProperties": {
+                "^vacances_": {
+                  "type": "object",
+                  "properties": {
+                    "active": {
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "label": {
+                      "type": "string"
+                    },
+                    "condition": {
+                      "type": "string"
+                    },
+                    "osm_syntax": {
+                      "type": "string"
+                    },
+                    "horaires": {
+                      "$ref": "#/definitions/horaires_hebdomadaires"
+                    },
+                    "description": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "additionalProperties": false
+            },
+            "jours_feries": {
+              "type": "object",
+              "description": "Gestion des jours fériés",
+              "properties": {
+                "active": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "label": {
+                  "type": "string",
+                  "default": "Jours fériés"
+                },
+                "condition": {
+                  "type": "string",
+                  "default": "PH"
+                },
+                "osm_syntax": {
+                  "type": "string",
+                  "default": "PH off"
+                },
+                "mode": {
+                  "type": "string",
+                  "enum": ["ferme", "ouvert", "reduit"],
+                  "default": "ferme"
+                },
+                "description": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false,
+          "required": ["hors_vacances_scolaires"]
+        },
+        "generation_osm": {
+          "type": "object",
+          "description": "Configuration de génération OSM",
+          "properties": {
+            "auto_generate": {
+              "type": "boolean",
+              "default": true
+            },
+            "format_preference": {
+              "type": "string",
+              "enum": ["compact", "verbose"],
+              "default": "compact"
+            },
+            "opening_hours_osm": {
+              "type": "string",
+              "description": "Horaires au format OSM final"
+            }
+          },
+          "additionalProperties": false,
+          "required": ["opening_hours_osm"]
+        },
+        "extraction_info": {
+          "type": "object",
+          "description": "Informations sur l'extraction",
+          "properties": {
+            "source_found": {
+              "type": "boolean",
+              "description": "Indique si des horaires ont été trouvés dans le contenu"
+            },
+            "confidence": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Niveau de confiance de l'extraction (0-1)"
+            },
+            "notes": {
+              "type": "string",
+              "description": "Notes sur l'extraction ou particularités"
+            }
+          },
+          "additionalProperties": false,
+          "required": ["source_found"]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "metadata",
+        "periodes",
+        "generation_osm",
+        "extraction_info"
+      ]
+    }
+  },
+  "required": ["horaires_lieux_publics"],
+  "definitions": {
+    "creneau_horaire": {
+      "type": "object",
+      "properties": {
+        "debut": {
+          "type": "string",
+          "pattern": "^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$",
+          "description": "Heure de début au format HH:MM"
+        },
+        "fin": {
+          "type": "string",
+          "pattern": "^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$",
+          "description": "Heure de fin au format HH:MM"
+        }
+      },
+      "additionalProperties": false,
+      "required": ["debut", "fin"]
+    },
+    "horaires_jour": {
+      "type": "object",
+      "properties": {
+        "active": {
+          "type": "boolean",
+          "default": true,
+          "description": "Indique si ce jour est pris en compte"
+        },
+        "ouvert": {
+          "type": "boolean",
+          "description": "Indique si le lieu est ouvert ce jour"
+        },
+        "creneaux": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/creneau_horaire"
+          },
+          "description": "Liste des créneaux d'ouverture"
+        }
+      },
+      "additionalProperties": false,
+      "required": ["active", "ouvert", "creneaux"]
+    },
+    "horaires_hebdomadaires": {
+      "type": "object",
+      "properties": {
+        "lundi": {
+          "$ref": "#/definitions/horaires_jour"
+        },
+        "mardi": {
+          "$ref": "#/definitions/horaires_jour"
+        },
+        "mercredi": {
+          "$ref": "#/definitions/horaires_jour"
+        },
+        "jeudi": {
+          "$ref": "#/definitions/horaires_jour"
+        },
+        "vendredi": {
+          "$ref": "#/definitions/horaires_jour"
+        },
+        "samedi": {
+          "$ref": "#/definitions/horaires_jour"
+        },
+        "dimanche": {
+          "$ref": "#/definitions/horaires_jour"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
