@@ -225,7 +225,7 @@ def generer_rapport_html(
 if __name__ == "__main__":
     from pathlib import Path
 
-    SCRIPT_DIR = Path(r"C:\Users\beranger\Documents\GitHub\smartwatch\data")
+    SCRIPT_DIR = Path(r"C:\Users\name\Documents\GitHub\smartwatch\data")
     DATA_DIR = SCRIPT_DIR
     NOM_FIC = "alerte_modif_horaire_lieu"
     DB_FILE = DATA_DIR / f"{NOM_FIC}.db"
