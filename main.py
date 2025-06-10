@@ -5,6 +5,7 @@
 import concurrent.futures
 import json
 import os
+import time
 from datetime import datetime
 from pathlib import Path
 
@@ -12,6 +13,7 @@ from pathlib import Path
 import polars as pl
 from dotenv import load_dotenv
 
+from core.CustomJsonToOSM import OSMConverter
 from core.EnvoyerMail import envoyer_mail_html
 from core.GenererRapportHTML import generer_rapport_html
 from core.GetPrompt import get_prompt
@@ -24,9 +26,15 @@ from core.LLMClient import (
 from core.URLRetriever import retrieve_url
 from utils.CSVToPolars import csv_to_polars
 
+converter = OSMConverter()
+
+
 ###############################################################
 #                        VARIALBES                            #
 ###############################################################
+# Remettre à zéro les variables d'environnement clés API
+os.environ.pop("API_KEY_LOCAL", None)
+os.environ.pop("API_KEY_MISTRAL", None)
 # Chargement des variables d'environnement depuis le fichier .env
 load_dotenv()
 
@@ -39,27 +47,28 @@ DATA_DIR = SCRIPT_DIR / "data"
 # Fichier CSV contenant les URL
 NOM_FIC = "alerte_modif_horaire_lieu"
 NOM_FIC = "alerte_modif_horaire_lieu_short"
+
 CSV_FILE = DATA_DIR / f"{NOM_FIC}.csv"
+
 
 # Base de données SQLite
 DB_FILE = DATA_DIR / f"{NOM_FIC}.db"
 
 # Colonnes à ajouter au dataframe
-COLS_SUPPL = ["statut", "message", "markdown", "horaires_llm"]
+COLS_SUPPL = ["statut", "message", "markdown", "horaires_llm", "horaires_osm"]
 
 # Nombre de threads concurrents pour le traitement des URL
 NB_THREADS = 100
 
-# Appel à quel LLM ?
-LLM = "mistral"  # "local" ou "mistral"
+# Température pour les appels LLM
+TEMPERATURE = 0.1
 
-# Modèle LLM à utiliser
-MODELE_LLM = "gemma3" if LLM == "local" else "mistral-large-latest"
+# Délai entre les appels LLM (en secondes)
+DELAI_ENTRE_APPELS = 20
+DELAI_EN_CAS_ERREUR = 600
 
-# Clé API pour l'appel au LLM
-CLE_API = (
-    os.environ["API_KEY_LOCAL"] if LLM == "local" else os.environ["API_KEY_MISTRAL"]
-)
+# timeout pour les appels LLM (en secondes)
+TIMEOUT = 60
 
 # Envoi mail
 MAIL_EMETTEUR = os.getenv("MAIL_EMETTEUR")
@@ -71,6 +80,23 @@ MDP_EMETTEUR = os.getenv("MDP_EMETTEUR")
 
 # Fichier de schéma JSON
 SCHEMA_FILE = SCRIPT_DIR / "assets" / "opening_hours_schema_template.json"
+
+# Détection automatique du LLM basée sur les clés API disponibles
+api_key_local = os.getenv("API_KEY_LOCAL")
+api_key_mistral = os.getenv("API_KEY_MISTRAL")
+
+if api_key_local:
+    MODELE = "gemma3"
+    API_KEY = api_key_local
+    print("Clé API locale détectée pour gemma3.")
+elif api_key_mistral:
+    API_KEY = api_key_mistral
+    MODELE = "mistral-large-latest"
+    print("Clé API Mistral détectée pour mistral-large-latest.")
+else:
+    print(
+        "Aucune clé API trouvée. Veuillez définir API_KEY_LOCAL ou API_KEY_MISTRAL dans vos variables d'environnement."
+    )
 
 
 ###############################################################
@@ -111,12 +137,6 @@ def main():
         4. Sauvegarde en base de données
         5. Génération de rapport HTML
         6. Envoi par email
-    Note:
-        Cette fonction utilise plusieurs variables globales pour la configuration :
-        - CSV_FILE, COLS_SUPPL, NB_THREADS pour le traitement des données
-        - LLM, MODELE_LLM, CLE_API pour la configuration du LLM
-        - DB_FILE, NOM_FIC pour la base de données
-        - Variables MAIL_* pour l'envoi d'emails
     """
     #
     # Chargement des données
@@ -166,10 +186,6 @@ def main():
     #
     # Extraction des horaires par LLM
     #
-    print(
-        f"Début de l'extraction des horaires avec le LLM '{LLM}', modèle '{MODELE_LLM}'"
-    )
-
     # Chargement du schéma JSON depuis le fichier template
     try:
         opening_hours_schema = load_opening_hours_schema()
@@ -177,46 +193,90 @@ def main():
         print(f"Erreur lors du chargement du schéma : {e}")
         return
 
-    # Préparation du client LLM
-    if LLM == "local":
+    # Appel au LLM
+    if api_key_local:
+        print("Utilisation du LLM local (gemma3)")
         llm_client = llm_local(
-            api_key=CLE_API,
-            model=MODELE_LLM,
+            api_key=API_KEY,
+            model=MODELE,
             base_url="https://api.erasme.homes/v1",
-            temperature=0.1,
+            temperature=TEMPERATURE,
+            timeout=TIMEOUT,
         )
-        # Configuration du format de réponse structuré pour OpenAI-compatible
         structured_format = get_structured_response_format(
             schema=opening_hours_schema, name="opening_hours_extraction"
         )
-    elif LLM == "mistral":
+    elif api_key_mistral:
+        print("Utilisation de Mistral AI (mistral-large-latest)")
         llm_client = llm_mistral(
-            api_key=CLE_API,
-            model=MODELE_LLM,
-            temperature=0.1,
+            api_key=API_KEY,
+            model=MODELE,
+            temperature=TEMPERATURE,
+            timeout=TIMEOUT,
         )
-        # Configuration du format de réponse structuré pour Mistral
         structured_format = get_mistral_response_format(schema=opening_hours_schema)
+    else:
+        print(
+            "Aucune clé API trouvée. Veuillez définir API_KEY_LOCAL ou API_KEY_MISTRAL dans vos variables d'environnement."
+        )
+        return
 
     # Appel au LLM
     total = len(df)
-    for i, row in enumerate(df.iter_rows(named=True), start=1):
+
+    i = 1
+    while i <= total:
+        row = list(df.iter_rows(named=True))[i - 1]
+
         # Affichage de la progression
         print(f"Appel {i}/{total} au LLM pour '{row.get('nom', 'Lieu inconnu')}'")
 
-        # Traitement de l'enregistrement
-        # Construction des messages
-        messages = get_prompt(row)
-        # Appel au LLM
-        result = llm_client.call_llm(messages, response_format=structured_format)
+        # Traitement de l'enregistrement avec gestion d'erreur
+        try:
+            # Construction des messages
+            messages = get_prompt(row)
+            # Appel au LLM
+            result = llm_client.call_llm(messages, response_format=structured_format)
 
-        # Mise à jour du dataframe
-        df = df.with_columns(
-            pl.when(pl.col("identifiant") == row["identifiant"])
-            .then(pl.lit(result))
-            .otherwise(pl.col("horaires_llm"))
-            .alias("horaires_llm")
-        )
+            # Convert to OSM format
+            result_osm = converter.convert_to_osm(json.loads(result))
+
+            # Mise à jour du dataframe
+            df = df.with_columns(
+                [
+                    pl.when(pl.col("identifiant") == row["identifiant"])
+                    .then(pl.lit(result))
+                    .otherwise(pl.col("horaires_llm"))
+                    .alias("horaires_llm"),
+                    pl.when(pl.col("identifiant") == row["identifiant"])
+                    .then(pl.lit(result_osm))
+                    .otherwise(pl.col("horaires_osm"))
+                    .alias("horaires_osm"),
+                ]
+            )
+
+            # Délai normal entre les appels
+            if i < total:  # Pas de pause après le dernier appel
+                time.sleep(DELAI_ENTRE_APPELS)
+
+            # Passer au suivant seulement si succès
+            i += 1
+
+        except Exception as e:
+            print(
+                f"Erreur lors de l'appel au LLM pour '{row.get('nom', 'Lieu inconnu')}': {e}"
+            )
+
+            # Pause plus longue en cas d'erreur (rate limiting, etc.)
+            if "429" in str(e) or "capacity exceeded" in str(e).lower():
+                print(
+                    f"Rate limiting détecté - Pause de {DELAI_EN_CAS_ERREUR}s avant de réessayer"
+                )
+                time.sleep(DELAI_EN_CAS_ERREUR)
+                # Ne pas incrémenter i pour réessayer le même identifiant
+            else:
+                # Pour les autres erreurs, passer au suivant
+                i += 1
     print("Extraction des horaires terminée.")
 
     #
@@ -254,7 +314,7 @@ def main():
     #
     texte = f"""
     Rapport de vérification des URLs généré le {datetime.now().strftime("%d/%m/%Y à %H:%M")}
-    
+
     {"Consultez le fichier HTML joint pour le rapport complet avec onglets interactifs." if fichier_html else "Consultez le contenu HTML ci-dessous pour le rapport complet."}
     """
     envoyer_mail_html(
