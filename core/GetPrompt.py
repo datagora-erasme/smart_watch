@@ -17,16 +17,11 @@ INSTRUCTIONS IMPORTANTES :
 2. Utilise la structure JSON fournie dans le schéma de réponse
 3. Remplis au minimum la section "hors_vacances_scolaires" avec les horaires normaux
 4. Si tu trouves des horaires spéciaux (vacances, jours fériés, jours spéciaux, etc), ajoute-les dans les sections appropriées
-5. Génère la syntaxe OSM finale dans generation_osm.opening_hours_osm
-6. Indique ton niveau de confiance dans extraction_info.confidence (0.0 à 1.0)
-7. Si aucun horaire n'est trouvé, mets source_found à false et confidence à 0.0
-8. Réponds UNIQUEMENT avec le JSON, sans texte supplémentaire
-9. Ne pas inventer d'informations, utilise uniquement les données fournies
-10. Si le lieu est fermé de manière permanente, indique-le clairement dans la section "hors_vacances_scolaires"
-
-FORMATS HORAIRES ATTENDUS :
-- Heures au format HH:MM (ex: "08:30", "17:00")
-- Syntaxe OSM finale (ex: "Mo-Fr 08:30-12:00,14:00-17:00; Sa 09:00-12:00")
+5. Indique ton niveau de confiance dans extraction_info.confidence (0.0 à 1.0)
+6. Si aucun horaire n'est trouvé, n'invente rien et mets source_found à false et confidence à 0.0
+7. Réponds UNIQUEMENT avec le JSON, sans texte supplémentaire
+8. N'invente aucune information, utilise uniquement les données fournies
+9. Si le lieu est fermé de manière permanente, indique-le clairement dans la section "hors_vacances_scolaires"
 
 SOIS PRÉCIS ET NE FAIS PAS D'HALLUCINATIONS."""
 
