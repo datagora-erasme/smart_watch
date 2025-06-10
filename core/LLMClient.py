@@ -1,4 +1,7 @@
 import os
+import signal
+import sys
+from contextlib import contextmanager
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, Union
 
@@ -150,6 +153,38 @@ class llm_local:
         return self.call_llm(messages, **kwargs)
 
 
+class TimeoutError(Exception):
+    """Exception levée en cas de timeout."""
+
+    pass
+
+
+@contextmanager
+def timeout_handler(seconds):
+    """Context manager pour gérer les timeouts manuellement."""
+
+    # SIGALRM n'est pas disponible sur Windows
+    if sys.platform == "win32":
+        # Sur Windows, on utilise juste un yield sans timeout
+        yield
+    else:
+
+        def timeout_signal_handler(signum, frame):
+            raise TimeoutError(f"Timeout après {seconds} secondes")
+
+        # Sauvegarder l'ancien handler
+        old_handler = signal.signal(signal.SIGALRM, timeout_signal_handler)
+        signal.alarm(seconds)
+
+        try:
+            yield
+        finally:
+            # Restaurer l'ancien handler et annuler l'alarme
+            signal.alarm(0)
+            signal.signal(signal.SIGALRM, old_handler)
+        signal.signal(signal.SIGALRM, old_handler)
+
+
 class llm_mistral:
     """
     Client pour interagir avec l'API Mistral AI en utilisant la librairie officielle.
@@ -161,6 +196,7 @@ class llm_mistral:
         model: str = "mistral-large-latest",
         temperature: float = 0.1,
         random_seed: int = 1,
+        timeout: int = 30,
     ):
         """
         Initialise le client Mistral.
@@ -170,10 +206,12 @@ class llm_mistral:
             model: Nom du modèle Mistral à utiliser
             temperature: Paramètre de température pour la génération
             random_seed: Graine aléatoire pour la reproductibilité
+            timeout: Timeout en secondes pour les requêtes
         """
         self.model = model
         self.temperature = temperature
         self.random_seed = random_seed
+        self.timeout = timeout
 
         api_key = api_key or os.environ.get("MISTRAL_API_KEY")
         if not api_key:
@@ -225,11 +263,14 @@ class llm_mistral:
             if response_format:
                 kwargs["response_format"] = response_format
 
-            # Effectuer l'appel avec la librairie officielle
-            response = self.client.chat.complete(**kwargs)
+            # Effectuer l'appel avec gestion manuelle du timeout
+            with timeout_handler(self.timeout):
+                response = self.client.chat.complete(**kwargs)
 
             return response.choices[0].message.content
 
+        except TimeoutError:
+            raise Exception(f"Timeout après {self.timeout} secondes")
         except Exception as e:
             raise Exception(f"Erreur lors de l'appel à Mistral: {e}")
 
