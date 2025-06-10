@@ -3,6 +3,7 @@
 ###############################################################
 # Imports standards
 import concurrent.futures
+import json
 import os
 from datetime import datetime
 from pathlib import Path
@@ -15,7 +16,6 @@ from core.EnvoyerMail import envoyer_mail_html
 from core.GenererRapportHTML import generer_rapport_html
 from core.GetPrompt import get_prompt
 from core.LLMClient import (
-    create_complete_opening_hours_schema,
     get_mistral_response_format,
     get_structured_response_format,
     llm_local,
@@ -68,6 +68,34 @@ SMTP_SERVER = os.getenv("SMTP_SERVER")
 SMTP_PORT = os.getenv("SMTP_PORT")
 SMTP_PORT = int(SMTP_PORT) if SMTP_PORT else 587
 MDP_EMETTEUR = os.getenv("MDP_EMETTEUR")
+
+# Fichier de schéma JSON
+SCHEMA_FILE = SCRIPT_DIR / "assets" / "opening_hours_schema_template.json"
+
+
+###############################################################
+#                        FUNCTIONS                            #
+###############################################################
+def load_opening_hours_schema() -> dict:
+    """
+    Charge le schéma JSON depuis le fichier template.
+
+    Returns:
+        dict: Schéma JSON pour les horaires d'ouverture
+
+    Raises:
+        FileNotFoundError: Si le fichier template n'existe pas
+        json.JSONDecodeError: Si le fichier JSON est malformé
+    """
+    try:
+        with open(SCHEMA_FILE, "r", encoding="utf-8") as f:
+            schema = json.load(f)
+        print(f"Schéma JSON chargé depuis : {SCHEMA_FILE}")
+        return schema
+    except FileNotFoundError:
+        raise FileNotFoundError(f"Fichier de schéma non trouvé : {SCHEMA_FILE}")
+    except json.JSONDecodeError as e:
+        raise json.JSONDecodeError(f"Erreur de format JSON dans {SCHEMA_FILE}: {e}")
 
 
 ###############################################################
@@ -142,6 +170,13 @@ def main():
         f"Début de l'extraction des horaires avec le LLM '{LLM}', modèle '{MODELE_LLM}'"
     )
 
+    # Chargement du schéma JSON depuis le fichier template
+    try:
+        opening_hours_schema = load_opening_hours_schema()
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        print(f"Erreur lors du chargement du schéma : {e}")
+        return
+
     # Préparation du client LLM
     if LLM == "local":
         llm_client = llm_local(
@@ -151,7 +186,6 @@ def main():
             temperature=0.1,
         )
         # Configuration du format de réponse structuré pour OpenAI-compatible
-        opening_hours_schema = create_complete_opening_hours_schema()
         structured_format = get_structured_response_format(
             schema=opening_hours_schema, name="opening_hours_extraction"
         )
@@ -162,7 +196,6 @@ def main():
             temperature=0.1,
         )
         # Configuration du format de réponse structuré pour Mistral
-        opening_hours_schema = create_complete_opening_hours_schema()
         structured_format = get_mistral_response_format(schema=opening_hours_schema)
 
     # Appel au LLM

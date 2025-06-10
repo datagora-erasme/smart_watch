@@ -1,9 +1,9 @@
 {
   "type": "object",
   "properties": {
-    "horaires_lieux_publics": {
+    "horaires_ouverture": {
       "type": "object",
-      "description": "Structure complète des horaires d'un lieu public",
+      "description": "Structure complète des horaires d'ouverture d'un lieu",
       "properties": {
         "metadata": {
           "type": "object",
@@ -19,7 +19,7 @@
             },
             "type_lieu": {
               "type": "string",
-              "description": "Type de lieu (Mairie, École, etc.)"
+              "description": "Type de lieu (Mairie, École, Piscine, Médiathèque, etc.)"
             },
             "url": {
               "type": "string",
@@ -54,10 +54,6 @@
                   "type": "string",
                   "default": "default"
                 },
-                "osm_syntax": {
-                  "type": "string",
-                  "description": "Syntaxe OSM générée"
-                },
                 "horaires": {
                   "$ref": "#/definitions/horaires_hebdomadaires"
                 }
@@ -65,9 +61,9 @@
               "additionalProperties": false,
               "required": ["active", "horaires"]
             },
-            "vacances_scolaires_general": {
+            "vacances_scolaires_ete": {
               "type": "object",
-              "description": "Horaires pendant toutes les vacances scolaires",
+              "description": "Horaires pour les grandes vacances scolaires, durant l'été",
               "properties": {
                 "active": {
                   "type": "boolean",
@@ -75,14 +71,11 @@
                 },
                 "label": {
                   "type": "string",
-                  "default": "Toutes vacances scolaires"
+                  "default": "Grandes vacances scolaires"
                 },
                 "condition": {
                   "type": "string",
                   "default": "SH"
-                },
-                "osm_syntax": {
-                  "type": "string"
                 },
                 "horaires": {
                   "$ref": "#/definitions/horaires_hebdomadaires"
@@ -90,34 +83,27 @@
               },
               "additionalProperties": false
             },
-            "vacances_specifiques": {
+            "vacances_scolaires_hors_ete": {
               "type": "object",
-              "description": "Horaires pour des vacances spécifiques",
-              "patternProperties": {
-                "^vacances_": {
-                  "type": "object",
-                  "properties": {
-                    "active": {
-                      "type": "boolean",
-                      "default": false
-                    },
-                    "label": {
-                      "type": "string"
-                    },
-                    "condition": {
-                      "type": "string"
-                    },
-                    "osm_syntax": {
-                      "type": "string"
-                    },
-                    "horaires": {
-                      "$ref": "#/definitions/horaires_hebdomadaires"
-                    },
-                    "description": {
-                      "type": "string"
-                    }
-                  },
-                  "additionalProperties": false
+              "description": "Horaires pour les petites vacances",
+              "properties": {
+                "active": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "label": {
+                  "type": "string",
+                  "default": "Petites vacances scolaires"
+                },
+                "condition": {
+                  "type": "string",
+                  "default": "SH"
+                },
+                "horaires": {
+                  "$ref": "#/definitions/horaires_hebdomadaires"
+                },
+                "description": {
+                  "type": "string"
                 }
               },
               "additionalProperties": false
@@ -138,14 +124,55 @@
                   "type": "string",
                   "default": "PH"
                 },
-                "osm_syntax": {
+                "mode": {
                   "type": "string",
-                  "default": "PH off"
+                  "enum": ["ferme", "ouvert", "reduit"],
+                  "default": "ferme"
+                },
+                "horaires_specifiques": {
+                  "type": "object",
+                  "patternProperties": {
+                    ".*": {
+                      "oneOf": [
+                        { "type": "string" },
+                        { "$ref": "#/definitions/horaires_jour" }
+                      ]
+                    }
+                  }
+                },
+                "description": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            },
+            "jours_speciaux": {
+              "type": "object",
+              "description": "Gestion des jours spéciaux avec horaires aménagés",
+              "properties": {
+                "active": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "label": {
+                  "type": "string",
+                  "default": "Jours spéciaux"
                 },
                 "mode": {
                   "type": "string",
                   "enum": ["ferme", "ouvert", "reduit"],
                   "default": "ferme"
+                },
+                "horaires_specifiques": {
+                  "type": "object",
+                  "patternProperties": {
+                    ".*": {
+                      "oneOf": [
+                        { "type": "string" },
+                        { "$ref": "#/definitions/horaires_jour" }
+                      ]
+                    }
+                  }
                 },
                 "description": {
                   "type": "string"
@@ -156,27 +183,6 @@
           },
           "additionalProperties": false,
           "required": ["hors_vacances_scolaires"]
-        },
-        "generation_osm": {
-          "type": "object",
-          "description": "Configuration de génération OSM",
-          "properties": {
-            "auto_generate": {
-              "type": "boolean",
-              "default": true
-            },
-            "format_preference": {
-              "type": "string",
-              "enum": ["compact", "verbose"],
-              "default": "compact"
-            },
-            "opening_hours_osm": {
-              "type": "string",
-              "description": "Horaires au format OSM final"
-            }
-          },
-          "additionalProperties": false,
-          "required": ["opening_hours_osm"]
         },
         "extraction_info": {
           "type": "object",
@@ -205,12 +211,11 @@
       "required": [
         "metadata",
         "periodes",
-        "generation_osm",
         "extraction_info"
       ]
     }
   },
-  "required": ["horaires_lieux_publics"],
+  "required": ["horaires_ouverture"],
   "definitions": {
     "creneau_horaire": {
       "type": "object",
