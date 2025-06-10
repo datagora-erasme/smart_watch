@@ -7,7 +7,7 @@ from typing import Any, Dict, List, Optional
 
 
 class OSMConverter:
-    """Converter from custom JSON opening hours format to OSM opening_hours syntax."""
+    """Convertisseur du format JSON personnalisé des horaires vers la syntaxe OSM opening_hours."""
 
     DAY_MAPPING = {
         "lundi": "Mo",
@@ -30,20 +30,20 @@ class OSMConverter:
         self.debug = False
 
     def parse_time_range(self, time_str: str) -> Optional[str]:
-        """Parse and normalize time range string."""
+        """Analyse et normalise une chaîne de créneau horaire."""
         if not time_str or time_str.lower() in ["fermé", "ferme", "closed"]:
             return None
 
-        # Handle multiple ranges separated by comma
+        # Gérer plusieurs créneaux séparés par une virgule
         if "," in time_str:
             ranges = [self.parse_time_range(r.strip()) for r in time_str.split(",")]
-            ranges = [r for r in ranges if r]  # Filter out None values
+            ranges = [r for r in ranges if r]  # Filtrer les valeurs None
             return ",".join(ranges) if ranges else None
 
-        # Clean and normalize format
+        # Nettoyer et normaliser le format
         time_str = time_str.strip().replace(" ", "").replace("h", ":")
 
-        # Match HH:MM-HH:MM pattern
+        # Correspondance du motif HH:MM-HH:MM
         match = re.match(r"(\d{1,2}):(\d{2})-(\d{1,2}):(\d{2})", time_str)
         if match:
             start_h, start_m, end_h, end_m = match.groups()
@@ -52,11 +52,11 @@ class OSMConverter:
         return None
 
     def normalize_day_name(self, day: str) -> Optional[str]:
-        """Convert French day name to OSM format."""
+        """Convertit un nom de jour en français vers le format OSM."""
         return self.DAY_MAPPING.get(day.lower())
 
     def parse_day_schedule(self, day_data: Any) -> Optional[str]:
-        """Parse schedule for a single day."""
+        """Analyse les horaires pour un seul jour."""
         if isinstance(day_data, str):
             return self.parse_time_range(day_data)
         elif isinstance(day_data, list):
@@ -64,7 +64,7 @@ class OSMConverter:
             ranges = [r for r in ranges if r]
             return ",".join(ranges) if ranges else None
         elif isinstance(day_data, dict):
-            # Handle schema-compliant format
+            # Gérer le format conforme au schéma
             if "ouvert" in day_data and not day_data["ouvert"]:
                 return None
             if "creneaux" in day_data:
@@ -81,14 +81,14 @@ class OSMConverter:
         return None
 
     def group_consecutive_days(self, schedule: Dict[str, str]) -> List[str]:
-        """Group consecutive days with same schedule."""
+        """Regroupe les jours consécutifs ayant le même horaire."""
         if not schedule:
             return []
 
-        # Day order for grouping
+        # Ordre des jours pour le regroupement
         day_order = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"]
 
-        # Group days by schedule
+        # Regrouper les jours par horaire
         schedule_groups = {}
         for day in day_order:
             if day in schedule:
@@ -97,25 +97,25 @@ class OSMConverter:
                     schedule_groups[sched] = []
                 schedule_groups[sched].append(day)
 
-        # Convert to OSM format
+        # Conversion au format OSM
         osm_parts = []
         for sched, days in schedule_groups.items():
-            if not sched:  # Skip closed days
+            if not sched:  # Sauter les jours fermés
                 osm_parts.append(f"{','.join(days)} off")
                 continue
 
-            # Group consecutive days
+            # Regrouper les jours consécutifs
             day_ranges = self.compress_day_ranges(days)
             osm_parts.append(f"{day_ranges} {sched}")
 
         return osm_parts
 
     def compress_day_ranges(self, days: List[str]) -> str:
-        """Compress consecutive days into ranges (Mo-Fr, Sa-Su, etc.)."""
+        """Compresse les jours consécutifs en plages (Mo-Fr, Sa-Di, etc.)."""
         day_order = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"]
         day_indices = {day: i for i, day in enumerate(day_order)}
 
-        # Sort days by order
+        # Trier les jours selon l'ordre
         days = sorted(days, key=lambda d: day_indices[d])
 
         if not days:
@@ -128,7 +128,7 @@ class OSMConverter:
         for i in range(1, len(days)):
             curr_idx = day_indices[days[i]]
             if curr_idx != prev_idx + 1:
-                # Break in sequence
+                # Rupture dans la séquence
                 if start == days[i - 1]:
                     ranges.append(start)
                 else:
@@ -136,7 +136,7 @@ class OSMConverter:
                 start = days[i]
             prev_idx = curr_idx
 
-        # Handle last range
+        # Gérer la dernière plage
         if start == days[-1]:
             ranges.append(start)
         else:
@@ -145,7 +145,7 @@ class OSMConverter:
         return ",".join(ranges)
 
     def convert_weekly_schedule(self, schedule_data: Dict) -> str:
-        """Convert weekly schedule to OSM format."""
+        """Convertit un planning hebdomadaire au format OSM."""
         normalized_schedule = {}
 
         for day_key, day_data in schedule_data.items():
@@ -155,25 +155,25 @@ class OSMConverter:
                 if parsed_schedule is not None:
                     normalized_schedule[osm_day] = parsed_schedule
                 else:
-                    normalized_schedule[osm_day] = None  # Closed
+                    normalized_schedule[osm_day] = None  # Fermé
 
         osm_parts = self.group_consecutive_days(normalized_schedule)
         return "; ".join(osm_parts)
 
     def convert_special_days(self, special_data: Dict) -> List[str]:
-        """Convert special days/holidays to OSM format."""
+        """Convertit les jours spéciaux/jours fériés au format OSM."""
         osm_parts = []
 
         for date_desc, schedule in special_data.items():
-            # Simple handling - more sophisticated date parsing could be added
+            # Gestion simple - une analyse de date plus poussée peut être ajoutée
             if isinstance(schedule, str):
                 if schedule.lower() in ["fermé", "ferme", "closed"]:
-                    # Try to extract date pattern for OSM
+                    # Essayer d'extraire un motif de date pour OSM
                     if any(
                         word in date_desc.lower()
                         for word in ["mai", "juin", "juillet", "août"]
                     ):
-                        osm_parts.append("PH off")  # Generic public holidays off
+                        osm_parts.append("PH off")  # Jours fériés génériques fermés
                 else:
                     parsed = self.parse_time_range(schedule)
                     if parsed:
@@ -182,10 +182,10 @@ class OSMConverter:
         return osm_parts
 
     def convert_to_osm(self, data: Dict) -> str:
-        """Convert complete schedule data to OSM opening_hours format."""
+        """Convertit toutes les données d'horaires au format OSM opening_hours."""
         osm_parts = []
 
-        # Handle main schedule periods
+        # Gérer les périodes principales d'horaires
         periods_to_check = [
             ("hors_vacances_scolaires", None),
             ("horaires.hors_vacances_scolaires", None),
@@ -199,12 +199,12 @@ class OSMConverter:
         for period_path, condition in periods_to_check:
             schedule_data = self.get_nested_value(data, period_path)
             if schedule_data and isinstance(schedule_data, dict):
-                # Handle multi-zone schedules (e.g., different pools)
+                # Gérer les horaires multi-zones (ex : différentes piscines)
                 if any(
                     isinstance(v, dict) and "Lundi" in str(v)
                     for v in schedule_data.values()
                 ):
-                    # This is a multi-zone schedule
+                    # Ceci est un horaire multi-zone
                     for zone, zone_schedule in schedule_data.items():
                         if isinstance(zone_schedule, dict):
                             osm_schedule = self.convert_weekly_schedule(zone_schedule)
@@ -214,28 +214,28 @@ class OSMConverter:
                                 else:
                                     osm_parts.append(osm_schedule)
                 else:
-                    # Regular weekly schedule
+                    # Planning hebdomadaire classique
                     osm_schedule = self.convert_weekly_schedule(schedule_data)
                     if osm_schedule:
                         if condition:
                             osm_parts.append(f'{osm_schedule} "{condition}"')
                         else:
                             osm_parts.append(osm_schedule)
-                break  # Use first found schedule
+                break  # Utiliser le premier horaire trouvé
 
-        # Handle special days and holidays
+        # Gérer les jours spéciaux et jours fériés
         for special_key in ["jours_feries", "jours_speciaux", "horaires_speciaux"]:
             special_data = self.get_nested_value(data, special_key)
             if special_data:
                 special_osm = self.convert_special_days(special_data)
                 osm_parts.extend(special_osm)
 
-        # Clean up and join
+        # Nettoyer et assembler
         result = "; ".join(filter(None, osm_parts))
         return result if result else "closed"
 
     def get_nested_value(self, data: Dict, path: str) -> Any:
-        """Get value from nested dictionary using dot notation."""
+        """Récupère une valeur dans un dictionnaire imbriqué en utilisant la notation pointée."""
         keys = path.split(".")
         current = data
 
@@ -248,7 +248,7 @@ class OSMConverter:
         return current
 
     def convert_file(self, input_file: str, output_file: str = None) -> Dict:
-        """Convert entire JSON file to OSM format."""
+        """Convertit un fichier JSON entier au format OSM."""
         with open(input_file, "r", encoding="utf-8") as f:
             data = json.load(f)
 
@@ -277,49 +277,49 @@ class OSMConverter:
 
 
 def main():
-    """Example usage of the OSM converter."""
+    """Exemple d'utilisation du convertisseur OSM."""
     converter = OSMConverter()
 
-    # Connect to SQLite database
+    # Connexion à la base de données SQLite
     db_path = r"c:\Users\beranger\Documents\GitHub\smart_watch\data\alerte_modif_horaire_lieu_short.db"
 
     try:
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
 
-        # Read all records with horaires_llm column
+        # Lire tous les enregistrements avec la colonne horaires_llm
         cursor.execute(
             "SELECT identifiant, nom, url, horaires_llm FROM alerte_modif_horaire_lieu_short WHERE horaires_llm IS NOT NULL"
         )
         records = cursor.fetchall()
 
-        print("=== OSM CONVERSION RESULTS ===")
+        print("=== RÉSULTATS DE LA CONVERSION OSM ===")
 
         for record in records:
             item_id, nom, url, horaires_llm = record
 
             try:
-                # Parse the JSON string from horaires_llm column
+                # Analyser la chaîne JSON de la colonne horaires_llm
                 horaires_data = json.loads(horaires_llm)
 
-                # Convert to OSM format
+                # Conversion au format OSM
                 osm_hours = converter.convert_to_osm(horaires_data)
 
-                print(f"\nID: {item_id}")
-                print(f"Nom: {nom}")
-                print(f"URL: {url}")
-                print(f"OSM: {osm_hours}")
+                print(f"\nID : {item_id}")
+                print(f"Nom : {nom}")
+                print(f"URL : {url}")
+                print(f"OSM : {osm_hours}")
                 print("-" * 50)
 
             except json.JSONDecodeError as e:
-                print(f"\nID: {item_id} - Error parsing JSON: {e}")
+                print(f"\nID : {item_id} - Erreur lors de l'analyse du JSON : {e}")
             except Exception as e:
-                print(f"\nID: {item_id} - Error converting: {e}")
+                print(f"\nID : {item_id} - Erreur lors de la conversion : {e}")
 
         conn.close()
 
     except sqlite3.Error as e:
-        print(f"Database error: {e}")
+        print(f"Erreur de base de données : {e}")
 
 
 if __name__ == "__main__":
