@@ -13,7 +13,6 @@ from pathlib import Path
 import polars as pl
 from dotenv import load_dotenv
 
-from core.CustomJsonToOSM import OSMConverter
 from core.EnvoyerMail import envoyer_mail_html
 from core.GenererRapportHTML import generer_rapport_html
 from core.GetPrompt import get_prompt
@@ -25,6 +24,7 @@ from core.LLMClient import (
 )
 from core.URLRetriever import retrieve_url
 from utils.CSVToPolars import csv_to_polars
+from utils.CustomJsonToOSM import OSMConverter
 
 converter = OSMConverter()
 
@@ -45,8 +45,8 @@ SCRIPT_DIR = Path(__file__).parent.resolve()
 DATA_DIR = SCRIPT_DIR / "data"
 
 # Fichier CSV contenant les URL
-NOM_FIC = "alerte_modif_horaire_lieu"
 NOM_FIC = "alerte_modif_horaire_lieu_short"
+NOM_FIC = "alerte_modif_horaire_lieu"
 
 CSV_FILE = DATA_DIR / f"{NOM_FIC}.csv"
 
@@ -92,7 +92,8 @@ if api_key_local:
 elif api_key_mistral:
     API_KEY = api_key_mistral
     MODELE = "mistral-large-latest"
-    print("Clé API Mistral détectée pour mistral-large-latest.")
+    MODELE = "mistral-medium-latest"
+    print(f"Clé API Mistral détectée pour {MODELE}.")
 else:
     print(
         "Aucune clé API trouvée. Veuillez définir API_KEY_LOCAL ou API_KEY_MISTRAL dans vos variables d'environnement."
@@ -207,7 +208,7 @@ def main():
             schema=opening_hours_schema, name="opening_hours_extraction"
         )
     elif api_key_mistral:
-        print("Utilisation de Mistral AI (mistral-large-latest)")
+        print(f"Utilisation de Mistral AI ({MODELE})")
         llm_client = llm_mistral(
             api_key=API_KEY,
             model=MODELE,
