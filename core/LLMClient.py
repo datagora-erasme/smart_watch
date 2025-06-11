@@ -17,7 +17,7 @@ class LLMMessage:
     content: str
 
 
-class llm_local:
+class llm_openai:
     """
     Client pour interagir avec des API compatibles OpenAI.
     """
@@ -34,7 +34,7 @@ class llm_local:
         Initialise le client LLM.
 
         Args:
-            api_key: Clé API (utilise LLM_API_KEY par défaut)
+            api_key: Clé API (utilise OPENAI_API_KEY par défaut)
             model: Nom du modèle à utiliser
             base_url: URL de base pour l'API
             temperature: Paramètre de température pour la génération
@@ -44,8 +44,8 @@ class llm_local:
         self.temperature = temperature
         self.timeout = timeout
 
-        self.api_key = api_key or os.environ.get("LLM_API_KEY")
-        self.base_url = (base_url or "https://api.erasme.homes/v1").rstrip("/")
+        self.api_key = api_key or os.environ.get("OPENAI_API_KEY")
+        self.base_url = (base_url or "https://api.openai.com/v1").rstrip("/")
 
         # Configuration de la session requests
         self.session = requests.Session()
@@ -57,8 +57,6 @@ class llm_local:
     def call_llm(
         self,
         messages: List[Union[Dict[str, str], LLMMessage]],
-        model_override: Optional[str] = None,
-        temperature_override: Optional[float] = None,
         response_format: Optional[Dict[str, Any]] = None,
     ) -> str:
         """
@@ -66,9 +64,7 @@ class llm_local:
 
         Args:
             messages: Liste des messages de la conversation
-            model_override: Modèle à utiliser pour cet appel spécifique
-            temperature_override: Température pour cet appel spécifique
-            response_format: Format de réponse structuré (OpenAI format)
+            response_format: Format de réponse structuré
 
         Returns:
             str: Réponse du LLM
@@ -86,9 +82,9 @@ class llm_local:
 
         try:
             payload = {
-                "model": model_override or self.model,
+                "model": self.model,
                 "messages": formatted_messages,
-                "temperature": temperature_override or self.temperature,
+                "temperature": self.temperature,
             }
 
             # Ajouter le format de réponse structuré si fourni
@@ -223,18 +219,12 @@ class llm_mistral:
     def call_llm(
         self,
         messages: List[Union[Dict[str, str], LLMMessage]],
-        model_override: Optional[str] = None,
-        temperature_override: Optional[float] = None,
-        response_format: Optional[Dict[str, Any]] = None,
     ) -> str:
         """
         Effectue un appel au LLM Mistral.
 
         Args:
             messages: Liste des messages de la conversation
-            model_override: Modèle à utiliser pour cet appel spécifique
-            temperature_override: Température pour cet appel spécifique
-            response_format: Format de réponse structuré
 
         Returns:
             str: Réponse du LLM
@@ -253,15 +243,11 @@ class llm_mistral:
         try:
             # Préparer les paramètres
             kwargs = {
-                "model": model_override or self.model,
+                "model": self.model,
                 "messages": formatted_messages,
-                "temperature": temperature_override or self.temperature,
+                "temperature": self.temperature,
                 "random_seed": self.random_seed,
             }
-
-            # Ajouter le format de réponse structuré si fourni
-            if response_format:
-                kwargs["response_format"] = response_format
 
             # Effectuer l'appel avec gestion manuelle du timeout
             with timeout_handler(self.timeout):
@@ -279,7 +265,6 @@ class llm_mistral:
         content: str,
         role: str = "user",
         system_prompt: Optional[str] = None,
-        **kwargs,
     ) -> str:
         """
         Envoie un message simple au LLM Mistral et retourne la réponse.
@@ -288,7 +273,6 @@ class llm_mistral:
             content: Le contenu du message à envoyer
             role: Le rôle du message ("user" par défaut)
             system_prompt: Prompt système optionnel
-            **kwargs: Arguments supplémentaires pour call_llm
 
         Returns:
             str: La réponse textuelle du LLM
@@ -300,20 +284,19 @@ class llm_mistral:
 
         messages.append({"role": role, "content": content})
 
-        return self.call_llm(messages, **kwargs)
+        return self.call_llm(messages)
 
-    def conversation(self, messages: List[Union[Dict, LLMMessage]], **kwargs) -> str:
+    def conversation(self, messages: List[Union[Dict, LLMMessage]]) -> str:
         """
         Méthode de convenance pour une conversation complète.
 
         Args:
             messages: Liste de messages de la conversation
-            **kwargs: Arguments supplémentaires pour call_llm
 
         Returns:
             str: La réponse textuelle du LLM
         """
-        return self.call_llm(messages, **kwargs)
+        return self.call_llm(messages)
 
 
 # Fonctions utilitaires pour les formats de réponse structurés
