@@ -35,7 +35,8 @@ converter = OSMConverter()
 CLES_API = [
     "API_KEY_OPENAI",
     "API_KEY_MISTRAL",
-    "API_KEY_LOCAL",
+    "API_KEY_ERASME",
+    "API_KEY_LMSTUDIO",
 ]
 
 # Remettre à zéro les variables d'environnement clés API
@@ -56,9 +57,6 @@ NOM_FIC = "alerte_modif_horaire_lieu"
 NOM_FIC = "alerte_modif_horaire_lieu_short"
 CSV_FILE = DATA_DIR / f"{NOM_FIC}.csv"
 
-# Base de données SQLite
-DB_FILE = DATA_DIR / f"{NOM_FIC}.db"
-
 # Colonnes à ajouter au dataframe
 COLS_SUPPL = ["statut", "message", "markdown", "horaires_llm", "horaires_osm"]
 
@@ -73,7 +71,7 @@ DELAI_ENTRE_APPELS = 20
 DELAI_EN_CAS_ERREUR = 600
 
 # timeout pour les appels LLM (en secondes)
-TIMEOUT = 240
+TIMEOUT = 2400
 
 # Envoi mail
 MAIL_EMETTEUR = os.getenv("MAIL_EMETTEUR")
@@ -93,10 +91,15 @@ LLM_PROVIDERS = {
         "api_key": "API_KEY_OPENAI",
         "base_url": "https://api.openai.com/v1",
     },
-    "LOCAL": {
+    "ERASME": {
         "model": "gemma3",
-        "api_key": "API_KEY_LOCAL",
+        "api_key": "API_KEY_ERASME",
         "base_url": "https://api.erasme.homes/v1",
+    },
+    "LMSTUDIO": {
+        "model": "deepseek/deepseek-r1-0528-qwen3-8b",
+        "api_key": "API_KEY_LMSTUDIO",
+        "base_url": "http://localhost:1234/v1",
     },
     "MISTRAL": {"model": "mistral-large-latest", "api_key": "API_KEY_MISTRAL"},
 }
@@ -120,6 +123,9 @@ if not selected_provider:
     print(
         f"Aucune clé API trouvée. Veuillez définir une des variables suivantes : {', '.join(available_keys)}"
     )
+
+# Base de données SQLite
+DB_FILE = DATA_DIR / f"{NOM_FIC}_{MODELE.split('/')[-1]}.db"
 
 
 ###############################################################
@@ -217,7 +223,8 @@ def main():
         return
 
     # Configuration du client LLM basé sur le fournisseur détecté
-    if selected_provider in ["OPENAI", "LOCAL"]:
+    if selected_provider in ["OPENAI", "ERASME", "LMSTUDIO"]:
+        # Pour les fournisseurs OpenAI, Erasme et LMStudio, on utilise le client OpenAI
         provider_config = LLM_PROVIDERS[selected_provider]
         print(f"Utilisation du LLM OpenAI-compatible ({MODELE})")
         llm_client = llm_openai(
@@ -232,6 +239,7 @@ def main():
         )
 
     elif selected_provider == "MISTRAL":
+        # Pour Mistral, on utilise le client Mistral
         print(f"Utilisation de Mistral AI ({MODELE})")
         llm_client = llm_mistral(
             api_key=API_KEY,
@@ -242,7 +250,9 @@ def main():
         structured_format = get_mistral_response_format(schema=opening_hours_schema)
     else:
         print(f"Fournisseur LLM '{selected_provider}' non supporté pour le moment.")
-        print("Seuls OPENAI, LOCAL et MISTRAL sont actuellement implémentés.")
+        print(
+            "Seuls les profils OPENAI, ERASME, LMSTUDIO et MISTRAL sont actuellement implémentés."
+        )
         return
 
     # Appel au LLM
