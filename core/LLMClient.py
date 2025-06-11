@@ -44,7 +44,7 @@ class llm_openai:
         self.temperature = temperature
         self.timeout = timeout
 
-        self.api_key = api_key or os.environ.get("OPENAI_API_KEY")
+        self.api_key = api_key or os.environ.get("API_KEY_LOCAL")
         self.base_url = (base_url or "https://api.openai.com/v1").rstrip("/")
 
         # Configuration de la session requests
@@ -219,12 +219,14 @@ class llm_mistral:
     def call_llm(
         self,
         messages: List[Union[Dict[str, str], LLMMessage]],
+        response_format: Optional[Dict[str, Any]] = None,
     ) -> str:
         """
         Effectue un appel au LLM Mistral.
 
         Args:
             messages: Liste des messages de la conversation
+            response_format: Format de réponse structuré
 
         Returns:
             str: Réponse du LLM
@@ -248,6 +250,10 @@ class llm_mistral:
                 "temperature": self.temperature,
                 "random_seed": self.random_seed,
             }
+
+            # Ajouter le format de réponse structuré si fourni
+            if response_format:
+                kwargs["response_format"] = response_format
 
             # Effectuer l'appel avec gestion manuelle du timeout
             with timeout_handler(self.timeout):
