@@ -73,7 +73,7 @@ DELAI_ENTRE_APPELS = 20
 DELAI_EN_CAS_ERREUR = 600
 
 # timeout pour les appels LLM (en secondes)
-TIMEOUT = 60
+TIMEOUT = 240
 
 # Envoi mail
 MAIL_EMETTEUR = os.getenv("MAIL_EMETTEUR")
@@ -230,6 +230,7 @@ def main():
         structured_format = get_structured_response_format(
             schema=opening_hours_schema, name="opening_hours_extraction"
         )
+
     elif selected_provider == "MISTRAL":
         print(f"Utilisation de Mistral AI ({MODELE})")
         llm_client = llm_mistral(
