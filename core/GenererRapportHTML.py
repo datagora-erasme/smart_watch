@@ -140,19 +140,19 @@ def generer_rapport_html(
             "nom": "Avertissement",
             "emoji": "⚠️",
             "type": "warning",
-            "description": "URLs accessibles avec problèmes mineurs",
+            "description": "URLs en erreur",
         },
         "critical": {
             "nom": "Erreur",
             "emoji": "❌",
             "type": "error",
-            "description": "URLs non accessibles ou défaillantes",
+            "description": "Erreur critique lors de la récupération",
         },
         "unknown": {
-            "nom": "Statut Inconnu",
+            "nom": "Statut inconnu",
             "emoji": "❓",
             "type": "unknown",
-            "description": "Statut non déterminé",
+            "description": "Statut inconnu",
         },
     }
 
