@@ -19,8 +19,8 @@ from core.GetPrompt import get_prompt
 from core.LLMClient import (
     get_mistral_response_format,
     get_structured_response_format,
-    llm_local,
     llm_mistral,
+    llm_openai,
 )
 from core.URLRetriever import retrieve_url
 from utils.CSVToPolars import csv_to_polars
@@ -32,9 +32,16 @@ converter = OSMConverter()
 ###############################################################
 #                        VARIALBES                            #
 ###############################################################
+CLES_API = [
+    "API_KEY_OPENAI",
+    "API_KEY_MISTRAL",
+    "API_KEY_LOCAL",
+]
+
 # Remettre à zéro les variables d'environnement clés API
-os.environ.pop("API_KEY_LOCAL", None)
-os.environ.pop("API_KEY_MISTRAL", None)
+for cle in CLES_API:
+    os.environ.pop(cle, None)
+
 # Chargement des variables d'environnement depuis le fichier .env
 load_dotenv()
 
@@ -45,11 +52,9 @@ SCRIPT_DIR = Path(__file__).parent.resolve()
 DATA_DIR = SCRIPT_DIR / "data"
 
 # Fichier CSV contenant les URL
-NOM_FIC = "alerte_modif_horaire_lieu_short"
 NOM_FIC = "alerte_modif_horaire_lieu"
-
+NOM_FIC = "alerte_modif_horaire_lieu_short"
 CSV_FILE = DATA_DIR / f"{NOM_FIC}.csv"
-
 
 # Base de données SQLite
 DB_FILE = DATA_DIR / f"{NOM_FIC}.db"
@@ -81,22 +86,39 @@ MDP_EMETTEUR = os.getenv("MDP_EMETTEUR")
 # Fichier de schéma JSON
 SCHEMA_FILE = SCRIPT_DIR / "assets" / "opening_hours_schema_template.json"
 
-# Détection automatique du LLM basée sur les clés API disponibles
-api_key_local = os.getenv("API_KEY_LOCAL")
-api_key_mistral = os.getenv("API_KEY_MISTRAL")
+# Configuration des fournisseurs LLM disponibles
+LLM_PROVIDERS = {
+    "OPENAI": {
+        "model": "gpt-4o",
+        "api_key": "API_KEY_OPENAI",
+        "base_url": "https://api.openai.com/v1",
+    },
+    "LOCAL": {
+        "model": "gemma3",
+        "api_key": "API_KEY_LOCAL",
+        "base_url": "https://api.erasme.homes/v1",
+    },
+    "MISTRAL": {"model": "mistral-large-latest", "api_key": "API_KEY_MISTRAL"},
+}
 
-if api_key_local:
-    MODELE = "gemma3"
-    API_KEY = api_key_local
-    print("Clé API locale détectée pour gemma3.")
-elif api_key_mistral:
-    API_KEY = api_key_mistral
-    MODELE = "mistral-large-latest"
-    MODELE = "mistral-medium-latest"
-    print(f"Clé API Mistral détectée pour {MODELE}.")
-else:
+# Détection automatique du LLM basée sur les clés API disponibles
+selected_provider = None
+API_KEY = None
+MODELE = None
+
+for provider, config in LLM_PROVIDERS.items():
+    api_key = os.getenv(config["api_key"])
+    if api_key:
+        selected_provider = provider
+        API_KEY = api_key
+        MODELE = config["model"]
+        print(f"Clé API {provider} détectée pour {MODELE}.")
+        break
+
+if not selected_provider:
+    available_keys = [config["api_key"] for config in LLM_PROVIDERS.values()]
     print(
-        "Aucune clé API trouvée. Veuillez définir API_KEY_LOCAL ou API_KEY_MISTRAL dans vos variables d'environnement."
+        f"Aucune clé API trouvée. Veuillez définir une des variables suivantes : {', '.join(available_keys)}"
     )
 
 
@@ -194,20 +216,21 @@ def main():
         print(f"Erreur lors du chargement du schéma : {e}")
         return
 
-    # Appel au LLM
-    if api_key_local:
-        print("Utilisation du LLM local (gemma3)")
-        llm_client = llm_local(
+    # Configuration du client LLM basé sur le fournisseur détecté
+    if selected_provider in ["OPENAI", "LOCAL"]:
+        provider_config = LLM_PROVIDERS[selected_provider]
+        print(f"Utilisation du LLM OpenAI-compatible ({MODELE})")
+        llm_client = llm_openai(
             api_key=API_KEY,
             model=MODELE,
-            base_url="https://api.erasme.homes/v1",
+            base_url=provider_config["base_url"],
             temperature=TEMPERATURE,
             timeout=TIMEOUT,
         )
         structured_format = get_structured_response_format(
             schema=opening_hours_schema, name="opening_hours_extraction"
         )
-    elif api_key_mistral:
+    elif selected_provider == "MISTRAL":
         print(f"Utilisation de Mistral AI ({MODELE})")
         llm_client = llm_mistral(
             api_key=API_KEY,
@@ -217,9 +240,8 @@ def main():
         )
         structured_format = get_mistral_response_format(schema=opening_hours_schema)
     else:
-        print(
-            "Aucune clé API trouvée. Veuillez définir API_KEY_LOCAL ou API_KEY_MISTRAL dans vos variables d'environnement."
-        )
+        print(f"Fournisseur LLM '{selected_provider}' non supporté pour le moment.")
+        print("Seuls OPENAI, LOCAL et MISTRAL sont actuellement implémentés.")
         return
 
     # Appel au LLM
