@@ -40,9 +40,9 @@
           "properties": {
             "hors_vacances_scolaires": {
               "type": "object",
-              "description": "Horaires normaux hors vacances",
+              "description": "Horaires normaux hors vacances scolaires",
               "properties": {
-                "active": {
+                "source_found": {
                   "type": "boolean",
                   "default": true
                 },
@@ -59,13 +59,13 @@
                 }
               },
               "additionalProperties": false,
-              "required": ["active", "horaires"]
+              "required": ["source_found", "horaires"]
             },
             "vacances_scolaires_ete": {
               "type": "object",
               "description": "Horaires pour les grandes vacances scolaires, durant l'été",
               "properties": {
-                "active": {
+                "source_found": {
                   "type": "boolean",
                   "default": false
                 },
@@ -83,11 +83,11 @@
               },
               "additionalProperties": false
             },
-            "vacances_scolaires_hors_ete": {
+            "petites_vacances_scolaires": {
               "type": "object",
-              "description": "Horaires pour les petites vacances",
+              "description": "Horaires pour les petites vacances scolaires, hors été",
               "properties": {
-                "active": {
+                "source_found": {
                   "type": "boolean",
                   "default": false
                 },
@@ -112,7 +112,7 @@
               "type": "object",
               "description": "Gestion des jours fériés",
               "properties": {
-                "active": {
+                "source_found": {
                   "type": "boolean",
                   "default": false
                 },
@@ -150,7 +150,7 @@
               "type": "object",
               "description": "Gestion des jours spéciaux avec horaires aménagés",
               "properties": {
-                "active": {
+                "source_found": {
                   "type": "boolean",
                   "default": false
                 },
@@ -237,7 +237,7 @@
     "horaires_jour": {
       "type": "object",
       "properties": {
-        "active": {
+        "source_found": {
           "type": "boolean",
           "default": true,
           "description": "Indique si ce jour est pris en compte"
@@ -255,7 +255,7 @@
         }
       },
       "additionalProperties": false,
-      "required": ["active", "ouvert", "creneaux"]
+      "required": ["source_found", "ouvert", "creneaux"]
     },
     "horaires_hebdomadaires": {
       "type": "object",
