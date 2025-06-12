@@ -1,3 +1,4 @@
+import re
 import ssl
 
 import urllib3
@@ -147,7 +148,10 @@ def retrieve_url(
                     html=html_content, library_type="bs4", bs4_parser="lxml"
                 )
                 try:
-                    row_dict[sortie] = converter.convert()
+                    markdown_content = converter.convert()
+                    # Épuration des sauts de ligne en double
+                    markdown_content = re.sub(r"\n{3,}", "\n\n", markdown_content)
+                    row_dict[sortie] = markdown_content
                 except Exception as e:
                     print(f"❌ Error converting HTML to Markdown: {str(e)}")
                     row_dict[sortie] = html_content
