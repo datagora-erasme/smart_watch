@@ -208,7 +208,9 @@ def main():
 
     # Configuration du client LLM basé sur le fournisseur détecté
     if fournisseur_LLM == "OPENAI":
-        print(f"Utilisation du LLM OpenAI-compatible ({MODELE})")
+        print(
+            f"Utilisation du LLM OpenAI-compatible sur '{BASE_URL}', modèle '{MODELE}'"
+        )
         llm_client = llm_openai(
             api_key=API_KEY,
             model=MODELE,
@@ -220,7 +222,7 @@ def main():
             schema=opening_hours_schema, name="opening_hours_extraction"
         )
     elif fournisseur_LLM == "MISTRAL":
-        print(f"Utilisation de Mistral AI ({MODELE})")
+        print(f"Utilisation de Mistral AI. Modèle '{MODELE}'")
         llm_client = llm_mistral(
             api_key=API_KEY,
             model=MODELE,
