@@ -11,8 +11,9 @@ from pathlib import Path
 
 # Libraries externes
 import polars as pl
-from dotenv import load_dotenv
+from dotenv import dotenv_values, load_dotenv
 
+# Librairies du projet
 from core.EnvoyerMail import envoyer_mail_html
 from core.GenererRapportHTML import generer_rapport_html
 from core.GetPrompt import get_prompt
@@ -30,18 +31,13 @@ converter = OSMConverter()
 
 
 ###############################################################
-#                        VARIALBES                            #
+#                        VARIABLES                            #
 ###############################################################
-CLES_API = [
-    "API_KEY_OPENAI",
-    "API_KEY_MISTRAL",
-    "API_KEY_ERASME",
-    "API_KEY_LMSTUDIO",
-]
-
-# Remettre à zéro les variables d'environnement clés API
-for cle in CLES_API:
-    os.environ.pop(cle, None)
+# Remettre à zéro les variables d'environnement,
+# pour éviter les conflits avec les anciennes valeurs
+dotenv_vars = dotenv_values()
+for key in dotenv_vars.keys():
+    os.environ.pop(key, None)
 
 # Chargement des variables d'environnement depuis le fichier .env
 load_dotenv()
@@ -55,9 +51,10 @@ DATA_DIR = SCRIPT_DIR / "data"
 # Fichier CSV contenant les URL
 NOM_FIC = "alerte_modif_horaire_lieu"
 NOM_FIC = "alerte_modif_horaire_lieu_short"
+NOM_FIC = "alerte_modif_horaire_lieu_unique"
 CSV_FILE = DATA_DIR / f"{NOM_FIC}.csv"
 
-# Colonnes à ajouter au dataframe
+# Colonnes à ajouter au dataframe pour stocker les résultats
 COLS_SUPPL = ["statut", "message", "markdown", "horaires_llm", "horaires_osm"]
 
 # Nombre de threads concurrents pour le traitement des URL
@@ -71,7 +68,7 @@ DELAI_ENTRE_APPELS = 20
 DELAI_EN_CAS_ERREUR = 600
 
 # timeout pour les appels LLM (en secondes)
-TIMEOUT = 2400
+TIMEOUT = 240
 
 # Envoi mail
 MAIL_EMETTEUR = os.getenv("MAIL_EMETTEUR")
@@ -84,52 +81,39 @@ MDP_EMETTEUR = os.getenv("MDP_EMETTEUR")
 # Fichier de schéma JSON
 SCHEMA_FILE = SCRIPT_DIR / "assets" / "opening_hours_schema_template.json"
 
-# Configuration des fournisseurs LLM disponibles
-LLM_PROVIDERS = {
-    "OPENAI": {
-        "model": "gpt-4o",
-        "api_key": "API_KEY_OPENAI",
-        "base_url": "https://api.openai.com/v1",
-    },
-    "ERASME": {
-        "model": "gemma3",
-        "api_key": "API_KEY_ERASME",
-        "base_url": "https://api.erasme.homes/v1",
-    },
-    "LMSTUDIO": {
-        "model": "deepseek/deepseek-r1-0528-qwen3-8b",
-        "api_key": "API_KEY_LMSTUDIO",
-        "base_url": "http://localhost:1234/v1",
-    },
-    "MISTRAL": {"model": "mistral-large-latest", "api_key": "API_KEY_MISTRAL"},
-}
-
 # Détection automatique du LLM basée sur les clés API disponibles
-selected_provider = None
+fournisseur_LLM = None
 API_KEY = None
 MODELE = None
+BASE_URL = None
 
-for provider, config in LLM_PROVIDERS.items():
-    api_key = os.getenv(config["api_key"])
-    if api_key:
-        selected_provider = provider
-        API_KEY = api_key
-        MODELE = config["model"]
-        print(f"Clé API {provider} détectée pour {MODELE}.")
-        break
-
-if not selected_provider:
-    available_keys = [config["api_key"] for config in LLM_PROVIDERS.values()]
+# Vérifier OPENAI d'abord
+if os.getenv("API_KEY_OPENAI"):
+    fournisseur_LLM = "OPENAI"
+    API_KEY = os.getenv("API_KEY_OPENAI")
+    MODELE = os.getenv("MODELE_OPENAI")
+    BASE_URL = os.getenv("BASE_URL_OPENAI")
+    print(f"Clé API OPENAI détectée pour {MODELE}.")
+elif os.getenv("API_KEY_MISTRAL"):
+    fournisseur_LLM = "MISTRAL"
+    API_KEY = os.getenv("API_KEY_MISTRAL")
+    MODELE = os.getenv("MODELE_MISTRAL")
+    print(f"Clé API MISTRAL détectée pour {MODELE}.")
+else:
     print(
-        f"Aucune clé API trouvée. Veuillez définir une des variables suivantes : {', '.join(available_keys)}"
+        "Aucune clé API trouvée. Veuillez définir API_KEY_OPENAI ou API_KEY_MISTRAL dans vos variables d'environnement."
     )
 
 # Base de données SQLite
-DB_FILE = DATA_DIR / f"{NOM_FIC}_{MODELE.split('/')[-1]}.db"
+DB_FILE = (
+    DATA_DIR / f"{NOM_FIC}_{MODELE.split('/')[-1]}.db"
+    if MODELE
+    else DATA_DIR / f"{NOM_FIC}.db"
+)
 
 
 ###############################################################
-#                        FUNCTIONS                            #
+#                        FONCTIONS                            #
 ###############################################################
 def load_opening_hours_schema() -> dict:
     """
@@ -223,23 +207,19 @@ def main():
         return
 
     # Configuration du client LLM basé sur le fournisseur détecté
-    if selected_provider in ["OPENAI", "ERASME", "LMSTUDIO"]:
-        # Pour les fournisseurs OpenAI, Erasme et LMStudio, on utilise le client OpenAI
-        provider_config = LLM_PROVIDERS[selected_provider]
+    if fournisseur_LLM == "OPENAI":
         print(f"Utilisation du LLM OpenAI-compatible ({MODELE})")
         llm_client = llm_openai(
             api_key=API_KEY,
             model=MODELE,
-            base_url=provider_config["base_url"],
+            base_url=BASE_URL,
             temperature=TEMPERATURE,
             timeout=TIMEOUT,
         )
         structured_format = get_structured_response_format(
             schema=opening_hours_schema, name="opening_hours_extraction"
         )
-
-    elif selected_provider == "MISTRAL":
-        # Pour Mistral, on utilise le client Mistral
+    elif fournisseur_LLM == "MISTRAL":
         print(f"Utilisation de Mistral AI ({MODELE})")
         llm_client = llm_mistral(
             api_key=API_KEY,
@@ -249,10 +229,8 @@ def main():
         )
         structured_format = get_mistral_response_format(schema=opening_hours_schema)
     else:
-        print(f"Fournisseur LLM '{selected_provider}' non supporté pour le moment.")
-        print(
-            "Seuls les profils OPENAI, ERASME, LMSTUDIO et MISTRAL sont actuellement implémentés."
-        )
+        print("Fournisseur LLM non supporté ou non configuré.")
+        print("Seuls OPENAI et MISTRAL sont actuellement implémentés.")
         return
 
     # Appel au LLM
