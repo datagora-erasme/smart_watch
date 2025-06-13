@@ -3,7 +3,7 @@ from pathlib import Path
 import polars as pl
 
 
-class csv_to_polars:
+class CSVToPolars:
     def __init__(
         self, file_path: str = None, separator: str = ";", has_header: bool = True
     ):
