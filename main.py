@@ -14,6 +14,7 @@ import polars as pl
 from dotenv import dotenv_values, load_dotenv
 
 # Librairies du projet
+from core.DatabaseManager import DatabaseManager
 from core.EnvoyerMail import envoyer_mail_html
 from core.GenererRapportHTML import generer_rapport_html
 from core.GetPrompt import get_prompt
@@ -24,7 +25,7 @@ from core.LLMClient import (
     llm_openai,
 )
 from core.URLRetriever import retrieve_url
-from utils.CSVToPolars import csv_to_polars
+from utils.CSVToPolars import CSVToPolars
 from utils.CustomJsonToOSM import OSMConverter
 
 converter = OSMConverter()
@@ -35,6 +36,8 @@ converter = OSMConverter()
 ###############################################################
 # Remettre à zéro les variables d'environnement,
 # pour éviter les conflits avec les anciennes valeurs
+os.environ.pop("API_KEY_OPENAI", None)
+os.environ.pop("API_KEY_MISTRAL", None)
 dotenv_vars = dotenv_values()
 for key in dotenv_vars.keys():
     os.environ.pop(key, None)
@@ -49,8 +52,8 @@ SCRIPT_DIR = Path(__file__).parent.resolve()
 DATA_DIR = SCRIPT_DIR / "data"
 
 # Fichier CSV contenant les URL
-NOM_FIC = "alerte_modif_horaire_lieu"
 NOM_FIC = "alerte_modif_horaire_lieu_short"
+NOM_FIC = "alerte_modif_horaire_lieu"
 NOM_FIC = "alerte_modif_horaire_lieu_unique"
 CSV_FILE = DATA_DIR / f"{NOM_FIC}.csv"
 
@@ -64,7 +67,7 @@ NB_THREADS = 100
 TEMPERATURE = 0.1
 
 # Délai entre les appels LLM (en secondes)
-DELAI_ENTRE_APPELS = 20
+DELAI_ENTRE_APPELS = 2
 DELAI_EN_CAS_ERREUR = 600
 
 # timeout pour les appels LLM (en secondes)
@@ -87,7 +90,7 @@ API_KEY = None
 MODELE = None
 BASE_URL = None
 
-# Vérifier OPENAI d'abord
+# Détection du fournisseur LLM
 if os.getenv("API_KEY_OPENAI"):
     fournisseur_LLM = "OPENAI"
     API_KEY = os.getenv("API_KEY_OPENAI")
@@ -105,11 +108,7 @@ else:
     )
 
 # Base de données SQLite
-DB_FILE = (
-    DATA_DIR / f"{NOM_FIC}_{MODELE.split('/')[-1]}.db"
-    if MODELE
-    else DATA_DIR / f"{NOM_FIC}.db"
-)
+DB_FILE = DATA_DIR / f"{NOM_FIC}_{MODELE.split('/')[-1]}.db"
 
 
 ###############################################################
@@ -145,178 +144,180 @@ def main():
     Fonction principale du programme de vérification et extraction d'horaires depuis des URLs.
     Cette fonction exécute un pipeline complet en plusieurs étapes :
         1. Chargement des données
-        2. Extraction concurrente des URLs
-        3. Extraction des horaires par LLM
-        4. Sauvegarde en base de données
+        2. Extraction concurrente des URLs (si nécessaire)
+        3. Extraction des horaires par LLM (reprise possible)
+        4. Sauvegarde incrémentale en base de données
         5. Génération de rapport HTML
         6. Envoi par email
     """
+    # Initialisation du gestionnaire de base de données
+    bdd = DatabaseManager(DB_FILE, NOM_FIC)
+
     #
     # Chargement des données
     #
-    # Convertisseur csv -> df Polars
-    CSVToDF = csv_to_polars(file_path=CSV_FILE, separator=";", has_header=True)
-
-    # Chargement des données dans le df
-    df = CSVToDF.load_csv()
-
-    # En cas d'erreur de lecture du fichier, afficher un message et quitter
-    if isinstance(df, str):
-        print(f"Erreur lors du chargement du fichier CSV '{CSV_FILE}' : '{df}'")
-        return
-
-    #
-    # Ajout des nouvelles colonnes
-    #
-    for col in COLS_SUPPL:
-        df = df.with_columns(
-            pl.lit("").alias(col)
-        )  # Avec un str vide par défaut : pl.lit("")
-
-    # Extraction des enregistrements à partir du dataframe
-    rows = list(df.iter_rows(named=True))
-
-    #
-    # Extraction URL par appels concurrents
-    #
-    with concurrent.futures.ThreadPoolExecutor(max_workers=NB_THREADS) as executor:
-        future_to_row = {
-            executor.submit(
-                retrieve_url, row, sortie="markdown", encoding_errors="ignore"
-            ): row
-            for row in rows
-        }
-
-        # Sauvegarde des résultats dans le nouveau dataframe
-        new_rows = []
-        for future in concurrent.futures.as_completed(future_to_row):
-            row_dict = future.result()
-            new_rows.append(row_dict)
-
-    # Puis mise à jour du dataframe Polars avec les nouvelles lignes
-    df = pl.DataFrame(new_rows)
-
-    #
-    # Extraction des horaires par LLM
-    #
-    # Chargement du schéma JSON depuis le fichier template
-    try:
-        opening_hours_schema = load_opening_hours_schema()
-    except (FileNotFoundError, json.JSONDecodeError) as e:
-        print(f"Erreur lors du chargement du schéma : {e}")
-        return
-
-    # Configuration du client LLM basé sur le fournisseur détecté
-    if fournisseur_LLM == "OPENAI":
-        print(
-            f"Utilisation du LLM OpenAI-compatible sur '{BASE_URL}', modèle '{MODELE}'"
-        )
-        llm_client = llm_openai(
-            api_key=API_KEY,
-            model=MODELE,
-            base_url=BASE_URL,
-            temperature=TEMPERATURE,
-            timeout=TIMEOUT,
-        )
-        structured_format = get_structured_response_format(
-            schema=opening_hours_schema, name="opening_hours_extraction"
-        )
-    elif fournisseur_LLM == "MISTRAL":
-        print(f"Utilisation de Mistral AI. Modèle '{MODELE}'")
-        llm_client = llm_mistral(
-            api_key=API_KEY,
-            model=MODELE,
-            temperature=TEMPERATURE,
-            timeout=TIMEOUT,
-        )
-        structured_format = get_mistral_response_format(schema=opening_hours_schema)
+    # Vérifier si la base de données existe déjà
+    if bdd.exists():
+        # Charger les données existantes
+        df = bdd.load_data()
     else:
-        print("Fournisseur LLM non supporté ou non configuré.")
-        print("Seuls OPENAI et MISTRAL sont actuellement implémentés.")
-        return
+        # Dans ce cas on lance le chargement du fichier CSV,
+        # et on crée les enregistrements dans la foulée, en
+        # extrayant les URLs par appels concurrents.
 
-    # Appel au LLM
-    total = len(df)
+        # Chargement du CSV
+        CSVToDF = CSVToPolars(file_path=CSV_FILE, separator=";", has_header=True)
+        df_csv = CSVToDF.load_csv()
 
-    i = 1
-    while i <= total:
-        row = list(df.iter_rows(named=True))[i - 1]
+        # En cas d'erreur de lecture du fichier, afficher un message et quitter
+        if isinstance(df_csv, str):
+            print(f"Erreur lors du chargement du fichier CSV '{CSV_FILE}' : '{df_csv}'")
+            return
 
-        # Affichage de la progression
-        print(f"Appel {i}/{total} au LLM pour '{row.get('nom', 'Lieu inconnu')}'")
+        # Ajout des nouvelles colonnes
+        for col in COLS_SUPPL:
+            df_csv = df_csv.with_columns(pl.lit("").alias(col))
 
-        # Traitement de l'enregistrement avec gestion d'erreur
-        try:
-            # Construction des messages
-            messages = get_prompt(row)
-            # Appel au LLM
-            result = llm_client.call_llm(messages, response_format=structured_format)
+        # Extraction des enregistrements à partir du dataframe
+        rows = list(df_csv.iter_rows(named=True))
 
-            # Convert to OSM format
-            result_osm = converter.convert_to_osm(json.loads(result))
+        #
+        # Extraction URL par appels concurrents (seulement si nouvelle exécution)
+        #
+        print("=== EXTRACTION DES URLs ===")
+        with concurrent.futures.ThreadPoolExecutor(max_workers=NB_THREADS) as executor:
+            future_to_row = {
+                executor.submit(
+                    retrieve_url, row, sortie="markdown", encoding_errors="ignore"
+                ): row
+                for row in rows
+            }
 
-            # Mise à jour du dataframe
-            df = df.with_columns(
-                [
-                    pl.when(pl.col("identifiant") == row["identifiant"])
-                    .then(pl.lit(result))
-                    .otherwise(pl.col("horaires_llm"))
-                    .alias("horaires_llm"),
-                    pl.when(pl.col("identifiant") == row["identifiant"])
-                    .then(pl.lit(result_osm))
-                    .otherwise(pl.col("horaires_osm"))
-                    .alias("horaires_osm"),
-                ]
-            )
+            # Sauvegarde des résultats dans le nouveau dataframe
+            new_rows = []
+            for future in concurrent.futures.as_completed(future_to_row):
+                row_dict = future.result()
+                new_rows.append(row_dict)
 
-            # Délai normal entre les appels
-            if i < total:  # Pas de pause après le dernier appel
-                time.sleep(DELAI_ENTRE_APPELS)
+        # Mise à jour du dataframe Polars avec les nouvelles lignes
+        df = pl.DataFrame(new_rows)
 
-            # Passer au suivant seulement si succès
-            i += 1
-
-        except Exception as e:
-            print(
-                f"Erreur lors de l'appel au LLM pour '{row.get('nom', 'Lieu inconnu')}': {e}"
-            )
-
-            # Pause plus longue en cas d'erreur (rate limiting, etc.)
-            if "429" in str(e) or "capacity exceeded" in str(e).lower():
-                print(
-                    f"Rate limiting détecté - Pause de {DELAI_EN_CAS_ERREUR}s avant de réessayer"
-                )
-                time.sleep(DELAI_EN_CAS_ERREUR)
-                # Ne pas incrémenter i pour réessayer le même identifiant
-            else:
-                # Pour les autres erreurs, passer au suivant
-                i += 1
-    print("Extraction des horaires terminée.")
+        # Initialiser la base de données
+        if_exists = "skip" if bdd.exists() else "fail"
+        bdd.initialize(df, if_exists)
 
     #
-    # Enregistrer le df dans une base SQLite
+    # Extraction des horaires par LLM (avec reprise)
     #
-    try:
-        # Suppression de l'ancien fichier de base de données s'il existe
-        if DB_FILE.exists():
-            print(f"Suppression du fichier SQLite '{DB_FILE}'")
-            DB_FILE.unlink(missing_ok=True)
+    print("=== EXTRACTION DES HORAIRES PAR LLM ===")
 
-        # Enregistrement du dataframe dans la base de données SQLite
-        df.write_database(
-            table_name=NOM_FIC,
-            connection=f"sqlite:///{DB_FILE}",
-            if_table_exists="replace",
-        )
-        print(f"DataFrame saved to SQLite database '{DB_FILE}' in table '{NOM_FIC}'")
-    except Exception as err:
+    # Obtenir les enregistrements restants à traiter directement
+    # Filtrer d'abord par statut 'ok', puis par horaires_llm vides
+    remaining_df = df.filter(
+        (pl.col("statut") == "ok")
+        & ((pl.col("horaires_llm") == "") | (pl.col("horaires_llm").is_null()))
+    )
+    remaining_records = list(remaining_df.iter_rows(named=True))
+
+    # Afficher les statistiques de filtrage
+    print(
+        f"{len(remaining_records)} enregistrements à traiter (statut 'ok' et sans horaires)"
+    )
+
+    if not remaining_records:
         print(
-            f"Erreur lors de l'enregistrement du dataframe dans la base de données '{DB_FILE}': '{err}'"
+            "Tous les enregistrements avec statut 'ok' ont déjà été traités par le LLM."
         )
+    else:
+        # Chargement du schéma JSON depuis le fichier template
+        try:
+            opening_hours_schema = load_opening_hours_schema()
+        except (FileNotFoundError, json.JSONDecodeError) as e:
+            print(f"Erreur lors du chargement du schéma : {e}")
+            return
+
+        # Configuration du client LLM basé sur le fournisseur détecté
+        if fournisseur_LLM == "OPENAI":
+            print(
+                f"Utilisation du LLM OpenAI-compatible sur '{BASE_URL}', modèle '{MODELE}'"
+            )
+            llm_client = llm_openai(
+                api_key=API_KEY,
+                model=MODELE,
+                base_url=BASE_URL,
+                temperature=TEMPERATURE,
+                timeout=TIMEOUT,
+            )
+            structured_format = get_structured_response_format(
+                schema=opening_hours_schema, name="opening_hours_extraction"
+            )
+        elif fournisseur_LLM == "MISTRAL":
+            print(f"Utilisation de Mistral AI. Modèle '{MODELE}'")
+            llm_client = llm_mistral(
+                api_key=API_KEY,
+                model=MODELE,
+                temperature=TEMPERATURE,
+                timeout=TIMEOUT,
+            )
+            structured_format = get_mistral_response_format(schema=opening_hours_schema)
+        else:
+            print("Fournisseur LLM non supporté ou non configuré.")
+            print("Seuls OPENAI et MISTRAL sont actuellement implémentés.")
+            return
+
+        # Traitement des enregistrements restants
+        total = len(remaining_records)
+
+        for i, row in enumerate(remaining_records, 1):
+            # Affichage de la progression
+            print(f"Appel {i}/{total} au LLM pour '{row.get('nom', 'Lieu inconnu')}'")
+
+            # Traitement de l'enregistrement avec gestion d'erreur
+            try:
+                # Construction des messages
+                messages = get_prompt(row)
+                # Appel au LLM
+                result = llm_client.call_llm(
+                    messages, response_format=structured_format
+                )
+
+                # Convert to OSM format
+                result_osm = converter.convert_to_osm(json.loads(result))
+
+                # Mise à jour immédiate en base de données
+                where_conditions = {"identifiant": row["identifiant"]}
+                update_values = {"horaires_llm": result, "horaires_osm": result_osm}
+                bdd.update_record(where_conditions, update_values)
+                print(f"Enregistrement '{row['identifiant']}' sauvegardé")
+
+                # Délai normal entre les appels
+                if i < total:  # Pas de pause après le dernier appel
+                    time.sleep(DELAI_ENTRE_APPELS)
+
+            except Exception as e:
+                print(
+                    f"Erreur lors de l'appel au LLM pour '{row.get('nom', 'Lieu inconnu')}': {e}"
+                )
+
+                # Pause plus longue en cas d'erreur (rate limiting, etc.)
+                if "429" in str(e) or "capacity exceeded" in str(e).lower():
+                    print(
+                        f"Rate limiting détecté - Pause de {DELAI_EN_CAS_ERREUR}s avant de réessayer"
+                    )
+                    time.sleep(DELAI_EN_CAS_ERREUR)
+                    # Réessayer le même enregistrement en ne pas incrementant i
+                    continue
+                else:
+                    # Pour les autres erreurs, passer au suivant
+                    print(f"Erreur pour '{row['identifiant']}', passage au suivant")
+                    continue
+
+    print("=== EXTRACTION DES HORAIRES TERMINÉE ===")
 
     #
     # Générer le rapport HTML à partir de la base de données SQLite
     #
+    print("=== GÉNÉRATION DU RAPPORT HTML ===")
     resume_html, fichier_html = generer_rapport_html(
         db_file=DB_FILE,
         table_name=NOM_FIC,
@@ -326,6 +327,7 @@ def main():
     #
     # Envoyer le rapport par mail
     #
+    print("=== ENVOI DU RAPPORT PAR EMAIL ===")
     texte = f"""
     Rapport de vérification des URLs généré le {datetime.now().strftime("%d/%m/%Y à %H:%M")}
 
