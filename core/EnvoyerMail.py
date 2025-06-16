@@ -1,5 +1,3 @@
-import smtplib
-from datetime import datetime
 from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
@@ -14,72 +12,89 @@ def envoyer_mail_html(
     smtp_port: int,
     sujet: str,
     texte: str,
-    html_content: str,
+    html_content: str = None,
     fichier_joint: str = None,
-) -> None:
+):
     """
-    Envoie un rapport par email avec contenu HTML et pièce jointe optionnelle.
+    Envoie un email avec contenu HTML et fichier joint optionnel.
 
-    Arguments :
-        emetteur (str): Adresse email de l'expéditeur
-        recepteur (str): Adresse email du destinataire
-        mdp_emetteur (str): Mot de passe de l'expéditeur
-        smtp_server (str): Adresse du serveur SMTP
-        smtp_port (int): Port du serveur SMTP
-        sujet (str): Sujet de l'email
-        texte (str): Texte brut de l'email
-        html_content (str): Contenu HTML du corps de l'email
-        fichier_joint (str, optional): Chemin du fichier HTML à joindre en pièce jointe
+    Args:
+        emetteur: Adresse email de l'expéditeur
+        recepteur: Adresse email du destinataire
+        mdp_emetteur: Mot de passe de l'expéditeur
+        smtp_server: Serveur SMTP
+        smtp_port: Port SMTP
+        sujet: Sujet de l'email
+        texte: Contenu texte de l'email
+        html_content: Contenu HTML optionnel
+        fichier_joint: Chemin vers le fichier à joindre (optionnel)
     """
-    # Création du message
-    msg = MIMEMultipart("alternative")
-    msg["Subject"] = sujet
-    msg["From"] = emetteur
-    msg["To"] = recepteur
+    import os
+    import smtplib
 
-    # Version texte simple
-    texte = f"""
-    Rapport de vérification des URLs généré le {datetime.now().strftime("%d/%m/%Y à %H:%M")}
-    
-    {"Consultez le fichier HTML joint pour le rapport complet avec onglets interactifs." if fichier_joint else "Consultez le contenu HTML ci-dessous pour le rapport complet."}
-    """
+    try:
+        # Créer le message
+        msg = MIMEMultipart("alternative")
+        msg["From"] = emetteur
+        msg["To"] = recepteur
+        msg["Subject"] = sujet
 
-    msg.attach(MIMEText(texte, "plain", "utf-8"))
-    msg.attach(MIMEText(html_content, "html", "utf-8"))
+        # Ajouter le contenu texte
+        msg.attach(MIMEText(texte, "plain", "utf-8"))
 
-    # Joindre le fichier HTML si fourni
-    if fichier_joint:
-        try:
+        # Ajouter le contenu HTML si fourni
+        if html_content:
+            msg.attach(MIMEText(html_content, "html", "utf-8"))
+
+        # Ajouter le fichier joint si fourni
+        if fichier_joint and os.path.exists(fichier_joint):
             with open(fichier_joint, "rb") as attachment:
                 part = MIMEBase("application", "octet-stream")
                 part.set_payload(attachment.read())
-                encoders.encode_base64(part)
-                part.add_header(
-                    "Content-Disposition", f"attachment; filename= {fichier_joint}"
-                )
-                msg.attach(part)
-        except FileNotFoundError:
-            print(
-                f"Attention: Le fichier {fichier_joint} n'a pas été trouvé. Email envoyé sans pièce jointe."
-            )
 
-    # Envoi
-    try:
-        with smtplib.SMTP(smtp_server, smtp_port) as server:
-            server.starttls()
-            server.login(emetteur, mdp_emetteur)
-            server.send_message(msg)
-            print("Email envoyé avec succès !")
+            encoders.encode_base64(part)
+            part.add_header(
+                "Content-Disposition",
+                f"attachment; filename= {os.path.basename(fichier_joint)}",
+            )
+            msg.attach(part)
+
+        # Détecter le type de connexion SMTP basé sur le port
+        if smtp_port == 465:
+            # Port 465 utilise SSL/TLS immédiat
+            print(f"Connexion SMTP_SSL sur {smtp_server}:{smtp_port}")
+            server = smtplib.SMTP_SSL(smtp_server, smtp_port)
+        else:
+            # Autres ports utilisent SMTP standard avec starttls si nécessaire
+            print(f"Connexion SMTP sur {smtp_server}:{smtp_port}")
+            server = smtplib.SMTP(smtp_server, smtp_port)
+
+            # Pour le port 587, utiliser starttls
+            if smtp_port == 587:
+                server.starttls()
+
+        # Authentification et envoi
+        server.login(emetteur, mdp_emetteur)
+        server.send_message(msg)
+        server.quit()
+
+        print(f"Email envoyé avec succès de {emetteur} vers {recepteur}")
+
     except Exception as e:
-        print(f"Erreur lors de l'envoi : {e}")
+        raise Exception(f"Erreur lors de l'envoi de l'email : {e}")
 
 
 # Faire un test avec les variables du .env
 if __name__ == "__main__":
     import os
 
-    from dotenv import load_dotenv
+    from dotenv import dotenv_values, load_dotenv
 
+    dotenv_vars = dotenv_values()
+    for key in dotenv_vars.keys():
+        os.environ.pop(key, None)
+
+    # Chargement des variables d'environnement depuis le fichier .env
     load_dotenv()
     # Envoi du mail
     mail_emetteur = os.getenv("MAIL_EMETTEUR")
@@ -88,17 +103,27 @@ if __name__ == "__main__":
     smtp_port = os.getenv("SMTP_PORT")
     smtp_port = int(smtp_port) if smtp_port else 587
     mdp_emetteur = os.getenv("MDP_EMETTEUR")
+    # Afficher toutes les variables pour vérification
+    print("Variables d'environnement chargées :")
+    env_vars = list(dotenv_values().keys())
+    for var in env_vars:
+        value = os.getenv(var)
+        print(f"{var}: '{value}'")
     sujet = "Test d'envoi d'email"
     texte = "Ceci est un test d'envoi d'email avec un contenu HTML."
     html_content = "<h1>Test Email</h1><p>Ceci est un test d'envoi d'email avec un contenu HTML.</p>"
 
-    envoyer_mail_html(
-        emetteur=mail_emetteur,
-        recepteur=mail_recepteur,
-        mdp_emetteur=mdp_emetteur,
-        smtp_server=smtp_server,
-        smtp_port=smtp_port,
-        sujet=sujet,
-        texte=texte,
-        html_content=html_content,
-    )
+    try:
+        envoyer_mail_html(
+            emetteur=mail_emetteur,
+            recepteur=mail_recepteur,
+            mdp_emetteur=mdp_emetteur,
+            smtp_server=smtp_server,
+            smtp_port=smtp_port,
+            sujet=sujet,
+            texte=texte,
+            html_content=html_content,
+        )
+        print("Email envoyé avec succès.")
+    except Exception as e:
+        print(f"Échec de l'envoi de l'email : {e}")
