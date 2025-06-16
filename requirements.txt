@@ -10,3 +10,4 @@ pyarrow
 requests
 sqlalchemy
 urllib3
+datamodel-code-generator
