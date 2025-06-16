@@ -42,7 +42,7 @@ def to_json(value: any) -> str:
 
 
 def generer_rapport_html(
-    db_file: str, table_name: str, titre_rapport: str
+    db_file: str, table_name: str, titre_rapport: str, model_info: dict = None
 ) -> tuple[str, str]:
     """
     Génère un rapport HTML analysant les URLs stockées dans une base de données SQLite.
@@ -54,6 +54,7 @@ def generer_rapport_html(
         db_file (str): Chemin vers le fichier de base de données SQLite.
         table_name (str): Nom de la table contenant les données des URLs.
         titre_rapport (str): Titre à afficher dans le rapport généré.
+        model_info (dict): Informations sur le modèle LLM utilisé.
 
     Renvoie :
         tuple[str, str]: Un tuple contenant:
@@ -79,7 +80,7 @@ def generer_rapport_html(
 
     # Extraction des données depuis la base de données
     uri = f"sqlite:///{db_file}"
-    query = f"SELECT type_lieu, identifiant, nom, url, statut, message, horaires_llm, code_http FROM {table_name}"
+    query = f"SELECT type_lieu, identifiant, nom, url, statut, message, horaires_llm, horaires_osm, code_http FROM {table_name}"
     df = pl.read_database_uri(query=query, uri=uri, engine="connectorx")
 
     # Convertir le DataFrame Polars en dictionnaire pour faciliter le traitement
@@ -95,6 +96,16 @@ def generer_rapport_html(
             except json.JSONDecodeError:
                 # Si ce n'est pas un JSON valide, le garder comme une chaîne
                 pass
+
+        # S'assurer que les champs requis existent avec des valeurs par défaut
+        url.setdefault("horaires_llm", None)
+        url.setdefault("horaires_osm", None)
+        url.setdefault("code_http", 0)
+        url.setdefault("message", "")
+        url.setdefault("url", "")
+        url.setdefault("nom", "")
+        url.setdefault("identifiant", "")
+        url.setdefault("type_lieu", "")
 
     # Calculer les statistiques globales
     total_urls = len(donnees_urls)
@@ -128,33 +139,29 @@ def generer_rapport_html(
         "total_urls": total_urls,
     }
 
-    # Définir les statuts et leurs propriétés
+    # Définir les statuts et leurs propriétés (simplifié)
     statuts_config = {
         "ok": {
             "nom": "Succès",
             "emoji": "✅",
             "type": "success",
-            "description": "URLs accessibles et fonctionnelles",
+            "description": "URLs avec horaires OSM extraits",
         },
-        "warning": {
-            "nom": "Avertissement",
-            "emoji": "⚠️",
-            "type": "warning",
-            "description": "URLs en erreur",
-        },
-        "critical": {
+        "error": {
             "nom": "Erreur",
             "emoji": "❌",
             "type": "error",
-            "description": "Erreur critique lors de la récupération",
-        },
-        "unknown": {
-            "nom": "Statut inconnu",
-            "emoji": "❓",
-            "type": "unknown",
-            "description": "Statut inconnu",
+            "description": "URLs sans horaires OSM (problème d'extraction, URL inaccessible, etc.)",
         },
     }
+
+    # Reclassifier les données selon le nouveau critère : présence d'horaires OSM
+    for url in donnees_urls:
+        # Reclassifier basé uniquement sur la présence d'horaires OSM
+        if url.get("horaires_osm") and url["horaires_osm"].strip():
+            url["statut"] = "ok"
+        else:
+            url["statut"] = "error"
 
     # Regrouper les URLs par statut
     statuts_disponibles = []
@@ -196,14 +203,29 @@ def generer_rapport_html(
         )
     codes_http_stats.sort(key=lambda x: x["code"])
 
+    # Construire le titre enrichi avec les informations du modèle
+    titre_enrichi = titre_rapport
+    if model_info:
+        modele = model_info.get("modele", "")
+        base_url = model_info.get("base_url", "")
+        fournisseur = model_info.get("fournisseur", "")
+
+        if modele:
+            titre_enrichi += f" - Modèle: {modele}"
+        if base_url:
+            titre_enrichi += f" - URL: {base_url}"
+        elif fournisseur:
+            titre_enrichi += f" - Fournisseur: {fournisseur}"
+
     # Données à passer au template
     donnees_template = {
-        "titre_rapport": titre_rapport,
+        "titre_rapport": titre_rapport,  # Titre principal sans modification
         "date_generation": datetime.now().strftime("%d/%m/%Y à %H:%M"),
         "stats_globales": stats_globales,
         "statuts_disponibles": statuts_disponibles,
         "types_lieu_stats": types_lieu_stats,
         "codes_http_stats": codes_http_stats,
+        "model_info": model_info,  # Ajouter les infos du modèle pour usage dans le template
     }
 
     # Génération du HTML simple pour l'email
@@ -225,14 +247,14 @@ def generer_rapport_html(
 if __name__ == "__main__":
     from pathlib import Path
 
-    SCRIPT_DIR = Path(r"C:\Users\name\Documents\GitHub\smartwatch\data")
+    SCRIPT_DIR = Path(r"C:\Users\name\Documents\GitHub\smart_watch\data")
     DATA_DIR = SCRIPT_DIR
-    NOM_FIC = "alerte_modif_horaire_lieu"
+    NOM_FIC = "alerte_modif_horaire_lieu_devstral"
     DB_FILE = DATA_DIR / f"{NOM_FIC}.db"
 
     # générer le rapport HTML à partir de la base de données
     html_content, nom_fichier = generer_rapport_html(
         db_file=DB_FILE,
-        table_name=NOM_FIC,
+        table_name="_".join(NOM_FIC.split("_")[:-1]),
         titre_rapport="Rapport de vérification des URLs",
     )

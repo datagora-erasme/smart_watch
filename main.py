@@ -14,6 +14,7 @@ import polars as pl
 from dotenv import dotenv_values, load_dotenv
 
 # Librairies du projet
+# from assets.model import Horaires
 from core.DatabaseManager import DatabaseManager
 from core.EnvoyerMail import envoyer_mail_html
 from core.GenererRapportHTML import generer_rapport_html
@@ -28,7 +29,10 @@ from core.URLRetriever import retrieve_url
 from utils.CSVToPolars import CSVToPolars
 from utils.CustomJsonToOSM import OSMConverter
 
-converter = OSMConverter()
+# Initialiser le convertisseur avec l'option d'override
+# True = outrepasser ouvert=False si des créneaux sont présents
+# False = respecter strictement ouvert=False
+converter = OSMConverter(creneaux_prioritaires=True)
 
 
 ###############################################################
@@ -52,7 +56,6 @@ SCRIPT_DIR = Path(__file__).parent.resolve()
 DATA_DIR = SCRIPT_DIR / "data"
 
 # Fichier CSV contenant les URL
-NOM_FIC = "alerte_modif_horaire_lieu_short"
 NOM_FIC = "alerte_modif_horaire_lieu"
 NOM_FIC = "alerte_modif_horaire_lieu_unique"
 CSV_FILE = DATA_DIR / f"{NOM_FIC}.csv"
@@ -61,17 +64,29 @@ CSV_FILE = DATA_DIR / f"{NOM_FIC}.csv"
 COLS_SUPPL = ["statut", "message", "markdown", "horaires_llm", "horaires_osm"]
 
 # Nombre de threads concurrents pour le traitement des URL
-NB_THREADS = 100
+NB_THREADS_URL = 100
+
+# Remplacements de caractères pour le markdown (optionnel)
+CHAR_REPLACEMENTS = {
+    "-": " ",
+    "*": " ",
+    "_": " ",
+    "`": " ",
+    "+": " ",
+    "\\": " ",
+    "\n\n\n": "\n",
+    "\n\n\n\n": "\n",
+}
 
 # Température pour les appels LLM
 TEMPERATURE = 0.1
 
 # Délai entre les appels LLM (en secondes)
-DELAI_ENTRE_APPELS = 2
+DELAI_ENTRE_APPELS = 20 / 100
 DELAI_EN_CAS_ERREUR = 600
 
 # timeout pour les appels LLM (en secondes)
-TIMEOUT = 240
+TIMEOUT = 610  # mettre plus que le DELAI_EN_CAS_ERREUR pour éviter les timeouts
 
 # Envoi mail
 MAIL_EMETTEUR = os.getenv("MAIL_EMETTEUR")
@@ -185,10 +200,16 @@ def main():
         # Extraction URL par appels concurrents (seulement si nouvelle exécution)
         #
         print("=== EXTRACTION DES URLs ===")
-        with concurrent.futures.ThreadPoolExecutor(max_workers=NB_THREADS) as executor:
+        with concurrent.futures.ThreadPoolExecutor(
+            max_workers=NB_THREADS_URL
+        ) as executor:
             future_to_row = {
                 executor.submit(
-                    retrieve_url, row, sortie="markdown", encoding_errors="ignore"
+                    retrieve_url,
+                    row,
+                    sortie="markdown",
+                    encoding_errors="ignore",
+                    char_replacements=CHAR_REPLACEMENTS,
                 ): row
                 for row in rows
             }
@@ -259,7 +280,10 @@ def main():
                 temperature=TEMPERATURE,
                 timeout=TIMEOUT,
             )
+            # Utiliser le modèle Pydantic pour Mistral
+            # structured_format = Horaires
             structured_format = get_mistral_response_format(schema=opening_hours_schema)
+
         else:
             print("Fournisseur LLM non supporté ou non configuré.")
             print("Seuls OPENAI et MISTRAL sont actuellement implémentés.")
@@ -318,10 +342,19 @@ def main():
     # Générer le rapport HTML à partir de la base de données SQLite
     #
     print("=== GÉNÉRATION DU RAPPORT HTML ===")
+
+    # Préparer les informations du modèle pour le titre
+    model_info = {
+        "modele": MODELE,
+        "base_url": BASE_URL if fournisseur_LLM == "OPENAI" else None,
+        "fournisseur": fournisseur_LLM,
+    }
+
     resume_html, fichier_html = generer_rapport_html(
         db_file=DB_FILE,
         table_name=NOM_FIC,
         titre_rapport="Rapport de vérification des URLs",
+        model_info=model_info,
     )
 
     #
@@ -333,18 +366,22 @@ def main():
 
     {"Consultez le fichier HTML joint pour le rapport complet avec onglets interactifs." if fichier_html else "Consultez le contenu HTML ci-dessous pour le rapport complet."}
     """
-    envoyer_mail_html(
-        emetteur=MAIL_EMETTEUR,
-        recepteur=MAIL_RECEPTEUR,
-        mdp_emetteur=MDP_EMETTEUR,
-        smtp_server=SMTP_SERVER,
-        smtp_port=SMTP_PORT,
-        sujet=f"Rapport de vérification URLs - {datetime.now().strftime('%d/%m/%Y')}",
-        texte=texte,
-        html_content=resume_html,
-        fichier_joint=fichier_html,
-    )
-    print(f"Email envoyé avec le rapport '{fichier_html}'")
+    try:
+        envoyer_mail_html(
+            emetteur=MAIL_EMETTEUR,
+            recepteur=MAIL_RECEPTEUR,
+            mdp_emetteur=MDP_EMETTEUR,
+            smtp_server=SMTP_SERVER,
+            smtp_port=SMTP_PORT,
+            sujet=f"Rapport de vérification URLs - {datetime.now().strftime('%d/%m/%Y')}",
+            texte=texte,
+            html_content=resume_html,
+            fichier_joint=fichier_html,
+        )
+        print(f"Email envoyé avec le rapport '{fichier_html}'")
+    except Exception as e:
+        print(f"Erreur lors de l'envoi de l'email : {e}")
+        return
 
 
 if __name__ == "__main__":
