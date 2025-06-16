@@ -14,8 +14,49 @@ HEADERS = {
 }
 
 
+def _apply_char_replacements(text: str, char_replacements: dict) -> str:
+    """
+    Applique efficacement les remplacements de caractères selon une table de remplacement.
+    Optimisé pour économiser CPU et mémoire en traitant d'abord les remplacements simples
+    avec str.translate(), puis les remplacements de chaînes multiples.
+
+    Arguments:
+        text (str): Texte à traiter
+        char_replacements (dict): Dictionnaire {source: cible} pour les remplacements
+
+    Renvoie:
+        str: Texte avec les remplacements appliqués
+    """
+    if not char_replacements or not text:
+        return text
+
+    # Séparer les remplacements de caractères uniques des remplacements de chaînes
+    single_char_replacements = {}
+    multi_char_replacements = {}
+
+    for source, target in char_replacements.items():
+        if len(source) == 1:
+            single_char_replacements[source] = target
+        else:
+            multi_char_replacements[source] = target
+
+    # Appliquer d'abord les remplacements de caractères uniques avec str.translate()
+    if single_char_replacements:
+        translation_table = str.maketrans(single_char_replacements)
+        text = text.translate(translation_table)
+
+    # Appliquer ensuite les remplacements de chaînes multiples
+    for source, target in multi_char_replacements.items():
+        text = text.replace(source, target)
+
+    return text
+
+
 def retrieve_url(
-    row: dict, sortie: str = "html", encoding_errors: str = "ignore"
+    row: dict,
+    sortie: str = "html",
+    encoding_errors: str = "ignore",
+    char_replacements: dict = None,
 ) -> dict:
     """
     Récupère le contenu HTML d'une URL spécifiée dans un dictionnaire de ligne, gère les erreurs SSL et HTTP,
@@ -24,7 +65,8 @@ def retrieve_url(
     Arguments :
         row (dict): Dictionnaire représentant un enregistrement contenant au moins la clé "url".
         sortie (str, optionnel): Type de sortie souhaité, "html" ou "markdown". Par défaut "html".
-        errors (str, optionnel): Stratégie de gestion des erreurs lors du décodage du contenu. Par défaut "ignore".
+        encoding_errors (str, optionnel): Stratégie de gestion des erreurs lors du décodage du contenu. Par défaut "ignore".
+        char_replacements (dict, optionnel): Table de remplacement {source: cible}. Par défaut None.
 
     Renvoie :
         dict: Dictionnaire enrichi avec le statut, le code HTTP, le message d'erreur éventuel,
@@ -151,6 +193,11 @@ def retrieve_url(
                     markdown_content = converter.convert()
                     # Épuration des sauts de ligne en double
                     markdown_content = re.sub(r"\n{3,}", "\n\n", markdown_content)
+                    # Remplacement des caractères selon la table si spécifiée
+                    if char_replacements:
+                        markdown_content = _apply_char_replacements(
+                            markdown_content, char_replacements
+                        )
                     row_dict[sortie] = markdown_content
                 except Exception as e:
                     print(f"❌ Error converting HTML to Markdown: {str(e)}")
@@ -161,7 +208,13 @@ def retrieve_url(
                 converter = HtmlToMarkdown(
                     html=row_dict["html"], library_type="bs4", bs4_parser="lxml"
                 )
-                row_dict["markdown"] = converter.convert()
+                markdown_content = converter.convert()
+                # Remplacement des caractères selon la table si spécifiée
+                if char_replacements:
+                    markdown_content = _apply_char_replacements(
+                        markdown_content, char_replacements
+                    )
+                row_dict["markdown"] = markdown_content
 
             row_dict["statut"] = "ok"
             row_dict["code_http"] = response.status

@@ -56,8 +56,8 @@ SCRIPT_DIR = Path(__file__).parent.resolve()
 DATA_DIR = SCRIPT_DIR / "data"
 
 # Fichier CSV contenant les URL
-NOM_FIC = "alerte_modif_horaire_lieu"
 NOM_FIC = "alerte_modif_horaire_lieu_unique"
+NOM_FIC = "alerte_modif_horaire_lieu"
 CSV_FILE = DATA_DIR / f"{NOM_FIC}.csv"
 
 # Colonnes à ajouter au dataframe pour stocker les résultats
