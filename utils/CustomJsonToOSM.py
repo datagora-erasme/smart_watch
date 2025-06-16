@@ -18,8 +18,17 @@ class OSMConverter:
         "dimanche": "Su",
     }
 
-    def __init__(self):
+    def __init__(self, creneaux_prioritaires: bool = True):
+        """
+        Initialise le convertisseur OSM.
+
+        Args:
+            creneaux_prioritaires: Si True, considère un lieu comme ouvert
+                                      quand ouvert=False mais qu'il y a des créneaux.
+                                      Si False, respecte strictement ouvert=False.
+        """
         self.debug = False
+        self.creneaux_prioritaires = creneaux_prioritaires
 
     def normalize_day_name(self, day: str) -> Optional[str]:
         """Convertit un nom de jour en français vers le format OSM."""
@@ -52,12 +61,27 @@ class OSMConverter:
         if not jour_data.get("source_found", True):
             return None
 
-        # Vérifier si le lieu est ouvert
-        if not jour_data.get("ouvert", False):
-            return None
-
         # Traiter les créneaux
         creneaux = jour_data.get("creneaux", [])
+        ouvert = jour_data.get("ouvert", False)
+
+        # Gestion du conflit ouvert=False avec créneaux présents
+        if not ouvert and creneaux and self.creneaux_prioritaires:
+            print(
+                "⚠️  Détection d'un conflit : ouvert=False mais créneaux présents. "
+                "Option creneaux_prioritaires=True -> Considéré comme ouvert."
+            )
+            ouvert = True
+        elif not ouvert and creneaux and not self.creneaux_prioritaires:
+            print(
+                "ℹ️  Conflit détecté : ouvert=False avec créneaux présents. "
+                "Option creneaux_prioritaires=False -> Respect du statut fermé."
+            )
+            return None
+        elif not ouvert:
+            # Pas de créneaux et fermé -> normal
+            return None
+
         if not creneaux:
             return None
 
@@ -252,77 +276,58 @@ class OSMConverter:
 
     def parse_date_to_osm(self, date_desc: str) -> Optional[str]:
         """Parse une description de date en format OSM."""
-        import re
+        try:
+            from datetime import datetime
 
-        # Mapping des mois français vers numéros
-        mois_mapping = {
-            "janvier": "01",
-            "jan": "01",
-            "février": "02",
-            "fév": "02",
-            "fevrier": "02",
-            "fev": "02",
-            "mars": "03",
-            "mar": "03",
-            "avril": "04",
-            "avr": "04",
-            "mai": "05",
-            "juin": "06",
-            "juillet": "07",
-            "juil": "07",
-            "août": "08",
-            "aout": "08",
-            "septembre": "09",
-            "sep": "09",
-            "sept": "09",
-            "octobre": "10",
-            "oct": "10",
-            "novembre": "11",
-            "nov": "11",
-            "décembre": "12",
-            "déc": "12",
-            "decembre": "12",
-            "dec": "12",
-        }
+            from dateutil import parser
 
-        # Pattern pour "jour DD mois YYYY"
-        pattern = r"(\w+)\s+(\d{1,2})\s+(\w+)\s+(\d{4})"
-        match = re.search(pattern, date_desc.lower())
+            # Mapping des mois français vers anglais pour améliorer le parsing
+            mois_fr_en = {
+                "janvier": "January",
+                "jan": "Jan",
+                "février": "February",
+                "fév": "Feb",
+                "fevrier": "February",
+                "fev": "Feb",
+                "mars": "March",
+                "mar": "Mar",
+                "avril": "April",
+                "avr": "Apr",
+                "mai": "May",
+                "juin": "June",
+                "juillet": "July",
+                "juil": "Jul",
+                "août": "August",
+                "aout": "August",
+                "septembre": "September",
+                "sep": "Sep",
+                "sept": "Sep",
+                "octobre": "October",
+                "oct": "Oct",
+                "novembre": "November",
+                "nov": "Nov",
+                "décembre": "December",
+                "déc": "Dec",
+                "decembre": "December",
+                "dec": "Dec",
+            }
 
-        if match:
-            jour_semaine, jour, mois_nom, annee = match.groups()
-            mois_num = mois_mapping.get(mois_nom)
+            # Remplacer les mois français par leurs équivalents anglais
+            date_normalized = date_desc.lower()
+            for fr, en in mois_fr_en.items():
+                date_normalized = date_normalized.replace(fr, en)
 
-            if mois_num:
-                # Format OSM pour une date spécifique: YYYY mmm dd
-                return f"{annee} {mois_nom.capitalize()[:3]} {int(jour):02d}"
+            # Parser la date avec dateutil
+            parsed_date = parser.parse(
+                date_normalized, fuzzy=True, default=datetime.now()
+            )
 
-        # Pattern pour "DD/MM/YYYY"
-        pattern_numeric = r"(\d{1,2})[/\-](\d{1,2})[/\-](\d{4})"
-        match_numeric = re.search(pattern_numeric, date_desc)
+            # Formatter au format OSM: YYYY MMM DD
+            return parsed_date.strftime("%Y %b %d")
 
-        if match_numeric:
-            jour, mois, annee = match_numeric.groups()
-            mois_names = [
-                "",
-                "Jan",
-                "Feb",
-                "Mar",
-                "Apr",
-                "May",
-                "Jun",
-                "Jul",
-                "Aug",
-                "Sep",
-                "Oct",
-                "Nov",
-                "Dec",
-            ]
-            if 1 <= int(mois) <= 12:
-                return f"{annee} {mois_names[int(mois)]} {int(jour):02d}"
-
-        # Si on ne peut pas parser, retourner None pour utiliser le fallback
-        return None
+        except Exception:
+            # Si le parsing échoue, retourner None pour utiliser le fallback
+            return None
 
     def has_valid_source_in_period(self, period_data: Dict) -> bool:
         """Vérifie si une période a au moins une source valide."""
@@ -360,84 +365,125 @@ class OSMConverter:
 
         return True  # Par défaut, si pas d'horaires spécifiés
 
-    def convert_to_osm_by_periods(self, data: Dict) -> Dict[str, str]:
-        """Convertit les données d'horaires au format OSM en séparant par période."""
-        result = {}
+    def convert_to_osm(
+        self, data: Dict, creneaux_prioritaires: Optional[bool] = None
+    ) -> str:
+        """
+        Convertit toutes les données d'horaires au format OSM opening_hours (méthode principale).
 
-        # Vérifier si c'est le nouveau format de schéma
-        if "horaires_ouverture" not in data:
-            return {"error": "Format JSON non reconnu - 'horaires_ouverture' manquant"}
+        Args:
+            data: Données JSON des horaires
+            creneaux_prioritaires: Option pour outrepasser temporairement le comportement
+                                      par défaut de l'instance
+        """
+        # Sauvegarder l'option actuelle si override temporaire
+        original_override = self.creneaux_prioritaires
+        if creneaux_prioritaires is not None:
+            self.creneaux_prioritaires = creneaux_prioritaires
 
-        horaires_data = data["horaires_ouverture"]
-        periodes = horaires_data.get("periodes", {})
+        try:
+            # Utiliser la nouvelle méthode par périodes
+            periods_result = self.convert_to_osm_by_periods(data)
 
-        # Traiter chaque période
-        for period_key, period_data in periodes.items():
-            if not isinstance(period_data, dict):
-                continue
+            if not periods_result:
+                return "closed"
 
-            # Vérifier si la période a au moins une source valide
-            if not self.has_valid_source_in_period(period_data):
-                continue
+            # Assembler toutes les périodes en une seule chaîne OSM
+            osm_parts = []
 
-            if period_key in [
+            # Ordre de priorité pour l'assemblage
+            period_order = [
                 "hors_vacances_scolaires",
-                "vacances_scolaires_ete",
                 "petites_vacances_scolaires",
-            ]:
-                # Traiter les horaires hebdomadaires
-                horaires = period_data.get("horaires", {})
-                if horaires:
-                    osm_schedule = self.convert_horaires_hebdomadaires(horaires)
-                    if osm_schedule:  # Seulement si on a des horaires valides
-                        result[period_key] = osm_schedule
+                "vacances_scolaires_ete",
+                "jours_feries",
+                "jours_speciaux",
+            ]
 
-            elif period_key in ["jours_feries", "jours_speciaux"]:
-                # Traiter les jours spéciaux
-                osm_special = self.process_jours_speciaux(period_data)
-                if osm_special:  # Seulement si on a des horaires valides
-                    result[period_key] = osm_special
+            for period in period_order:
+                if period in periods_result:
+                    osm_part = periods_result[period]
+                    if period == "hors_vacances_scolaires":
+                        # Horaires normaux sans condition
+                        osm_parts.append(osm_part)
+                    elif period in [
+                        "vacances_scolaires_ete",
+                        "petites_vacances_scolaires",
+                    ]:
+                        # Ajouter condition de vacances scolaires
+                        osm_parts.append(f'{osm_part} "SH"')
+                    else:
+                        # Jours fériés et spéciaux (déjà formatés avec condition)
+                        osm_parts.append(osm_part)
 
-        return result
+            result = "; ".join(osm_parts)
+            return result if result else "closed"
 
-    def convert_to_osm(self, data: Dict) -> str:
-        """Convertit toutes les données d'horaires au format OSM opening_hours (méthode principale)."""
-        # Utiliser la nouvelle méthode par périodes
-        periods_result = self.convert_to_osm_by_periods(data)
+        finally:
+            # Restaurer l'option originale
+            if creneaux_prioritaires is not None:
+                self.creneaux_prioritaires = original_override
 
-        if not periods_result:
-            return "closed"
+    def convert_to_osm_by_periods(
+        self, data: Dict, creneaux_prioritaires: Optional[bool] = None
+    ) -> Dict[str, str]:
+        """
+        Convertit les données d'horaires au format OSM en séparant par période.
 
-        # Assembler toutes les périodes en une seule chaîne OSM
-        osm_parts = []
+        Args:
+            data: Données JSON des horaires
+            creneaux_prioritaires: Option pour outrepasser temporairement le comportement
+        """
+        # Sauvegarder l'option actuelle si override temporaire
+        original_override = self.creneaux_prioritaires
+        if creneaux_prioritaires is not None:
+            self.creneaux_prioritaires = creneaux_prioritaires
 
-        # Ordre de priorité pour l'assemblage
-        period_order = [
-            "hors_vacances_scolaires",
-            "petites_vacances_scolaires",
-            "vacances_scolaires_ete",
-            "jours_feries",
-            "jours_speciaux",
-        ]
+        try:
+            result = {}
 
-        for period in period_order:
-            if period in periods_result:
-                osm_part = periods_result[period]
-                if period == "hors_vacances_scolaires":
-                    # Horaires normaux sans condition
-                    osm_parts.append(osm_part)
-                elif period in [
+            # Vérifier si c'est le nouveau format de schéma
+            if "horaires_ouverture" not in data:
+                return {
+                    "error": "Format JSON non reconnu - 'horaires_ouverture' manquant"
+                }
+
+            horaires_data = data["horaires_ouverture"]
+            periodes = horaires_data.get("periodes", {})
+
+            # Traiter chaque période
+            for period_key, period_data in periodes.items():
+                if not isinstance(period_data, dict):
+                    continue
+
+                # Vérifier si la période a au moins une source valide
+                if not self.has_valid_source_in_period(period_data):
+                    continue
+
+                if period_key in [
+                    "hors_vacances_scolaires",
                     "vacances_scolaires_ete",
                     "petites_vacances_scolaires",
                 ]:
-                    # Ajouter condition de vacances scolaires
-                    osm_parts.append(f'{osm_part} "SH"')
-                else:
-                    # Jours fériés et spéciaux (déjà formatés avec condition)
-                    osm_parts.append(osm_part)
+                    # Traiter les horaires hebdomadaires
+                    horaires = period_data.get("horaires", {})
+                    if horaires:
+                        osm_schedule = self.convert_horaires_hebdomadaires(horaires)
+                        if osm_schedule:  # Seulement si on a des horaires valides
+                            result[period_key] = osm_schedule
 
-        result = "; ".join(osm_parts)
-        return result if result else "closed"
+                elif period_key in ["jours_feries", "jours_speciaux"]:
+                    # Traiter les jours spéciaux
+                    osm_special = self.process_jours_speciaux(period_data)
+                    if osm_special:  # Seulement si on a des horaires valides
+                        result[period_key] = osm_special
+
+            return result
+
+        finally:
+            # Restaurer l'option originale
+            if creneaux_prioritaires is not None:
+                self.creneaux_prioritaires = original_override
 
     def convert_file(self, input_file: str, output_file: str = None) -> Dict:
         """Convertit un fichier JSON entier au format OSM."""
@@ -482,165 +528,12 @@ class OSMConverter:
 
 def main():
     """Exemple d'utilisation du convertisseur OSM."""
-    converter = OSMConverter()
-
-    # Test avec l'exemple fourni
-    test_data = {
-        "horaires_ouverture": {
-            "metadata": {
-                "identifiant": "S3858",
-                "nom": "Piscine municipale",
-                "type_lieu": "piscine",
-                "url": "http://www.oullins.fr/sorties-activites/sports-et-loisirs/piscine-municipale-358.html",
-            },
-            "periodes": {
-                "hors_vacances_scolaires": {
-                    "source_found": True,
-                    "horaires": {
-                        "lundi": {
-                            "source_found": True,
-                            "ouvert": True,
-                            "creneaux": [{"debut": "12:00", "fin": "13:45"}],
-                        },
-                        "mardi": {
-                            "source_found": True,
-                            "ouvert": True,
-                            "creneaux": [{"debut": "12:00", "fin": "13:45"}],
-                        },
-                        "mercredi": {
-                            "source_found": True,
-                            "ouvert": True,
-                            "creneaux": [{"debut": "17:00", "fin": "19:30"}],
-                        },
-                        "jeudi": {
-                            "source_found": True,
-                            "ouvert": True,
-                            "creneaux": [{"debut": "12:00", "fin": "13:45"}],
-                        },
-                        "vendredi": {
-                            "source_found": True,
-                            "ouvert": True,
-                            "creneaux": [
-                                {"debut": "12:00", "fin": "13:45"},
-                                {"debut": "17:00", "fin": "19:30"},
-                            ],
-                        },
-                        "samedi": {
-                            "source_found": True,
-                            "ouvert": True,
-                            "creneaux": [
-                                {"debut": "10:00", "fin": "12:00"},
-                                {"debut": "14:00", "fin": "18:00"},
-                            ],
-                        },
-                        "dimanche": {
-                            "source_found": True,
-                            "ouvert": True,
-                            "creneaux": [{"debut": "8:30", "fin": "12:30"}],
-                        },
-                    },
-                    "condition": "De mi-septembre à début juin",
-                },
-                "petites_vacances_scolaires": {
-                    "source_found": True,
-                    "horaires": {
-                        "lundi": {
-                            "source_found": True,
-                            "ouvert": True,
-                            "creneaux": [
-                                {"debut": "11:30", "fin": "14:00"},
-                                {"debut": "16:30", "fin": "19:00"},
-                            ],
-                        },
-                        "mardi": {
-                            "source_found": True,
-                            "ouvert": True,
-                            "creneaux": [
-                                {"debut": "11:30", "fin": "14:00"},
-                                {"debut": "16:30", "fin": "19:00"},
-                            ],
-                        },
-                        "mercredi": {
-                            "source_found": True,
-                            "ouvert": True,
-                            "creneaux": [
-                                {"debut": "11:30", "fin": "14:00"},
-                                {"debut": "16:30", "fin": "19:30"},
-                            ],
-                        },
-                        "jeudi": {
-                            "source_found": True,
-                            "ouvert": True,
-                            "creneaux": [
-                                {"debut": "11:30", "fin": "14:00"},
-                                {"debut": "16:30", "fin": "19:00"},
-                            ],
-                        },
-                        "vendredi": {
-                            "source_found": True,
-                            "ouvert": True,
-                            "creneaux": [
-                                {"debut": "11:30", "fin": "14:00"},
-                                {"debut": "16:30", "fin": "19:30"},
-                            ],
-                        },
-                        "samedi": {
-                            "source_found": True,
-                            "ouvert": True,
-                            "creneaux": [{"debut": "10:00", "fin": "18:00"}],
-                        },
-                        "dimanche": {
-                            "source_found": True,
-                            "ouvert": True,
-                            "creneaux": [{"debut": "8:30", "fin": "12:00"}],
-                        },
-                    },
-                },
-                "jours_feries": {
-                    "source_found": True,
-                    "horaires_specifiques": {
-                        "lundi 21 avril 2025": {"ouvert": False},
-                        "jeudi 1 mai 2025": {"ouvert": False},
-                        "jeudi 8 mai 2025": {"ouvert": False},
-                        "jeudi 29 mai 2025": {"ouvert": False},
-                    },
-                },
-                "jours_speciaux": {
-                    "source_found": True,
-                    "horaires_specifiques": {
-                        "vendredi 2 mai 2025": {
-                            "creneaux": [
-                                {"debut": "11:30", "fin": "14:00"},
-                                {"debut": "16:30", "fin": "19:30"},
-                            ]
-                        },
-                        "vendredi 30 mai 2025": {
-                            "creneaux": [
-                                {"debut": "11:30", "fin": "14:00"},
-                                {"debut": "16:30", "fin": "19:30"},
-                            ]
-                        },
-                    },
-                },
-            },
-            "extraction_info": {"source_found": True, "confidence": 1},
-        }
-    }
 
     print("=== TEST DU CONVERTISSEUR OSM ===")
-
-    # Test de conversion par périodes
-    periods_result = converter.convert_to_osm_by_periods(test_data)
-    print("\nRésultat par périodes:")
-    for period, osm_format in periods_result.items():
-        print(f"  {period}: {osm_format}")
-
-    # Test de conversion combinée
-    combined_result = converter.convert_to_osm(test_data)
-    print(f"\nRésultat combiné OSM: {combined_result}")
+    converter = OSMConverter()
 
     # Test avec base de données
-    db_path = r"c:\Users\beranger\Documents\GitHub\smart_watch\data\alerte_modif_horaire_lieu_unique_devstral.db"
+    db_path = r"C:\Users\beranger\Documents\GitHub\smart_watch\data\alerte_modif_horaire_lieu_unique_devstral.db"
 
     try:
         conn = sqlite3.connect(db_path)
@@ -651,8 +544,6 @@ def main():
             "SELECT identifiant, nom, url, horaires_llm FROM alerte_modif_horaire_lieu_unique WHERE horaires_llm IS NOT NULL LIMIT 5"
         )
         records = cursor.fetchall()
-
-        print("\n=== RÉSULTATS DE LA CONVERSION OSM DEPUIS LA DB ===")
 
         for record in records:
             item_id, nom, url, horaires_llm = record
@@ -667,10 +558,12 @@ def main():
 
                 print(f"\nID : {item_id}")
                 print(f"Nom : {nom}")
-                print(f"OSM combiné : {osm_combined}")
+                print(f"URL : {url}")
+                print("Horaires OSM combinés :")
+                print(f"{osm_combined}")
 
                 if osm_periods:
-                    print("Périodes détaillées :")
+                    print("\nPériodes détaillées :")
                     for period, osm_format in osm_periods.items():
                         print(f"  {period}: {osm_format}")
 
