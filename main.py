@@ -56,8 +56,9 @@ SCRIPT_DIR = Path(__file__).parent.resolve()
 DATA_DIR = SCRIPT_DIR / "data"
 
 # Fichier CSV contenant les URL
-NOM_FIC = "alerte_modif_horaire_lieu_unique"
 NOM_FIC = "alerte_modif_horaire_lieu"
+NOM_FIC = "alerte_modif_horaire_lieu_unique"
+
 CSV_FILE = DATA_DIR / f"{NOM_FIC}.csv"
 
 # Colonnes à ajouter au dataframe pour stocker les résultats
@@ -94,7 +95,8 @@ MAIL_RECEPTEUR = os.getenv("MAIL_RECEPTEUR")
 SMTP_SERVER = os.getenv("SMTP_SERVER")
 SMTP_PORT = os.getenv("SMTP_PORT")
 SMTP_PORT = int(SMTP_PORT) if SMTP_PORT else 587
-MDP_EMETTEUR = os.getenv("MDP_EMETTEUR")
+LOGIN_SMTP = os.getenv("LOGIN_SMTP")
+MDP_MAIL = os.getenv("MDP_MAIL")
 
 # Fichier de schéma JSON
 SCHEMA_FILE = SCRIPT_DIR / "assets" / "opening_hours_schema_template.json"
@@ -370,9 +372,10 @@ def main():
         envoyer_mail_html(
             emetteur=MAIL_EMETTEUR,
             recepteur=MAIL_RECEPTEUR,
-            mdp_emetteur=MDP_EMETTEUR,
             smtp_server=SMTP_SERVER,
             smtp_port=SMTP_PORT,
+            mdp=MDP_MAIL,
+            login_smtp=LOGIN_SMTP or MAIL_EMETTEUR,
             sujet=f"Rapport de vérification URLs - {datetime.now().strftime('%d/%m/%Y')}",
             texte=texte,
             html_content=resume_html,
