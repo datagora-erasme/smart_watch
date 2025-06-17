@@ -7,6 +7,8 @@ from typing import Dict, List, Optional
 
 from utils.JoursFeries import get_jours_feries
 
+# from JoursFeries import get_jours_feries
+
 
 class OSMConverter:
     """Convertisseur du format JSON personnalisé des horaires vers la syntaxe OSM opening_hours."""
@@ -52,8 +54,6 @@ class OSMConverter:
         if not jours_feries_data:
             return {}
 
-        # Convertir les jours fériés en format OSM
-        # return {date: "PH" for date in jours_feries_data.keys()}
         return jours_feries_data
 
     def parse_creneaux(self, creneaux: List[Dict]) -> str:
@@ -641,7 +641,7 @@ def main():
     converter = OSMConverter()
 
     # Test avec base de données
-    db_path = r"C:\Users\beranger\Documents\GitHub\smart_watch\data\alerte_modif_horaire_lieu_devstral.db"
+    db_path = r"C:\Users\name\Documents\GitHub\smart_watch\data\alerte_modif_horaire_lieu_unique_devstral.db"
 
     try:
         conn = sqlite3.connect(db_path)
@@ -649,7 +649,7 @@ def main():
 
         # Lire tous les enregistrements avec la colonne horaires_llm
         cursor.execute(
-            "SELECT identifiant, nom, url, horaires_llm FROM alerte_modif_horaire_lieu WHERE horaires_llm IS NOT NULL LIMIT 5"
+            "SELECT identifiant, nom, url, horaires_llm FROM alerte_modif_horaire_lieu_unique WHERE horaires_llm IS NOT NULL LIMIT 5"
         )
         records = cursor.fetchall()
 

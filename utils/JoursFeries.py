@@ -7,11 +7,11 @@ def get_jours_feries(zone="metropole", annee=None):
     """
     Récupère les jours fériés pour une zone et une année données.
 
-    Args:
+    Arguments :
         zone (str): Zone géographique (par défaut: "metropole")
         annee (int): Année (par défaut: année en cours)
 
-    Returns:
+    Retourne :
         dict: Dictionnaire des jours fériés
     """
     if annee is None:
@@ -32,10 +32,10 @@ def get_day_name(date_str):
     """
     Retourne le nom du jour de la semaine en français pour une date donnée.
 
-    Args:
+    Argument :
         date_str (str): Date au format YYYY-MM-DD
 
-    Returns:
+    retourne :
         str: Nom du jour de la semaine
     """
     jours = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"]
@@ -44,14 +44,14 @@ def get_day_name(date_str):
 
 
 def main():
-    """Fonction principale pour tester la récupération des jours fériés."""
+    """Fonction pour tester la librairie."""
     jours_feries = get_jours_feries()
 
     if jours_feries:
         print(f"Jours fériés pour la métropole en {datetime.now().year}:")
         for date, nom in jours_feries.items():
             jour_semaine = get_day_name(date)
-            print(f"{date} ({jour_semaine}): {nom}")
+            print(f"{jour_semaine} {date} : {nom}")
     else:
         print("Impossible de récupérer les jours fériés")
 
