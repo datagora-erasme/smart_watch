@@ -87,7 +87,8 @@ DELAI_ENTRE_APPELS = 20 / 100
 DELAI_EN_CAS_ERREUR = 600
 
 # timeout pour les appels LLM (en secondes)
-TIMEOUT = 610  # mettre plus que le DELAI_EN_CAS_ERREUR pour éviter les timeouts
+# mettre plus que DELAI_EN_CAS_ERREUR pour éviter les timeouts
+TIMEOUT = DELAI_EN_CAS_ERREUR + 10
 
 # Envoi mail
 MAIL_EMETTEUR = os.getenv("MAIL_EMETTEUR")
@@ -126,31 +127,6 @@ else:
 
 # Base de données SQLite
 DB_FILE = DATA_DIR / f"{NOM_FIC}_{MODELE.split('/')[-1]}.db"
-
-
-###############################################################
-#                        FONCTIONS                            #
-###############################################################
-def load_opening_hours_schema() -> dict:
-    """
-    Charge le schéma JSON depuis le fichier template.
-
-    Returns:
-        dict: Schéma JSON pour les horaires d'ouverture
-
-    Raises:
-        FileNotFoundError: Si le fichier template n'existe pas
-        json.JSONDecodeError: Si le fichier JSON est malformé
-    """
-    try:
-        with open(SCHEMA_FILE, "r", encoding="utf-8") as f:
-            schema = json.load(f)
-        print(f"Schéma JSON chargé depuis : {SCHEMA_FILE}")
-        return schema
-    except FileNotFoundError:
-        raise FileNotFoundError(f"Fichier de schéma non trouvé : {SCHEMA_FILE}")
-    except json.JSONDecodeError as e:
-        raise json.JSONDecodeError(f"Erreur de format JSON dans {SCHEMA_FILE}: {e}")
 
 
 ###############################################################
@@ -201,7 +177,7 @@ def main():
         #
         # Extraction URL par appels concurrents (seulement si nouvelle exécution)
         #
-        print("=== EXTRACTION DES URLs ===")
+        print("=== EXTRACTION DU CONTENU DES URLs ===")
         with concurrent.futures.ThreadPoolExecutor(
             max_workers=NB_THREADS_URL
         ) as executor:
@@ -251,12 +227,66 @@ def main():
         print(
             "Tous les enregistrements avec statut 'ok' ont déjà été traités par le LLM."
         )
+
+        # Vérifier si des enregistrements ont horaires_llm mais pas horaires_osm
+        missing_osm_df = df.filter(
+            (pl.col("statut") == "ok")
+            & (pl.col("horaires_llm") != "")
+            & (pl.col("horaires_llm").is_not_null())
+            & ((pl.col("horaires_osm") == "") | (pl.col("horaires_osm").is_null()))
+        )
+        missing_osm_records = list(missing_osm_df.iter_rows(named=True))
+
+        if missing_osm_records:
+            print(
+                f"{len(missing_osm_records)} enregistrements nécessitent une conversion OSM"
+            )
+
+            for i, row in enumerate(missing_osm_records, 1):
+                print(
+                    f"Conversion OSM {i}/{len(missing_osm_records)} pour '{row.get('nom', 'Lieu inconnu')}'"
+                )
+
+                try:
+                    # Convertir les horaires LLM en format OSM
+                    horaires_json = json.loads(row["horaires_llm"])
+                    # result_osm = converter.convert_to_osm(horaires_json)
+                    osm_periods_dict = converter.convert_to_osm_by_periods(
+                        horaires_json
+                    )
+                    result_osm = " / ".join(
+                        [
+                            f"{period}: {osm_format}"
+                            for period, osm_format in osm_periods_dict.items()
+                        ]
+                    )
+
+                    # Mise à jour en base de données
+                    where_conditions = {"identifiant": row["identifiant"]}
+                    update_values = {"horaires_osm": result_osm}
+                    bdd.update_record(where_conditions, update_values)
+                    print(f"Conversion OSM pour '{row['identifiant']}' sauvegardée")
+
+                except Exception as e:
+                    print(
+                        f"Erreur lors de la conversion OSM pour '{row.get('nom', 'Lieu inconnu')}': {e}"
+                    )
+                    continue
+        else:
+            print(
+                "Tous les enregistrements avec horaires_llm ont déjà leur conversion OSM."
+            )
     else:
         # Chargement du schéma JSON depuis le fichier template
         try:
-            opening_hours_schema = load_opening_hours_schema()
-        except (FileNotFoundError, json.JSONDecodeError) as e:
-            print(f"Erreur lors du chargement du schéma : {e}")
+            with open(SCHEMA_FILE, "r", encoding="utf-8") as f:
+                opening_hours_schema = json.load(f)
+            print(f"Schéma JSON chargé depuis : {SCHEMA_FILE}")
+        except FileNotFoundError:
+            print(f"Fichier de schéma non trouvé : {SCHEMA_FILE}")
+            return
+        except json.JSONDecodeError as e:
+            print(f"Erreur de format JSON dans {SCHEMA_FILE}: {e}")
             return
 
         # Configuration du client LLM basé sur le fournisseur détecté
@@ -282,8 +312,7 @@ def main():
                 temperature=TEMPERATURE,
                 timeout=TIMEOUT,
             )
-            # Utiliser le modèle Pydantic pour Mistral
-            # structured_format = Horaires
+            # Mistral
             structured_format = get_mistral_response_format(schema=opening_hours_schema)
 
         else:
@@ -308,7 +337,16 @@ def main():
                 )
 
                 # Convert to OSM format
-                result_osm = converter.convert_to_osm(json.loads(result))
+                # result_osm = converter.convert_to_osm(json.loads(result))
+                osm_periods_dict = converter.convert_to_osm_by_periods(
+                    json.loads(result)
+                )
+                result_osm = " / ".join(
+                    [
+                        f"{period}: {osm_format}"
+                        for period, osm_format in osm_periods_dict.items()
+                    ]
+                )
 
                 # Mise à jour immédiate en base de données
                 where_conditions = {"identifiant": row["identifiant"]}
@@ -382,6 +420,11 @@ def main():
             fichier_joint=fichier_html,
         )
         print(f"Email envoyé avec le rapport '{fichier_html}'")
+
+        # Suppression du fichier HTML après envoi
+        if fichier_html and os.path.exists(fichier_html):
+            os.remove(fichier_html)
+            print(f"Fichier temporaire '{fichier_html}' supprimé après envoi.")
     except Exception as e:
         print(f"Erreur lors de l'envoi de l'email : {e}")
         return
