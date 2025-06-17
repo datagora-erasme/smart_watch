@@ -2,7 +2,10 @@
 
 import json
 import sqlite3
+from datetime import datetime
 from typing import Dict, List, Optional
+
+from utils.JoursFeries import get_jours_feries
 
 
 class OSMConverter:
@@ -37,6 +40,21 @@ class OSMConverter:
     def format_time_range(self, debut: str, fin: str) -> str:
         """Formate un créneau horaire au format OSM."""
         return f"{debut}-{fin}"
+
+    def jours_feries(self, annee: Optional[int] = None) -> Dict[str, str]:
+        """Récupère les jours fériés pour l'année donnée."""
+        if annee is None:
+            from datetime import datetime
+
+            annee = datetime.now().year
+
+        jours_feries_data = get_jours_feries(annee=annee)
+        if not jours_feries_data:
+            return {}
+
+        # Convertir les jours fériés en format OSM
+        # return {date: "PH" for date in jours_feries_data.keys()}
+        return jours_feries_data
 
     def parse_creneaux(self, creneaux: List[Dict]) -> str:
         """Parse une liste de créneaux horaires."""
@@ -204,6 +222,22 @@ class OSMConverter:
             else:
                 return ""
 
+        # Vérifier si on a des horaires par jours de semaine sans dates spécifiques
+        jours_semaine = [
+            "lundi",
+            "mardi",
+            "mercredi",
+            "jeudi",
+            "vendredi",
+            "samedi",
+            "dimanche",
+        ]
+        if any(jour.lower() in horaires_specifiques for jour in jours_semaine):
+            # Cas spécial : horaires par jour de semaine pour les jours fériés
+            return self._process_jours_feries_par_jour_semaine(
+                jours_data, horaires_specifiques
+            )
+
         # Traiter chaque date spécifique
         osm_parts = []
         dates_avec_source = 0
@@ -273,6 +307,80 @@ class OSMConverter:
             return f"{condition} open"
 
         return ""
+
+    def _process_jours_feries_par_jour_semaine(
+        self, jours_data: Dict, horaires_specifiques: Dict
+    ) -> str:
+        """Traite les jours fériés avec horaires définis par jour de la semaine."""
+
+        # Récupérer les jours fériés de l'année courante
+        jours_feries_data = self.jours_feries()
+        if not jours_feries_data:
+            return ""
+
+        osm_parts = []
+
+        # Pour chaque jour férié, déterminer son jour de la semaine et appliquer les horaires correspondants
+        for date_str, nom_ferie in jours_feries_data.items():
+            try:
+                # Parser la date du jour férié
+                date_obj = datetime.strptime(date_str, "%Y-%m-%d")
+                jour_semaine_num = date_obj.weekday()  # 0=lundi, 6=dimanche
+
+                # Mapping du numéro vers le nom du jour
+                jours_mapping = {
+                    0: "lundi",
+                    1: "mardi",
+                    2: "mercredi",
+                    3: "jeudi",
+                    4: "vendredi",
+                    5: "samedi",
+                    6: "dimanche",
+                }
+
+                jour_nom = jours_mapping[jour_semaine_num]
+
+                # Chercher les horaires pour ce jour de la semaine
+                horaires_jour = None
+                for jour_key, schedule in horaires_specifiques.items():
+                    if jour_key.lower() == jour_nom:
+                        horaires_jour = schedule
+                        break
+
+                if horaires_jour is None:
+                    continue  # Pas d'horaires définis pour ce jour de la semaine
+
+                # Vérifier source_found si c'est un dict
+                if isinstance(horaires_jour, dict):
+                    if not horaires_jour.get("source_found", True):
+                        continue
+
+                # Formatter la date au format OSM
+                date_osm = date_obj.strftime("%Y %b %d")
+
+                # Traiter les horaires selon leur type
+                if isinstance(horaires_jour, dict):
+                    if horaires_jour.get("ouvert", False):
+                        creneaux = horaires_jour.get("creneaux", [])
+                        if creneaux:
+                            horaires_str = self.parse_creneaux(creneaux)
+                            osm_parts.append(f"{date_osm} {horaires_str}")
+                        else:
+                            osm_parts.append(f"{date_osm} open")
+                    else:
+                        osm_parts.append(f"{date_osm} off")
+                elif isinstance(horaires_jour, str):
+                    if horaires_jour.lower() in ["fermé", "ferme", "closed"]:
+                        osm_parts.append(f"{date_osm} off")
+                    else:
+                        osm_parts.append(f"{date_osm} {horaires_jour}")
+
+            except (ValueError, KeyError) as e:
+                if self.debug:
+                    print(f"Erreur lors du traitement du jour férié {date_str}: {e}")
+                continue
+
+        return "; ".join(osm_parts) if osm_parts else ""
 
     def parse_date_to_osm(self, date_desc: str) -> Optional[str]:
         """Parse une description de date en format OSM."""
@@ -533,7 +641,7 @@ def main():
     converter = OSMConverter()
 
     # Test avec base de données
-    db_path = r"C:\Users\beranger\Documents\GitHub\smart_watch\data\alerte_modif_horaire_lieu_unique_devstral.db"
+    db_path = r"C:\Users\beranger\Documents\GitHub\smart_watch\data\alerte_modif_horaire_lieu_devstral.db"
 
     try:
         conn = sqlite3.connect(db_path)
@@ -541,7 +649,7 @@ def main():
 
         # Lire tous les enregistrements avec la colonne horaires_llm
         cursor.execute(
-            "SELECT identifiant, nom, url, horaires_llm FROM alerte_modif_horaire_lieu_unique WHERE horaires_llm IS NOT NULL LIMIT 5"
+            "SELECT identifiant, nom, url, horaires_llm FROM alerte_modif_horaire_lieu WHERE horaires_llm IS NOT NULL LIMIT 5"
         )
         records = cursor.fetchall()
 
