@@ -1,3 +1,6 @@
+from datetime import datetime
+
+
 def get_prompt(row: dict) -> list:
     """
     Construit le prompt pour l'extraction d'horaires d'ouverture avec structure JSON complète.
@@ -8,7 +11,7 @@ def get_prompt(row: dict) -> list:
     Returns:
         list: Liste des messages pour le LLM
     """
-    system_prompt = """Tu es un expert en extraction de périodes et d'horaires d'ouverture et de fermeture pour des lieux publics.
+    system_prompt = f"""Tu es un expert en extraction de périodes et d'horaires d'ouverture et de fermeture pour des lieux publics.
 
 Ton objectif est d'analyser le contenu markdown fourni et d'extraire ces périodes et horaires en utilisant la structure JSON définie.
 
@@ -26,12 +29,13 @@ INSTRUCTIONS IMPORTANTES :
 6. Les jours fériés et les jours spéciaux doivent être identifiés avec des dates précises si disponibles.
 7. Remplis la balise "source_found" avec True si des informations pertinentes (horaires ou fermetures) sont trouvées, avec False uniquement si aucune information pertinente n'est trouvée.
 8. Indique ton niveau de confiance dans "extraction_info.confidence" (0.0 à 1.0).
-9. Réponds UNIQUEMENT avec le JSON, sans texte supplémentaire.
-10. N'invente aucune information, utilise uniquement les données fournies. Si aucun horaire n'est trouvé, n'invente rien et mets "source_found" à False et "confidence" à 0.0.
-11. Si le lieu est fermé de manière permanente, indique-le clairement dans la section "hors_vacances_scolaires".
-12. Si des jours de fermeture sont explicitement précisés, "source_found" doit être mis à True.
-13. Prends en compte les cas où un lieu peut être ouvert seulement une partie de la journée (par exemple, ouvert le matin mais fermé l'après-midi). Assure-toi de bien noter ces différences dans les horaires d'ouverture.
-14. En cas de doublon incohérent dans les horaires (deux ou plusieurs horaires différents pour le même jour), prend un seul horaire, celui qui est le plus proche du lieu indiqué dans "informations du lieu", et met "confidence" à 0.5.
+9. N'invente aucune date. Par exemple, si un jour de l'année est précisé sans année, utilise l'année actuelle : {datetime.now().year}.
+10. Réponds UNIQUEMENT avec le JSON, sans texte supplémentaire.
+11. N'invente aucune information, utilise uniquement les données fournies. Si aucun horaire n'est trouvé, n'invente rien et mets "source_found" à False et "confidence" à 0.0.
+12. Si le lieu est fermé de manière permanente, indique-le clairement dans la section "hors_vacances_scolaires".
+13. Si des jours de fermeture sont explicitement précisés, "source_found" doit être mis à True.
+14. Prends en compte les cas où un lieu peut être ouvert seulement une partie de la journée (par exemple, ouvert le matin mais fermé l'après-midi). Assure-toi de bien noter ces différences dans les horaires d'ouverture.
+15. En cas de doublon incohérent dans les horaires (deux ou plusieurs horaires différents pour le même jour), prend un seul horaire, celui qui est le plus proche du lieu indiqué dans "informations du lieu", et met "confidence" à 0.5.
 
 SOIS PRÉCIS ET NE FAIS PAS D'HALLUCINATIONS."""
 
