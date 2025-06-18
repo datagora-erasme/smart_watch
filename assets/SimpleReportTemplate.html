@@ -39,9 +39,6 @@
         .status-warning { border-left-color: #ffc107; }
         .status-error { border-left-color: #dc3545; }
         .status-unknown { border-left-color: #6c757d; }
-        .http-2xx { color: #28a745; }
-        .http-3xx { color: #ffc107; }
-        .http-4xx, .http-5xx { color: #dc3545; }
         .footer-note {
             margin-top: 20px;
             padding: 10px;
@@ -54,6 +51,13 @@
 <body>
     <h2>{{ titre_rapport }}</h2>
     <p><strong>Rapport généré le :</strong> {{ date_generation }}</p>
+    {% if model_info %}
+    <p style="font-size: 0.9em; opacity: 0.8;">
+        {% if model_info.modele %}Modèle LLM utilisé : {{ model_info.modele }}{% endif %}
+        {% if model_info.base_url %} | URL : {{ model_info.base_url }}{% endif %}
+        {% if model_info.fournisseur and not model_info.base_url %} | Fournisseur : {{ model_info.fournisseur }}{% endif %}
+    </p>
+    {% endif %}
     
     <h3>📊 Statistiques Globales</h3>
     <ul>
@@ -74,15 +78,6 @@
         {% for type_lieu in types_lieu_stats %}
         <li>
             <strong>{{ type_lieu.type }} :</strong> {{ type_lieu.count }} URLs ({{ (type_lieu.count / stats_globales.total_urls * 100)|round(1) }}%)
-        </li>
-        {% endfor %}
-    </ul>
-    
-    <h3>🌐 Codes de Réponse HTTP</h3>
-    <ul>
-        {% for code_http in codes_http_stats %}
-        <li class="{% if code_http.code|string|slice(0,1) == '2' %}http-2xx{% elif code_http.code|string|slice(0,1) == '3' %}http-3xx{% else %}http-4xx{% endif %}">
-            <strong>HTTP {{ code_http.code }} :</strong> {{ code_http.count }} URLs ({{ (code_http.count / stats_globales.total_urls * 100)|round(1) }}%)
         </li>
         {% endfor %}
     </ul>
