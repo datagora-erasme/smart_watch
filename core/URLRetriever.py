@@ -107,7 +107,7 @@ def retrieve_url(
             if "too many redirects" in error_str:
                 row_dict["statut"] = "warning"
                 row_dict["message"] = "too many redirects"
-                row_dict["code_http"] = 20
+                row_dict["code_http"] = 310
                 print(f"⚠️  Warning: Too many redirects for {url}")
                 return row_dict
             elif "CERTIFICATE_VERIFY_FAILED" in error_str:
