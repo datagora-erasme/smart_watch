@@ -40,7 +40,7 @@
           "properties": {
             "hors_vacances_scolaires": {
               "type": "object",
-              "description": "Horaires normaux hors vacances scolaires",
+              "description": "Horaires normaux, hors vacances scolaires",
               "properties": {
                 "source_found": {
                   "type": "boolean",
@@ -85,7 +85,7 @@
             },
             "petites_vacances_scolaires": {
               "type": "object",
-              "description": "Horaires pour les petites vacances scolaires, hors été",
+              "description": "Horaires pour les petites vacances scolaires (Toussaint, Noël, Hiver et Printemps), hors vacances d'été",
               "properties": {
                 "source_found": {
                   "type": "boolean",
@@ -110,7 +110,7 @@
             },
             "jours_feries": {
               "type": "object",
-              "description": "Gestion des jours fériés",
+              "description": "Gestion des jours fériés avec horaires spécifiques ou fermeture exceptionnelle",
               "properties": {
                 "source_found": {
                   "type": "boolean",
@@ -148,7 +148,7 @@
             },
             "jours_speciaux": {
               "type": "object",
-              "description": "Gestion des jours spéciaux avec horaires aménagés",
+              "description": "Gestion des jours spéciaux avec horaires spécifiques ou fermeture exceptionnelle",
               "properties": {
                 "source_found": {
                   "type": "boolean",
@@ -240,7 +240,7 @@
         "source_found": {
           "type": "boolean",
           "default": true,
-          "description": "Indique si ce jour est pris en compte"
+          "description": "Indique si des informations sur les horaires d'ouverture ont été trouvées pour ce jour"
         },
         "ouvert": {
           "type": "boolean",
@@ -251,7 +251,7 @@
           "items": {
             "$ref": "#/definitions/creneau_horaire"
           },
-          "description": "Liste des créneaux d'ouverture"
+          "description": "Liste des créneaux d'ouverture trouvées pour ce jour"
         }
       },
       "additionalProperties": false,
