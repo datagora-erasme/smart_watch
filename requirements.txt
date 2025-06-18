@@ -3,11 +3,9 @@ dotenv
 html_to_markdown
 jinja2
 lxml
-mistralai
 pandas
 polars
 pyarrow
 requests
 sqlalchemy
 urllib3
-datamodel-code-generator
