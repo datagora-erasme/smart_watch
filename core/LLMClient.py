@@ -6,7 +6,6 @@ from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, Union
 
 import requests
-from mistralai import Mistral
 
 
 @dataclass
@@ -183,7 +182,7 @@ def timeout_handler(seconds):
 
 class llm_mistral:
     """
-    Client pour interagir avec l'API Mistral AI en utilisant la librairie officielle.
+    Client pour interagir avec l'API Mistral AI via des requêtes HTTP directes.
     """
 
     def __init__(
@@ -208,33 +207,40 @@ class llm_mistral:
         self.temperature = temperature
         self.random_seed = random_seed
         self.timeout = timeout
+        self.base_url = "https://api.mistral.ai/v1"
 
-        api_key = api_key or os.environ.get("MISTRAL_API_KEY")
+        api_key = api_key or os.environ.get("API_KEY_MISTRAL")
         if not api_key:
             raise ValueError("Clé API Mistral requise (MISTRAL_API_KEY)")
 
-        # Initialiser le client Mistral officiel
-        self.client = Mistral(api_key=api_key)
+        # Configuration de la session requests
+        self.session = requests.Session()
+        self.session.headers.update(
+            {
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {api_key}",
+            }
+        )
 
     def call_llm(
         self,
         messages: List[Union[Dict[str, str], LLMMessage]],
-        response_format: Optional[Dict[str, Any]] = None,
+        tool_params: Optional[Dict[str, Any]] = None,
     ) -> str:
         """
-        Effectue un appel au LLM Mistral.
+        Effectue un appel au LLM Mistral, en utilisant le tool calling pour une sortie structurée.
 
         Args:
-            messages: Liste des messages de la conversation
-            response_format: Format de réponse structuré
+            messages: Liste des messages de la conversation.
+            tool_params: Paramètres pour le tool calling (contenant `tools` et `tool_choice`).
 
         Returns:
-            str: Réponse du LLM
+            str: Réponse du LLM, soit le contenu du message, soit les arguments de l'outil appelé.
 
         Raises:
-            Exception: En cas d'erreur lors de l'appel au LLM
+            Exception: En cas d'erreur lors de l'appel au LLM.
         """
-        # Normaliser les messages
+        # Normaliser les messages en une liste de dictionnaires
         formatted_messages = []
         for msg in messages:
             if isinstance(msg, LLMMessage):
@@ -243,28 +249,39 @@ class llm_mistral:
                 formatted_messages.append(msg)
 
         try:
-            # Préparer les paramètres
-            kwargs = {
+            # Préparer le payload de la requête
+            payload = {
                 "model": self.model,
                 "messages": formatted_messages,
                 "temperature": self.temperature,
                 "random_seed": self.random_seed,
             }
 
-            # Ajouter le format de réponse structuré si fourni
-            if response_format:
-                kwargs["response_format"] = response_format
+            # Ajouter les paramètres de tool calling si fournis
+            if tool_params:
+                payload.update(tool_params)
 
-            # Effectuer l'appel avec gestion manuelle du timeout
-            with timeout_handler(self.timeout):
-                response = self.client.chat.complete(**kwargs)
+            url = f"{self.base_url}/chat/completions"
+            response = self.session.post(url, json=payload, timeout=self.timeout)
+            response.raise_for_status()
 
-            return response.choices[0].message.content
+            response_data = response.json()
+            choice = response_data["choices"][0]
 
-        except TimeoutError:
+            # Vérifier si le modèle a appelé un outil
+            if "tool_calls" in choice["message"] and choice["message"]["tool_calls"]:
+                return choice["message"]["tool_calls"][0]["function"]["arguments"]
+            else:
+                return choice["message"]["content"]
+
+        except requests.exceptions.Timeout:
             raise Exception(f"Timeout après {self.timeout} secondes")
-        except Exception as e:
-            raise Exception(f"Erreur lors de l'appel à Mistral: {e}")
+        except requests.exceptions.ConnectionError:
+            raise Exception(f"Impossible de se connecter à {self.base_url}")
+        except requests.exceptions.HTTPError:
+            raise Exception(f"Erreur HTTP {response.status_code}: {response.text}")
+        except (KeyError, IndexError) as e:
+            raise Exception(f"Structure de réponse inattendue: {e}")
 
     def send_message(
         self,
@@ -325,16 +342,29 @@ def get_structured_response_format(
     }
 
 
-def get_mistral_response_format(schema: Dict[str, Any]) -> Dict[str, Any]:
+def get_mistral_tool_format(
+    schema: Dict[str, Any], function_name: str = "extract_info"
+) -> Dict[str, Any]:
     """
-    Formate un schéma pour les structured outputs Mistral.
+    Crée le dictionnaire pour le tool calling avec Mistral, forçant une réponse structurée.
 
     Args:
-        schema: Le schéma JSON
+        schema: Le schéma JSON que la réponse doit suivre.
+        function_name: Le nom de la fonction fictive à appeler.
 
     Returns:
-        Dict: Format de réponse pour l'API Mistral
+        Dict: Dictionnaire contenant les `tools` et `tool_choice` pour l'API Mistral.
     """
     return {
-        "type": "json_object",
+        "tools": [
+            {
+                "type": "function",
+                "function": {
+                    "name": function_name,
+                    "description": "Extraire les informations structurées du texte en suivant le schéma JSON.",
+                    "parameters": schema,
+                },
+            }
+        ],
+        "tool_choice": "any",  # Force le modèle à appeler l'outil
     }

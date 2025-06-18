@@ -1,58 +1,50 @@
+import json
 from datetime import datetime
 
 
-def get_prompt(row: dict) -> list:
+def get_prompt(row: dict, json_schema: dict = None) -> list:
     """
-    Construit le prompt pour l'extraction d'horaires d'ouverture avec structure JSON complète.
+    Construit le prompt pour l'extraction d'horaires d'ouverture.
+    Le schéma JSON est injecté dans le prompt pour guider le LLM.
 
     Args:
-        row: Dictionnaire contenant les informations du lieu
+        row: Dictionnaire contenant les informations du lieu.
+        json_schema: Le schéma JSON à suivre pour la réponse.
 
     Returns:
-        list: Liste des messages pour le LLM
+        list: Liste des messages pour le LLM.
     """
-    system_prompt = f"""Tu es un expert en extraction de périodes et d'horaires d'ouverture et de fermeture pour des lieux publics.
+    system_prompt = f"""Tu es un expert en extraction d'horaires d'ouverture à partir de texte.
+Ton objectif est d'analyser le contenu markdown fourni et d'extraire les horaires en respectant rigoureusement la structure JSON fournie.
+- N'invente aucune information. Si une information n'est pas présente, ne la mets pas dans le JSON.
+- Si aucun horaire ou jour de fermeture n'est trouvé, retourne un JSON avec "ouvert" à false et des listes de créneaux vides.
+- L'année de référence pour les dates sans année est {datetime.now().year}.
+- Réponds UNIQUEMENT avec le JSON, sans aucun texte ou formatage supplémentaire.
+"""
 
-Ton objectif est d'analyser le contenu markdown fourni et d'extraire ces périodes et horaires en utilisant la structure JSON définie.
+    # Construction du prompt utilisateur
+    user_prompt_content = f"""Analyse le contenu markdown suivant pour le lieu "{row.get("nom", "Non renseigné")}" et extrais les horaires d'ouverture.
 
-INSTRUCTIONS IMPORTANTES :
-1. Analyse minutieusement le contenu pour extraire toutes les informations en lien avec l'ouverture ou la fermeture du lieu indiqué dans "informations du lieu".
-2. Extrait les périodes d'ouverture avec les horaires correspondants, et indique-les dans chaque section appropriée du JSON.
-3. Extrait les périodes de fermeture éventuelles, y compris les jours fériés, les jours spéciaux et les vacances scolaires, et indique-les dans chaque section appropriée du JSON.
-4. Les périodes et horaires trouvés doivent être classés dans une des sections suivantes :
-   - hors_vacances_scolaires
-   - vacances_scolaires_ete
-   - petites_vacances_scolaires
-   - jours_feries
-   - jours_speciaux
-5. La période "vacances_scolaires_ete" désigne les vacances d'été (juillet-août), "petites_vacances_scolaires" désigne les vacances de Toussaint, Noël, Hiver et Printemps.
-6. Les jours fériés et les jours spéciaux doivent être identifiés avec des dates précises si disponibles.
-7. Remplis la balise "source_found" avec True si des informations pertinentes (horaires ou fermetures) sont trouvées, avec False uniquement si aucune information pertinente n'est trouvée.
-8. Indique ton niveau de confiance dans "extraction_info.confidence" (0.0 à 1.0).
-9. N'invente aucune date. Par exemple, si un jour de l'année est précisé sans année, utilise l'année actuelle : {datetime.now().year}.
-10. Réponds UNIQUEMENT avec le JSON, sans texte supplémentaire.
-11. N'invente aucune information, utilise uniquement les données fournies. Si aucun horaire n'est trouvé, n'invente rien et mets "source_found" à False et "confidence" à 0.0.
-12. Si le lieu est fermé de manière permanente, indique-le clairement dans la section "hors_vacances_scolaires".
-13. Si des jours de fermeture sont explicitement précisés, "source_found" doit être mis à True.
-14. Prends en compte les cas où un lieu peut être ouvert seulement une partie de la journée (par exemple, ouvert le matin mais fermé l'après-midi). Assure-toi de bien noter ces différences dans les horaires d'ouverture.
-15. En cas de doublon incohérent dans les horaires (deux ou plusieurs horaires différents pour le même jour), prend un seul horaire, celui qui est le plus proche du lieu indiqué dans "informations du lieu", et met "confidence" à 0.5.
-
-SOIS PRÉCIS ET NE FAIS PAS D'HALLUCINATIONS."""
-
-    user_prompt = f"""Analyse le contenu suivant pour extraire les périodes et horaires d'ouverture et de fermeture :
-
-INFORMATIONS DU LIEU :
-- Identifiant : {row.get("identifiant", "Non renseigné")}
-- Nom : {row.get("nom", "Non renseigné")}
-- Type de lieu : {row.get("type_lieu", "Non renseigné")}
-- URL : {row.get("url", "Non renseignée")}
-
-CONTENU À ANALYSER :
+### Markdown à analyser
+```markdown
 {row.get("markdown", "Aucun contenu disponible")}
+```
+"""
 
-Réponds uniquement avec la structure JSON demandée."""
+    # Ajout du schéma JSON au prompt si fourni
+    if json_schema:
+        schema_str = json.dumps(json_schema, indent=2, ensure_ascii=False)
+        user_prompt_content += f"""
+### Format de sortie JSON attendu
+Réponds en utilisant exclusivement le format JSON suivant. Respecte scrupuleusement ce schéma :
+```json
+{schema_str}
+```
+"""
+    else:
+        user_prompt_content += "\nRéponds uniquement avec la structure JSON demandée."
 
     return [
         {"role": "system", "content": system_prompt},
-        {"role": "user", "content": user_prompt},
+        {"role": "user", "content": user_prompt_content},
     ]
