@@ -21,10 +21,6 @@
               "type": "string",
               "description": "Type de lieu (Mairie, École, Piscine, Médiathèque, etc.)"
             },
-            "url": {
-              "type": "string",
-              "description": "URL de la page analysée"
-            },
             "timezone": {
               "type": "string",
               "description": "Fuseau horaire",
@@ -131,13 +127,18 @@
                 },
                 "horaires_specifiques": {
                   "type": "object",
-                  "patternProperties": {
-                    ".*": {
-                      "oneOf": [
-                        { "type": "string" },
-                        { "$ref": "#/definitions/horaires_jour" }
-                      ]
-                    }
+                  "description": "Dictionnaire des horaires spécifiques. La clé est le nom du jour (ex: '2024-12-25') et la valeur est soit la chaîne 'ferme', soit un objet d'horaires.",
+                  "additionalProperties": {
+                    "oneOf": [
+                      {
+                        "type": "string",
+                        "enum": ["ferme"],
+                        "description": "Indique que le lieu est fermé ce jour-là."
+                      },
+                      {
+                        "$ref": "#/definitions/horaires_jour"
+                      }
+                    ]
                   }
                 },
                 "description": {
@@ -165,13 +166,18 @@
                 },
                 "horaires_specifiques": {
                   "type": "object",
-                  "patternProperties": {
-                    ".*": {
-                      "oneOf": [
-                        { "type": "string" },
-                        { "$ref": "#/definitions/horaires_jour" }
-                      ]
-                    }
+                  "description": "Dictionnaire des horaires spécifiques. La clé est le nom du jour (ex: '2024-12-25') et la valeur est soit la chaîne 'ferme', soit un objet d'horaires.",
+                  "additionalProperties": {
+                    "oneOf": [
+                      {
+                        "type": "string",
+                        "enum": ["ferme"],
+                        "description": "Indique que le lieu est fermé ce jour-là."
+                      },
+                      {
+                        "$ref": "#/definitions/horaires_jour"
+                      }
+                    ]
                   }
                 },
                 "description": {
@@ -192,12 +198,6 @@
               "type": "boolean",
               "description": "Indique si des horaires ont été trouvés dans le contenu"
             },
-            "confidence": {
-              "type": "number",
-              "minimum": 0,
-              "maximum": 1,
-              "description": "Niveau de confiance de l'extraction (0-1)"
-            },
             "notes": {
               "type": "string",
               "description": "Notes sur l'extraction ou particularités"
@@ -216,18 +216,17 @@
     }
   },
   "required": ["horaires_ouverture"],
+  "additionalProperties": false,
   "definitions": {
     "creneau_horaire": {
       "type": "object",
       "properties": {
         "debut": {
           "type": "string",
-          "pattern": "^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$",
           "description": "Heure de début au format HH:MM"
         },
         "fin": {
           "type": "string",
-          "pattern": "^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$",
           "description": "Heure de fin au format HH:MM"
         }
       },
@@ -282,7 +281,8 @@
           "$ref": "#/definitions/horaires_jour"
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "required": ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"]
     }
   }
 }
