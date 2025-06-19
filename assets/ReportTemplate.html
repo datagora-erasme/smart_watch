@@ -384,22 +384,22 @@
                             </td>
                             <td class="details-col">{{ url.message if url.message else '-' }}</td>
                             <td class="json-cell">
-                                {% if url.horaires_llm %}
+                                {% if url.llm_horaires_json %}
                                 <div class="horaires-actions">
-                                    <div class="json-preview">{{ (url.horaires_llm|string)[:50] }}{% if (url.horaires_llm|string)|length > 50 %}...{% endif %}</div>
-                                    <button class="btn view-btn" onclick="showJsonModal('{{ url.identifiant or inconnu }}', '{{ url.horaires_llm|tojson }}')">👁️ Voir</button>
+                                    <div class="json-preview">{{ (url.llm_horaires_json|string)[:50] }}{% if (url.llm_horaires_json|string)|length > 50 %}...{% endif %}</div>
+                                    <button class="btn view-btn" onclick="showJsonModal('{{ url.identifiant or inconnu }}', '{{ url.llm_horaires_json|tojson }}')">👁️ Voir</button>
                                 </div>
                                 {% else %}
                                 <span style="color: #999; font-style: italic;">-</span>
                                 {% endif %}
                             </td>
                             <td class="osm-cell">
-                                {% if url.horaires_osm %}
+                                {% if url.llm_horaires_osm %}
                                 <div class="horaires-actions">
-                                    <div class="osm-preview" title="{{ url.horaires_osm }}">
-                                        {{ url.horaires_osm[:60] }}{% if url.horaires_osm|length > 60 %}...{% endif %}
+                                    <div class="osm-preview" title="{{ url.llm_horaires_osm }}">
+                                        {{ (url.llm_horaires_osm|string)[:60] }}{% if (url.llm_horaires_osm|string)|length > 60 %}...{% endif %}
                                     </div>
-                                    <button class="btn view-btn" onclick="showOsmModal('{{ url.identifiant or inconnu }}', '{{ url.horaires_osm|e }}')">👁️ Voir OSM</button>
+                                    <button class="btn view-btn" onclick="showOsmModal('{{ url.identifiant or inconnu }}', '{{ url.llm_horaires_osm|e }}')">👁️ Voir OSM</button>
                                 </div>
                                 {% else %}
                                 <span style="color: #999; font-style: italic;">-</span>

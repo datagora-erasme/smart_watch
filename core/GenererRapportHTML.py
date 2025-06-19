@@ -80,7 +80,21 @@ def generer_rapport_html(
 
     # Extraction des données depuis la base de données
     uri = f"sqlite:///{db_file}"
-    query = f"SELECT type_lieu, identifiant, nom, url, statut, message, horaires_llm, horaires_osm, code_http FROM {table_name}"
+    query = """
+    SELECT 
+        l.type_lieu, 
+        l.identifiant, 
+        l.nom, 
+        l.url, 
+        r.statut_url as statut, 
+        r.message_url as message, 
+        r.llm_horaires_json, 
+        r.llm_horaires_osm, 
+        r.code_http
+    FROM resultats_extraction r
+    JOIN lieux l ON r.lieu_id = l.identifiant
+    ORDER BY l.identifiant
+    """
     df = pl.read_database_uri(query=query, uri=uri, engine="connectorx")
 
     # Convertir le DataFrame Polars en dictionnaire pour faciliter le traitement
@@ -88,18 +102,18 @@ def generer_rapport_html(
 
     # Traiter les données JSON
     for url in donnees_urls:
-        # Convertir horaires_llm en objet Python si c'est une chaîne JSON
-        if "horaires_llm" in url and url["horaires_llm"]:
+        # Convertir llm_horaires_json en objet Python si c'est une chaîne JSON
+        if "llm_horaires_json" in url and url["llm_horaires_json"]:
             try:
-                if isinstance(url["horaires_llm"], str):
-                    url["horaires_llm"] = json.loads(url["horaires_llm"])
+                if isinstance(url["llm_horaires_json"], str):
+                    url["llm_horaires_json"] = json.loads(url["llm_horaires_json"])
             except json.JSONDecodeError:
                 # Si ce n'est pas un JSON valide, le garder comme une chaîne
                 pass
 
         # S'assurer que les champs requis existent avec des valeurs par défaut
-        url.setdefault("horaires_llm", None)
-        url.setdefault("horaires_osm", None)
+        url.setdefault("llm_horaires_json", None)
+        url.setdefault("llm_horaires_osm", None)
         url.setdefault("code_http", 0)
         url.setdefault("message", "")
         url.setdefault("url", "")
@@ -158,7 +172,7 @@ def generer_rapport_html(
     # Reclassifier les données selon le nouveau critère : présence d'horaires OSM
     for url in donnees_urls:
         # Reclassifier basé uniquement sur la présence d'horaires OSM
-        if url.get("horaires_osm") and url["horaires_osm"].strip():
+        if url.get("llm_horaires_osm") and url["llm_horaires_osm"].strip():
             url["statut"] = "ok"
         else:
             url["statut"] = "error"
@@ -247,7 +261,7 @@ def generer_rapport_html(
 if __name__ == "__main__":
     from pathlib import Path
 
-    SCRIPT_DIR = Path(r"C:\Users\name\Documents\GitHub\smart_watch\data")
+    SCRIPT_DIR = Path(r"C:\Users\beranger\Documents\GitHub\smart_watch\data")
     DATA_DIR = SCRIPT_DIR
     NOM_FIC = "alerte_modif_horaire_lieu_devstral"
     DB_FILE = DATA_DIR / f"{NOM_FIC}.db"
