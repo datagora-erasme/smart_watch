@@ -38,6 +38,7 @@ class TimeSlot:
 
     start: str
     end: str
+    occurence: Optional[Union[int, List[int]]] = None  # Ajout du champ occurence
 
     def __post_init__(self):
         if not self._validate_time_format(self.start):
@@ -58,7 +59,7 @@ class TimeSlot:
             return False
 
     def to_osm_format(self) -> str:
-        """Convertit en format de plage horaire OSM."""
+        """Convertit en format de plage horaire OSM (sans jour)."""
         return f"{self.start}-{self.end}"
 
 
@@ -208,35 +209,41 @@ class OSMConverter:
         for slot in slots:
             try:
                 if isinstance(slot, dict) and "debut" in slot and "fin" in slot:
-                    time_slot = TimeSlot(slot["debut"], slot["fin"])
+                    occurence = slot.get("occurence")
+                    # Si occurence est une liste, la garder, sinon None ou int
+                    if isinstance(occurence, list):
+                        occur = occurence
+                    elif occurence is not None:
+                        occur = [occurence]
+                    else:
+                        occur = None
+                    time_slot = TimeSlot(slot["debut"], slot["fin"], occurence=occur)
                     processed_slots.append(time_slot)
             except ValueError:
                 continue
 
         return processed_slots
 
-    def _process_daily_hours(self, day_data: Dict) -> Optional[str]:
-        """Traite les horaires pour un jour donné."""
+    def _process_daily_hours(self, day_data: Dict) -> Optional[List[Dict]]:
+        """Traite les horaires pour un jour donné. Retourne une liste de dicts {occurence, slot_str}."""
         if not isinstance(day_data, dict):
             return None
 
-        # Vérifie si une source a été trouvée
         if not day_data.get("source_found", True):
             return None
 
         time_slots = day_data.get("creneaux", [])
 
-        # Toujours prioriser les créneaux horaires lorsqu'ils sont présents
+        results = []
         if time_slots:
-            # Traite les créneaux horaires
             processed_slots = self._process_time_slots(time_slots)
+            for slot in processed_slots:
+                # slot.occurence est soit None, soit une liste d'entiers
+                results.append(
+                    {"occurence": slot.occurence, "slot_str": slot.to_osm_format()}
+                )
+            return results if results else None
 
-            if processed_slots:
-                # Convertit au format OSM
-                osm_slots = [slot.to_osm_format() for slot in processed_slots]
-                return ",".join(osm_slots)
-
-        # Repli sur le statut 'ouvert' si aucun créneau horaire
         is_open = day_data.get("ouvert", False)
         if not is_open:
             return None
@@ -244,11 +251,12 @@ class OSMConverter:
         return None
 
     def _process_weekly_schedule(self, schedule: Dict) -> str:
-        """Traite les données d'horaires hebdomadaires."""
+        """Traite les données d'horaires hebdomadaires avec gestion des occurences."""
         if not isinstance(schedule, dict):
             return ""
 
-        daily_schedules = {}
+        # Pour chaque jour, on collecte une liste de tuples (occurence, slot_str)
+        day_slots = {}
 
         for day_name, day_data in schedule.items():
             osm_day = self.day_mapper.normalize_day(day_name)
@@ -258,47 +266,52 @@ class OSMConverter:
             if not day_data.get("source_found", True):
                 continue
 
-            daily_hours = self._process_daily_hours(day_data)
-            daily_schedules[osm_day] = daily_hours
+            slot_infos = self._process_daily_hours(day_data)
+            if slot_infos:
+                day_slots[osm_day] = slot_infos
 
-        # Regroupe les jours consécutifs avec le même horaire
-        osm_parts = self._group_consecutive_days(daily_schedules)
+        # On va regrouper par (occurence, slot_str) pour tous les jours
+        # Structure : {(tuple_occurence, slot_str): [osm_day, ...]}
+        slot_groups = {}
+        for osm_day, slot_infos in day_slots.items():
+            for slot_info in slot_infos:
+                occur = slot_info["occurence"]
+                slot_str = slot_info["slot_str"]
+                # Pour la clé, tuple(occur) ou None
+                occur_key = (
+                    tuple(occur)
+                    if isinstance(occur, list)
+                    else (occur,)
+                    if occur is not None
+                    else None
+                )
+                group_key = (occur_key, slot_str)
+                if group_key not in slot_groups:
+                    slot_groups[group_key] = []
+                slot_groups[group_key].append(osm_day)
 
-        return "; ".join(osm_parts)
-
-    def _group_consecutive_days(self, schedule: Dict[str, Optional[str]]) -> List[str]:
-        """Regroupe les jours consécutifs avec les mêmes horaires."""
-        if not schedule:
-            return []
-
-        # Regroupe par horaire
-        schedule_groups = {}
-        closed_days = []
-
-        for day in self.day_mapper.DAY_ORDER:
-            if day in schedule:
-                day_schedule = schedule[day]
-                if day_schedule is None:
-                    closed_days.append(day)
-                else:
-                    if day_schedule not in schedule_groups:
-                        schedule_groups[day_schedule] = []
-                    schedule_groups[day_schedule].append(day)
-
+        # Génération du format OSM
         osm_parts = []
+        for (occur_key, slot_str), days in slot_groups.items():
+            day_ranges = self.day_mapper.compress_day_ranges(days)
+            # Ajout du [n] ou [n,m] si occurence
+            if occur_key and any(x is not None for x in occur_key):
+                occur_list = [str(x) for x in occur_key if x is not None]
+                occur_part = f"[{','.join(occur_list)}]"
+            else:
+                occur_part = ""
+            osm_parts.append(f"{day_ranges}{occur_part} {slot_str}")
 
-        # Traite les jours fermés
+        # Gestion des jours fermés (off)
+        closed_days = []
+        for day in self.day_mapper.DAY_ORDER:
+            if day not in day_slots:
+                closed_days.append(day)
         if closed_days:
             day_ranges = self.day_mapper.compress_day_ranges(closed_days)
             osm_parts.append(f"{day_ranges} off")
 
-        # Traite les jours ouverts
-        for schedule_str, days in schedule_groups.items():
-            if schedule_str:  # Ignore les horaires vides
-                day_ranges = self.day_mapper.compress_day_ranges(days)
-                osm_parts.append(f"{day_ranges} {schedule_str}")
-
-        return osm_parts
+        return "; ".join(osm_parts)
 
     def _process_special_days(self, special_data: Dict) -> str:
         """Traite les jours spéciaux (jours fériés, exceptions)."""
@@ -520,17 +533,17 @@ def main():
         with sqlite3.connect(db_path) as conn:
             cursor = conn.cursor()
             cursor.execute("""
-                SELECT identifiant, nom, url, horaires_llm 
+                SELECT identifiant, nom, url, llm_horaires_json 
                 FROM alerte_modif_horaire_lieu_unique 
-                WHERE horaires_llm IS NOT NULL 
+                WHERE llm_horaires_json IS NOT NULL 
                 LIMIT 5
             """)
 
             for record in cursor.fetchall():
-                item_id, nom, url, horaires_llm = record
+                item_id, nom, url, llm_horaires_json = record
 
                 try:
-                    horaires_data = json.loads(horaires_llm)
+                    horaires_data = json.loads(llm_horaires_json)
                     result = converter.convert_to_osm(horaires_data)
 
                     print(f"\nID : {item_id}")

@@ -19,6 +19,7 @@ Ton objectif est d'analyser le contenu markdown fourni et d'extraire les horaire
 - N'invente aucune information. Si une information n'est pas présente, ne la mets pas dans le JSON.
 - Si aucun horaire ou jour de fermeture n'est trouvé, retourne un JSON avec "ouvert" à false et des listes de créneaux vides.
 - L'année de référence pour les dates sans année est {datetime.now().year}.
+- les occurences spécifiques (1er lundi du mois, 1er et 3eme mardi du mois, dernier samedi du mois, etc.) doivent être récupérées dans le champ "occurences" du JSON.
 - Réponds UNIQUEMENT avec le JSON, sans aucun texte ou formatage supplémentaire.
 """
 

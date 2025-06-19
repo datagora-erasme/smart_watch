@@ -228,6 +228,22 @@
         "fin": {
           "type": "string",
           "description": "Heure de fin au format HH:MM"
+        },
+        "occurence": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "description": "Numéro d'occurence du jour dans le mois (ex: 1 pour le premier lundi du mois)"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "description": "Liste des occurrences du jour dans le mois (ex: [1,3] pour le premier et le troisième lundi du mois)"
+            }
+          ],
+          "description": "Optionnel. Si absent, le créneau s'applique à tous les jours concernés."
         }
       },
       "additionalProperties": false,
