@@ -6,267 +6,114 @@
     <title>{{ titre_rapport }}</title>
     <style>
         /* Reset et base */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: system-ui, -apple-system, sans-serif; 
-            line-height: 1.6; 
-            color: #333; 
-            background: #f5f5f5; 
-        }
-        .container { 
-            max-width: 1400px; /* Augmenter la largeur pour plus d'espace */
-            margin: 0 auto; 
-            padding: 20px; 
-            background: white; 
-            box-shadow: 0 0 10px rgba(0,0,0,0.1); 
-        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:system-ui,sans-serif;line-height:1.6;color:#333;background:#f5f5f5}
+        .container{max-width:1400px;margin:0 auto;padding:20px;background:white;box-shadow:0 0 10px rgba(0,0,0,0.1)}
 
         /* Header */
-        .header { 
-            text-align: center; 
-            margin-bottom: 30px; 
-            padding: 20px; 
-            background: linear-gradient(135deg, #667eea, #764ba2); 
-            color: white; 
-            border-radius: 8px; 
-        }
-        .header h1 { font-size: 2.2em; margin-bottom: 10px; }
+        .header{text-align:center;margin-bottom:30px;padding:20px;background:linear-gradient(135deg,#667eea,#764ba2);color:white;border-radius:8px}
+        .header h1{font-size:2.2em;margin-bottom:10px}
 
         /* Onglets */
-        .tabs { border-bottom: 2px solid #e0e0e0; margin-bottom: 20px; }
-        .tab-buttons { display: flex; flex-wrap: wrap; }
-        .tab-button { 
-            background: #f8f9fa; 
-            border: none; 
-            padding: 12px 20px; 
-            cursor: pointer; 
-            border-top: 3px solid transparent; 
-            border-right: 1px solid #e0e0e0; 
-            text-decoration: none; 
-            color: inherit; 
-            transition: all 0.3s; 
-        }
-        .tab-button:hover { background: #e9ecef; }
-        .tab-button.active { 
-            background: white; 
-            border-top-color: #667eea; 
-            border-bottom: 2px solid white; 
-            margin-bottom: -2px; 
-            font-weight: 600; 
-        }
-        .tab-content { display: none; animation: fadeIn 0.3s; }
-        .tab-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .tabs{border-bottom:2px solid #e0e0e0;margin-bottom:20px}
+        .tab-buttons{display:flex;flex-wrap:wrap}
+        .tab-button{background:#f8f9fa;border:none;padding:12px 20px;cursor:pointer;border-top:3px solid transparent;text-decoration:none;color:inherit;transition:all 0.3s}
+        .tab-button:hover{background:#e9ecef}
+        .tab-button.active{background:white;border-top-color:#667eea;font-weight:600}
+        .tab-content{display:none;animation:fadeIn 0.3s}
+        .tab-content.active{display:block}
+        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
-        /* Tableaux et cartes */
-        .table-container { 
-            overflow-x: auto; 
-            margin: 20px 0; 
-            border-radius: 8px; 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
-            min-width: 1200px; /* Largeur minimale pour forcer la barre de défilement si nécessaire */
-        }
-        table { width: 100%; border-collapse: collapse; background: white; min-width: 1200px; }
-        th, td { 
-            padding: 8px 12px; 
-            text-align: left; 
-            border-bottom: 1px solid #e0e0e0; 
-            white-space: nowrap; 
-        }
-        th { background: #f8f9fa; font-weight: 600; position: sticky; top: 0; font-size: 13px; }
-        tr:hover { background: #f8f9fa; }
+        /* Tableaux */
+        .table-container{overflow-x:auto;margin:20px 0;border-radius:8px;box-shadow:0 2px 4px rgba(0,0,0,0.1)}
+        table{width:100%;border-collapse:collapse;background:white;min-width:1200px}
+        th,td{padding:8px 12px;text-align:left;border-bottom:1px solid #e0e0e0;white-space:nowrap}
+        th{background:#f8f9fa;font-weight:600;position:sticky;top:0;font-size:13px}
+        tr:hover{background:#f8f9fa}
 
-        /* Badges de statut */
-        .status-badge { 
-            padding: 4px 8px; 
-            border-radius: 12px; 
-            font-size: 11px; 
-            font-weight: 600; 
-            text-transform: uppercase; 
-        }
-        .status-success { background: #d4edda; color: #155724; }
-        .status-warning { background: #fff3cd; color: #856404; }
-        .status-error { background: #f8d7da; color: #721c24; }
-        .status-unknown { background: #e2e3e5; color: #495057; }
+        /* Badges et boutons unifiés */
+        .badge{padding:4px 8px;border-radius:12px;font-size:11px;font-weight:600;text-transform:uppercase}
+        .badge.success{background:#d4edda;color:#155724}
+        .badge.error{background:#f8d7da;color:#721c24}
+        .btn{border:none;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;margin:2px;background:#17a2b8;color:white}
+        .btn:hover{background:#138496}
+
+        /* Aperçus unifiés */
+        .preview{border-radius:4px;padding:6px;font-family:monospace;font-size:11px;overflow:hidden;word-wrap:break-word;white-space:pre-wrap;width:180px}
+        .preview.gl{background:#e8f5e8;border:1px solid #c3e6c3}
+        .preview.llm{background:#e8f5e8;border:1px solid #c3e6c3}
+        .preview.comparison{background:#f0f8ff;border:1px solid #cce7ff;width:200px}
 
         /* Graphiques */
-        .chart-container { margin: 20px 0; }
-        .chart-bar { 
-            display: flex; 
-            align-items: center; 
-            margin: 8px 0; 
-            padding: 8px; 
-            background: #f8f9fa; 
-            border-radius: 4px; 
-        }
-        .chart-label { min-width: 100px; font-weight: 500; }
-        .chart-progress { 
-            flex: 1; 
-            height: 20px; 
-            background: #e9ecef; 
-            border-radius: 10px; 
-            margin: 0 15px; 
-            overflow: hidden; 
-        }
-        .chart-fill { height: 100%; border-radius: 10px; transition: width 0.8s; }
-        .chart-value { min-width: 40px; text-align: right; font-weight: 600; }
+        .chart-bar{display:flex;align-items:center;margin:8px 0;padding:8px;background:#f8f9fa;border-radius:4px}
+        .chart-label{min-width:100px;font-weight:500}
+        .chart-progress{flex:1;height:20px;background:#e9ecef;border-radius:10px;margin:0 15px;overflow:hidden}
+        .chart-fill{height:100%;border-radius:10px;transition:width 0.8s}
+        .chart-value{min-width:40px;text-align:right;font-weight:600}
 
-        /* Tri et actions */
-        .sortable { cursor: pointer; user-select: none; }
-        .sortable:hover { background-color: #dee2e6; }
-        .sortable::after { content: '↕️'; font-size: 0.8em; margin-left: 5px; opacity: 0.5; }
-        .sortable.asc::after { content: '↑'; opacity: 1; }
-        .sortable.desc::after { content: '↓'; opacity: 1; }
-
-        /* Boutons */
-        .btn { 
-            border: none; 
-            padding: 4px 8px; 
-            border-radius: 4px; 
-            cursor: pointer; 
-            font-size: 11px; 
-            text-decoration: none; 
-            display: inline-block; 
-            margin: 2px; 
-        }
-        .download-btn { background: #667eea; color: white; }
-        .download-btn:hover { background: #5a6fd8; }
-        .download-btn.json { background: #28a745; }
-        .download-btn.json:hover { background: #218838; }
-        .view-btn { background: #17a2b8; color: white; }
-        .view-btn:hover { background: #138496; }
-
-        /* JSON et liens */
-        .json-preview { 
-            background: #f8f9fa; 
-            border: 1px solid #e9ecef; 
-            border-radius: 4px; 
-            padding: 6px; 
-            font-family: monospace; 
-            font-size: 11px; 
-            max-height: 80px; 
-            overflow-y: auto; 
-            overflow-x: hidden; 
-            width: 200px; 
-            word-wrap: break-word; 
-            white-space: pre-wrap; 
-        }
-        .osm-preview { 
-            background: #e8f5e8; 
-            border: 1px solid #c3e6c3; 
-            border-radius: 4px; 
-            padding: 6px; 
-            font-family: monospace; 
-            font-size: 11px; 
-            max-height: none; /* Supprimer la limite de hauteur */
-            overflow: hidden; /* Supprimer tout défilement */
-            word-wrap: break-word; 
-            white-space: pre-wrap; 
-            width: 180px; 
-        }
-
-        /* URL links styling */
-        .url-link { 
-            color: #667eea; 
-            text-decoration: none; 
-            word-break: break-all; 
-            display: block; 
-            white-space: normal; 
-        }
-        .url-link:hover { text-decoration: underline; }
-
-        /* Colonnes spécifiques avec application forcée aux cellules */
-        .type-lieu-col, td:nth-child(1) { width: 100px !important; min-width: 100px !important; max-width: 100px !important; }
-        .identifiant-col, td:nth-child(2) { width: 120px !important; min-width: 120px !important; max-width: 120px !important; }
-        .nom-col, td:nth-child(3) { width: 120px !important; min-width: 120px !important; max-width: 120px !important; word-wrap: break-word; white-space: normal; }
-        .url-col, td:nth-child(4) { width: 150px !important; min-width: 150px !important; max-width: 150px !important; word-wrap: break-word; white-space: normal; }
-        .code-http-col, td:nth-child(5) { width: 80px !important; min-width: 80px !important; max-width: 80px !important; }
-        .details-col, td:nth-child(6) { width: 120px !important; min-width: 120px !important; max-width: 120px !important; word-wrap: break-word; white-space: normal; }
-        .json-cell, td:nth-child(7) { width: 200px !important; min-width: 200px !important; max-width: 200px !important; white-space: normal; }
-        .osm-cell, td:nth-child(8) { width: 180px !important; min-width: 180px !important; max-width: 180px !important; white-space: normal; }
-
-        /* Forcer la largeur des colonnes dans le tbody */
-        tbody td:nth-child(1) { width: 100px; max-width: 100px; }
-        tbody td:nth-child(2) { width: 120px; max-width: 120px; }
-        tbody td:nth-child(3) { width: 120px; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: normal; word-wrap: break-word; }
-        tbody td:nth-child(4) { width: 150px; max-width: 150px; overflow: hidden; white-space: normal; word-wrap: break-word; }
-        tbody td:nth-child(5) { width: 80px; max-width: 80px; }
-        tbody td:nth-child(6) { width: 120px; max-width: 120px; overflow: hidden; white-space: normal; word-wrap: break-word; }
-        tbody td:nth-child(7) { width: 200px; max-width: 200px; }
-        tbody td:nth-child(8) { width: 180px; max-width: 180px; }
+        /* Colonnes */
+        .col-type{width:100px!important}
+        .col-id{width:90px!important}
+        .col-name{width:180px!important;white-space:normal;word-wrap:break-word}
+        .col-http{width:80px!important}
+        .col-details{width:120px!important;white-space:normal;word-wrap:break-word}
+        .col-gl,.col-llm{width:180px!important;white-space:normal}
+        .col-comparison{width:200px!important;white-space:normal}
 
         /* Modal */
-        .modal { 
-            display: none; 
-            position: fixed; 
-            z-index: 1000; 
-            left: 0; 
-            top: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: rgba(0,0,0,0.5); 
-        }
-        .modal-content { 
-            background: white; 
-            margin: 5% auto; 
-            padding: 20px; 
-            border-radius: 8px; 
-            width: 80%; 
-            max-width: 800px; 
-            max-height: 80%; 
-            overflow-y: auto; 
-        }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .close { color: #aaa; font-size: 28px; font-weight: bold; cursor: pointer; }
-        .close:hover { color: black; }
-        .json-display { 
-            background: #f8f9fa; 
-            border: 1px solid #e9ecef; 
-            border-radius: 4px; 
-            padding: 15px; 
-            font-family: monospace; 
-            white-space: pre-wrap; 
-            overflow-x: auto; 
-        }
-        .osm-display { 
-            background: #f8f9fa; 
-            border: 1px solid #e9ecef; 
-            border-radius: 4px; 
-            padding: 15px; 
-            font-family: monospace; 
-            white-space: pre-wrap; 
-            overflow-x: auto; 
-        }
+        .modal{display:none;position:fixed;z-index:1000;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.5)}
+        .modal-content{background:white;margin:5% auto;padding:20px;border-radius:8px;width:80%;max-width:800px;max-height:80%;overflow-y:auto}
+        .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+        .close{color:#aaa;font-size:28px;font-weight:bold;cursor:pointer}
+        .close:hover{color:black}
+        .content-display{background:#f8f9fa;border:1px solid #e9ecef;border-radius:4px;padding:15px;font-family:monospace;white-space:pre-wrap}
 
         /* Responsive */
-        @media (max-width: 1200px) {
-            .container { 
-                padding: 10px; 
-                max-width: 100%;
-                overflow-x: auto;
-            }
-            .table-container {
-                min-width: 1000px;
-            }
-            table {
-                min-width: 1000px;
-            }
+        @media (max-width:768px){
+            .container{padding:10px}
+            .tab-button{padding:10px 15px;font-size:13px}
+            .header h1{font-size:1.8em}
+            table{min-width:800px}
         }
-        
-        @media (max-width: 768px) {
-            .container { padding: 10px; }
-            .tab-button { padding: 10px 15px; font-size: 13px; }
-            .header h1 { font-size: 1.8em; }
-            .nom-col, td:nth-child(3) { width: 100px !important; min-width: 100px !important; max-width: 100px !important; }
-            .url-col, td:nth-child(4) { width: 120px !important; min-width: 120px !important; max-width: 120px !important; }
-            .json-cell, td:nth-child(7) { min-width: 150px; max-width: 170px; width: 150px; }
-            .osm-cell, td:nth-child(8) { min-width: 130px; max-width: 150px; width: 130px; }
-            .table-container {
-                min-width: 800px;
-            }
-            table {
-                min-width: 800px;
-            }
+
+        /* Table de résumé exception */
+        #resume .table-container{min-width:initial}
+        #resume table{min-width:initial}
+
+        /* Style des headers triables */
+        th[onclick] { 
+            cursor: pointer; 
+            user-select: none; 
+            position: relative;
+            padding-right: 20px;
+        }
+        th[onclick]:hover { 
+            background: #dee2e6; 
+        }
+        th[onclick]:after { 
+            content: '↕️'; 
+            position: absolute; 
+            right: 5px; 
+            font-size: 0.8em; 
+            opacity: 0.5; 
+        }
+        th.asc:after { 
+            content: '↑'; 
+            opacity: 1; 
+        }
+        th.desc:after { 
+            content: '↓'; 
+            opacity: 1; 
+        }
+
+        /* Style pour les liens URL */
+        .url-link {
+            color: #667eea;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .url-link:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -275,18 +122,17 @@
         <div class="header">
             <h1>{{ titre_rapport }}</h1>
             <p>Généré le {{ date_generation }} | {{ stats_globales.total_urls }} URLs analysées</p>
-            {% if model_info %}
-            <p style="font-size: 0.9em; opacity: 0.8;">
-                {% if model_info.modele %}Modèle: {{ model_info.modele }}{% endif %}
-                {% if model_info.base_url %} | URL: {{ model_info.base_url }}{% endif %}
-                {% if model_info.fournisseur and not model_info.base_url %} | Fournisseur: {{ model_info.fournisseur }}{% endif %}
+            {% if model_info and model_info.modele %}
+            <p style="font-size:0.9em;opacity:0.8">
+                Modèle: {{ model_info.modele }}
+                {% if model_info.base_url %} | {{ model_info.base_url }}{% endif %}
             </p>
             {% endif %}
         </div>
 
         <div class="tabs">
             <div class="tab-buttons">
-                <a href="#resume" class="tab-button active" data-target="resume">📊 Résumé Global</a>
+                <a href="#resume" class="tab-button active" data-target="resume">📊 Résumé ({{ stats_globales.total_urls }})</a>
                 {% for statut in statuts_disponibles %}
                 <a href="#{{ statut.code }}" class="tab-button" data-target="{{ statut.code }}">
                     {{ statut.emoji }} {{ statut.nom }} ({{ statut.count }})
@@ -296,16 +142,14 @@
         </div>
 
         <div id="resume" class="tab-content active">
-            <h3>📋 Récapitulatif par statut</h3>
+            <h3>📋 Récapitulatif</h3>
             <div class="table-container">
                 <table>
-                    <thead>
-                        <tr><th>Statut</th><th>Nombre d'URLs</th><th>Pourcentage</th><th>Description</th></tr>
-                    </thead>
+                    <thead><tr><th>Statut</th><th>Nombre</th><th>%</th><th>Description</th></tr></thead>
                     <tbody>
                         {% for statut in statuts_disponibles %}
                         <tr>
-                            <td><span class="status-badge status-{{ statut.type }}">{{ statut.emoji }} {{ statut.nom }}</span></td>
+                            <td><span class="badge {{ statut.type }}">{{ statut.emoji }} {{ statut.nom }}</span></td>
                             <td>{{ statut.count }}</td>
                             <td>{{ (statut.count / stats_globales.total_urls * 100)|round(1) }}%</td>
                             <td>{{ statut.description }}</td>
@@ -315,26 +159,27 @@
                 </table>
             </div>
             
-            <h3>📍 Répartition par types de lieu</h3>
+            <h3>📍 Types de lieu</h3>
             <div class="chart-container">
                 {% for type_lieu in types_lieu_stats %}
                 <div class="chart-bar">
                     <div class="chart-label">{{ type_lieu.type }}</div>
                     <div class="chart-progress">
-                        <div class="chart-fill" data-width="{{ (type_lieu.count / stats_globales.total_urls * 100)|round(1) }}" style="background-color: #667eea;"></div>
+                        <div class="chart-fill" data-width="{{ (type_lieu.count / stats_globales.total_urls * 100)|round(1) }}" style="background:#667eea"></div>
                     </div>
                     <div class="chart-value">{{ type_lieu.count }}</div>
                 </div>
                 {% endfor %}
             </div>
 
-            <h3>🔍 Répartition par codes HTTP</h3>
+            <h3>🔍 Codes HTTP</h3>
             <div class="chart-container">
                 {% for code_http in codes_http_stats %}
                 <div class="chart-bar">
                     <div class="chart-label">{{ code_http.code }}</div>
                     <div class="chart-progress">
-                        <div class="chart-fill" data-width="{{ (code_http.count / stats_globales.total_urls * 100)|round(1) }}" data-color="{% if code_http.code >= 200 and code_http.code < 300 %}#28a745{% elif code_http.code >= 300 and code_http.code < 400 %}#ffc107{% elif code_http.code >= 400 %}#dc3545{% else %}#6c757d{% endif %}"></div>
+                        <div class="chart-fill" data-width="{{ (code_http.count / stats_globales.total_urls * 100)|round(1) }}" 
+                             data-color="{% if code_http.code >= 200 and code_http.code < 300 %}#28a745{% elif code_http.code >= 400 %}#dc3545{% else %}#ffc107{% endif %}"></div>
                     </div>
                     <div class="chart-value">{{ code_http.count }}</div>
                 </div>
@@ -344,22 +189,22 @@
 
         {% for statut in statuts_disponibles %}
         <div id="{{ statut.code }}" class="tab-content">
-            <h2>{{ statut.emoji }} {{ statut.nom }} ({{ statut.count }} URLs)</h2>
-            <p style="margin-bottom: 20px; color: #666;">{{ statut.description }}</p>
+            <h2>{{ statut.emoji }} {{ statut.nom }} ({{ statut.count }})</h2>
+            <p style="margin-bottom:20px;color:#666">{{ statut.description }}</p>
             
             {% if statut.urls %}
             <div class="table-container">
                 <table>
                     <thead>
                         <tr>
-                            <th class="sortable type-lieu-col" onclick="sortTable(this, 0, 'string')">Type de Lieu</th>
-                            <th class="sortable identifiant-col" onclick="sortTable(this, 1, 'string')">Identifiant</th>
-                            <th class="sortable nom-col" onclick="sortTable(this, 2, 'string')">Nom</th>
-                            <th class="sortable url-col" onclick="sortTable(this, 3, 'string')">URL</th>
-                            <th class="sortable code-http-col" onclick="sortTable(this, 4, 'number')">Code HTTP</th>
-                            <th class="details-col">Détails</th>
-                            <th class="json-cell">Horaires LLM</th>
-                            <th class="osm-cell">Horaires OSM</th>
+                            <th onclick="sortTable(this,0,'string')">Type</th>
+                            <th onclick="sortTable(this,1,'string')">ID</th>
+                            <th onclick="sortTable(this,2,'string')">Nom</th>
+                            <th onclick="sortTable(this,3,'number')">HTTP</th>
+                            <th onclick="sortTable(this,4,'string')">Détails</th>
+                            <th>Horaires GL</th>
+                            <th>Horaires LLM</th>
+                            <th>Comparaison</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -367,297 +212,166 @@
                         <tr>
                             <td>{{ url.type_lieu or '-' }}</td>
                             <td>{{ url.identifiant or '-' }}</td>
-                            <td class="nom-col">{{ url.nom or '-' }}</td>
                             <td>
                                 {% if url.url %}
-                                <a href="{{ url.url }}" target="_blank" class="url-link">
-                                    {{ url.url[:35] }}{% if url.url|length > 35 %}...{% endif %}
-                                </a>
+                                <span class="url-link" data-href="{{ url.url }}">{{ url.nom or '-' }}</span>
                                 {% else %}
-                                <span style="color: #999; font-style: italic;">URL non renseignée</span>
+                                {{ url.nom or '-' }}
                                 {% endif %}
                             </td>
-                            <td>
-                                <span class="status-badge {% if url.code_http >= 200 and url.code_http < 300 %}status-success{% else %}status-error{% endif %}">
-                                    {{ url.code_http }}
-                                </span>
-                            </td>
-                            <td class="details-col">{{ url.message if url.message else '-' }}</td>
-                            <td class="json-cell">
-                                {% if url.llm_horaires_json %}
-                                <div class="horaires-actions">
-                                    <div class="json-preview">{{ (url.llm_horaires_json|string)[:50] }}{% if (url.llm_horaires_json|string)|length > 50 %}...{% endif %}</div>
-                                    <button class="btn view-btn" onclick="showJsonModal('{{ url.identifiant or inconnu }}', '{{ url.llm_horaires_json|tojson }}')">👁️ Voir</button>
-                                </div>
-                                {% else %}
-                                <span style="color: #999; font-style: italic;">-</span>
-                                {% endif %}
-                            </td>
-                            <td class="osm-cell">
-                                {% if url.llm_horaires_osm %}
-                                <div class="horaires-actions">
-                                    <div class="osm-preview" title="{{ url.llm_horaires_osm }}">
-                                        {{ (url.llm_horaires_osm|string)[:60] }}{% if (url.llm_horaires_osm|string)|length > 60 %}...{% endif %}
-                                    </div>
-                                    <button class="btn view-btn" onclick="showOsmModal('{{ url.identifiant or inconnu }}', '{{ url.llm_horaires_osm|e }}')">👁️ Voir OSM</button>
-                                </div>
-                                {% else %}
-                                <span style="color: #999; font-style: italic;">-</span>
-                                {% endif %}
-                            </td>
+                            <td><span class="badge {% if url.code_http >= 200 and url.code_http < 300 %}success{% else %}error{% endif %}">{{ url.code_http }}</span></td>
+                            <td>{{ url.message or '-' }}</td>
+                            <td>{% if url.horaires_data_gl %}
+                                <div class="preview gl">{{ url.horaires_data_gl[:60] }}{% if url.horaires_data_gl|length > 60 %}...{% endif %}</div>
+                                <button class="btn view-btn" data-title="Horaires GL - {{ url.identifiant }}" data-content="{{ url.horaires_data_gl|e }}">👁️ Voir</button>
+                                {% else %}-{% endif %}</td>
+                            <td>{% if url.llm_horaires_osm %}
+                                <div class="preview llm">{{ url.llm_horaires_osm[:60] }}{% if url.llm_horaires_osm|length > 60 %}...{% endif %}</div>
+                                <button class="btn view-btn" data-title="Horaires LLM - {{ url.identifiant }}" data-content="{{ url.llm_horaires_osm|e }}">👁️ Voir</button>
+                                {% else %}-{% endif %}</td>
+                            <td>{% if url.comparaison_horaires %}
+                                <div class="preview comparison">{{ url.comparaison_horaires[:80] }}{% if url.comparaison_horaires|length > 80 %}...{% endif %}</div>
+                                <button class="btn view-btn" data-title="Comparaison - {{ url.identifiant }}" data-content="{{ url.comparaison_horaires|e }}">👁️ Voir</button>
+                                {% else %}-{% endif %}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
             {% else %}
-            <p style="text-align: center; color: #666; padding: 40px;">Aucune URL trouvée pour ce statut.</p>
+            <p style="text-align:center;color:#666;padding:40px">Aucune URL pour ce statut.</p>
             {% endif %}
         </div>
         {% endfor %}
     </div>
 
-    <div id="jsonModal" class="modal">
+    <!-- Modal unique optimisé -->
+    <div id="modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 id="modalTitle">Horaires LLM</h3>
+                <h3 id="modalTitle"></h3>
                 <div>
-                    <button class="btn download-btn" onclick="copyJsonToClipboard()" style="margin-right: 10px;">📋 Copier</button>
-                    <span class="close" onclick="closeJsonModal()">&times;</span>
+                    <button class="btn" onclick="copyContent()">📋 Copier</button>
+                    <span class="close" onclick="closeModal()">&times;</span>
                 </div>
             </div>
-            <div id="jsonContent" class="json-display"></div>
-        </div>
-    </div>
-
-    <div id="osmModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="osmModalTitle">Horaires OSM</h3>
-                <div>
-                    <button class="btn download-btn" onclick="copyOsmToClipboard()" style="margin-right: 10px;">📋 Copier</button>
-                    <span class="close" onclick="closeOsmModal()">&times;</span>
-                </div>
-            </div>
-            <div id="osmContent" class="osm-display"></div>
+            <div id="modalContent" class="content-display"></div>
         </div>
     </div>
 
     <script>
-        // Gestionnaire d'onglets simplifié
+        // Variables globales
+        const modal = document.getElementById('modal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalContent = document.getElementById('modalContent');
+        let currentContent = '';
+
+        // Gestion des onglets optimisée
         document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('.tab-button').forEach(link => {
-                link.addEventListener('click', e => {
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.addEventListener('click', e => {
                     e.preventDefault();
-                    const targetId = link.dataset.target;
+                    const target = btn.dataset.target;
                     
-                    // Désactiver tous les onglets
-                    document.querySelectorAll('.tab-content, .tab-button').forEach(el => el.classList.remove('active'));
-                    
-                    // Activer l'onglet sélectionné
-                    document.getElementById(targetId)?.classList.add('active');
-                    link.classList.add('active');
+                    // Mise à jour état
+                    document.querySelectorAll('.tab-button, .tab-content').forEach(el => el.classList.remove('active'));
+                    btn.classList.add('active');
+                    document.getElementById(target)?.classList.add('active');
                 });
             });
-            
-            // Activation par hash URL
-            if (window.location.hash) {
-                const tabId = window.location.hash.substring(1);
-                const tabLink = document.querySelector(`[data-target="${tabId}"]`);
-                if (tabLink) tabLink.click();
-            }
-        });
 
-        // Animation des barres
-        window.addEventListener('load', () => {
-            document.querySelectorAll('.chart-fill').forEach(fill => {
-                const width = fill.dataset.width + '%';
-                const color = fill.dataset.color;
-                fill.style.width = '0%';
-                if (color) fill.style.backgroundColor = color;
-                setTimeout(() => fill.style.width = width, 100);
+            // Animation des graphiques
+            setTimeout(() => {
+                document.querySelectorAll('.chart-fill').forEach(fill => {
+                    const width = fill.dataset.width + '%';
+                    const color = fill.dataset.color;
+                    if (color) fill.style.backgroundColor = color;
+                    fill.style.width = width;
+                });
+            }, 100);
+
+            // Gestionnaire d'événements unifié pour les clics
+            document.body.addEventListener('click', function(event) {
+                // Gère les boutons "Voir" pour les modaux
+                const viewBtn = event.target.closest('.view-btn');
+                if (viewBtn) {
+                    const title = viewBtn.dataset.title;
+                    const content = viewBtn.dataset.content;
+                    showModal(title, content);
+                    return; // Empêche d'autres actions
+                }
+
+                // Gère les liens URL
+                const urlLink = event.target.closest('.url-link');
+                if (urlLink) {
+                    const url = urlLink.dataset.href;
+                    if (url) {
+                        window.open(url, '_blank', 'noopener,noreferrer');
+                    }
+                }
             });
         });
 
-        // Tri des tableaux
-        function sortTable(header, columnIndex, dataType) {
+        // Tri de tableau amélioré
+        function sortTable(header, colIndex, dataType) {
             const table = header.closest('table');
-            const tbody = table.querySelector('tbody');
-            const rows = Array.from(tbody.querySelectorAll('tr'));
-            const isAsc = header.classList.contains('asc');
+            const rows = Array.from(table.querySelectorAll('tbody tr'));
+            const isAsc = !header.classList.contains('asc');
             
-            table.querySelectorAll('.sortable').forEach(h => h.classList.remove('asc', 'desc'));
-            header.classList.add(isAsc ? 'desc' : 'asc');
+            // Reset tous les headers
+            table.querySelectorAll('th').forEach(h => h.classList.remove('asc', 'desc'));
+            header.classList.add(isAsc ? 'asc' : 'desc');
             
             rows.sort((a, b) => {
-                const aVal = a.cells[columnIndex].textContent.trim();
-                const bVal = b.cells[columnIndex].textContent.trim();
-                let comparison = dataType === 'number' ? 
-                    (parseFloat(aVal) || 0) - (parseFloat(bVal) || 0) : 
-                    aVal.localeCompare(bVal);
-                return isAsc ? -comparison : comparison;
+                const aVal = a.cells[colIndex].textContent.trim();
+                const bVal = b.cells[colIndex].textContent.trim();
+                
+                let comparison = 0;
+                if (dataType === 'number') {
+                    const aNum = parseFloat(aVal) || 0;
+                    const bNum = parseFloat(bVal) || 0;
+                    comparison = aNum - bNum;
+                } else {
+                    comparison = aVal.localeCompare(bVal, 'fr', { numeric: true });
+                }
+                
+                return isAsc ? comparison : -comparison;
             });
             
+            const tbody = table.querySelector('tbody');
             rows.forEach(row => tbody.appendChild(row));
         }
 
-        // Fonctions JSON
-        function showJsonModal(identifier, jsonBase64) {
+        // Modal unifié
+        function showModal(title, content) {
+            modalTitle.textContent = title;
+            modalContent.textContent = content || 'Pas de contenu disponible';
+            currentContent = content || '';
+            modal.style.display = 'block';
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        async function copyContent() {
             try {
-                const modal = document.getElementById('jsonModal');
-                document.getElementById('modalTitle').textContent = `Horaires LLM - ${identifier}`;
-                
-                // Décoder le base64 et s'assurer que l'UTF-8 est correctement géré
-                const jsonString = decodeURIComponent(escape(atob(jsonBase64)));
-                const jsonData = JSON.parse(jsonString);
-                document.getElementById('jsonContent').textContent = JSON.stringify(jsonData, null, 2);
-                modal.style.display = 'block';
-            } catch (error) {
-                console.error("Erreur affichage JSON:", error);
-                alert("Erreur lors de l'affichage des données JSON.");
+                await navigator.clipboard.writeText(currentContent);
+                const btn = event.target;
+                const orig = btn.textContent;
+                btn.textContent = '✅ Copié !';
+                btn.style.background = '#28a745';
+                setTimeout(() => {
+                    btn.textContent = orig;
+                    btn.style.background = '';
+                }, 2000);
+            } catch {
+                alert('Impossible de copier');
             }
         }
 
-        function closeJsonModal() {
-            document.getElementById('jsonModal').style.display = 'none';
-        }
-
-        // Fermer modal en cliquant à l'extérieur
-        window.onclick = event => {
-            const modal = document.getElementById('jsonModal');
-            if (event.target === modal) closeJsonModal();
-        }
-
-        // Fonction pour copier le JSON dans le presse-papiers
-        function copyJsonToClipboard() {
-            try {
-                const jsonContent = document.getElementById('jsonContent').textContent;
-                const button = event.target;
-                const originalText = button.textContent;
-                
-                // Créer un élément textarea temporaire
-                const textArea = document.createElement("textarea");
-                textArea.value = jsonContent;
-                textArea.style.position = "fixed";
-                textArea.style.left = "-999999px";
-                textArea.style.top = "-999999px";
-                document.body.appendChild(textArea);
-                textArea.focus();
-                textArea.select();
-                
-                // Utiliser execCommand pour copier
-                const successful = document.execCommand('copy');
-                document.body.removeChild(textArea);
-                
-                if (successful) {
-                    // Afficher le feedback de succès
-                    button.textContent = '✅ Copié !';
-                    button.style.background = '#28a745';
-                    setTimeout(() => {
-                        button.textContent = originalText;
-                        button.style.background = '#667eea';
-                    }, 2000);
-                } else {
-                    alert('Impossible de copier dans le presse-papiers');
-                }
-            } catch (error) {
-                console.error("Erreur copie JSON:", error);
-                alert("Erreur lors de la copie du JSON.");
-            }
-        }
-
-        // Fonctions OSM
-        function showOsmModal(identifier, osmString) {
-            try {
-                console.log('showOsmModal appelé avec:', identifier, osmString); // Debug
-                
-                const modal = document.getElementById('osmModal');
-                const titleElement = document.getElementById('osmModalTitle');
-                const contentElement = document.getElementById('osmContent');
-                
-                if (!modal || !titleElement || !contentElement) {
-                    console.error('Éléments de modal OSM non trouvés');
-                    alert('Erreur: Éléments de modal non trouvés');
-                    return;
-                }
-                
-                titleElement.textContent = `Horaires OSM - ${identifier}`;
-                contentElement.textContent = osmString || 'Pas d\'horaires OSM disponibles';
-                modal.style.display = 'block';
-                
-                console.log('Modal OSM affiché avec succès'); // Debug
-            } catch (error) {
-                console.error('Erreur lors de l\'ouverture du modal OSM:', error);
-                alert('Erreur lors de l\'affichage des horaires OSM: ' + error.message);
-            }
-        }
-
-        function closeOsmModal() {
-            try {
-                const modal = document.getElementById('osmModal');
-                if (modal) {
-                    modal.style.display = 'none';
-                    console.log('Modal OSM fermé'); // Debug
-                }
-            } catch (error) {
-                console.error('Erreur lors de la fermeture du modal OSM:', error);
-            }
-        }
-
-        // Fermer les modals en cliquant à l'extérieur
-        window.onclick = function(event) {
-            try {
-                const jsonModal = document.getElementById('jsonModal');
-                const osmModal = document.getElementById('osmModal');
-                
-                if (event.target === jsonModal) {
-                    closeJsonModal();
-                }
-                if (event.target === osmModal) {
-                    closeOsmModal();
-                }
-            } catch (error) {
-                console.error('Erreur lors du clic sur la fenêtre:', error);
-            }
-        }
-
-        // Fonction pour copier l'OSM dans le presse-papiers
-        function copyOsmToClipboard() {
-            try {
-                const osmContent = document.getElementById('osmContent').textContent;
-                const button = event.target;
-                const originalText = button.textContent;
-                
-                // Créer un élément textarea temporaire
-                const textArea = document.createElement("textarea");
-                textArea.value = osmContent;
-                textArea.style.position = "fixed";
-                textArea.style.left = "-999999px";
-                textArea.style.top = "-999999px";
-                document.body.appendChild(textArea);
-                textArea.focus();
-                textArea.select();
-                
-                // Utiliser execCommand pour copier
-                const successful = document.execCommand('copy');
-                document.body.removeChild(textArea);
-                
-                if (successful) {
-                    // Afficher le feedback de succès
-                    button.textContent = '✅ Copié !';
-                    button.style.background = '#28a745';
-                    setTimeout(() => {
-                        button.textContent = originalText;
-                        button.style.background = '#667eea';
-                    }, 2000);
-                } else {
-                    alert('Impossible de copier dans le presse-papiers');
-                }
-            } catch (error) {
-                console.error("Erreur copie OSM:", error);
-                alert("Erreur lors de la copie de l'OSM.");
-            }
-        }
+        // Fermeture modal par clic extérieur
+        window.onclick = e => e.target === modal && closeModal();
     </script>
 </body>
 </html>
