@@ -17,7 +17,10 @@ class Lieux(Base):
     nom = Column(Text)
     type_lieu = Column(Text)
     url = Column(Text)
-    horaires_data_gl = Column(Text)  # Horaires OSM de référence
+    horaires_data_gl = Column(
+        Text
+    )  # Horaires OSM de référence, pris sur data.grandlyon.com
+    horaires_data_gl_json = Column(Text)
 
 
 class Executions(Base):
@@ -28,7 +31,7 @@ class Executions(Base):
     llm_modele = Column(Text)
     llm_fournisseur = Column(Text)
     llm_url = Column(Text)
-    llm_consommation_totale = Column(Text)
+    llm_consommation_execution = Column(Text)
 
 
 class ResultatsExtraction(Base):
@@ -47,3 +50,4 @@ class ResultatsExtraction(Base):
     llm_consommation_requete = Column(Text)
     llm_horaires_json = Column(Text)
     llm_horaires_osm = Column(Text)
+    comparaison_horaires = Column(Text)
