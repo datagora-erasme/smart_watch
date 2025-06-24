@@ -1,32 +1,39 @@
 """
-Convertisseur du format OSM opening_hours vers le format JSON personnalisé.
-Opération inverse de CustomJsonToOSM.
+Convertisseur d'horaires d'ouverture depuis le format OpenStreetMap
+vers le format JSON personnalisé (../assets/opening_hours_schema.json).
+
+Ce module fournit des fonctionnalités complètes pour convertir une spécification
+opening_hours d'OSM en format JSON personnalisé.
 """
 
+import json
+import os
 import re
-from typing import Dict, List, Optional
+from pathlib import Path
+from typing import Dict, List, Optional, Union
 
-from assets.model import (
-    CreneauHoraire,
-    ExtractionInfo,
-    Horaires,
-    HorairesHebdomadaires,
-    HorairesJour,
-    HorairesOuverture,
-    HorsVacancesScolaires,
-    JoursFeries,
-    JoursSpeciaux,
-    Metadata,
-    Periodes,
-    PetitesVacancesScolaires,
-    VacancesScolairesEte,
+from dotenv import load_dotenv
+
+# sys.path.append(str(Path(__file__).parent.parent))
+from core.Logger import LogOutput, create_logger
+
+# Charger la variable d'environnement pour le nom du fichier log
+load_dotenv()
+csv_name = os.getenv("CSV_URL_HORAIRES")
+
+# Initialize logger for this module
+logger = create_logger(
+    outputs=[LogOutput.CONSOLE, LogOutput.FILE],
+    log_file=Path(__file__).parent.parent / "data" / "logs" / f"{csv_name}.log",
+    module_name="OSMToCustomJson",
 )
 
 
-class OSMToCustomJsonConverter:
-    """Convertisseur du format OSM opening_hours vers le format JSON personnalisé."""
+class OSMParser:
+    """Parser principal pour les horaires OSM."""
 
-    OSM_DAY_MAPPING = {
+    # Mapping des jours OSM vers français
+    DAY_MAPPING = {
         "Mo": "lundi",
         "Tu": "mardi",
         "We": "mercredi",
@@ -36,288 +43,444 @@ class OSMToCustomJsonConverter:
         "Su": "dimanche",
     }
 
-    def __init__(self):
-        """Initialise le convertisseur."""
-        self.debug = False
+    # Ordre des jours pour les plages
+    DAY_ORDER = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"]
 
-    def parse_time_range(self, time_range: str) -> Optional[CreneauHoraire]:
-        """Parse un créneau horaire du format OSM (HH:MM-HH:MM)."""
-        pattern = r"(\d{1,2}:\d{2})-(\d{1,2}:\d{2})"
-        match = re.match(pattern, time_range.strip())
-
-        if match:
-            debut, fin = match.groups()
-            return CreneauHoraire(debut=debut, fin=fin)
-        return None
-
-    def parse_time_ranges(self, time_ranges: str) -> List[CreneauHoraire]:
-        """Parse plusieurs créneaux séparés par des virgules."""
-        if not time_ranges or time_ranges.strip() in ["off", "closed"]:
-            return []
-
-        creneaux = []
-        for time_range in time_ranges.split(","):
-            creneau = self.parse_time_range(time_range.strip())
-            if creneau:
-                creneaux.append(creneau)
-
-        return creneaux
-
-    def expand_day_range(self, day_range: str) -> List[str]:
-        """Étend une plage de jours (Mo-Fr) en liste de jours individuels."""
-        if "-" in day_range:
-            start_day, end_day = day_range.split("-")
-            day_order = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"]
-
-            try:
-                start_idx = day_order.index(start_day)
-                end_idx = day_order.index(end_day)
-
-                if start_idx <= end_idx:
-                    return day_order[start_idx : end_idx + 1]
-                else:
-                    # Gestion du cas Sa-Mo (weekend qui traverse la semaine)
-                    return day_order[start_idx:] + day_order[: end_idx + 1]
-            except ValueError:
-                return [day_range]  # Si les jours ne sont pas reconnus
-        else:
-            return [day_range]
-
-    def parse_day_specification(self, day_spec: str) -> List[str]:
-        """Parse une spécification de jours (Mo,Tu-Fr,Sa)."""
-        days = []
-        for part in day_spec.split(","):
-            days.extend(self.expand_day_range(part.strip()))
-        return days
-
-    def parse_osm_rule(self, osm_rule: str) -> Dict:
-        """Parse une règle OSM individuelle."""
-        osm_rule = osm_rule.strip()
-
-        # Pattern pour une règle standard: jours + horaires
-        pattern = r"^([A-Za-z,-]+)\s+(.+)$"
-        match = re.match(pattern, osm_rule)
-
-        if not match:
-            return {}
-
-        day_spec, time_spec = match.groups()
-
-        # Vérifier si c'est fermé
-        is_closed = time_spec.strip() in ["off", "closed"]
-
-        # Parser les jours
-        days = self.parse_day_specification(day_spec)
-
-        # Parser les horaires
-        if is_closed:
-            creneaux = []
-            ouvert = False
-        else:
-            creneaux = self.parse_time_ranges(time_spec)
-            ouvert = len(creneaux) > 0
-
-        return {"days": days, "ouvert": ouvert, "creneaux": creneaux}
+    # Mapping des mois OSM vers numéros
+    MONTH_MAPPING = {
+        "Jan": "01",
+        "Feb": "02",
+        "Mar": "03",
+        "Apr": "04",
+        "May": "05",
+        "Jun": "06",
+        "Jul": "07",
+        "Aug": "08",
+        "Sep": "09",
+        "Oct": "10",
+        "Nov": "11",
+        "Dec": "12",
+    }
 
     def parse_osm_string(self, osm_string: str) -> Dict:
         """Parse une chaîne OSM complète."""
-        if not osm_string or osm_string.strip() in ["closed", ""]:
-            return {}
+        logger.debug(f"Parsing OSM string: {osm_string[:100]}...")
 
-        # Séparer les règles par ";"
+        # Sépare les règles par point-virgule
         rules = [rule.strip() for rule in osm_string.split(";") if rule.strip()]
 
-        parsed_rules = []
+        # Sépare les règles normales des règles de dates spécifiques
+        normal_rules = []
+        date_rules = []
+
         for rule in rules:
-            # Ignorer les conditions pour l'instant (SH, PH, etc.)
-            if '"' in rule:
-                # Retirer les conditions entre guillemets
-                rule = re.sub(r'\s*"[^"]*"', "", rule).strip()
+            if self._is_date_rule(rule):
+                date_rules.append(rule)
+            else:
+                normal_rules.append(rule)
 
-            parsed_rule = self.parse_osm_rule(rule)
-            if parsed_rule:
-                parsed_rules.append(parsed_rule)
+        # Parse les règles normales (horaires réguliers et spéciaux)
+        weekly_data = self._parse_weekly_rules(normal_rules)
 
-        return {"rules": parsed_rules}
+        # Parse les règles de dates (jours fériés/spéciaux)
+        special_dates = self._parse_date_rules(date_rules)
 
-    def create_horaires_hebdomadaires(self, parsed_osm: Dict) -> HorairesHebdomadaires:
-        """Crée un objet HorairesHebdomadaires à partir des règles OSM parsées."""
-        # Initialiser tous les jours
-        horaires_data = {}
+        return {
+            "weekly_schedule": weekly_data.get("weekly_schedule", {}),
+            "special_schedules": weekly_data.get("special_schedules", {}),
+            "special_dates": special_dates,
+        }
 
-        # Traiter chaque règle
-        if "rules" in parsed_osm:
-            for rule in parsed_osm["rules"]:
-                for osm_day in rule["days"]:
-                    french_day = self.OSM_DAY_MAPPING.get(osm_day)
-                    if french_day:
-                        horaires_data[french_day] = HorairesJour(
-                            source_found=True,
-                            ouvert=rule["ouvert"],
-                            creneaux=rule["creneaux"],
+    def _is_date_rule(self, rule: str) -> bool:
+        """Vérifie si une règle contient une date spécifique."""
+        # Cherche le pattern YYYY MMM DD
+        return bool(re.search(r"\b\d{4}\s+[A-Za-z]{3}\s+\d{1,2}\b", rule))
+
+    def _parse_weekly_rules(self, rules: List[str]) -> Dict:
+        """Parse les règles d'horaires hebdomadaires."""
+        schedule = self._create_empty_weekly_schedule()
+        special_schedules = {}
+
+        for rule in rules:
+            logger.debug(f"Parsing weekly rule: {rule}")
+
+            # Sépare les parties jours et horaires
+            # Format: "Tu-Fr 16:00-19:00, We,Sa 10:00-13:00,14:00-18:00"
+            parts = rule.split(" ", 1)
+            if len(parts) < 2:
+                continue
+
+            day_part = parts[0]
+            time_part = parts[1]
+
+            # Parse les jours et occurrences
+            days_info = self._parse_days_with_occurrence(day_part)
+
+            # Parse les horaires
+            if time_part.lower() in ["off", "closed"]:
+                # Jour fermé
+                for day_info in days_info:
+                    day = day_info["day"]
+                    occurrence = day_info.get("occurrence")
+
+                    if occurrence:
+                        # Crée un horaire spécial fermé avec occurrence
+                        if day not in special_schedules:
+                            special_schedules[day] = {
+                                "source_found": True,
+                                "ouvert": False,
+                                "creneaux": [
+                                    {
+                                        "debut": "00:00",
+                                        "fin": "00:00",
+                                        "occurence": occurrence,
+                                    }
+                                ],
+                            }
+                    elif day in schedule:
+                        # Horaire régulier fermé
+                        schedule[day]["source_found"] = True
+                        schedule[day]["ouvert"] = False
+            else:
+                # Parse les créneaux horaires
+                time_slots = self._parse_time_slots(time_part)
+                for day_info in days_info:
+                    day = day_info["day"]
+                    occurrence = day_info.get("occurrence")
+
+                    if occurrence:
+                        # Horaire spécial avec occurrence
+                        if day not in special_schedules:
+                            special_schedules[day] = {
+                                "source_found": True,
+                                "ouvert": True,
+                                "creneaux": [],
+                            }
+
+                        # Ajoute les créneaux avec occurrence
+                        for slot in time_slots:
+                            slot_with_occurrence = slot.copy()
+                            slot_with_occurrence["occurence"] = occurrence
+                            special_schedules[day]["creneaux"].append(
+                                slot_with_occurrence
+                            )
+
+                        special_schedules[day]["ouvert"] = (
+                            len(special_schedules[day]["creneaux"]) > 0
                         )
+                    elif day in schedule:
+                        # Horaire régulier
+                        schedule[day]["source_found"] = True
+                        schedule[day]["ouvert"] = True
 
-        return HorairesHebdomadaires(**horaires_data)
+                        # Ajoute les créneaux
+                        for slot in time_slots:
+                            schedule[day]["creneaux"].append(slot.copy())
 
-    def convert_osm_to_custom_json(
+        return {"weekly_schedule": schedule, "special_schedules": special_schedules}
+
+    def _create_special_key(self, day: str, occurrence) -> str:
+        """Crée une clé pour les horaires spéciaux avec occurrence."""
+        if isinstance(occurrence, list):
+            occ_str = ",".join(map(str, occurrence))
+            return f"{day}[{occ_str}]"
+        else:
+            return f"{day}[{occurrence}]"
+
+    def _parse_days_with_occurrence(self, day_part: str) -> List[Dict]:
+        """Parse une spécification de jours avec gestion des occurrences (ex: Th[1])."""
+        days_info = []
+
+        # Cherche les occurrences [1], [1,3], etc.
+        occurrence_match = re.search(r"\[([^\]]+)\]", day_part)
+        occurrence = None
+
+        if occurrence_match:
+            try:
+                occ_str = occurrence_match.group(1)
+                if "," in occ_str:
+                    occurrence = [int(x.strip()) for x in occ_str.split(",")]
+                else:
+                    occurrence = [int(occ_str)]
+            except ValueError:
+                pass
+
+            # Supprime l'occurrence de la chaîne pour parser les jours
+            day_part = re.sub(r"\[([^\]]+)\]", "", day_part)
+
+        # Parse les jours normalement
+        french_days = self._parse_days(day_part)
+
+        # Ajoute l'information d'occurrence
+        for day in french_days:
+            day_info = {"day": day}
+            if occurrence:
+                day_info["occurrence"] = (
+                    occurrence if len(occurrence) > 1 else occurrence[0]
+                )
+            days_info.append(day_info)
+
+        return days_info
+
+    def _parse_days(self, day_part: str) -> List[str]:
+        """Parse une spécification de jours (ex: Tu-Fr, We,Sa)."""
+        french_days = []
+
+        # Sépare par virgule
+        day_groups = [group.strip() for group in day_part.split(",")]
+
+        for group in day_groups:
+            if "-" in group:
+                # Plage de jours (Tu-Fr)
+                start_day, end_day = group.split("-", 1)
+                start_day = start_day.strip()
+                end_day = end_day.strip()
+
+                if start_day in self.DAY_ORDER and end_day in self.DAY_ORDER:
+                    start_idx = self.DAY_ORDER.index(start_day)
+                    end_idx = self.DAY_ORDER.index(end_day)
+
+                    if end_idx >= start_idx:
+                        # Plage normale
+                        for i in range(start_idx, end_idx + 1):
+                            day = self.DAY_ORDER[i]
+                            if day in self.DAY_MAPPING:
+                                french_days.append(self.DAY_MAPPING[day])
+                    else:
+                        # Plage qui traverse la semaine (Sa-Mo)
+                        for i in range(start_idx, len(self.DAY_ORDER)):
+                            day = self.DAY_ORDER[i]
+                            if day in self.DAY_MAPPING:
+                                french_days.append(self.DAY_MAPPING[day])
+                        for i in range(0, end_idx + 1):
+                            day = self.DAY_ORDER[i]
+                            if day in self.DAY_MAPPING:
+                                french_days.append(self.DAY_MAPPING[day])
+            else:
+                # Jour simple
+                if group in self.DAY_MAPPING:
+                    french_days.append(self.DAY_MAPPING[group])
+
+        return list(set(french_days))  # Supprime les doublons
+
+    def _parse_time_slots(self, time_part: str) -> List[Dict]:
+        """Parse les créneaux horaires (ex: 16:00-19:00,10:00-13:00,14:00-18:00)."""
+        slots = []
+
+        # Sépare par virgule pour les différents créneaux
+        slot_parts = [part.strip() for part in time_part.split(",")]
+
+        for slot_part in slot_parts:
+            if "-" in slot_part and ":" in slot_part:
+                # Format HH:MM-HH:MM
+                try:
+                    start_time, end_time = slot_part.split("-", 1)
+                    start_time = start_time.strip()
+                    end_time = end_time.strip()
+
+                    # Valide le format HH:MM
+                    if self._is_valid_time(start_time) and self._is_valid_time(
+                        end_time
+                    ):
+                        slots.append({"debut": start_time, "fin": end_time})
+                except ValueError:
+                    logger.warning(f"Could not parse time slot: {slot_part}")
+
+        return slots
+
+    def _is_valid_time(self, time_str: str) -> bool:
+        """Vérifie si une chaîne est un horaire valide HH:MM."""
+        return bool(re.match(r"^\d{1,2}:\d{2}$", time_str))
+
+    def _parse_date_rules(self, rules: List[str]) -> Dict:
+        """Parse les règles avec dates spécifiques."""
+        special_dates = {}
+
+        for rule in rules:
+            logger.debug(f"Parsing date rule: {rule}")
+
+            # Cherche le pattern de date YYYY MMM DD
+            date_match = re.search(r"(\d{4})\s+([A-Za-z]{3})\s+(\d{1,2})", rule)
+            if not date_match:
+                continue
+
+            year, month_name, day = date_match.groups()
+
+            # Convertit en format ISO
+            if month_name in self.MONTH_MAPPING:
+                month_num = self.MONTH_MAPPING[month_name]
+                date_iso = f"{year}-{month_num}-{day.zfill(2)}"
+
+                # Détermine le statut (closed, ouvert, ou horaires spécifiques)
+                if "closed" in rule.lower() or "off" in rule.lower():
+                    special_dates[date_iso] = "ferme"
+                else:
+                    # Parse les horaires si présents
+                    # Pour l'instant, on assume que c'est fermé si pas d'horaires explicites
+                    special_dates[date_iso] = "ferme"
+
+        return special_dates
+
+    def _create_empty_weekly_schedule(self) -> Dict:
+        """Crée un planning hebdomadaire vide."""
+        schedule = {}
+        for french_day in self.DAY_MAPPING.values():
+            schedule[french_day] = {
+                "source_found": False,
+                "ouvert": False,
+                "creneaux": [],
+            }
+        return schedule
+
+
+class OSMToCustomConverter:
+    """Convertisseur principal d'OSM vers JSON personnalisé."""
+
+    def __init__(self):
+        self.parser = OSMParser()
+
+    def convert_osm_string(
+        self, osm_string: str, metadata: Optional[Dict] = None
+    ) -> Dict:
+        """Convertit une chaîne OSM en JSON personnalisé."""
+        logger.info(
+            f"Converting OSM string for: {metadata.get('identifiant', 'unknown') if metadata else 'unknown'}"
+        )
+
+        # Parse la chaîne OSM
+        parsed_data = self.parser.parse_osm_string(osm_string)
+
+        # Crée la structure JSON selon le schéma
+        result = {
+            "horaires_ouverture": {
+                "metadata": metadata
+                or {
+                    "identifiant": "converted_from_osm",
+                    "nom": "Lieu converti depuis OSM",
+                    "type_lieu": "Indéterminé",
+                    "url": "",
+                },
+                "periodes": {
+                    "hors_vacances_scolaires": {
+                        "source_found": True,
+                        "label": "Période hors vacances scolaires",
+                        "condition": "default",
+                        "horaires": parsed_data.get("weekly_schedule", {}),
+                    },
+                    "vacances_scolaires_ete": {
+                        "source_found": False,
+                        "label": "Grandes vacances scolaires",
+                        "condition": "SH",
+                        "horaires": self._create_empty_weekly_schedule(),
+                    },
+                    "petites_vacances_scolaires": {
+                        "source_found": False,
+                        "label": "Petites vacances scolaires",
+                        "condition": "SH",
+                        "horaires": self._create_empty_weekly_schedule(),
+                    },
+                    "jours_feries": {
+                        "source_found": len(parsed_data.get("special_dates", {})) > 0,
+                        "label": "Jours fériés",
+                        "condition": "PH",
+                        "mode": "ferme",
+                        "horaires_specifiques": parsed_data.get("special_dates", {}),
+                    },
+                    "jours_speciaux": {
+                        "source_found": len(parsed_data.get("special_schedules", {}))
+                        > 0,
+                        "label": "Jours spéciaux",
+                        "mode": "ouvert",
+                        "horaires_specifiques": parsed_data.get(
+                            "special_schedules", {}
+                        ),
+                    },
+                },
+                "extraction_info": {
+                    "source_found": True,
+                    "notes": "Converti depuis format OSM",
+                },
+            }
+        }
+
+        logger.info("OSM conversion completed successfully")
+        return result
+
+    def _create_empty_weekly_schedule(self) -> Dict:
+        """Crée un planning hebdomadaire vide."""
+        schedule = {}
+        day_names = [
+            "lundi",
+            "mardi",
+            "mercredi",
+            "jeudi",
+            "vendredi",
+            "samedi",
+            "dimanche",
+        ]
+        for day in day_names:
+            schedule[day] = {"source_found": False, "ouvert": False, "creneaux": []}
+        return schedule
+
+    def convert_file(
         self,
-        osm_string: str,
-        identifiant: str,
-        nom: str,
-        type_lieu: str,
-        url: str,
-        timezone: str = "Europe/Paris",
-    ) -> Horaires:
-        """
-        Convertit une chaîne OSM vers le format JSON personnalisé.
-
-        Args:
-            osm_string: Chaîne OSM opening_hours
-            identifiant: Identifiant unique du lieu
-            nom: Nom de l'établissement
-            type_lieu: Type de lieu
-            url: URL de la page
-            timezone: Fuseau horaire
-
-        Returns:
-            Instance du modèle Horaires
-        """
-        # Parser la chaîne OSM
-        parsed_osm = self.parse_osm_string(osm_string)
-
-        # Créer les métadonnées
-        metadata = Metadata(
-            identifiant=identifiant,
-            nom=nom,
-            type_lieu=type_lieu,
-            url=url,
-            timezone=timezone,
-        )
-
-        # Créer les horaires hebdomadaires
-        horaires_hebdo = self.create_horaires_hebdomadaires(parsed_osm)
-
-        # Créer la période principale (hors vacances scolaires)
-        hors_vacances = HorsVacancesScolaires(
-            source_found=bool(parsed_osm.get("rules")), horaires=horaires_hebdo
-        )
-
-        # Créer les périodes
-        periodes = Periodes(
-            hors_vacances_scolaires=hors_vacances,
-            vacances_scolaires_ete=VacancesScolairesEte(),
-            petites_vacances_scolaires=PetitesVacancesScolaires(),
-            jours_feries=JoursFeries(),
-            jours_speciaux=JoursSpeciaux(),
-        )
-
-        # Créer les informations d'extraction
-        extraction_info = ExtractionInfo(
-            source_found=bool(parsed_osm.get("rules")),
-            confidence=0.8,  # Confiance moyenne pour une conversion automatique
-            notes="Converti depuis le format OSM opening_hours",
-        )
-
-        # Créer l'objet principal
-        horaires_ouverture = HorairesOuverture(
-            metadata=metadata, periodes=periodes, extraction_info=extraction_info
-        )
-
-        return Horaires(horaires_ouverture=horaires_ouverture)
-
-    def convert_osm_file(self, input_file: str, output_file: str = None) -> Dict:
+        input_file: Union[str, Path],
+        output_file: Optional[Union[str, Path]] = None,
+    ) -> Dict:
         """Convertit un fichier contenant des chaînes OSM."""
-        results = {}
+        input_path = Path(input_file)
+        if not input_path.exists():
+            logger.error(f"Input file not found: {input_path}")
+            raise FileNotFoundError(f"Input file not found: {input_path}")
 
-        # Ici, vous pourriez implémenter la lecture d'un fichier CSV ou JSON
-        # contenant les données OSM et les métadonnées associées
+        logger.info(f"Converting OSM file: {input_path.name}")
+
+        with open(input_path, "r", encoding="utf-8") as f:
+            if input_path.suffix.lower() == ".json":
+                data = json.load(f)
+            else:
+                data = f.read().strip()
+
+        if isinstance(data, str):
+            result = self.convert_osm_string(data)
+        elif isinstance(data, dict):
+            result = {}
+            for key, osm_string in data.items():
+                if isinstance(osm_string, str):
+                    result[key] = self.convert_osm_string(osm_string)
+        else:
+            raise ValueError("Unsupported input file format")
 
         if output_file:
-            import json
+            output_path = Path(output_file)
+            with open(output_path, "w", encoding="utf-8") as f:
+                json.dump(result, f, indent=2, ensure_ascii=False)
+            logger.info(f"Output saved to: {output_path}")
 
-            with open(output_file, "w", encoding="utf-8") as f:
-                json.dump(results, f, indent=2, ensure_ascii=False)
-
-        return results
-
-    def validate_osm_string(self, osm_string: str) -> bool:
-        """Valide une chaîne OSM opening_hours basique."""
-        if not osm_string or osm_string.strip() in ["closed", ""]:
-            return True
-
-        # Vérification basique des patterns
-        basic_pattern = r"^[A-Za-z,-]+\s+(\d{1,2}:\d{2}-\d{1,2}:\d{2}(,\d{1,2}:\d{2}-\d{1,2}:\d{2})*|off|closed)"
-        rules = [rule.strip() for rule in osm_string.split(";") if rule.strip()]
-
-        for rule in rules:
-            # Retirer les conditions entre guillemets pour la validation
-            clean_rule = re.sub(r'\s*"[^"]*"', "", rule).strip()
-            if not re.match(basic_pattern, clean_rule):
-                return False
-
-        return True
+        return result
 
 
 def main():
-    """Exemple d'utilisation du convertisseur OSM vers JSON."""
-    converter = OSMToCustomJsonConverter()
+    """Test et exemple d'utilisation."""
+    logger.section("OSM TO CUSTOM JSON CONVERTER")
 
-    # Test avec quelques exemples OSM
-    test_cases = [
-        {
-            "osm": "Mo-Fr 09:00-17:00; Sa 09:00-12:00",
-            "identifiant": "TEST001",
-            "nom": "Mairie de Test",
-            "type_lieu": "mairie",
-            "url": "https://example.com",
-        },
-        {
-            "osm": "Mo-We,Fr 08:30-12:00,13:00-17:00; Th 08:30-12:00; Sa 09:00-12:00; Su off",
-            "identifiant": "TEST002",
-            "nom": "Service Public Test",
-            "type_lieu": "service_public",
-            "url": "https://example2.com",
-        },
-        {
-            "osm": "closed",
-            "identifiant": "TEST003",
-            "nom": "Lieu Fermé",
-            "type_lieu": "autre",
-            "url": "https://example3.com",
-        },
-    ]
+    converter = OSMToCustomConverter()
 
-    print("=== TEST DU CONVERTISSEUR OSM VERS JSON ===")
+    # Test avec l'exemple problématique
+    test_osm = """Mo,Tu,We,Fr 08:45-16:45, Th 10:00-16:45, Sa 09:30-12:00; Th[1] 13:30-16:45; 2025 Jul 05-2025 Aug 31 Mo,Tu,We,Fr 08:45-12:30,13:30-16:45, Th 10:00-12:30,13:30-16:45, Sa 09:30-12:00 "Vacances d'Été"; 2025 Oct 18-2025 Nov 02 Mo,Tu,We,Fr 08:45-12:30,13:30-16:45, Th 10:00-12:30,13:30-16:45, Sa 09:30-12:00 "Vacances de la Toussaint"; 2025 Dec 20-2026 Jan 04 Mo,Tu,We,Fr 08:45-12:30,13:30-16:45, Th 10:00-12:30,13:30-16:45, Sa 09:30-12:00 "Vacances de Noël"; 2025 Dec 26-2025 Dec 27 closed; 2026 Feb 07-2026 Feb 22 Mo,Tu,We,Fr 08:45-12:30,13:30-16:45, Th 10:00-12:30,13:30-16:45, Sa 09:30-12:00 "Vacances d'Hiver"; 2026 Apr 04-2026 Apr 19 Mo,Tu,We,Fr 08:45-12:30,13:30-16:45, Th 10:00-12:30,13:30-16:45, Sa 09:30-12:00 "Vacances de Printemps"; 2026 May 14-2026 May 17 Mo,Tu,We,Fr 08:45-12:30,13:30-16:45, Th 10:00-12:30,13:30-16:45, Sa 09:30-12:00 "Pont de l'Ascension"; 2025 Jul 12 closed; 2025 Jul 14 closed "14 juillet"; 2025 Aug 02 closed; 2025 Aug 09 closed; 2025 Aug 15 closed "Assomption"; 2025 Aug 16 closed; 2025 Aug 23 closed; 2025 Nov 01 closed "Toussaint"; 2025 Nov 11 closed "11 novembre"; 2025 Dec 25 closed "Jour de Noël"; 2026 Jan 01 closed "1er janvier"; 2026 Apr 06 closed "Lundi de Pâques"; 2026 May 01 closed "1er mai"; 2026 May 08 closed "8 mai"; 2026 May 14 closed "Ascension"; 2026 May 25 closed "Lundi de Pentecôte"; 2026 Jul 14 closed "14 juillet"; 2026 Aug 15 closed "Assomption"; 2026 Nov 01 closed "Toussaint"; 2026 Nov 11 closed "11 novembre"; 2026 Dec 25 closed "Jour de Noël"""
 
-    for i, test_case in enumerate(test_cases, 1):
-        print(f"\n--- Test {i} ---")
-        print(f"OSM: {test_case['osm']}")
+    metadata = {
+        "identifiant": "S7806",
+        "nom": "Médiathèque du Tonkin",
+        "type_lieu": "bibliothèque",
+        "url": "https://mediatheques.villeurbanne.fr/2024/06/horaires-hors-vacances-dete/",
+    }
 
-        # Validation
-        is_valid = converter.validate_osm_string(test_case["osm"])
-        print(f"Valide: {is_valid}")
+    logger.info("Testing OSM conversion")
+    result = converter.convert_osm_string(test_osm, metadata)
 
-        if is_valid:
-            # Conversion
-            try:
-                result = converter.convert_osm_to_custom_json(
-                    osm_string=test_case["osm"],
-                    identifiant=test_case["identifiant"],
-                    nom=test_case["nom"],
-                    type_lieu=test_case["type_lieu"],
-                    url=test_case["url"],
-                )
-
-                print("Conversion réussie!")
-                print("JSON généré:")
-                import json
-
-                print(json.dumps(result.dict(), indent=2, ensure_ascii=False))
-
-            except Exception as e:
-                print(f"Erreur lors de la conversion: {e}")
-
-        print("-" * 50)
+    print("Résultat de la conversion:")
+    print(json.dumps(result, indent=2, ensure_ascii=False))
 
 
 if __name__ == "__main__":
