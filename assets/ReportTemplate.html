@@ -197,42 +197,67 @@
                 <table>
                     <thead>
                         <tr>
-                            <th onclick="sortTable(this,0,'string')">Type</th>
-                            <th onclick="sortTable(this,1,'string')">ID</th>
-                            <th onclick="sortTable(this,2,'string')">Nom</th>
-                            <th onclick="sortTable(this,3,'number')">HTTP</th>
-                            <th onclick="sortTable(this,4,'string')">Détails</th>
-                            <th>Horaires GL</th>
-                            <th>Horaires LLM</th>
-                            <th>Comparaison</th>
+                            <th onclick="sortTable(this,0,'string')" class="col-type">Type</th>
+                            <th onclick="sortTable(this,1,'string')" class="col-id">ID</th>
+                            <th onclick="sortTable(this,2,'string')" class="col-name">Nom</th>
+                            <th onclick="sortTable(this,3,'number')" class="col-http">HTTP</th>
+                            <th onclick="sortTable(this,4,'string')" class="col-details">Détails</th>
+                            <th class="col-gl">Horaires GL</th>
+                            <th class="col-llm">Horaires LLM</th>
+                            {% if statut.code == 'ok' %}
+                            <th class="col-comparison">Différences</th>
+                            {% else %}
+                            <th class="col-comparison">Comparaison</th>
+                            {% endif %}
                         </tr>
                     </thead>
                     <tbody>
                         {% for url in statut.urls %}
-                        <tr>
-                            <td>{{ url.type_lieu or '-' }}</td>
-                            <td>{{ url.identifiant or '-' }}</td>
-                            <td>
+                        <tr {% if url.horaires_identiques == false %}class="horaires-differents"{% endif %}>
+                            <td class="col-type">{{ url.type_lieu or '-' }}</td>
+                            <td class="col-id">{{ url.identifiant or '-' }}</td>
+                            <td class="col-name">
                                 {% if url.url %}
                                 <span class="url-link" data-href="{{ url.url }}">{{ url.nom or '-' }}</span>
                                 {% else %}
                                 {{ url.nom or '-' }}
                                 {% endif %}
                             </td>
-                            <td><span class="badge {% if url.code_http >= 200 and url.code_http < 300 %}success{% else %}error{% endif %}">{{ url.code_http }}</span></td>
-                            <td>{{ url.message or '-' }}</td>
-                            <td>{% if url.horaires_data_gl %}
+                            <td class="col-http">
+                                <span class="badge {% if url.code_http >= 200 and url.code_http < 300 %}success{% else %}error{% endif %}">{{ url.code_http }}</span>
+                            </td>
+                            <td class="col-details">{{ url.message or '-' }}</td>
+                            <td class="col-gl">
+                                {% if url.horaires_data_gl %}
                                 <div class="preview gl">{{ url.horaires_data_gl[:60] }}{% if url.horaires_data_gl|length > 60 %}...{% endif %}</div>
                                 <button class="btn view-btn" data-title="Horaires GL - {{ url.identifiant }}" data-content="{{ url.horaires_data_gl|e }}">👁️ Voir</button>
-                                {% else %}-{% endif %}</td>
-                            <td>{% if url.llm_horaires_osm %}
+                                {% else %}-{% endif %}
+                            </td>
+                            <td class="col-llm">
+                                {% if url.llm_horaires_osm %}
                                 <div class="preview llm">{{ url.llm_horaires_osm[:60] }}{% if url.llm_horaires_osm|length > 60 %}...{% endif %}</div>
-                                <button class="btn view-btn" data-title="Horaires LLM - {{ url.identifiant }}" data-content="{{ url.llm_horaires_osm|e }}">👁️ Voir</button>
-                                {% else %}-{% endif %}</td>
-                            <td>{% if url.comparaison_horaires %}
-                                <div class="preview comparison">{{ url.comparaison_horaires[:80] }}{% if url.comparaison_horaires|length > 80 %}...{% endif %}</div>
-                                <button class="btn view-btn" data-title="Comparaison - {{ url.identifiant }}" data-content="{{ url.comparaison_horaires|e }}">👁️ Voir</button>
-                                {% else %}-{% endif %}</td>
+                                <button class="btn view-btn" data-title="Horaires LLM OSM - {{ url.identifiant }}" data-content="{{ url.llm_horaires_osm|e }}">👁️ Voir</button>
+                                {% else %}-{% endif %}
+                            </td>
+                            <td class="col-comparison">
+                                {% if statut.code == 'ok' %}
+                                    {% if url.horaires_identiques == false and url.differences_horaires %}
+                                    <div class="preview comparison">{{ url.differences_horaires[:80] }}{% if url.differences_horaires|length > 80 %}...{% endif %}</div>
+                                    <button class="btn view-btn" data-title="Différences détaillées - {{ url.identifiant }}" data-content="{{ url.differences_horaires|e }}">👁️ Voir</button>
+                                    {% elif url.horaires_identiques == true %}
+                                    <span style="color: #28a745; font-weight: 500;">✓ Identiques</span>
+                                    {% elif url.horaires_identiques is none %}
+                                    <span style="color: #6c757d;">Non comparé</span>
+                                    {% else %}
+                                    -
+                                    {% endif %}
+                                {% else %}
+                                    {% if url.comparaison_horaires %}
+                                    <div class="preview comparison">{{ url.comparaison_horaires[:80] }}{% if url.comparaison_horaires|length > 80 %}...{% endif %}</div>
+                                    <button class="btn view-btn" data-title="Comparaison - {{ url.identifiant }}" data-content="{{ url.comparaison_horaires|e }}">👁️ Voir</button>
+                                    {% else %}-{% endif %}
+                                {% endif %}
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -357,16 +382,20 @@
         async function copyContent() {
             try {
                 await navigator.clipboard.writeText(currentContent);
-                const btn = event.target;
-                const orig = btn.textContent;
-                btn.textContent = '✅ Copié !';
-                btn.style.background = '#28a745';
+                const copyBtn = document.querySelector('.modal .btn');
+                const originalText = copyBtn.textContent;
+                const originalBg = copyBtn.style.background;
+                
+                copyBtn.textContent = '✅ Copié !';
+                copyBtn.style.background = '#28a745';
+                
                 setTimeout(() => {
-                    btn.textContent = orig;
-                    btn.style.background = '';
+                    copyBtn.textContent = originalText;
+                    copyBtn.style.background = originalBg;
                 }, 2000);
-            } catch {
-                alert('Impossible de copier');
+            } catch (err) {
+                console.error('Erreur copie:', err);
+                alert('Impossible de copier le contenu');
             }
         }
 
