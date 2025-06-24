@@ -166,13 +166,13 @@
                 },
                 "horaires_specifiques": {
                   "type": "object",
-                  "description": "Dictionnaire des horaires spécifiques. La clé est le nom du jour (ex: '2024-12-25') et la valeur est soit la chaîne 'ferme', soit un objet d'horaires.",
+                  "description": "Dictionnaire des horaires spécifiques. La clé est le nom du jour (ex: 'Th' ou '2024-12-25') et la valeur est soit la chaîne 'ferme', soit un objet d'horaires.",
                   "additionalProperties": {
                     "oneOf": [
                       {
                         "type": "string",
                         "enum": ["ferme"],
-                        "description": "Indique que le lieu est fermé ce jour-là."
+                        "description": "Indique que le lieu est fermé ce jour-là, ou bien dispose d'horaires spécifiques. Par exemple, des horaires réduits tous les 1er mardi du mois."
                       },
                       {
                         "$ref": "#/definitions/horaires_jour"
@@ -197,6 +197,11 @@
             "source_found": {
               "type": "boolean",
               "description": "Indique si des horaires ont été trouvés dans le contenu"
+            },
+            "permanently_closed": {
+              "type": "boolean",
+              "description": "Indique si l'établissement est définitivement fermé",
+              "default": false
             },
             "notes": {
               "type": "string",
