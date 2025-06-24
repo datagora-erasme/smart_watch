@@ -1,4 +1,4 @@
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, Text
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql import func
 
@@ -46,8 +46,12 @@ class ResultatsExtraction(Base):
     code_http = Column(Integer)
     message_url = Column(Text)
     markdown = Column(Text)
+    markdown_horaires = Column(Text)
     prompt_message = Column(Text)
     llm_consommation_requete = Column(Text)
     llm_horaires_json = Column(Text)
     llm_horaires_osm = Column(Text)
-    comparaison_horaires = Column(Text)
+    horaires_identiques = Column(
+        Boolean, default=None
+    )  # True = identiques, False = différents, None = non comparé/erreur
+    differences_horaires = Column(Text)  # Détails des différences uniquement

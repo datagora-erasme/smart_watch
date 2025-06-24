@@ -64,7 +64,7 @@
         <li><strong>Total d'URLs analysées :</strong> {{ stats_globales.total_urls }}</li>
     </ul>
     
-    <h3>🎯 Répartition par Statut</h3>
+    <h3>🎯 Statut des pages visitées</h3>
     <ul>
         {% for statut in statuts_disponibles %}
         <li class="status-item status-{{ statut.type }}">
@@ -73,6 +73,21 @@
         {% endfor %}
     </ul>
     
+    {% if stats_globales.get('comparisons_done', 0) > 0 %}
+    <h3>⚖️ Comparaisons d'horaires</h3>
+    <ul>
+        <li class="status-item status-success">
+            ✅ <strong>Identiques :</strong> {{ stats_globales.get('comparisons_identical', 0) }} comparaisons
+        </li>
+        <li class="status-item status-error">
+            ❌ <strong>Différents :</strong> {{ stats_globales.get('comparisons_different', 0) }} comparaisons
+        </li>
+        <li class="status-item status-warning">
+            ⚠️ <strong>Non comparés :</strong> {{ stats_globales.get('comparisons_not_done', 0) }} URLs
+        </li>
+    </ul>
+    {% endif %}
+
     <h3>🏢 Répartition par Type de Lieu</h3>
     <ul>
         {% for type_lieu in types_lieu_stats %}
