@@ -4,6 +4,22 @@ from email import encoders
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from pathlib import Path
+
+from dotenv import load_dotenv
+
+from core.Logger import LogOutput, create_logger
+
+# Charger la variable d'environnement pour le nom du fichier log
+load_dotenv()
+csv_name = os.getenv("CSV_URL_HORAIRES")
+
+# Initialize logger for this module
+logger = create_logger(
+    outputs=[LogOutput.CONSOLE, LogOutput.FILE],
+    log_file=Path(__file__).parent.parent / "data" / "logs" / f"{csv_name}.log",
+    module_name="EnvoyerMail",
+)
 
 
 def envoyer_mail_html(
@@ -18,22 +34,10 @@ def envoyer_mail_html(
     fichier_joint=None,
     login_smtp=None,
 ):
-    """
-    Envoie un email HTML avec pièce jointe optionnelle.
-    Gère différentes configurations SMTP (ports 587 et 465) avec authentification flexible.
+    """Envoie un email HTML avec pièce jointe optionnelle."""
 
-    Args:
-        emetteur (str): Adresse email de l'expéditeur (From)
-        recepteur (str): Adresse email du destinataire
-        smtp_server (str): Serveur SMTP
-        smtp_port (int): Port SMTP (587 pour STARTTLS, 465 pour SSL/TLS)
-        mdp (str): Mot de passe pour l'authentification
-        sujet (str): Sujet de l'email
-        texte (str): Corps texte brut
-        html_content (str, optional): Corps HTML
-        fichier_joint (str, optional): Chemin du fichier à joindre
-        login_smtp (str, optional): Identifiant de connexion SMTP (si différent de l'emetteur)
-    """
+    logger.info(f"Envoi email: {emetteur} → {recepteur}")
+
     # Créer le message
     msg = MIMEMultipart("alternative")
     msg["From"] = emetteur
@@ -50,6 +54,7 @@ def envoyer_mail_html(
 
     # Ajouter la pièce jointe si fournie
     if fichier_joint and os.path.exists(fichier_joint):
+        logger.debug(f"Pièce jointe: {os.path.basename(fichier_joint)}")
         with open(fichier_joint, "rb") as attachment:
             part = MIMEBase("application", "octet-stream")
             part.set_payload(attachment.read())
@@ -67,57 +72,50 @@ def envoyer_mail_html(
     try:
         # Configuration selon le port
         if smtp_port == 465:
-            # Port 465 : SSL/TLS direct
-            print(f"Connexion SMTP SSL/TLS sur le port {smtp_port}")
+            logger.debug(f"Connexion SMTP SSL/TLS port {smtp_port}")
             with smtplib.SMTP_SSL(smtp_server, smtp_port) as server:
-                print(f"Authentification avec login: {smtp_login}")
                 server.login(smtp_login, mdp)
                 server.send_message(msg)
-                print("✅ Email envoyé avec succès (SSL/TLS)")
+                logger.info("Email envoyé avec succès (SSL/TLS)")
 
         elif smtp_port == 587:
-            # Port 587 : STARTTLS
-            print(f"Connexion SMTP STARTTLS sur le port {smtp_port}")
+            logger.debug(f"Connexion SMTP STARTTLS port {smtp_port}")
             with smtplib.SMTP(smtp_server, smtp_port) as server:
                 server.starttls()
-                print(f"Authentification avec login: {smtp_login}")
                 server.login(smtp_login, mdp)
                 server.send_message(msg)
-                print("✅ Email envoyé avec succès (STARTTLS)")
+                logger.info("Email envoyé avec succès (STARTTLS)")
 
         else:
-            # Autres ports : tentative avec STARTTLS par défaut
-            print(f"Connexion SMTP générique sur le port {smtp_port}")
+            logger.debug(f"Connexion SMTP générique port {smtp_port}")
             with smtplib.SMTP(smtp_server, smtp_port) as server:
                 try:
                     server.starttls()
-                    print("STARTTLS activé")
+                    logger.debug("STARTTLS activé")
                 except smtplib.SMTPNotSupportedError:
-                    print("STARTTLS non supporté, connexion non chiffrée")
+                    logger.warning("STARTTLS non supporté")
 
-                print(f"Authentification avec login: {smtp_login}")
                 server.login(smtp_login, mdp)
                 server.send_message(msg)
-                print("✅ Email envoyé avec succès")
+                logger.info("Email envoyé avec succès")
 
     except smtplib.SMTPAuthenticationError as e:
-        print(f"❌ Erreur d'authentification SMTP : {e}")
-        print(f"Vérifiez le login ({smtp_login}) et le mot de passe")
+        logger.error(f"Erreur authentification SMTP: {e}")
         raise
     except smtplib.SMTPConnectError as e:
-        print(f"❌ Erreur de connexion au serveur SMTP : {e}")
-        print(f"Vérifiez le serveur ({smtp_server}) et le port ({smtp_port})")
+        logger.error(f"Erreur connexion SMTP: {e}")
         raise
     except smtplib.SMTPException as e:
-        print(f"❌ Erreur SMTP : {e}")
+        logger.error(f"Erreur SMTP: {e}")
         raise
     except Exception as e:
-        print(f"❌ Erreur lors de l'envoi de l'email : {e}")
+        logger.error(f"Erreur envoi email: {e}")
         raise
 
 
 # Faire un test avec les variables du .env
 if __name__ == "__main__":
+    logger.section("TEST ENVOI EMAIL")
     import os
 
     from dotenv import dotenv_values, load_dotenv

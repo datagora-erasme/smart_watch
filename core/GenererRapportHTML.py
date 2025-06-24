@@ -1,28 +1,52 @@
+"""
+Générateur de rapport HTML pour l'analyse des extractions d'horaires.
+
+Ce module génère des rapports HTML détaillés à partir des données stockées
+en base de données, avec support des comparaisons d'horaires.
+"""
+
 import base64
 import json
 import os
 from datetime import datetime
+from pathlib import Path
+from typing import Dict, Optional, Tuple
 
 import polars as pl
+from dotenv import load_dotenv
 from jinja2 import Environment, FileSystemLoader
 
+from core.ErrorHandler import ErrorCategory, ErrorSeverity, handle_errors
+from core.Logger import LogOutput, create_logger
 
-# Fonction personnalisée pour Jinja2 pour convertir en JSON
-def to_json(value: any) -> str:
+# Charger la variable d'environnement pour le nom du fichier log
+load_dotenv()
+csv_name = os.getenv("CSV_URL_HORAIRES")
+
+# Initialize logger for this module
+logger = create_logger(
+    outputs=[LogOutput.CONSOLE, LogOutput.FILE],
+    log_file=Path(__file__).parent.parent / "data" / "logs" / f"{csv_name}.log",
+    module_name="GenererRapportHTML",
+)
+
+
+def to_json(value) -> Optional[str]:
     """
     Convertit une valeur en chaîne JSON encodée en base64.
 
     Cette fonction prend une valeur de n'importe quel type et la transforme en chaîne JSON,
     puis l'encode en base64 pour éviter les problèmes d'échappement dans les templates HTML.
 
-    Argument :
+    Args:
         value: La valeur à convertir et encoder
 
-    Renvoie :
+    Returns:
         str: Chaîne JSON encodée en base64, ou None si la valeur d'entrée est None
     """
     if value is None:
         return None
+
     try:
         # Si c'est déjà une chaîne JSON valide, la retourner
         if isinstance(value, str):
@@ -35,125 +59,223 @@ def to_json(value: any) -> str:
 
         # Encoder en base64 en s'assurant que l'UTF-8 est préservé
         return base64.b64encode(json_str.encode("utf-8")).decode("ascii")
-    except Exception:
+    except Exception as e:
+        logger.warning(f"Erreur conversion JSON pour template: {e}")
         # En cas d'erreur, convertir en chaîne puis encoder en base64
         json_str = json.dumps(str(value), ensure_ascii=False, indent=2)
         return base64.b64encode(json_str.encode("utf-8")).decode("ascii")
 
 
+@handle_errors(
+    category=ErrorCategory.UNKNOWN,
+    severity=ErrorSeverity.HIGH,
+    user_message="Erreur lors de la génération du rapport HTML",
+)
 def generer_rapport_html(
-    db_file: str, table_name: str, titre_rapport: str, model_info: dict = None
-) -> tuple[str, str]:
+    db_file: str, table_name: str, titre_rapport: str, model_info: Optional[Dict] = None
+) -> Tuple[str, str]:
     """
-    Génère un rapport HTML analysant les URLs stockées dans une base de données SQLite.
-    Cette fonction interroge une base de données contenant des informations sur des URLs,
-    calcule diverses statistiques (statuts, types de lieux, codes HTTP) et génère un
-    rapport HTML formaté à partir d'un template.
+    Génère un rapport HTML complet à partir des données de la base SQLite.
 
-    Arguments :
-        db_file (str): Chemin vers le fichier de base de données SQLite.
-        table_name (str): Nom de la table contenant les données des URLs.
-        titre_rapport (str): Titre à afficher dans le rapport généré.
-        model_info (dict): Informations sur le modèle LLM utilisé.
+    Args:
+        db_file: Chemin vers le fichier de base de données SQLite
+        table_name: Nom de la table à analyser
+        titre_rapport: Titre du rapport
+        model_info: Informations sur le modèle utilisé
 
-    Renvoie :
-        tuple[str, str]: Un tuple contenant:
-            - Le contenu HTML du rapport généré.
-            - Le nom du fichier HTML sauvegardé.
+    Returns:
+        Tuple contenant (résumé_html, chemin_fichier_html)
 
-    Notes:
-        - Le rapport est sauvegardé dans le répertoire courant avec un nom basé sur la date et l'heure.
-        - La fonction utilise un template HTML situé dans le répertoire "../assets" relatif à ce script.
-        - Les données sont regroupées par statut (ok, warning, critical, unknown) et par type de lieu.
+    Raises:
+        FileNotFoundError: Si le fichier de base de données n'existe pas
+        RuntimeError: Si les templates ne sont pas trouvés
     """
-    # Configuration du moteur de templates
-    assets_dir = os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), "..", "assets"
-    )
-    env = Environment(loader=FileSystemLoader(assets_dir))
+    try:
+        logger.info(f"Génération rapport HTML depuis: {Path(db_file).name}")
 
-    # Ajouter la fonction personnalisée tojson au template
-    env.filters["tojson"] = to_json
+        # Vérification de l'existence de la base de données
+        db_path = Path(db_file)
+        if not db_path.exists():
+            raise FileNotFoundError(f"Base de données non trouvée: {db_file}")
 
-    template = env.get_template("ReportTemplate.html")
-    simple_template = env.get_template("SimpleReportTemplate.html")
+        # Configuration du moteur de templates
+        assets_dir = Path(__file__).parent.parent / "assets"
+        if not assets_dir.exists():
+            raise FileNotFoundError(f"Répertoire assets non trouvé: {assets_dir}")
 
-    # Extraction des données depuis la base de données
-    uri = f"sqlite:///{db_file}"
-    query = """
-    SELECT 
-        l.type_lieu, 
-        l.identifiant, 
-        l.nom, 
-        l.url, 
-        r.statut_url as statut, 
-        r.message_url as message, 
-        r.llm_horaires_json, 
-        r.llm_horaires_osm, 
-        r.code_http
-    FROM resultats_extraction r
-    JOIN lieux l ON r.lieu_id = l.identifiant
-    ORDER BY l.identifiant
-    """
-    df = pl.read_database_uri(query=query, uri=uri, engine="connectorx")
+        env = Environment(loader=FileSystemLoader(str(assets_dir)))
+        env.filters["tojson"] = to_json
 
-    # Convertir le DataFrame Polars en dictionnaire pour faciliter le traitement
-    donnees_urls = df.to_dicts()
+        try:
+            template = env.get_template("ReportTemplate.html")
+            simple_template = env.get_template("SimpleReportTemplate.html")
+            logger.debug("Templates chargés avec succès")
+        except Exception as e:
+            raise RuntimeError(f"Erreur chargement templates: {e}")
 
-    # Traiter les données JSON
+        # Extraction des données depuis la base de données
+        donnees_urls = _extract_data_from_database(db_file)
+        logger.info(f"Données extraites: {len(donnees_urls)} enregistrements")
+
+        # Traitement des données
+        _process_data(donnees_urls)
+
+        # Calcul des statistiques
+        stats_globales = _calculate_global_stats(donnees_urls)
+        statuts_disponibles = _group_by_status(donnees_urls)
+        types_lieu_stats = _calculate_type_stats(donnees_urls)
+        codes_http_stats = _calculate_http_stats(donnees_urls)
+
+        # Préparation des données pour le template
+        donnees_template = {
+            "titre_rapport": titre_rapport,
+            "date_generation": datetime.now().strftime("%d/%m/%Y à %H:%M"),
+            "stats_globales": stats_globales,
+            "statuts_disponibles": statuts_disponibles,
+            "types_lieu_stats": types_lieu_stats,
+            "codes_http_stats": codes_http_stats,
+            "model_info": model_info,
+        }
+
+        # Génération des rapports
+        try:
+            resume_html = simple_template.render(**donnees_template)
+            html_content = template.render(**donnees_template)
+            logger.debug("Templates rendus avec succès")
+        except Exception as e:
+            raise RuntimeError(f"Erreur rendu template: {e}")
+
+        # Sauvegarde du fichier
+        fichier_rapport_html = _save_report(html_content)
+
+        logger.info(f"Rapport généré avec succès: {fichier_rapport_html}")
+        return resume_html, fichier_rapport_html
+
+    except Exception as e:
+        logger.error(f"Erreur génération rapport: {e}")
+        raise
+
+
+def _extract_data_from_database(db_file: str) -> list:
+    """Extrait les données depuis la base de données."""
+    try:
+        uri = f"sqlite:///{db_file}"
+        query = """
+        SELECT 
+            l.type_lieu, 
+            l.identifiant, 
+            l.nom, 
+            l.url, 
+            l.horaires_data_gl,
+            r.statut_url AS statut, 
+            r.message_url AS message, 
+            r.llm_horaires_json, 
+            r.llm_horaires_osm, 
+            r.code_http,
+            r.horaires_identiques,
+            r.differences_horaires
+        FROM resultats_extraction AS r 
+        JOIN lieux AS l ON r.lieu_id = l.identifiant 
+        ORDER BY l.identifiant
+        """
+
+        df = pl.read_database_uri(query=query, uri=uri, engine="connectorx")
+        return df.to_dicts()
+
+    except Exception as e:
+        logger.error(f"Erreur extraction données: {e}")
+        raise RuntimeError(f"Erreur lors de l'extraction des données: {e}")
+
+
+def _process_data(donnees_urls: list) -> None:
+    """Traite et normalise les données extraites."""
     for url in donnees_urls:
-        # Convertir llm_horaires_json en objet Python si c'est une chaîne JSON
-        if "llm_horaires_json" in url and url["llm_horaires_json"]:
-            try:
+        try:
+            # Convertir llm_horaires_json en objet Python si c'est une chaîne JSON
+            if "llm_horaires_json" in url and url["llm_horaires_json"]:
                 if isinstance(url["llm_horaires_json"], str):
-                    url["llm_horaires_json"] = json.loads(url["llm_horaires_json"])
-            except json.JSONDecodeError:
-                # Si ce n'est pas un JSON valide, le garder comme une chaîne
-                pass
+                    try:
+                        url["llm_horaires_json"] = json.loads(url["llm_horaires_json"])
+                    except json.JSONDecodeError:
+                        logger.warning(
+                            f"JSON invalide pour {url.get('identifiant', 'inconnu')}"
+                        )
 
-        # S'assurer que les champs requis existent avec des valeurs par défaut
-        url.setdefault("llm_horaires_json", None)
-        url.setdefault("llm_horaires_osm", None)
-        url.setdefault("code_http", 0)
-        url.setdefault("message", "")
-        url.setdefault("url", "")
-        url.setdefault("nom", "")
-        url.setdefault("identifiant", "")
-        url.setdefault("type_lieu", "")
+            # Créer le champ comparaison_horaires pour compatibilité avec le template
+            _create_comparison_field(url)
 
-    # Calculer les statistiques globales
+            # S'assurer que les champs requis existent avec des valeurs par défaut
+            _set_default_fields(url)
+
+        except Exception as e:
+            logger.warning(
+                f"Erreur traitement données pour {url.get('identifiant', 'inconnu')}: {e}"
+            )
+
+
+def _create_comparison_field(url: dict) -> None:
+    """Crée le champ de comparaison pour le template."""
+    horaires_identiques = url.get("horaires_identiques")
+    differences_horaires = url.get("differences_horaires", "")
+
+    if horaires_identiques is None:
+        url["comparaison_horaires"] = "Non comparé"
+    elif horaires_identiques is True:
+        url["comparaison_horaires"] = "IDENTIQUE - Aucune différence détectée"
+    elif horaires_identiques is False:
+        url["comparaison_horaires"] = f"DIFFÉRENT - {differences_horaires}"
+    else:
+        url["comparaison_horaires"] = (
+            differences_horaires if differences_horaires else "Erreur de comparaison"
+        )
+
+
+def _set_default_fields(url: dict) -> None:
+    """Définit les valeurs par défaut pour les champs requis."""
+    defaults = {
+        "llm_horaires_json": None,
+        "llm_horaires_osm": None,
+        "horaires_data_gl": None,
+        "code_http": 0,
+        "message": "",
+        "url": "",
+        "nom": "",
+        "identifiant": "",
+        "type_lieu": "",
+    }
+
+    for field, default_value in defaults.items():
+        url.setdefault(field, default_value)
+
+
+def _calculate_global_stats(donnees_urls: list) -> dict:
+    """Calcule les statistiques globales."""
     total_urls = len(donnees_urls)
 
-    # Compter par statut
-    statuts_count = (
-        df.group_by("statut").agg(pl.len().alias("count")).to_dict(as_series=False)
+    # Statistiques de comparaison
+    comparisons_done = len(
+        [u for u in donnees_urls if u.get("horaires_identiques") is not None]
     )
-    statuts_dict = {
-        statut: count
-        for statut, count in zip(statuts_count["statut"], statuts_count["count"])
-    }
-
-    # Compter par type de lieu
-    types_lieu_count = (
-        df.group_by("type_lieu").agg(pl.len().alias("count")).to_dict(as_series=False)
+    comparisons_identical = len(
+        [u for u in donnees_urls if u.get("horaires_identiques") is True]
     )
-    types_lieu_dict = {
-        type_lieu: count
-        for type_lieu, count in zip(
-            types_lieu_count["type_lieu"], types_lieu_count["count"]
-        )
-    }
-
-    # Compter par code HTTP
-    codes_http_count = (
-        df.group_by("code_http").agg(pl.len().alias("count")).to_dict(as_series=False)
+    comparisons_different = len(
+        [u for u in donnees_urls if u.get("horaires_identiques") is False]
     )
+    comparisons_not_done = total_urls - comparisons_done
 
-    stats_globales = {
+    return {
         "total_urls": total_urls,
+        "comparisons_done": comparisons_done,
+        "comparisons_identical": comparisons_identical,
+        "comparisons_different": comparisons_different,
+        "comparisons_not_done": comparisons_not_done,
     }
 
-    # Définir les statuts et leurs propriétés (simplifié)
+
+def _group_by_status(donnees_urls: list) -> list:
+    """Groupe les URLs par statut."""
+    # Configuration des statuts
     statuts_config = {
         "ok": {
             "nom": "Succès",
@@ -169,15 +291,14 @@ def generer_rapport_html(
         },
     }
 
-    # Reclassifier les données selon le nouveau critère : présence d'horaires OSM
+    # Reclassifier les données selon le critère : présence d'horaires OSM
     for url in donnees_urls:
-        # Reclassifier basé uniquement sur la présence d'horaires OSM
         if url.get("llm_horaires_osm") and url["llm_horaires_osm"].strip():
             url["statut"] = "ok"
         else:
             url["statut"] = "error"
 
-    # Regrouper les URLs par statut
+    # Regrouper par statut
     statuts_disponibles = []
     for statut_code, config in statuts_config.items():
         urls_du_statut = [u for u in donnees_urls if u["statut"] == statut_code]
@@ -194,81 +315,83 @@ def generer_rapport_html(
                 }
             )
 
-    # Regroupement par type de lieu
-    types_lieu_stats = []
-    for type_lieu, count in types_lieu_dict.items():
-        types_lieu_stats.append(
-            {
-                "type": type_lieu,
-                "count": count,
-            }
-        )
-
-    # Regroupement par code HTTP avec tri
-    codes_http_stats = []
-    for code_http, count in zip(
-        codes_http_count["code_http"], codes_http_count["count"]
-    ):
-        codes_http_stats.append(
-            {
-                "code": code_http,
-                "count": count,
-            }
-        )
-    codes_http_stats.sort(key=lambda x: x["code"])
-
-    # Construire le titre enrichi avec les informations du modèle
-    titre_enrichi = titre_rapport
-    if model_info:
-        modele = model_info.get("modele", "")
-        base_url = model_info.get("base_url", "")
-        fournisseur = model_info.get("fournisseur", "")
-
-        if modele:
-            titre_enrichi += f" - Modèle: {modele}"
-        if base_url:
-            titre_enrichi += f" - URL: {base_url}"
-        elif fournisseur:
-            titre_enrichi += f" - Fournisseur: {fournisseur}"
-
-    # Données à passer au template
-    donnees_template = {
-        "titre_rapport": titre_rapport,  # Titre principal sans modification
-        "date_generation": datetime.now().strftime("%d/%m/%Y à %H:%M"),
-        "stats_globales": stats_globales,
-        "statuts_disponibles": statuts_disponibles,
-        "types_lieu_stats": types_lieu_stats,
-        "codes_http_stats": codes_http_stats,
-        "model_info": model_info,  # Ajouter les infos du modèle pour usage dans le template
-    }
-
-    # Génération du HTML simple pour l'email
-    resume_html = simple_template.render(**donnees_template)
-
-    # Génération du rapport HTML complet
-    html_content = template.render(**donnees_template)
-
-    # Sauvegarde du fichier
-    fichier_rapport_html = f"rapport_urls_{datetime.now().strftime('%Y%m%d_%H%M')}.html"
-    with open(fichier_rapport_html, "w", encoding="utf-8") as f:
-        f.write(html_content)
-
-    print(f"Rapport généré : {fichier_rapport_html}")
-    return resume_html, fichier_rapport_html
+    return statuts_disponibles
 
 
-# Exemple d'utilisation de la fonction
-if __name__ == "__main__":
-    from pathlib import Path
+def _calculate_type_stats(donnees_urls: list) -> list:
+    """Calcule les statistiques par type de lieu."""
+    type_counts = {}
+    for url in donnees_urls:
+        type_lieu = url.get("type_lieu", "Non défini")
+        type_counts[type_lieu] = type_counts.get(type_lieu, 0) + 1
 
-    SCRIPT_DIR = Path(r"C:\Users\beranger\Documents\GitHub\smart_watch\data")
-    DATA_DIR = SCRIPT_DIR
-    NOM_FIC = "alerte_modif_horaire_lieu_devstral"
-    DB_FILE = DATA_DIR / f"{NOM_FIC}.db"
+    return [
+        {"type": type_lieu, "count": count} for type_lieu, count in type_counts.items()
+    ]
 
-    # générer le rapport HTML à partir de la base de données
-    html_content, nom_fichier = generer_rapport_html(
-        db_file=DB_FILE,
-        table_name="_".join(NOM_FIC.split("_")[:-1]),
-        titre_rapport="Rapport de vérification des URLs",
+
+def _calculate_http_stats(donnees_urls: list) -> list:
+    """Calcule les statistiques par code HTTP."""
+    code_counts = {}
+    for url in donnees_urls:
+        code_http = url.get("code_http", 0)
+        code_counts[code_http] = code_counts.get(code_http, 0) + 1
+
+    return sorted(
+        [{"code": code, "count": count} for code, count in code_counts.items()],
+        key=lambda x: x["code"],
     )
+
+
+def _save_report(html_content: str) -> str:
+    """Sauvegarde le rapport HTML et retourne le nom du fichier."""
+    try:
+        fichier_rapport_html = (
+            f"rapport_urls_{datetime.now().strftime('%Y%m%d_%H%M')}.html"
+        )
+
+        with open(fichier_rapport_html, "w", encoding="utf-8") as f:
+            f.write(html_content)
+
+        logger.debug(f"Rapport sauvegardé: {fichier_rapport_html}")
+        return fichier_rapport_html
+
+    except Exception as e:
+        logger.error(f"Erreur sauvegarde rapport: {e}")
+        raise RuntimeError(f"Erreur lors de la sauvegarde: {e}")
+
+
+def main():
+    """Exemple d'utilisation et tests."""
+    logger.section("TEST GÉNÉRATION RAPPORT")
+
+    try:
+        script_dir = Path(__file__).parent.parent / "data"
+        nom_fic = "alerte_modif_horaire_lieu_devstral"
+        db_file = script_dir / f"{nom_fic}.db"
+
+        if not db_file.exists():
+            logger.error(f"Base de données de test non trouvée: {db_file}")
+            return
+
+        model_info = {
+            "modele": "test-model",
+            "base_url": "http://localhost:8000",
+            "fournisseur": "TEST",
+        }
+
+        resume_html, fichier_html = generer_rapport_html(
+            db_file=str(db_file),
+            table_name="resultats_extraction",
+            titre_rapport="Rapport de test",
+            model_info=model_info,
+        )
+
+        logger.info(f"Test réussi - rapport généré: {fichier_html}")
+
+    except Exception as e:
+        logger.error(f"Erreur lors du test: {e}")
+
+
+if __name__ == "__main__":
+    main()

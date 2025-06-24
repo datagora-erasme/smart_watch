@@ -1,6 +1,21 @@
+import os
 from pathlib import Path
 
 import polars as pl
+from dotenv import load_dotenv
+
+from core.Logger import LogOutput, create_logger
+
+# Charger la variable d'environnement pour le nom du fichier log
+load_dotenv()
+csv_name = os.getenv("CSV_URL_HORAIRES")
+
+# Initialize logger for this module
+logger = create_logger(
+    outputs=[LogOutput.CONSOLE, LogOutput.FILE],
+    log_file=Path(__file__).parent.parent / "data" / "logs" / f"{csv_name}.log",
+    module_name="CSVToPolars",
+)
 
 
 class CSVToPolars:
@@ -36,17 +51,21 @@ class CSVToPolars:
             str : Message d'erreur si le fichier n'est pas trouvé.
         """
         if self.file_path.exists():
-            print(f"Fichier {self.file_path} trouvé")
+            logger.info(f"Chargement CSV: {self.file_path.name}")
 
-            # Transformer ce fichier csv en dataframe Polars
-            print(f"Transformation du fichier {self.file_path} en dataframe Polars")
-            self.df = pl.read_csv(
-                self.file_path, has_header=self.has_header, separator=self.separator
-            )
-
-            print("Fichier transformé en dataframe Polars")
-            return self.df
+            try:
+                self.df = pl.read_csv(
+                    self.file_path, has_header=self.has_header, separator=self.separator
+                )
+                logger.info(
+                    f"CSV chargé: {len(self.df)} lignes, {len(self.df.columns)} colonnes"
+                )
+                return self.df
+            except Exception as e:
+                logger.error(f"Erreur lecture CSV: {e}")
+                return f"Erreur lors de la lecture du fichier: {e}"
         else:
+            logger.error(f"Fichier CSV introuvable: {self.file_path}")
             return f"Fichier {self.file_path} non trouvé"
 
     def print_info(self) -> None:
@@ -55,8 +74,9 @@ class CSVToPolars:
         le nombre de lignes et de colonnes, et les premières lignes du DataFrame.
         """
         if self.df is not None:
-            print(f"Fichier: {self.file_path.name}")
-            print(f"{self.df.shape[0]} lignes, {self.df.shape[1]} colonnes")
-            print(self.df.head())
+            logger.info(
+                f"Fichier: {self.file_path.name} - {self.df.shape[0]} lignes, {self.df.shape[1]} colonnes"
+            )
+            logger.debug(f"Premières lignes:\n{self.df.head()}")
         else:
-            print("Aucun fichier chargé")
+            logger.warning("Aucun fichier chargé")

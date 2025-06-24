@@ -1,4 +1,21 @@
+import os
+from pathlib import Path
+
+from dotenv import load_dotenv
 from html_to_markdown import convert_to_markdown
+
+from core.Logger import LogOutput, create_logger
+
+# Charger la variable d'environnement pour le nom du fichier log
+load_dotenv()
+csv_name = os.getenv("CSV_URL_HORAIRES")
+
+# Initialize logger for this module
+logger = create_logger(
+    outputs=[LogOutput.CONSOLE, LogOutput.FILE],
+    log_file=Path(__file__).parent.parent / "data" / "logs" / f"{csv_name}.log",
+    module_name="HtmlToMarkdown",
+)
 
 
 class HtmlToMarkdown:
@@ -26,6 +43,7 @@ class HtmlToMarkdown:
         self.html = html
         self.library_type = library_type
         self.bs4_parser = bs4_parser
+        logger.debug(f"HtmlToMarkdown initialisé: {library_type}")
 
     def convert(self):
         """
@@ -34,33 +52,35 @@ class HtmlToMarkdown:
         Returns:
             str: The converted Markdown content
         """
-        if self.library_type == "html_to_markdown":
-            try:
+        try:
+            if self.library_type == "html_to_markdown":
+                logger.debug("Conversion avec html_to_markdown")
                 return convert_to_markdown(self.html)
-            except ImportError:
-                raise ImportError("html_to_markdown library not found")
 
-        elif self.library_type == "bs4":
-            try:
+            elif self.library_type == "bs4":
+                logger.debug(f"Conversion avec BeautifulSoup + {self.bs4_parser}")
                 import bs4
 
                 soup = bs4.BeautifulSoup(self.html, self.bs4_parser)
                 return convert_to_markdown(soup)
-            except ImportError:
-                raise ImportError("Required librarie bs4 not found")
-            except bs4.exceptions.FeatureNotFound:
-                raise ImportError(
-                    f"BeautifulSoup feature '{self.bs4_parser}' not found. Ensure you have the correct parser installed, or that the 'self.bs4_option' is correct."
-                )
 
-        else:
-            raise ValueError(
-                f"Unsupported library type: {self.library_type}. Use 'pyhtml2md', 'html_to_markdown', or 'bs4'"
-            )
+            else:
+                logger.error(f"Type de librairie non supporté: {self.library_type}")
+                raise ValueError(
+                    f"Unsupported library type: {self.library_type}. Use 'html_to_markdown', or 'bs4'"
+                )
+        except ImportError as e:
+            logger.error(f"Librairie manquante: {e}")
+            raise
+        except Exception as e:
+            logger.error(f"Erreur conversion HTML: {e}")
+            raise
 
 
 # Example usage
 if __name__ == "__main__":
+    logger.section("TEST HTML TO MARKDOWN")
+
     HTML = """
     <article>
         <h1>Welcome</h1>
@@ -74,13 +94,14 @@ if __name__ == "__main__":
 
     # Using different converters
     converter1 = HtmlToMarkdown(HTML, library_type="html_to_markdown")
-    print("\nUsing html_to_markdown:")
+    logger.info("Test avec html_to_markdown")
     print(converter1.convert())
 
     converter2 = HtmlToMarkdown(HTML, library_type="bs4")
-    print("\nUsing BeautifulSoup + html_to_markdown:")
+    logger.info("Test avec BeautifulSoup + html_to_markdown")
     print(converter2.convert())
 
     # Enregistrer le résultat dans un fichier Markdown
     with open("output.md", "w", encoding="utf-8") as md_file:
         md_file.write(converter2.convert())
+    logger.info("Résultat sauvegardé dans output.md")

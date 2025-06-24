@@ -1,6 +1,22 @@
+import os
 from datetime import datetime
+from pathlib import Path
 
 import requests
+from dotenv import load_dotenv
+
+from core.Logger import LogOutput, create_logger
+
+# Charger la variable d'environnement pour le nom du fichier log
+load_dotenv()
+csv_name = os.getenv("CSV_URL_HORAIRES")
+
+# Initialize logger for this module
+logger = create_logger(
+    outputs=[LogOutput.CONSOLE, LogOutput.FILE],
+    log_file=Path(__file__).parent.parent / "data" / "logs" / f"{csv_name}.log",
+    module_name="JoursFeries",
+)
 
 
 def get_jours_feries(zone="metropole", annee=None):
@@ -20,11 +36,14 @@ def get_jours_feries(zone="metropole", annee=None):
     url = f"https://calendrier.api.gouv.fr/jours-feries/{zone}/{annee}.json"
 
     try:
+        logger.debug(f"Requête jours fériés: {zone} {annee}")
         response = requests.get(url)
         response.raise_for_status()
-        return response.json()
+        result = response.json()
+        logger.info(f"Jours fériés récupérés: {len(result)} dates")
+        return result
     except requests.exceptions.RequestException as e:
-        print(f"Erreur lors de la récupération des données: {e}")
+        logger.error(f"Erreur API jours fériés: {e}")
         return None
 
 
@@ -45,15 +64,17 @@ def get_day_name(date_str):
 
 def main():
     """Fonction pour tester la librairie."""
+    logger.section("TEST JOURS FÉRIÉS")
+
     jours_feries = get_jours_feries()
 
     if jours_feries:
-        print(f"Jours fériés pour la métropole en {datetime.now().year}:")
+        logger.info(f"Jours fériés pour la métropole en {datetime.now().year}:")
         for date, nom in jours_feries.items():
             jour_semaine = get_day_name(date)
-            print(f"{jour_semaine} {date} : {nom}")
+            logger.info(f"{jour_semaine} {date} : {nom}")
     else:
-        print("Impossible de récupérer les jours fériés")
+        logger.error("Impossible de récupérer les jours fériés")
 
 
 if __name__ == "__main__":

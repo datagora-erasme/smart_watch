@@ -1,8 +1,24 @@
+import os
 from datetime import datetime
+from pathlib import Path
 from typing import Optional
 
 import polars as pl
 import requests
+from dotenv import load_dotenv
+
+from core.Logger import LogOutput, create_logger
+
+# Charger la variable d'environnement pour le nom du fichier log
+load_dotenv()
+csv_name = os.getenv("CSV_URL_HORAIRES")
+
+# Initialize logger for this module
+logger = create_logger(
+    outputs=[LogOutput.CONSOLE, LogOutput.FILE],
+    log_file=Path(__file__).parent.parent / "data" / "logs" / f"{csv_name}.log",
+    module_name="VacancesScolaires",
+)
 
 
 def get_vacances_scolaires(
@@ -54,12 +70,11 @@ def get_vacances_scolaires(
         where_conditions.append(f"annee_scolaire like '{annee_scolaire}'")
 
     where_clause = " and ".join(where_conditions)
-
     params = {"where": where_clause, "limit": 100}
 
     try:
+        logger.debug(f"Requête vacances scolaires: {localisation or 'toutes zones'}")
         response = requests.get(base_url, params=params)
-        # print(f"URL appelée: {response.url}")
         response.raise_for_status()
         data = response.json()
 
@@ -75,10 +90,15 @@ def get_vacances_scolaires(
                 ]
             )
 
+        if not df.is_empty():
+            logger.info(f"Vacances trouvées: {len(df)} périodes")
+        else:
+            logger.warning("Aucune période de vacances trouvée")
+
         # On retourne le dataframe Polars trié par date de début et de fin
         return df.sort(["start_date", "end_date"])
     except requests.exceptions.RequestException as e:
-        print(f"Erreur lors de la récupération des vacances scolaires: {e}")
+        logger.error(f"Erreur API vacances scolaires: {e}")
         return None
 
 
@@ -100,18 +120,16 @@ def format_date_vacances(date_str: str) -> str:
 
 def main():
     """Fonction pour tester la librairie."""
-    print("=== Test de récupération des vacances scolaires ===")
+    logger.section("TEST VACANCES SCOLAIRES")
 
     # Test 1: Vacances pour Lyon avec dates spécifiques
-    print("\n1. Vacances scolaires pour Lyon (2024-2026):")
+    logger.info("Test vacances Lyon 2025")
     vacances_lyon = get_vacances_scolaires(
         localisation="Lyon", date_debut="2025-01-01", date_fin="2025-12-31"
     )
 
-    print(vacances_lyon)
-
-    if not vacances_lyon.is_empty():
-        print(f"Nombre de périodes trouvées: {len(vacances_lyon)}")
+    if vacances_lyon and not vacances_lyon.is_empty():
+        logger.info(f"Résultat: {len(vacances_lyon)} périodes trouvées")
         for row in vacances_lyon.iter_rows(named=True):
             debut = format_date_vacances(row["start_date"])
             fin = format_date_vacances(row["end_date"])
@@ -119,20 +137,19 @@ def main():
             zone = row["zones"]
             population = row["population"]
             annee_scolaire = row["annee_scolaire"]
-            print(f"  • {description} ({zone}) - {annee_scolaire}")
-            print(f"    Du {debut} au {fin} - Population: {population}")
+            logger.info(
+                f"  • {description} ({zone}) - {annee_scolaire} | Du {debut} au {fin} - Population: {population}"
+            )
     else:
-        print("Impossible de récupérer les vacances scolaires")
+        logger.error("Impossible de récupérer les vacances scolaires")
 
     # Test 2: Vacances pour une période courte
-    print("\n2. Vacances scolaires pour la zone C au printemps 2025 :")
+    logger.info("Test vacances zone C printemps 2025")
     vacances_zone_c = get_vacances_scolaires(
         zone="C", date_debut="2025-03-01", date_fin="2025-06-30"
     )
 
-    print(vacances_zone_c)
-
-    if not vacances_zone_c.is_empty():
+    if vacances_zone_c and not vacances_zone_c.is_empty():
         # Traiter le DataFrame pour ne garder que les enregistrements uniques,
         # sans tenir compte de la colonne "location"
         vacances_zone_c = vacances_zone_c.unique(
@@ -142,40 +159,41 @@ def main():
             maintain_order=True,
         )
 
-        print(f"Nombre de périodes trouvées: {len(vacances_zone_c)}")
+        logger.info(f"Résultat: {len(vacances_zone_c)} périodes trouvées")
         for row in vacances_zone_c.iter_rows(named=True):
             debut = format_date_vacances(row["start_date"])
             fin = format_date_vacances(row["end_date"])
             description = row["description"]
-            print(f"  • {description}: {debut} au {fin}")
+            logger.info(f"  • {description}: {debut} au {fin}")
+    else:
+        logger.warning("Aucune période de vacances trouvée pour la zone C")
 
     # Test 3: Vacances des élèves pour l'année en cours à Lyon
     year = datetime.now().year
-    print(f"\n3. Vacances scolaires pour les élèves à Lyon, sur l'année {year} :")
+    logger.info(f"Test vacances élèves Lyon année {year}")
     vacances = get_vacances_scolaires(
         localisation="Lyon",
         date_debut=f"{year}-01-01",
         date_fin=f"{year}-12-31",
     )
 
-    # print(vacances)
-
-    if not vacances.is_empty():
+    if vacances and not vacances.is_empty():
         # Traiter le DataFrame pour ne garder que les vacances pour élèves ou tous (exclure "Enseignants")
         vacances = vacances.filter(
             pl.col("population").is_in(["Élèves", "-"], nulls_equal=True)
         )
 
-        print(f"Nombre de périodes trouvées: {len(vacances)}")
+        logger.info(f"Résultat: {len(vacances)} périodes trouvées")
         for row in vacances.iter_rows(named=True):
             debut = format_date_vacances(row["start_date"])
             fin = format_date_vacances(row["end_date"])
             description = row["description"]
-            print(f"  • {description}: {debut} au {fin}")
+            logger.info(f"  • {description}: {debut} au {fin}")
+    else:
+        logger.warning("Aucune période de vacances trouvée pour les élèves")
 
     # Test 4: Vacances de l'année scolaire en cours à Lyon
-    print("\n4. Vacances scolaires pour l'année scolaire en cours à Lyon :")
-
+    logger.info("Test vacances année scolaire en cours Lyon")
     # Calcul de l'année scolaire en cours
     # L'année scolaire commence en septembre et se termine en juin de l'année suivante
     # Date du jour
@@ -192,20 +210,22 @@ def main():
         annee_scolaire=f"{year}-{year + 1}",
     )
 
-    print(vacances)
-
-    if not vacances.is_empty():
+    if vacances and not vacances.is_empty():
         # Traiter le DataFrame pour ne garder que les vacances pour élèves ou tous (exclure "Enseignants")
         vacances = vacances.filter(
             pl.col("population").is_in(["Élèves", "-"], nulls_equal=True)
         )
 
-        print(f"Nombre de périodes trouvées: {len(vacances)}")
+        logger.info(f"Résultat: {len(vacances)} périodes trouvées")
         for row in vacances.iter_rows(named=True):
             debut = format_date_vacances(row["start_date"])
             fin = format_date_vacances(row["end_date"])
             description = row["description"]
-            print(f"  • {description}: {debut} au {fin}")
+            logger.info(f"  • {description}: {debut} au {fin}")
+    else:
+        logger.warning(
+            "Aucune période de vacances trouvée pour l'année scolaire en cours"
+        )
 
 
 if __name__ == "__main__":

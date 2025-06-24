@@ -1,13 +1,28 @@
 """
-Module de gestion générique de base de données SQLite.
+Module de gestion de base de données SQLite.
 Classe générique réutilisable pour différents projets.
 """
 
+import os
 import sqlite3
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
 import polars as pl
+from dotenv import load_dotenv
+
+from core.Logger import LogOutput, create_logger
+
+# Charger la variable d'environnement pour le nom du fichier log
+load_dotenv()
+csv_name = os.getenv("CSV_URL_HORAIRES")
+
+# Initialize logger for this module
+logger = create_logger(
+    outputs=[LogOutput.CONSOLE, LogOutput.FILE],
+    log_file=Path(__file__).parent.parent / "data" / "logs" / f"{csv_name}.log",
+    module_name="DatabaseManager",
+)
 
 
 class DatabaseManager:
@@ -23,6 +38,7 @@ class DatabaseManager:
         """
         self.db_file = Path(db_file)
         self.table_name = table_name
+        logger.debug(f"DatabaseManager initialisé: {self.db_file.name} / {table_name}")
 
     def exists(self) -> bool:
         """
@@ -31,7 +47,9 @@ class DatabaseManager:
         Returns:
             True si la base existe, False sinon
         """
-        return self.db_file.exists()
+        exists = self.db_file.exists()
+        logger.debug(f"Base existe: {exists}")
+        return exists
 
     def initialize(self, df_initial: pl.DataFrame, if_exists: str = "fail") -> None:
         """
@@ -47,26 +65,23 @@ class DatabaseManager:
         try:
             if not self.exists() or if_exists == "replace":
                 action = "Création" if not self.exists() else "Remplacement"
-                print(f"{action} de la base de données SQLite '{self.db_file}'")
+                logger.info(f"{action} base de données: {self.db_file.name}")
 
                 df_initial.write_database(
                     table_name=self.table_name,
                     connection=f"sqlite:///{self.db_file}",
                     if_table_exists="replace",
                 )
-                print(
-                    f"Base de données initialisée avec {len(df_initial)} enregistrements"
-                )
+                logger.info(f"Base initialisée: {len(df_initial)} enregistrements")
             elif if_exists == "skip":
-                print(f"Base de données existante trouvée : '{self.db_file}' - Ignorée")
+                logger.info(f"Base existante ignorée: {self.db_file.name}")
             else:
+                logger.error(f"Base existe déjà: {self.db_file.name}")
                 raise FileExistsError(
                     f"La base de données '{self.db_file}' existe déjà"
                 )
         except Exception as err:
-            print(
-                f"Erreur lors de l'initialisation de la base de données '{self.db_file}': '{err}'"
-            )
+            logger.error(f"Erreur initialisation base: {err}")
             raise
 
     def load_data(self, query: Optional[str] = None) -> pl.DataFrame:
@@ -90,12 +105,10 @@ class DatabaseManager:
                 query=query,
                 uri=f"sqlite:///{self.db_file}",
             )
-            print(f"Chargement de {len(df)} enregistrements depuis la base")
+            logger.info(f"Données chargées: {len(df)} enregistrements")
             return df
         except Exception as err:
-            print(
-                f"Erreur lors du chargement depuis la base de données '{self.db_file}': '{err}'"
-            )
+            logger.error(f"Erreur chargement données: {err}")
             raise
 
     def update_record(
@@ -132,10 +145,11 @@ class DatabaseManager:
             conn.commit()
             conn.close()
 
+            logger.debug(f"Enregistrements mis à jour: {rows_affected}")
             return rows_affected
 
         except Exception as err:
-            print(f"Erreur lors de la mise à jour : {err}")
+            logger.error(f"Erreur mise à jour: {err}")
             raise
 
     def execute_query(self, query: str, params: tuple = None) -> List[tuple]:
@@ -150,6 +164,8 @@ class DatabaseManager:
             Résultats de la requête
         """
         try:
+            logger.debug(f"Exécution requête: {query[:50]}...")
+
             conn = sqlite3.connect(self.db_file)
             cursor = conn.cursor()
 
@@ -161,7 +177,8 @@ class DatabaseManager:
             results = cursor.fetchall()
             conn.close()
 
+            logger.debug(f"Résultats: {len(results)} lignes")
             return results
         except Exception as err:
-            print(f"Erreur lors de l'exécution de la requête : {err}")
+            logger.error(f"Erreur exécution requête: {err}")
             raise

@@ -3,9 +3,25 @@ import signal
 import sys
 from contextlib import contextmanager
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
 import requests
+from dotenv import load_dotenv
+
+from core.ErrorHandler import ErrorCategory, ErrorHandler, ErrorSeverity, handle_errors
+from core.Logger import LogOutput, create_logger
+
+# Charger la variable d'environnement pour le nom du fichier log
+load_dotenv()
+csv_name = os.getenv("CSV_URL_HORAIRES")
+
+# Initialize logger for this module
+logger = create_logger(
+    outputs=[LogOutput.CONSOLE, LogOutput.FILE],
+    log_file=Path(__file__).parent.parent / "data" / "logs" / f"{csv_name}.log",
+    module_name="LLMClient",
+)
 
 
 @dataclass
@@ -17,9 +33,7 @@ class LLMMessage:
 
 
 class llm_openai:
-    """
-    Client pour interagir avec des API compatibles OpenAI.
-    """
+    """Client pour interagir avec des API compatibles OpenAI."""
 
     def __init__(
         self,
@@ -53,24 +67,23 @@ class llm_openai:
         if self.api_key:
             self.session.headers.update({"Authorization": f"Bearer {self.api_key}"})
 
+        logger.debug(f"Client OpenAI initialisé: {model} @ {self.base_url}")
+
+        # Initialiser le gestionnaire d'erreurs
+        self.error_handler = ErrorHandler()
+
+    @handle_errors(
+        category=ErrorCategory.LLM,
+        severity=ErrorSeverity.MEDIUM,
+        user_message="Erreur lors de l'appel au LLM",
+    )
     def call_llm(
         self,
         messages: List[Union[Dict[str, str], LLMMessage]],
         response_format: Optional[Dict[str, Any]] = None,
     ) -> str:
-        """
-        Effectue un appel au LLM.
+        """Effectue un appel au LLM avec gestion d'erreurs centralisée."""
 
-        Args:
-            messages: Liste des messages de la conversation
-            response_format: Format de réponse structuré
-
-        Returns:
-            str: Réponse du LLM
-
-        Raises:
-            Exception: En cas d'erreur lors de l'appel au LLM
-        """
         # Normaliser les messages
         formatted_messages = []
         for msg in messages:
@@ -79,32 +92,104 @@ class llm_openai:
             else:
                 formatted_messages.append(msg)
 
+        logger.debug(f"Appel LLM {self.model}: {len(formatted_messages)} messages")
+
+        payload = {
+            "model": self.model,
+            "messages": formatted_messages,
+            "temperature": self.temperature,
+        }
+
+        # Ajouter le format de réponse structuré si fourni
+        if response_format:
+            payload["response_format"] = response_format
+
+        url = f"{self.base_url}/chat/completions"
+
         try:
-            payload = {
-                "model": self.model,
-                "messages": formatted_messages,
-                "temperature": self.temperature,
-            }
-
-            # Ajouter le format de réponse structuré si fourni
-            if response_format:
-                payload["response_format"] = response_format
-
-            url = f"{self.base_url}/chat/completions"
             response = self.session.post(url, json=payload, timeout=self.timeout)
             response.raise_for_status()
 
             response_data = response.json()
-            return response_data["choices"][0]["message"]["content"]
+            result = response_data["choices"][0]["message"]["content"]
 
-        except requests.exceptions.Timeout:
-            raise Exception(f"Timeout après {self.timeout} secondes")
-        except requests.exceptions.ConnectionError:
-            raise Exception(f"Impossible de se connecter à {url}")
-        except requests.exceptions.HTTPError:
-            raise Exception(f"Erreur HTTP {response.status_code}: {response.text}")
+            logger.debug(f"Réponse LLM reçue: {len(result)} caractères")
+            return result
+
+        except requests.exceptions.Timeout as e:
+            context = self.error_handler.create_error_context(
+                module="LLMClient",
+                function="call_llm",
+                operation=f"Appel LLM {self.model}",
+                data={"timeout": self.timeout, "url": url},
+                user_message=f"Le LLM n'a pas répondu dans les {self.timeout} secondes",
+            )
+
+            return self.error_handler.handle_error(
+                exception=e,
+                context=context,
+                category=ErrorCategory.LLM,
+                severity=ErrorSeverity.MEDIUM,
+                default_return=f"Erreur Timeout LLM après {self.timeout}s",
+            )
+
+        except requests.exceptions.ConnectionError as e:
+            context = self.error_handler.create_error_context(
+                module="LLMClient",
+                function="call_llm",
+                operation=f"Connexion LLM {self.model}",
+                data={"url": url},
+                user_message="Impossible de se connecter au service LLM",
+            )
+
+            self.error_handler.handle_error(
+                exception=e,
+                context=context,
+                category=ErrorCategory.NETWORK,
+                severity=ErrorSeverity.HIGH,
+                reraise=True,
+            )
+
+        except requests.exceptions.HTTPError as e:
+            context = self.error_handler.create_error_context(
+                module="LLMClient",
+                function="call_llm",
+                operation=f"Requête HTTP LLM {self.model}",
+                data={
+                    "status_code": response.status_code,
+                    "response": response.text[:200],
+                },
+                user_message=f"Erreur HTTP {response.status_code} du service LLM",
+            )
+
+            self.error_handler.handle_error(
+                exception=e,
+                context=context,
+                category=ErrorCategory.LLM,
+                severity=ErrorSeverity.HIGH,
+                reraise=True,
+            )
+
         except (KeyError, IndexError) as e:
-            raise Exception(f"Structure de réponse inattendue: {e}")
+            context = self.error_handler.create_error_context(
+                module="LLMClient",
+                function="call_llm",
+                operation="Analyse réponse LLM",
+                data={
+                    "response_keys": list(response_data.keys())
+                    if "response_data" in locals()
+                    else None
+                },
+                user_message="Format de réponse LLM inattendu",
+            )
+
+            self.error_handler.handle_error(
+                exception=e,
+                context=context,
+                category=ErrorCategory.LLM,
+                severity=ErrorSeverity.HIGH,
+                reraise=True,
+            )
 
     def send_message(
         self,
@@ -211,6 +296,7 @@ class llm_mistral:
 
         api_key = api_key or os.environ.get("API_KEY_MISTRAL")
         if not api_key:
+            logger.error("Clé API Mistral manquante")
             raise ValueError("Clé API Mistral requise (MISTRAL_API_KEY)")
 
         # Configuration de la session requests
@@ -221,6 +307,8 @@ class llm_mistral:
                 "Authorization": f"Bearer {api_key}",
             }
         )
+
+        logger.debug(f"Client Mistral initialisé: {model}")
 
     def call_llm(
         self,
@@ -249,6 +337,10 @@ class llm_mistral:
                 formatted_messages.append(msg)
 
         try:
+            logger.debug(
+                f"Appel Mistral {self.model}: {len(formatted_messages)} messages"
+            )
+
             # Préparer le payload de la requête
             payload = {
                 "model": self.model,
@@ -270,17 +362,24 @@ class llm_mistral:
 
             # Vérifier si le modèle a appelé un outil
             if "tool_calls" in choice["message"] and choice["message"]["tool_calls"]:
-                return choice["message"]["tool_calls"][0]["function"]["arguments"]
+                result = choice["message"]["tool_calls"][0]["function"]["arguments"]
             else:
-                return choice["message"]["content"]
+                result = choice["message"]["content"]
+
+            logger.debug(f"Réponse Mistral reçue: {len(result)} caractères")
+            return result
 
         except requests.exceptions.Timeout:
+            logger.error(f"Timeout Mistral après {self.timeout}s")
             raise Exception(f"Timeout après {self.timeout} secondes")
         except requests.exceptions.ConnectionError:
+            logger.error("Connexion Mistral impossible")
             raise Exception(f"Impossible de se connecter à {self.base_url}")
         except requests.exceptions.HTTPError:
+            logger.error(f"Erreur HTTP Mistral {response.status_code}")
             raise Exception(f"Erreur HTTP {response.status_code}: {response.text}")
         except (KeyError, IndexError) as e:
+            logger.error(f"Structure réponse Mistral inattendue: {e}")
             raise Exception(f"Structure de réponse inattendue: {e}")
 
     def send_message(
