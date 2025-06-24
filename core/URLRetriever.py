@@ -1,9 +1,28 @@
+import os
 import re
 import ssl
+from pathlib import Path
 
 import urllib3
+from dotenv import load_dotenv
 
+from core.ErrorHandler import ErrorCategory, ErrorHandler, ErrorSeverity, handle_errors
+from core.Logger import LogOutput, create_logger
 from utils.HtmlToMarkdown import HtmlToMarkdown
+
+# Charger la variable d'environnement pour le nom du fichier log
+load_dotenv()
+csv_name = os.getenv("CSV_URL_HORAIRES")
+
+# Initialize logger for this module
+logger = create_logger(
+    outputs=[LogOutput.CONSOLE, LogOutput.FILE],
+    log_file=Path(__file__).parent.parent / "data" / "logs" / f"{csv_name}.log",
+    module_name="URLRetriever",
+)
+
+# Initialisation du gestionnaire d'erreurs pour ce module
+error_handler = ErrorHandler()
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36",
@@ -52,6 +71,11 @@ def _apply_char_replacements(text: str, char_replacements: dict) -> str:
     return text
 
 
+@handle_errors(
+    category=ErrorCategory.NETWORK,
+    severity=ErrorSeverity.MEDIUM,
+    user_message="Erreur lors de la récupération de l'URL",
+)
 def retrieve_url(
     row: dict,
     sortie: str = "html",
@@ -59,37 +83,39 @@ def retrieve_url(
     char_replacements: dict = None,
 ) -> dict:
     """
-    Récupère le contenu HTML d'une URL spécifiée dans un dictionnaire de ligne, gère les erreurs SSL et HTTP,
-    et convertit le contenu éventuel en Markdown.
-
-    Arguments :
-        row (dict): Dictionnaire représentant un enregistrement contenant au moins la clé "url".
-        sortie (str, optionnel): Type de sortie souhaité, "html" ou "markdown". Par défaut "html".
-        encoding_errors (str, optionnel): Stratégie de gestion des erreurs lors du décodage du contenu. Par défaut "ignore".
-        char_replacements (dict, optionnel): Table de remplacement {source: cible}. Par défaut None.
-
-    Renvoie :
-        dict: Dictionnaire enrichi avec le statut, le code HTTP, le message d'erreur éventuel,
-                et le contenu HTML ou Markdown selon la sortie demandée.
+    Récupère le contenu HTML d'une URL avec gestion d'erreurs centralisée.
     """
     row_dict = dict(row)
     url = row.get("url", "")
 
     if not url:
+        # Créer un contexte d'erreur spécifique
+        context = error_handler.create_error_context(
+            module="URLRetriever",
+            function="retrieve_url",
+            operation="Validation URL",
+            data={"row_keys": list(row.keys())},
+            user_message="Aucune URL fournie pour la récupération",
+        )
+
+        error_handler.handle_error(
+            exception=ValueError("URL manquante"),
+            context=context,
+            category=ErrorCategory.VALIDATION,
+            severity=ErrorSeverity.HIGH,
+        )
+
         row_dict["statut"] = "critical"
         row_dict["message"] = "Aucune URL n'a été fournie"
         row_dict["code_http"] = 0
-        print("❌ Erreur : Aucune URL n'a été fournie")
         return row_dict
 
     try:
-        print(f"\nFetching HTML content from {url}")
+        logger.debug(f"Récupération URL: {url}")
 
-        # First try with normal SSL verification, but NO automatic retries
+        # First try with normal SSL verification
         try:
-            http = urllib3.PoolManager(
-                timeout=30.0
-            )  # Removed retries to catch original exceptions
+            http = urllib3.PoolManager(timeout=30.0)
             response = http.request(
                 "GET",
                 url,
@@ -100,20 +126,15 @@ def retrieve_url(
             )
         except urllib3.exceptions.MaxRetryError as max_retry_err:
             error_str = str(max_retry_err)
-            print(
-                f"ℹ️  Erreur lors du GET initial (avec gestion des certificats): {error_str}"
-            )
 
             if "too many redirects" in error_str:
                 row_dict["statut"] = "warning"
                 row_dict["message"] = "too many redirects"
                 row_dict["code_http"] = 310
-                print(f"⚠️  Warning: Too many redirects for {url}")
+                logger.warning(f"Trop de redirections: {url}")
                 return row_dict
             elif "CERTIFICATE_VERIFY_FAILED" in error_str:
-                print(
-                    "ℹ️  Detected specific error: CERTIFICATE_VERIFY_FAILED. Retrying with disabled certificate verification"
-                )
+                logger.debug("Erreur certificat, nouvelle tentative sans vérification")
                 ctx = ssl.create_default_context()
                 ctx.check_hostname = False
                 ctx.verify_mode = ssl.CERT_NONE
@@ -127,10 +148,7 @@ def retrieve_url(
                     timeout=30.0,
                 )
             elif "DH_KEY_TOO_SMALL" in error_str:
-                print(
-                    "ℹ️  Detected specific error: DH_KEY_TOO_SMALL. Retrying with lower SSL security level"
-                )
-                # Try with lower security level
+                logger.debug("Erreur DH_KEY, nouvelle tentative avec sécurité réduite")
                 ctx = ssl.create_default_context()
                 ctx.set_ciphers("DEFAULT@SECLEVEL=1")
                 http = urllib3.PoolManager(ssl_context=ctx)
@@ -143,9 +161,8 @@ def retrieve_url(
                     timeout=30.0,
                 )
             else:
-                # For other SSL errors, try with both mitigations
-                print(
-                    "ℹ️  Retrying with disabled certificate verification and lower SSL security level"
+                logger.debug(
+                    "Erreur SSL, nouvelle tentative avec mitigations complètes"
                 )
                 ctx = ssl.create_default_context()
                 ctx.check_hostname = False
@@ -166,22 +183,18 @@ def retrieve_url(
             row_dict["statut"] = "warning"
             row_dict["code_http"] = response.status
             row_dict["message"] = f"HTTP error {response.status}"
-            print(f"⚠️ Warning: HTTP error {response.status} from {url}")
+            logger.warning(f"Erreur HTTP {response.status}: {url}")
         else:
-            # Décoder avec l'encodage précisé dans l'en-tête de la réponse
+            # Decode content
             content_type = response.headers.get("Content-Type", "")
             encoding = None
             if "charset=" in content_type:
                 encoding = content_type.split("charset=")[-1].strip()
-                print(f"ℹ️  Detected encoding from Content-Type: {encoding}")
             else:
-                encoding = "utf-8"  # Default to utf-8 if no charset is found
-                print(
-                    "ℹ️  No charset detected in Content-Type header, defaulting to utf-8"
-                )
+                encoding = "utf-8"
 
             html_content = response.data.decode(encoding, errors=encoding_errors)
-            print(f"✅ Successfully decoded using {encoding}")
+            logger.debug(f"Contenu décodé ({encoding}): {len(html_content)} caractères")
 
             if sortie == "html":
                 row_dict[sortie] = html_content
@@ -191,16 +204,14 @@ def retrieve_url(
                 )
                 try:
                     markdown_content = converter.convert()
-                    # Épuration des sauts de ligne en double
                     markdown_content = re.sub(r"\n{3,}", "\n\n", markdown_content)
-                    # Remplacement des caractères selon la table si spécifiée
                     if char_replacements:
                         markdown_content = _apply_char_replacements(
                             markdown_content, char_replacements
                         )
                     row_dict[sortie] = markdown_content
                 except Exception as e:
-                    print(f"❌ Error converting HTML to Markdown: {str(e)}")
+                    logger.error(f"Erreur conversion Markdown: {e}")
                     row_dict[sortie] = html_content
 
             # Convert HTML to Markdown if HTML content is available
@@ -209,7 +220,6 @@ def retrieve_url(
                     html=row_dict["html"], library_type="bs4", bs4_parser="lxml"
                 )
                 markdown_content = converter.convert()
-                # Remplacement des caractères selon la table si spécifiée
                 if char_replacements:
                     markdown_content = _apply_char_replacements(
                         markdown_content, char_replacements
@@ -219,18 +229,47 @@ def retrieve_url(
             row_dict["statut"] = "ok"
             row_dict["code_http"] = response.status
             row_dict["message"] = ""
-            print(f"✅ Successfully fetched HTML content from {url}")
-    except urllib3.exceptions.TimeoutError:
+            logger.info(f"Récupération réussie: {url}")
+
+    except urllib3.exceptions.TimeoutError as e:
+        context = error_handler.create_error_context(
+            module="URLRetriever",
+            function="retrieve_url",
+            operation=f"Récupération URL {url}",
+            data={"url": url, "timeout": 30},
+            user_message=f"Timeout lors de l'accès à {url}",
+        )
+
+        error_handler.handle_error(
+            exception=e,
+            context=context,
+            category=ErrorCategory.NETWORK,
+            severity=ErrorSeverity.MEDIUM,
+        )
+
         row_dict["statut"] = "warning"
-        row_dict["code_http"] = response.status
-        row_dict["message"] = "site inaccessible"
-        print(f"⚠️ Warning: Site inaccessible (timeout after 30 seconds) from {url}")
-    except Exception as err:
-        error_str = str(err)
+        row_dict["code_http"] = 0
+        row_dict["message"] = "Timeout"
+
+    except Exception as e:
+        context = error_handler.create_error_context(
+            module="URLRetriever",
+            function="retrieve_url",
+            operation=f"Récupération URL {url}",
+            data={"url": url},
+            user_message=f"Erreur lors de l'accès à {url}",
+        )
+
+        error_handler.handle_error(
+            exception=e,
+            context=context,
+            category=ErrorCategory.NETWORK,
+            severity=ErrorSeverity.MEDIUM,
+        )
+
         row_dict["statut"] = "critical"
-        row_dict["code_http"] = 10
-        row_dict["message"] = error_str
-        print(f"❌ Error fetching content from {url}: {error_str}")
+        row_dict["code_http"] = 0
+        row_dict["message"] = str(e)
 
     return row_dict
 
@@ -247,4 +286,5 @@ def retrieve_url(
 
 # resu = RetrieveURL(row, sortie="html", errors="ignore")
 # with open("output_from_url.md", "w", encoding="utf-8") as md_file:
+#     md_file.write(resu["markdown"])
 #     md_file.write(resu["markdown"])
