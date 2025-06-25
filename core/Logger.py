@@ -171,7 +171,7 @@ def create_logger(
         from pathlib import Path
 
         project_root = Path(__file__).parent.parent
-        log_file = project_root / "data" / "logs" / f"{csv_name}.log"
+        log_file = project_root / "logs" / f"{csv_name}.log"
 
     return SmartWatchLogger(
         outputs=outputs,

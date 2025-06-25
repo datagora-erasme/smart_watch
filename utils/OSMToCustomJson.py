@@ -24,7 +24,7 @@ csv_name = os.getenv("CSV_URL_HORAIRES")
 # Initialize logger for this module
 logger = create_logger(
     outputs=[LogOutput.CONSOLE, LogOutput.FILE],
-    log_file=Path(__file__).parent.parent / "data" / "logs" / f"{csv_name}.log",
+    log_file=Path(__file__).parent.parent / "logs" / f"{csv_name}.log",
     module_name="OSMToCustomJson",
 )
 
