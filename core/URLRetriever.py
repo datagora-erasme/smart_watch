@@ -1,23 +1,14 @@
-import os
 import re
 import ssl
-from pathlib import Path
 
 import urllib3
-from dotenv import load_dotenv
 
 from core.ErrorHandler import ErrorCategory, ErrorHandler, ErrorSeverity, handle_errors
-from core.Logger import LogOutput, create_logger
+from core.Logger import create_logger
 from utils.HtmlToMarkdown import HtmlToMarkdown
-
-# Charger la variable d'environnement pour le nom du fichier log
-load_dotenv()
-csv_name = os.getenv("CSV_URL_HORAIRES")
 
 # Initialize logger for this module
 logger = create_logger(
-    outputs=[LogOutput.CONSOLE, LogOutput.FILE],
-    log_file=Path(__file__).parent.parent / "logs" / f"{csv_name}.log",
     module_name="URLRetriever",
 )
 
@@ -272,19 +263,3 @@ def retrieve_url(
         row_dict["message"] = str(e)
 
     return row_dict
-
-
-# Exemple depuis une URL
-# Enlever "utils."" dans les imports pour exécuter ce code
-
-
-# row = {
-#     "url": "https://www.jeffwinterinsights.com/insights/chatgpt-venn-diagram",
-#     "markdown": "",
-# }
-
-
-# resu = RetrieveURL(row, sortie="html", errors="ignore")
-# with open("output_from_url.md", "w", encoding="utf-8") as md_file:
-#     md_file.write(resu["markdown"])
-#     md_file.write(resu["markdown"])

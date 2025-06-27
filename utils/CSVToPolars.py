@@ -1,19 +1,11 @@
-import os
 from pathlib import Path
 
 import polars as pl
-from dotenv import load_dotenv
 
-from core.Logger import LogOutput, create_logger
-
-# Charger la variable d'environnement pour le nom du fichier log
-load_dotenv()
-csv_name = os.getenv("CSV_URL_HORAIRES")
+from core.Logger import create_logger
 
 # Initialize logger for this module
 logger = create_logger(
-    outputs=[LogOutput.CONSOLE, LogOutput.FILE],
-    log_file=Path(__file__).parent.parent / "logs" / f"{csv_name}.log",
     module_name="CSVToPolars",
 )
 

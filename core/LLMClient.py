@@ -3,23 +3,15 @@ import signal
 import sys
 from contextlib import contextmanager
 from dataclasses import dataclass
-from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
 import requests
-from dotenv import load_dotenv
 
 from core.ErrorHandler import ErrorCategory, ErrorHandler, ErrorSeverity, handle_errors
-from core.Logger import LogOutput, create_logger
-
-# Charger la variable d'environnement pour le nom du fichier log
-load_dotenv()
-csv_name = os.getenv("CSV_URL_HORAIRES")
+from core.Logger import create_logger
 
 # Initialize logger for this module
 logger = create_logger(
-    outputs=[LogOutput.CONSOLE, LogOutput.FILE],
-    log_file=Path(__file__).parent.parent / "logs" / f"{csv_name}.log",
     module_name="LLMClient",
 )
 

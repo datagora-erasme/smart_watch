@@ -3,24 +3,16 @@ Module de gestion de base de données SQLite.
 Classe générique réutilisable pour différents projets.
 """
 
-import os
 import sqlite3
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
 import polars as pl
-from dotenv import load_dotenv
 
-from core.Logger import LogOutput, create_logger
-
-# Charger la variable d'environnement pour le nom du fichier log
-load_dotenv()
-csv_name = os.getenv("CSV_URL_HORAIRES")
+from core.Logger import create_logger
 
 # Initialize logger for this module
 logger = create_logger(
-    outputs=[LogOutput.CONSOLE, LogOutput.FILE],
-    log_file=Path(__file__).parent.parent / "logs" / f"{csv_name}.log",
     module_name="DatabaseManager",
 )
 

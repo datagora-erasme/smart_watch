@@ -1,20 +1,10 @@
 import json
-import os
 from datetime import datetime
-from pathlib import Path
 
-from dotenv import load_dotenv
-
-from core.Logger import LogOutput, create_logger
-
-# Charger la variable d'environnement pour le nom du fichier log
-load_dotenv()
-csv_name = os.getenv("CSV_URL_HORAIRES")
+from core.Logger import create_logger
 
 # Initialize logger for this module
 logger = create_logger(
-    outputs=[LogOutput.CONSOLE, LogOutput.FILE],
-    log_file=Path(__file__).parent.parent / "logs" / f"{csv_name}.log",
     module_name="GetPrompt",
 )
 
@@ -72,5 +62,7 @@ Réponds en utilisant exclusivement le format JSON suivant. Respecte scrupuleuse
         {"role": "user", "content": user_prompt_content},
     ]
 
+    logger.debug(f"Prompt construit: {len(messages)} messages")
+    return messages
     logger.debug(f"Prompt construit: {len(messages)} messages")
     return messages

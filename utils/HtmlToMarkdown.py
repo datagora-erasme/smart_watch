@@ -1,19 +1,9 @@
-import os
-from pathlib import Path
-
-from dotenv import load_dotenv
 from html_to_markdown import convert_to_markdown
 
-from core.Logger import LogOutput, create_logger
-
-# Charger la variable d'environnement pour le nom du fichier log
-load_dotenv()
-csv_name = os.getenv("CSV_URL_HORAIRES")
+from core.Logger import create_logger
 
 # Initialize logger for this module
 logger = create_logger(
-    outputs=[LogOutput.CONSOLE, LogOutput.FILE],
-    log_file=Path(__file__).parent.parent / "logs" / f"{csv_name}.log",
     module_name="HtmlToMarkdown",
 )
 
@@ -104,4 +94,4 @@ if __name__ == "__main__":
     # Enregistrer le résultat dans un fichier Markdown
     with open("output.md", "w", encoding="utf-8") as md_file:
         md_file.write(converter2.convert())
-    logger.info("Résultat sauvegardé dans output.md")
+        logger.info("Résultat sauvegardé dans output.md")

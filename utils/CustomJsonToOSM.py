@@ -7,30 +7,21 @@ en spécification opening_hours d'OSM.
 """
 
 import json
-import os
 import sqlite3
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional, Union
 
-from dotenv import load_dotenv
-
 try:
     from dateutil import parser as date_parser
 except ImportError:
     date_parser = None
 
-from core.Logger import LogOutput, create_logger
-
-# Charger la variable d'environnement pour le nom du fichier log
-load_dotenv()
-csv_name = os.getenv("CSV_URL_HORAIRES")
+from core.Logger import create_logger
 
 # Initialize logger for this module
 logger = create_logger(
-    outputs=[LogOutput.CONSOLE, LogOutput.FILE],
-    log_file=Path(__file__).parent.parent / "logs" / f"{csv_name}.log",
     module_name="CustomJsonToOSM",
 )
 
