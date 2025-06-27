@@ -69,6 +69,7 @@
         {% for statut in statuts_disponibles %}
         <li class="status-item status-{{ statut.type }}">
             {{ statut.emoji }} <strong>{{ statut.nom }} :</strong> {{ statut.count }} URLs ({{ (statut.count / stats_globales.total_urls * 100)|round(1) }}%)
+            <br><small style="opacity: 0.8; font-size: 0.85em;">{{ statut.description }}</small>
         </li>
         {% endfor %}
     </ul>

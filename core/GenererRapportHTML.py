@@ -7,26 +7,18 @@ en base de données, avec support des comparaisons d'horaires.
 
 import base64
 import json
-import os
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, Optional, Tuple
 
 import polars as pl
-from dotenv import load_dotenv
 from jinja2 import Environment, FileSystemLoader
 
 from core.ErrorHandler import ErrorCategory, ErrorSeverity, handle_errors
-from core.Logger import LogOutput, create_logger
-
-# Charger la variable d'environnement pour le nom du fichier log
-load_dotenv()
-csv_name = os.getenv("CSV_URL_HORAIRES")
+from core.Logger import create_logger
 
 # Initialize logger for this module
 logger = create_logger(
-    outputs=[LogOutput.CONSOLE, LogOutput.FILE],
-    log_file=Path(__file__).parent.parent / "data" / "logs" / f"{csv_name}.log",
     module_name="GenererRapportHTML",
 )
 
@@ -274,33 +266,75 @@ def _calculate_global_stats(donnees_urls: list) -> dict:
 
 
 def _group_by_status(donnees_urls: list) -> list:
-    """Groupe les URLs par statut."""
-    # Configuration des statuts
+    """Groupe les URLs par statut avec 4 catégories distinctes."""
+    # Configuration des statuts avec 4 catégories
     statuts_config = {
-        "ok": {
+        "success": {
             "nom": "Succès",
             "emoji": "✅",
             "type": "success",
-            "description": "URLs avec horaires OSM extraits",
+            "description": "URLs accessibles avec horaires OSM extraits et comparaison réussie (horaires identiques)",
         },
-        "error": {
-            "nom": "Erreur",
+        "schedule_diff": {
+            "nom": "Différences horaires",
+            "emoji": "⚠️",
+            "type": "warning",
+            "description": "URLs accessibles avec horaires extraits mais différences détectées lors de la comparaison",
+        },
+        "access_error": {
+            "nom": "Erreurs d'accès",
+            "emoji": "🔒",
+            "type": "error",
+            "description": "URLs inaccessibles, codes d'erreur HTTP, problèmes de connexion ou contenu indisponible",
+        },
+        "extraction_error": {
+            "nom": "Erreurs d'extraction",
             "emoji": "❌",
             "type": "error",
-            "description": "URLs sans horaires OSM (problème d'extraction, URL inaccessible, etc.)",
+            "description": "URLs accessibles mais échec de l'extraction LLM ou de la conversion OSM",
         },
     }
 
-    # Reclassifier les données selon le critère : présence d'horaires OSM
+    # Classification selon les nouveaux critères
     for url in donnees_urls:
-        if url.get("llm_horaires_osm") and url["llm_horaires_osm"].strip():
-            url["statut"] = "ok"
-        else:
-            url["statut"] = "error"
+        # Critère 1: Vérifier l'accessibilité de l'URL
+        url_accessible = url.get("statut") == "ok" and url.get("code_http", 0) in range(
+            200, 300
+        )
 
-    # Regrouper par statut
+        # Critère 2: Vérifier la présence d'horaires OSM extraits
+        has_osm_hours = (
+            url.get("llm_horaires_osm")
+            and url["llm_horaires_osm"].strip()
+            and not url["llm_horaires_osm"].startswith("Erreur")
+        )
+
+        # Critère 3: Vérifier le résultat de la comparaison
+        comparison_result = url.get("horaires_identiques")
+
+        # Classification hiérarchique
+        if not url_accessible:
+            # Problème d'accessibilité : codes HTTP non-200, URL invalide, etc.
+            url["statut"] = "access_error"
+        elif not has_osm_hours:
+            # URL accessible mais échec extraction/conversion
+            url["statut"] = "extraction_error"
+        elif comparison_result is True:
+            # URL accessible, extraction réussie, horaires identiques
+            url["statut"] = "success"
+        elif comparison_result is False:
+            # URL accessible, extraction réussie, mais horaires différents
+            url["statut"] = "schedule_diff"
+        else:
+            # URL accessible, extraction réussie, mais comparaison impossible/non effectuée
+            url["statut"] = "extraction_error"
+
+    # Regrouper par statut dans l'ordre de priorité
     statuts_disponibles = []
-    for statut_code, config in statuts_config.items():
+    ordre_statuts = ["success", "schedule_diff", "extraction_error", "access_error"]
+
+    for statut_code in ordre_statuts:
+        config = statuts_config[statut_code]
         urls_du_statut = [u for u in donnees_urls if u["statut"] == statut_code]
         if urls_du_statut:
             statuts_disponibles.append(
@@ -347,7 +381,7 @@ def _save_report(html_content: str) -> str:
     """Sauvegarde le rapport HTML et retourne le nom du fichier."""
     try:
         fichier_rapport_html = (
-            f"rapport_urls_{datetime.now().strftime('%Y%m%d_%H%M')}.html"
+            f"Rapport_SmartWatch_{datetime.now().strftime('%Y%m%d_%H%M')}.html"
         )
 
         with open(fichier_rapport_html, "w", encoding="utf-8") as f:

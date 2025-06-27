@@ -15,12 +15,14 @@ class Lieux(Base):
 
     identifiant = Column(Text, primary_key=True)
     nom = Column(Text)
-    type_lieu = Column(Text)
+    type_lieu = Column(Text)  # Piscine, mairie, médiathèque, etc.
     url = Column(Text)
     horaires_data_gl = Column(
         Text
     )  # Horaires OSM de référence, pris sur data.grandlyon.com
-    horaires_data_gl_json = Column(Text)
+    horaires_data_gl_json = Column(
+        Text
+    )  # Conversion JSON des horaires OSM GL, à l'aide de utils/OSMToCustomJson.py
 
 
 class Executions(Base):
@@ -29,8 +31,8 @@ class Executions(Base):
     id_executions = Column(Integer, primary_key=True, autoincrement=True)
     date_execution = Column(DateTime, default=func.current_timestamp())
     llm_modele = Column(Text)
-    llm_fournisseur = Column(Text)
-    llm_url = Column(Text)
+    llm_fournisseur = Column(Text)  # OPENAI ou MISTRAL
+    llm_url = Column(Text)  # http://api.openai.com/v1/ par exemple
     llm_consommation_execution = Column(Text)
 
 
@@ -43,15 +45,21 @@ class ResultatsExtraction(Base):
         Integer, ForeignKey("executions.id_executions"), nullable=False
     )
     statut_url = Column(Text)
-    code_http = Column(Integer)
+    code_http = Column(Integer)  # 200, 404, etc.
     message_url = Column(Text)
-    markdown = Column(Text)
-    markdown_horaires = Column(Text)
-    prompt_message = Column(Text)
+    markdown = Column(
+        Text
+    )  # Contenu de la page converti en Markdown via HtmlToMarkdown.py
+    markdown_horaires = Column(
+        Text
+    )  # Extraits du Markdown contenant les horaires, détectés par embeddings
+    prompt_message = Column(Text)  # Prompt complet envoyé au LLM
     llm_consommation_requete = Column(Text)
-    llm_horaires_json = Column(Text)
-    llm_horaires_osm = Column(Text)
+    llm_horaires_json = Column(Text)  # Json des horaires extraits par le LLM
+    llm_horaires_osm = Column(
+        Text
+    )  # Conversion des horaires LLM au format OSM via CustomJsonToOSM.py
     horaires_identiques = Column(
         Boolean, default=None
     )  # True = identiques, False = différents, None = non comparé/erreur
-    differences_horaires = Column(Text)  # Détails des différences uniquement
+    differences_horaires = Column(Text)  # Détails des différences, vide si identiques

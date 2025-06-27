@@ -34,6 +34,7 @@
         /* Badges et boutons unifiés */
         .badge{padding:4px 8px;border-radius:12px;font-size:11px;font-weight:600;text-transform:uppercase}
         .badge.success{background:#d4edda;color:#155724}
+        .badge.warning{background:#fff3cd;color:#856404}
         .badge.error{background:#f8d7da;color:#721c24}
         .btn{border:none;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;margin:2px;background:#17a2b8;color:white}
         .btn:hover{background:#138496}
@@ -152,7 +153,7 @@
                             <td><span class="badge {{ statut.type }}">{{ statut.emoji }} {{ statut.nom }}</span></td>
                             <td>{{ statut.count }}</td>
                             <td>{{ (statut.count / stats_globales.total_urls * 100)|round(1) }}%</td>
-                            <td>{{ statut.description }}</td>
+                            <td style="font-size: 0.9em; line-height: 1.4;">{{ statut.description }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -168,20 +169,6 @@
                         <div class="chart-fill" data-width="{{ (type_lieu.count / stats_globales.total_urls * 100)|round(1) }}" style="background:#667eea"></div>
                     </div>
                     <div class="chart-value">{{ type_lieu.count }}</div>
-                </div>
-                {% endfor %}
-            </div>
-
-            <h3>🔍 Codes HTTP</h3>
-            <div class="chart-container">
-                {% for code_http in codes_http_stats %}
-                <div class="chart-bar">
-                    <div class="chart-label">{{ code_http.code }}</div>
-                    <div class="chart-progress">
-                        <div class="chart-fill" data-width="{{ (code_http.count / stats_globales.total_urls * 100)|round(1) }}" 
-                             data-color="{% if code_http.code >= 200 and code_http.code < 300 %}#28a745{% elif code_http.code >= 400 %}#dc3545{% else %}#ffc107{% endif %}"></div>
-                    </div>
-                    <div class="chart-value">{{ code_http.count }}</div>
                 </div>
                 {% endfor %}
             </div>
@@ -204,10 +191,12 @@
                             <th onclick="sortTable(this,4,'string')" class="col-details">Détails</th>
                             <th class="col-gl">Horaires GL</th>
                             <th class="col-llm">Horaires LLM</th>
-                            {% if statut.code == 'ok' %}
-                            <th class="col-comparison">Différences</th>
-                            {% else %}
+                            {% if statut.code == 'success' %}
                             <th class="col-comparison">Comparaison</th>
+                            {% elif statut.code == 'schedule_diff' %}
+                            <th class="col-comparison">Différences détectées</th>
+                            {% elif statut.code == 'extraction_error' %}
+                            <th class="col-comparison">Erreur extraction</th>
                             {% endif %}
                         </tr>
                     </thead>
@@ -226,7 +215,7 @@
                             <td class="col-http">
                                 <span class="badge {% if url.code_http >= 200 and url.code_http < 300 %}success{% else %}error{% endif %}">{{ url.code_http }}</span>
                             </td>
-                            <td class="col-details">{{ url.message or '-' }}</td>
+                            <td class="col-details"{% if statut.code == 'access_error' %} style="color: #dc3545; font-weight: 500;"{% endif %}>{{ url.message or '-' }}</td>
                             <td class="col-gl">
                                 {% if url.horaires_data_gl %}
                                 <div class="preview gl">{{ url.horaires_data_gl[:60] }}{% if url.horaires_data_gl|length > 60 %}...{% endif %}</div>
@@ -239,25 +228,27 @@
                                 <button class="btn view-btn" data-title="Horaires LLM OSM - {{ url.identifiant }}" data-content="{{ url.llm_horaires_osm|e }}">👁️ Voir</button>
                                 {% else %}-{% endif %}
                             </td>
+                            {% if statut.code != 'access_error' %}
                             <td class="col-comparison">
-                                {% if statut.code == 'ok' %}
-                                    {% if url.horaires_identiques == false and url.differences_horaires %}
+                                {% if statut.code == 'success' %}
+                                    <span style="color: #28a745; font-weight: 500;">✓ Identiques</span>
+                                {% elif statut.code == 'schedule_diff' %}
+                                    {% if url.differences_horaires %}
                                     <div class="preview comparison">{{ url.differences_horaires[:80] }}{% if url.differences_horaires|length > 80 %}...{% endif %}</div>
                                     <button class="btn view-btn" data-title="Différences détaillées - {{ url.identifiant }}" data-content="{{ url.differences_horaires|e }}">👁️ Voir</button>
-                                    {% elif url.horaires_identiques == true %}
-                                    <span style="color: #28a745; font-weight: 500;">✓ Identiques</span>
-                                    {% elif url.horaires_identiques is none %}
-                                    <span style="color: #6c757d;">Non comparé</span>
                                     {% else %}
-                                    -
+                                    <span style="color: #ffc107; font-weight: 500;">⚠️ Différences détectées</span>
                                     {% endif %}
-                                {% else %}
+                                {% elif statut.code == 'extraction_error' %}
                                     {% if url.comparaison_horaires %}
                                     <div class="preview comparison">{{ url.comparaison_horaires[:80] }}{% if url.comparaison_horaires|length > 80 %}...{% endif %}</div>
-                                    <button class="btn view-btn" data-title="Comparaison - {{ url.identifiant }}" data-content="{{ url.comparaison_horaires|e }}">👁️ Voir</button>
-                                    {% else %}-{% endif %}
+                                    <button class="btn view-btn" data-title="Erreur extraction - {{ url.identifiant }}" data-content="{{ url.comparaison_horaires|e }}">👁️ Voir</button>
+                                    {% else %}
+                                    <span style="color: #dc3545; font-weight: 500;">❌ Extraction échouée</span>
+                                    {% endif %}
                                 {% endif %}
                             </td>
+                            {% endif %}
                         </tr>
                         {% endfor %}
                     </tbody>
