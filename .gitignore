@@ -12,6 +12,9 @@ originaux/
 # Rapports générés
 rapport*.html
 
+# Notebooks
+notebooks/
+
 # Distribution / packaging
 .Python
 test/
