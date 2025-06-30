@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+*.pyo
+*.db
+*.log
+*.csv
+*.rst
+*.md
+.idea/
+.vscode/
+logs/
+docs/
+notebooks/
+.venv
+SmartWatch.db
