@@ -16,8 +16,8 @@ class EmailConfig:
     recepteur: str
     smtp_server: str
     smtp_port: int
-    mot_de_passe: str
-    login_smtp: Optional[str] = None
+    smtp_password: str
+    smtp_login: Optional[str] = None
 
 
 class EmailConfigManager(BaseConfig):
@@ -40,8 +40,8 @@ class EmailConfigManager(BaseConfig):
             recepteur=recepteur,
             smtp_server=self.get_env_var("SMTP_SERVER", required=True),
             smtp_port=int(self.get_env_var("SMTP_PORT", "587")),
-            mot_de_passe=self.get_env_var("MDP_MAIL", required=True),
-            login_smtp=self.get_env_var("LOGIN_SMTP"),
+            smtp_password=self.get_env_var("SMTP_PASSWORD", required=True),
+            smtp_login=self.get_env_var("SMTP_LOGIN"),
         )
 
     def validate(self) -> bool:
@@ -49,6 +49,6 @@ class EmailConfigManager(BaseConfig):
         if not self.config:
             return True  # Email optionnel
 
-        if not self.config.mot_de_passe:
+        if not self.config.smtp_password:
             return False
         return True
