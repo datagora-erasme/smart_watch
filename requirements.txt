@@ -2,10 +2,13 @@ connectorx
 dotenv
 html_to_markdown
 jinja2
+langchain
 lxml
 pandas
 polars
 pyarrow
 requests
+sentence-transformers
+sphinx
 sqlalchemy
 urllib3
