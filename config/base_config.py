@@ -94,4 +94,3 @@ class BaseConfig:
             )
 
         return value
-        return value

@@ -37,29 +37,7 @@ class MarkdownFilteringConfig:
         )
 
         # Phrases de référence pour identifier les sections d'horaires
-        self.reference_phrases = config_data.get(
-            "reference_phrases",
-            [
-                "horaires d'ouverture et de fermeture",
-                "heures d'ouverture quotidiennes",
-                "jours et heures d'ouverture",
-                "horaires de service",
-                "horaires de fonctionnement",
-                "horaires des différentes sections",
-                "horaires d'ouverture pour les médiathèques",
-                "horaires des bibliothèques",
-                "horaires des centres culturels",
-                "horaires des espaces multimédias",
-                "horaires des services publics",
-                "horaires des jours fériés",
-                "horaires des vacances scolaires",
-                "lundi mardi mercredi jeudi vendredi samedi dimanche",
-                "ouvert fermé",
-                "de 9h à 18h",
-                "de 14h à 19h",
-                "planning hebdomadaire",
-            ],
-        )
+        self.reference_phrases = config_data.get("reference_phrases", [])
 
 
 class MarkdownFilteringConfigManager(BaseConfig):
@@ -71,6 +49,12 @@ class MarkdownFilteringConfigManager(BaseConfig):
 
     def _init_markdown_filtering_config(self) -> MarkdownFilteringConfig:
         """Initialise la configuration du filtrage markdown."""
+        default_phrases = "horaires d'ouverture et de fermeture;;heures d'ouverture quotidiennes;;jours et heures d'ouverture;;horaires de service;;horaires de fonctionnement;;horaires des différentes sections;;horaires d'ouverture pour les médiathèques;;horaires des bibliothèques;;horaires des centres culturels;;horaires des espaces multimédias;;horaires des services publics;;horaires des jours fériés;;horaires des vacances scolaires;;lundi mardi mercredi jeudi vendredi samedi dimanche;;ouvert fermé;;de 9h à 18h;;de 14h à 19h;;planning hebdomadaire"
+        reference_phrases_str = self.get_env_var("REFERENCE_PHRASES", default_phrases)
+        reference_phrases = [
+            phrase.strip() for phrase in reference_phrases_str.split(";;")
+        ]
+
         return MarkdownFilteringConfig(
             {
                 "embedding_model": self.get_env_var(
@@ -85,26 +69,7 @@ class MarkdownFilteringConfigManager(BaseConfig):
                     ("###", "Header 3"),
                     ("####", "Header 4"),
                 ],
-                "reference_phrases": [
-                    "horaires d'ouverture et de fermeture",
-                    "heures d'ouverture quotidiennes",
-                    "jours et heures d'ouverture",
-                    "horaires de service",
-                    "horaires de fonctionnement",
-                    "horaires des différentes sections",
-                    "horaires d'ouverture pour les médiathèques",
-                    "horaires des bibliothèques",
-                    "horaires des centres culturels",
-                    "horaires des espaces multimédias",
-                    "horaires des services publics",
-                    "horaires des jours fériés",
-                    "horaires des vacances scolaires",
-                    "lundi mardi mercredi jeudi vendredi samedi dimanche",
-                    "ouvert fermé",
-                    "de 9h à 18h",
-                    "de 14h à 19h",
-                    "planning hebdomadaire",
-                ],
+                "reference_phrases": reference_phrases,
             }
         )
 
