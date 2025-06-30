@@ -16,7 +16,7 @@ class LLMConfig:
     modele: str
     api_key: str
     base_url: Optional[str] = None
-    temperature: float = 0.1
+    temperature: float = 0
     timeout: int = 30
 
 
@@ -42,7 +42,7 @@ class LLMConfigManager(BaseConfig):
                 modele=self.get_env_var("MODELE_OPENAI", required=True),
                 api_key=api_key_openai,
                 base_url=base_url_openai,
-                temperature=float(self.get_env_var("LLM_TEMPERATURE", "0.1")),
+                temperature=float(self.get_env_var("LLM_TEMPERATURE", "0")),
                 timeout=int(self.get_env_var("LLM_TIMEOUT", "30")),
             )
         elif api_key_mistral:
