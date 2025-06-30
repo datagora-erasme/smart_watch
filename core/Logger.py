@@ -4,8 +4,11 @@ Système de logging pour le projet smart_watch
 """
 
 import logging
+import os
 from enum import Enum
 from pathlib import Path
+
+from dotenv import load_dotenv
 
 
 class LogLevel(Enum):
@@ -20,7 +23,7 @@ class LogLevel(Enum):
 
 class SmartWatchLogger:
     """
-    Logger simplifié pour le projet smart_watch (log fichier uniquement)
+    Logger fichier uniquement
     """
 
     def __init__(
@@ -33,6 +36,7 @@ class SmartWatchLogger:
         Args:
             module_name: Nom du module utilisant le logger
         """
+        load_dotenv()  # Charge les variables d'environnement depuis .env
         self.module_name = module_name
         self.log_file = Path(__file__).parent.parent / "logs" / "SmartWatch.log"
         self._setup_file_logging()
@@ -40,9 +44,12 @@ class SmartWatchLogger:
     def _setup_file_logging(self):
         """Configure le logging vers fichier"""
         try:
+            log_level_str = os.getenv("LOG_LEVEL", "INFO").upper()
+            log_level = LogLevel[log_level_str].value
+
             self.log_file.parent.mkdir(parents=True, exist_ok=True)
             self.file_logger = logging.getLogger(self.module_name)
-            self.file_logger.setLevel(logging.DEBUG)
+            self.file_logger.setLevel(log_level)
             # Éviter les doublons de handlers
             if not self.file_logger.handlers:
                 handler = logging.FileHandler(self.log_file, encoding="utf-8")
@@ -86,8 +93,8 @@ class SmartWatchLogger:
 
     def section(self, title: str, level: LogLevel = LogLevel.INFO):
         """Log une section avec formatage spécial"""
-        separator = "=" * len(title)
-        full_message = f"{separator}\n{title}\n{separator}"
+        separator = "*" * 20
+        full_message = f"{separator}  {title}  {separator}"
         self._log_to_file(level, full_message)
 
 
