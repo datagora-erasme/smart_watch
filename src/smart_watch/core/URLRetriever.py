@@ -78,6 +78,7 @@ def retrieve_url(
     """
     row_dict = dict(row)
     url = row.get("url", "")
+    identifiant = row.get("identifiant", "N/A")
 
     if not url:
         # Créer un contexte d'erreur spécifique
@@ -85,7 +86,7 @@ def retrieve_url(
             module="URLRetriever",
             function="retrieve_url",
             operation="Validation URL",
-            data={"row_keys": list(row.keys())},
+            data={"row_keys": list(row.keys()), "identifiant": identifiant},
             user_message="Aucune URL fournie pour la récupération",
         )
 
@@ -102,7 +103,7 @@ def retrieve_url(
         return row_dict
 
     try:
-        logger.debug(f"Récupération URL: {url}")
+        logger.debug(f"[{identifiant}] Récupération URL: {url}")
 
         # First try with normal SSL verification
         try:
@@ -122,10 +123,12 @@ def retrieve_url(
                 row_dict["statut"] = "warning"
                 row_dict["message"] = "too many redirects"
                 row_dict["code_http"] = 310
-                logger.warning(f"Trop de redirections: {url}")
+                logger.warning(f"[{identifiant}] Trop de redirections: {url}")
                 return row_dict
             elif "CERTIFICATE_VERIFY_FAILED" in error_str:
-                logger.debug("Erreur certificat, nouvelle tentative sans vérification")
+                logger.debug(
+                    f"[{identifiant}] Erreur certificat, nouvelle tentative sans vérification"
+                )
                 ctx = ssl.create_default_context()
                 ctx.check_hostname = False
                 ctx.verify_mode = ssl.CERT_NONE
@@ -139,7 +142,9 @@ def retrieve_url(
                     timeout=30.0,
                 )
             elif "DH_KEY_TOO_SMALL" in error_str:
-                logger.debug("Erreur DH_KEY, nouvelle tentative avec sécurité réduite")
+                logger.debug(
+                    f"[{identifiant}] Erreur DH_KEY, nouvelle tentative avec sécurité réduite"
+                )
                 ctx = ssl.create_default_context()
                 ctx.set_ciphers("DEFAULT@SECLEVEL=1")
                 http = urllib3.PoolManager(ssl_context=ctx)
@@ -153,7 +158,7 @@ def retrieve_url(
                 )
             else:
                 logger.debug(
-                    "Erreur SSL, nouvelle tentative avec mitigations complètes"
+                    f"[{identifiant}] Erreur SSL, nouvelle tentative avec mitigations complètes"
                 )
                 ctx = ssl.create_default_context()
                 ctx.check_hostname = False
@@ -174,7 +179,7 @@ def retrieve_url(
             row_dict["statut"] = "warning"
             row_dict["code_http"] = response.status
             row_dict["message"] = f"HTTP error {response.status}"
-            logger.warning(f"Erreur HTTP {response.status}: {url}")
+            logger.warning(f"[{identifiant}] Erreur HTTP {response.status}: {url}")
         else:
             # Decode content
             content_type = response.headers.get("Content-Type", "")
@@ -185,7 +190,9 @@ def retrieve_url(
                 encoding = "utf-8"
 
             html_content = response.data.decode(encoding, errors=encoding_errors)
-            logger.debug(f"Contenu décodé ({encoding}): {len(html_content)} caractères")
+            logger.debug(
+                f"[{identifiant}] Contenu décodé ({encoding}): {len(html_content)} caractères"
+            )
 
             if sortie == "html":
                 row_dict[sortie] = html_content
@@ -202,7 +209,7 @@ def retrieve_url(
                         )
                     row_dict[sortie] = markdown_content
                 except Exception as e:
-                    logger.error(f"Erreur conversion Markdown: {e}")
+                    logger.error(f"[{identifiant}] Erreur conversion Markdown: {e}")
                     row_dict[sortie] = html_content
 
             # Convert HTML to Markdown if HTML content is available
@@ -220,14 +227,14 @@ def retrieve_url(
             row_dict["statut"] = "ok"
             row_dict["code_http"] = response.status
             row_dict["message"] = ""
-            logger.info(f"Récupération réussie: {url}")
+            logger.info(f"[{identifiant}] Récupération réussie: {url}")
 
     except urllib3.exceptions.TimeoutError as e:
         context = error_handler.create_error_context(
             module="URLRetriever",
             function="retrieve_url",
             operation=f"Récupération URL {url}",
-            data={"url": url, "timeout": 30},
+            data={"url": url, "timeout": 30, "identifiant": identifiant},
             user_message=f"Timeout lors de l'accès à {url}",
         )
 
@@ -247,7 +254,7 @@ def retrieve_url(
             module="URLRetriever",
             function="retrieve_url",
             operation=f"Récupération URL {url}",
-            data={"url": url},
+            data={"url": url, "identifiant": identifiant},
             user_message=f"Erreur lors de l'accès à {url}",
         )
 
