@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="src/smart_watch/assets/images/logo_app.jpg" alt="Logo SmartWatch" width="200"/>
+  <img src="src/smart_watch/assets/images/logo_app.jpg" alt="Logo SmartWatch" />
 </div>
 
 # SmartWatch : Extracteur d'Horaires Intelligent
