@@ -54,7 +54,7 @@ class SmartWatchLogger:
             if not self.file_logger.handlers:
                 handler = logging.FileHandler(self.log_file, encoding="utf-8")
                 formatter = logging.Formatter(
-                    "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+                    "%(asctime)s - %(levelname)s - %(name)s : %(message)s"
                 )
                 handler.setFormatter(formatter)
                 self.file_logger.addHandler(handler)
@@ -68,7 +68,7 @@ class SmartWatchLogger:
         if not hasattr(self, "file_available") or not self.file_available:
             return
         try:
-            self.file_logger.log(level.value, f"{self.module_name}: {message}")
+            self.file_logger.log(level.value, f"{message}")
         except Exception as e:
             print(f"Erreur lors de l'écriture dans le fichier de log: {e}")
 
@@ -93,9 +93,12 @@ class SmartWatchLogger:
 
     def section(self, title: str, level: LogLevel = LogLevel.INFO):
         """Log une section avec formatage spécial"""
-        separator = "*" * 20
-        full_message = f"{separator}  {title}  {separator}"
-        self._log_to_file(level, full_message)
+        separator = "=" * len(title) + "=" * 4
+        self._log_to_file(level, "")
+        self._log_to_file(level, separator)
+        self._log_to_file(level, f"  {title}  ")
+        self._log_to_file(level, separator)
+        self._log_to_file(level, "")
 
 
 def create_logger(

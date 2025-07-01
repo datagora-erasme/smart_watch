@@ -55,7 +55,7 @@ class HoraireExtractor:
 
         # Initialisation du logger
         self.logger = create_logger(
-            module_name="HoraireExtractor_main.py",
+            module_name="Main",
         )
 
         # Affichage de la configuration
@@ -88,13 +88,17 @@ class HoraireExtractor:
             execution_id = self._setup_execution()
 
             # 2. Pipeline de traitement
+            # a. Extraction des URLs
             url_stats = self.url_processor.process_urls(self.db_manager, execution_id)
+            # b. Traitement des fichiers Markdown
             markdown_stats = self.markdown_processor.process_markdown_filtering(
                 self.db_manager, execution_id
-            )  # Nouvelle étape
+            )
+            # c. Extraction des horaires via LLM
             llm_stats = self.llm_processor.process_llm_extractions(
                 self.db_manager, execution_id
             )
+            # d. Comparaison des horaires extraits avec les données de référence
             comp_stats = self.comparison_processor.process_comparisons(self.db_manager)
 
             # 3. Consolidation des statistiques

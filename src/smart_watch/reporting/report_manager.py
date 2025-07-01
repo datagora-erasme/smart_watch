@@ -23,7 +23,7 @@ class ReportManager:
         """Crée un fichier zip contenant tous les logs."""
         try:
             # Dossier des logs
-            logs_dir = Path(__file__).parent.parent / "logs"
+            logs_dir = Path(__file__).resolve().parents[3] / "logs"
 
             if not logs_dir.exists():
                 self.logger.warning("Dossier logs introuvable")
