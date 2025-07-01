@@ -8,8 +8,8 @@ __pycache__/
 *.md
 .idea/
 .vscode/
-logs/
 docs/
 notebooks/
 .venv
 SmartWatch.db
+SmartWatch.log
