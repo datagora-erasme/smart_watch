@@ -3,12 +3,12 @@ Processeur pour filtrer le contenu markdown et extraire les sections pertinentes
 Utilise des embeddings sémantiques pour identifier les sections les plus pertinentes.
 """
 
+import re
 from dataclasses import dataclass
 from typing import Dict, List, Tuple
 
-import numpy as np
-from langchain_text_splitters import MarkdownHeaderTextSplitter
-from sentence_transformers import SentenceTransformer, util
+from sentence_transformers import SentenceTransformer
+from sklearn.metrics.pairwise import cosine_similarity
 
 from ..data_models.schema_bdd import Lieux, ResultatsExtraction
 from .ConfigManager import ConfigManager
@@ -53,9 +53,6 @@ class MarkdownProcessor:
             self.logger.error(f"Erreur chargement modèle embeddings: {e}")
             self.model = None
 
-        # Headers pour le splitting markdown (depuis la config)
-        self.headers_to_split_on = self.config.markdown_filtering.headers_to_split
-
         # Phrases de référence pour identifier les sections d'horaires (depuis la config)
         self.reference_phrases = self.config.markdown_filtering.reference_phrases
 
@@ -83,16 +80,12 @@ class MarkdownProcessor:
         self.logger.info(f"{len(resultats_a_filtrer)} contenus markdown à filtrer")
         stats.urls_processed = len(resultats_a_filtrer)
 
-        # Calcul du vecteur de référence pour les horaires
-        reference_embeddings = self.model.encode(self.reference_phrases)
-        reference_vector = np.mean(reference_embeddings, axis=0)
-
         for i, (resultat, lieu) in enumerate(resultats_a_filtrer, 1):
             self.logger.info(f"Filtrage {i}/{len(resultats_a_filtrer)}: {lieu.nom}")
 
             try:
                 filtered_markdown = self._filter_single_markdown(
-                    resultat.markdown, reference_vector
+                    resultat.markdown, lieu.nom, lieu.type_lieu
                 )
 
                 # Mise à jour en base
@@ -143,7 +136,17 @@ class MarkdownProcessor:
         finally:
             session.close()
 
-    def _filter_single_markdown(self, markdown_content: str, reference_vector) -> str:
+    def _extract_context_around_phrase(
+        self, phrases: List[str], phrase_index: int, context_window: int = 1
+    ) -> List[int]:
+        """Extrait les indices des phrases dans la fenêtre de contexte autour d'une phrase donnée."""
+        start_idx = max(0, phrase_index - context_window)
+        end_idx = min(len(phrases), phrase_index + context_window + 1)
+        return list(range(start_idx, end_idx))
+
+    def _filter_single_markdown(
+        self, markdown_content: str, nom: str = "", type_lieu: str = ""
+    ) -> str:
         """Filtre un contenu markdown pour extraire les sections pertinentes aux horaires."""
         if (
             not markdown_content
@@ -153,59 +156,79 @@ class MarkdownProcessor:
             return markdown_content
 
         try:
-            # Découpage du markdown par sections
-            markdown_splitter = MarkdownHeaderTextSplitter(self.headers_to_split_on)
-            md_header_splits = markdown_splitter.split_text(markdown_content)
+            # Créer des thèmes dynamiques incluant le nom et type d'établissement
+            themes = self.reference_phrases.copy()
+            if nom:
+                if type_lieu:
+                    themes.extend([f"horaires d'ouverture {nom} ({type_lieu})"])
+                else:
+                    themes.extend([f"horaires d'ouverture {nom}"])
+            else:
+                if type_lieu:
+                    themes.extend([f"horaires d'ouverture {type_lieu}"])
 
-            if not md_header_splits:
-                return markdown_content
+            # Pré-calculer les embeddings des thèmes
+            embed_themes = self.model.encode(themes)
 
-            # Calcul des scores de similarité pour chaque section
-            document_sections_with_scores = []
-
-            for doc in md_header_splits:
-                # Ignorer les sections trop courtes (utilise la config)
-                if (
-                    len(doc.page_content.strip())
-                    < self.config.markdown_filtering.min_section_length
-                ):
-                    continue
-
-                # Calcul de l'embedding pour la section
-                section_embedding = self.model.encode(doc.page_content)
-
-                # Calcul de la similarité cosinus
-                similarity_score = util.cos_sim(
-                    reference_vector, section_embedding
-                ).item()
-
-                document_sections_with_scores.append(
-                    {
-                        "score": similarity_score,
-                        "metadata": doc.metadata,
-                        "content": doc.page_content,
-                    }
-                )
-
-            # Tri par score de similarité décroissant
-            sorted_sections = sorted(
-                document_sections_with_scores, key=lambda x: x["score"], reverse=True
-            )
-
-            # Sélection des meilleures sections (utilise la config)
-            top_sections = sorted_sections[
-                : self.config.markdown_filtering.max_sections
+            # Segmenter le texte en phrases
+            split_chars = ["."]
+            regex = "|".join(map(re.escape, split_chars))
+            phrases = [
+                p.strip() for p in re.split(regex, markdown_content) if p.strip()
             ]
 
-            # Concaténation des sections sélectionnées
-            filtered_content = "\n".join(
-                [
-                    f"\n## Section Horaires: {section['metadata']}\n{section['content']}"
-                    for section in top_sections
-                ]
+            if not phrases:
+                return markdown_content
+
+            # Générer les embeddings des phrases
+            embed_phrases = self.model.encode(phrases)
+
+            # Calculer les similarités
+            similarites = cosine_similarity(embed_themes, embed_phrases)
+            similarites_max = similarites.max(axis=0)
+
+            # Normaliser pour obtenir des scores [0, 1]
+            min_val = similarites_max.min()
+            max_val = similarites_max.max()
+            if max_val - min_val > 0:
+                similarites_norm = (similarites_max - min_val) / (max_val - min_val)
+            else:
+                similarites_norm = similarites_max * 0  # all zeros
+
+            # Filtrer les phrases ayant un score élevé
+            threshold = getattr(
+                self.config.markdown_filtering, "similarity_threshold", 0.25
             )
 
-            return filtered_content if filtered_content.strip() else markdown_content
+            # Obtenir le contexte autour des phrases pertinentes
+            context_window = getattr(
+                self.config.markdown_filtering, "context_window", 1
+            )
+
+            relevant_indices = set()
+
+            for i, score in enumerate(similarites_norm):
+                if score >= threshold:
+                    # Ajouter le contexte autour de cette phrase
+                    context_indices = self._extract_context_around_phrase(
+                        phrases, i, context_window
+                    )
+                    relevant_indices.update(context_indices)
+
+            # Convertir en liste triée pour maintenir l'ordre
+            relevant_indices = sorted(list(relevant_indices))
+
+            # Extraire les phrases avec leur contexte
+            relevant_phrases = [phrases[i] for i in relevant_indices]
+
+            # Retourner les phrases pertinentes avec contexte concaténées
+            if relevant_phrases:
+                filtered_content = ". ".join(relevant_phrases)
+                return (
+                    filtered_content if filtered_content.strip() else markdown_content
+                )
+            else:
+                return markdown_content
 
         except Exception as e:
             self.logger.error(f"Erreur lors du filtrage: {e}")
@@ -223,3 +246,7 @@ class MarkdownProcessor:
                 session.commit()
         finally:
             session.close()
+            resultat = session.get(ResultatsExtraction, resultat_id)
+            if resultat:
+                resultat.markdown_horaires = filtered_markdown
+                session.commit()

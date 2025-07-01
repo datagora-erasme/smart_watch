@@ -114,4 +114,9 @@ class ConfigManager:
         logger.info(f"Threads: {self.processing.nb_threads_url}")
         logger.info("=== CONFIGURATION FILTRAGE MARKDOWN ===")
         logger.info(f"Modèle embedding: {self.markdown_filtering.embedding_model}")
-        logger.info(f"Sections max: {self.markdown_filtering.max_sections}")
+        logger.info(f"Seuil similarité: {self.markdown_filtering.similarity_threshold}")
+        logger.info(f"Fenêtre contexte: {self.markdown_filtering.context_window}")
+        logger.info(f"Taille min contenu: {self.markdown_filtering.min_content_length}")
+        logger.info(
+            f"Phrases référence: {len(self.markdown_filtering.reference_phrases)} phrases"
+        )
