@@ -20,7 +20,6 @@ Les modules principaux sont :
 """
 
 # Modules du projet
-# Import des processeurs depuis le module processing
 from src.smart_watch.core.ConfigManager import ConfigManager
 from src.smart_watch.core.ErrorHandler import (
     ErrorCategory,
@@ -37,8 +36,6 @@ from src.smart_watch.processing import (
     URLProcessor,
 )
 from src.smart_watch.processing.url_processor import ProcessingStats
-
-# Import du gestionnaire de rapports
 from src.smart_watch.reporting import ReportManager
 from src.smart_watch.utils.CSVToPolars import CSVToPolars
 
@@ -110,7 +107,7 @@ class HoraireExtractor:
             # 5. Résumé final
             self._display_final_summary()
 
-            self.logger.section("EXTRACTION TERMINÉE AVEC SUCCÈS")
+            self.logger.section("FIN PIPELINE EXTRACTION HORAIRES : SUCCÈS")
 
         except Exception as e:
             self.logger.error(f"Erreur pipeline: {e}")
