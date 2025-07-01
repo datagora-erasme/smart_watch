@@ -1,21 +1,46 @@
 """
-Programme principal optimisé pour l'extraction d'horaires d'ouverture.
-Architecture modulaire et workflow pipeline optimisé.
+SmartWatch est un programme permettant l'extraction d'horaires d'ouverture
+par LLM depuis des sites web, et leur comparaison avec des données de référence.
+
+Les données de référence sont issues de data.grandlyon.com.
+
+Les variables d'environnement sont chargées depuis un fichier .env.
+
+Les modules principaux sont :
+    - ConfigManager : Gestion de la configuration et des variables d'environnement
+    - ErrorHandler : Gestion des erreurs et des logs
+    - Logger : Gestion des logs
+    - MarkdownProcessor : Traitement des fichiers Markdown
+    - URLProcessor : Traitement des URLs et extraction de données
+    - LLMProcessor : Interaction avec les modèles de langage pour l'extraction d'horaires
+    - ComparisonProcessor : Comparaison des horaires extraits avec les données de référence
+    - DatabaseManager : Gestion de la base de données SQLite
+    - ReportManager : Génération et envoi de rapports
+    - HoraireExtractor : Classe principale orchestrant l'extraction et le traitement des horaires
 """
 
 # Modules du projet
-from core.ConfigManager import ConfigManager
-from core.ErrorHandler import ErrorCategory, ErrorHandler, ErrorSeverity, handle_errors
-from core.Logger import create_logger
-from core.MarkdownProcessor import MarkdownProcessor
-
 # Import des processeurs depuis le module processing
-from processing import ComparisonProcessor, DatabaseManager, LLMProcessor, URLProcessor
-from processing.url_processor import ProcessingStats
+from src.smart_watch.core.ConfigManager import ConfigManager
+from src.smart_watch.core.ErrorHandler import (
+    ErrorCategory,
+    ErrorHandler,
+    ErrorSeverity,
+    handle_errors,
+)
+from src.smart_watch.core.Logger import create_logger
+from src.smart_watch.core.MarkdownProcessor import MarkdownProcessor
+from src.smart_watch.processing import (
+    ComparisonProcessor,
+    DatabaseManager,
+    LLMProcessor,
+    URLProcessor,
+)
+from src.smart_watch.processing.url_processor import ProcessingStats
 
 # Import du gestionnaire de rapports
-from reporting import ReportManager
-from utils.CSVToPolars import CSVToPolars
+from src.smart_watch.reporting import ReportManager
+from src.smart_watch.utils.CSVToPolars import CSVToPolars
 
 
 class HoraireExtractor:
@@ -30,7 +55,7 @@ class HoraireExtractor:
 
         # Initialisation du logger
         self.logger = create_logger(
-            module_name="HoraireExtractor",
+            module_name="HoraireExtractor_main.py",
         )
 
         # Affichage de la configuration
@@ -93,10 +118,9 @@ class HoraireExtractor:
 
         # Chargement du CSV depuis l'URL
         csv_loader = CSVToPolars(
-            source=self.config.database.csv_url,  # Utiliser l'URL au lieu du fichier
+            source=self.config.database.csv_url,
             separator=";",
             has_header=True,
-            cache_dir=str(self.config.database.csv_file.parent),  # Répertoire de cache
         )
         df_csv = csv_loader.load_csv()
 
@@ -142,7 +166,6 @@ def main():
         extractor = HoraireExtractor()
         extractor.run()
     except Exception as e:
-        # Gestionnaire d'erreurs de dernier recours
         error_handler = ErrorHandler()
         context = error_handler.create_error_context(
             module="main",

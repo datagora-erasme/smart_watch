@@ -1,0 +1,117 @@
+"""
+Gestionnaire de configuration centralisé pour le projet smart_watch.
+Point d'entrée simplifié qui agrège les configurations modulaires.
+"""
+
+from pathlib import Path
+from typing import Optional
+
+from ..config.base_config import BaseConfig
+from ..config.database_config import DatabaseConfigManager
+from ..config.email_config import EmailConfigManager
+from ..config.llm_config import LLMConfigManager
+from ..config.markdown_filtering_config import MarkdownFilteringConfigManager
+from ..config.processing_config import ProcessingConfigManager
+from .Logger import create_logger
+
+# Initialize logger for this module
+logger = create_logger(
+    module_name="ConfigManager",
+)
+
+
+class ConfigManager:
+    """Gestionnaire de configuration centralisé simplifié."""
+
+    def __init__(self, env_file: Optional[Path] = None):
+        """
+        Initialise le gestionnaire de configuration.
+
+        Args:
+            env_file: Chemin vers le fichier .env (optionnel)
+        """
+        self.project_root = Path(__file__).resolve().parents[3]
+        self.env_file = env_file or self.project_root / ".env"
+
+        # Initialiser la configuration de base
+        self.base_config = BaseConfig(self.env_file)
+        self.error_handler = self.base_config.error_handler
+
+        try:
+            # Initialiser les gestionnaires de configuration modulaires
+            self._init_config_managers()
+
+            logger.info("Configuration centralisée initialisée")
+
+        except Exception as e:
+            context = self.error_handler.create_error_context(
+                module="ConfigManager",
+                function="__init__",
+                operation="Initialisation de la configuration",
+                user_message="Erreur lors du chargement de la configuration",
+            )
+
+            self.error_handler.handle_error(
+                exception=e,
+                context=context,
+                reraise=True,
+            )
+
+    def _init_config_managers(self):
+        """Initialise tous les gestionnaires de configuration."""
+        # Initialiser les gestionnaires modulaires
+        llm_manager = LLMConfigManager(self.env_file)
+        database_manager = DatabaseConfigManager(self.env_file)
+        email_manager = EmailConfigManager(self.env_file)
+        processing_manager = ProcessingConfigManager(self.env_file)
+        markdown_manager = MarkdownFilteringConfigManager(self.env_file)
+
+        # Exposer les configurations
+        self.llm = llm_manager.config
+        self.database = database_manager.config
+        self.email = email_manager.config
+        self.processing = processing_manager.config
+        self.markdown_filtering = markdown_manager.config
+
+        # Garder les références aux managers pour la validation
+        self._managers = {
+            "llm": llm_manager,
+            "database": database_manager,
+            "email": email_manager,
+            "processing": processing_manager,
+            "markdown_filtering": markdown_manager,
+        }
+
+    def validate(self) -> bool:
+        """Valide la configuration complète."""
+        errors = []
+
+        # Valider chaque configuration modulaire
+        for name, manager in self._managers.items():
+            if not manager.validate():
+                errors.append(f"Configuration {name} invalide")
+
+        if errors:
+            for error in errors:
+                logger.error(f"Validation échouée: {error}")
+            return False
+
+        logger.info("Configuration validée avec succès")
+        return True
+
+    def display_summary(self):
+        """Affiche un résumé de la configuration."""
+        logger.info("=== RÉSUMÉ CONFIGURATION ===")
+        logger.info(f"LLM: {self.llm.fournisseur} - {self.llm.modele}")
+        if self.llm.base_url:
+            logger.info(f"URL: {self.llm.base_url}")
+        logger.info(f"Base: {self.database.db_file.name}")
+        logger.info(f"CSV: {self.database.csv_file.name}")
+        if self.email:
+            logger.info(f"Email: {self.email.emetteur} → {self.email.recepteur}")
+        else:
+            logger.info("Email: Non configuré")
+        logger.info(f"Threads: {self.processing.nb_threads_url}")
+        logger.info("=== CONFIGURATION FILTRAGE MARKDOWN ===")
+        logger.info(f"Modèle embedding: {self.markdown_filtering.embedding_model}")
+        logger.info(f"Sections max: {self.markdown_filtering.max_sections}")
