@@ -50,7 +50,7 @@ class LLMConfigManager(BaseConfig):
                 fournisseur="MISTRAL",
                 modele=self.get_env_var("MODELE_MISTRAL", required=True),
                 api_key=api_key_mistral,
-                temperature=float(self.get_env_var("LLM_TEMPERATURE", "0.1")),
+                temperature=float(self.get_env_var("LLM_TEMPERATURE", "0")),
                 timeout=int(self.get_env_var("LLM_TIMEOUT", "30")),
             )
         else:
