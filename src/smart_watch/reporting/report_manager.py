@@ -84,25 +84,7 @@ class ReportManager:
 
         try:
             # Créer le contenu de l'email
-            subject = f"Rapport URLs - {datetime.now().strftime('%d/%m/%Y')} - {stats.urls_successful} succès"
-
-            body = f"""
-            <h2>Rapport de vérification généré</h2>
-            <p><strong>Date:</strong> {datetime.now().strftime("%d/%m/%Y à %H:%M")}</p>
-            
-            <h3>Statistiques:</h3>
-            <ul>
-                <li>URLs traitées: {stats.urls_successful}/{stats.urls_processed}</li>
-                <li>Extractions LLM: {stats.llm_successful}/{stats.llm_processed}</li>
-                <li>Comparaisons: {stats.comparisons_successful}/{stats.comparisons_processed}</li>
-            </ul>
-            
-            <p>Consultez les fichiers joints pour le rapport complet et les logs détaillés.</p>
-            
-            <hr>
-            <h3>Résumé du rapport:</h3>
-            {resume_html}
-            """
+            subject = f"Rapport URLs Horaires - {datetime.now().strftime('%d/%m/%Y')}"
 
             # Préparer les pièces jointes
             attachments = []
@@ -118,7 +100,7 @@ class ReportManager:
 
             # Utiliser EmailSender pour envoyer l'email
             email_sender = EmailSender(self.config)
-            email_sender.send_email(subject, body, attachments)
+            email_sender.send_email(subject, resume_html, attachments)
             self.logger.info("Email envoyé avec succès")
 
             # Nettoyage des fichiers temporaires
