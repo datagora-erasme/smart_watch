@@ -240,11 +240,14 @@
                                     <span style="color: #ffc107; font-weight: 500;">⚠️ Différences détectées</span>
                                     {% endif %}
                                 {% elif statut.code == 'extraction_error' %}
-                                    {% if url.comparaison_horaires %}
-                                    <div class="preview comparison">{{ url.comparaison_horaires[:80] }}{% if url.comparaison_horaires|length > 80 %}...{% endif %}</div>
-                                    <button class="btn view-btn" data-title="Erreur extraction - {{ url.identifiant }}" data-content="{{ url.comparaison_horaires|e }}">👁️ Voir</button>
+                                    {% if url.erreurs_resume %}
+                                    <div class="preview comparison" style="background:#fff3cd;border-color:#ffeaa7;">{{ url.erreurs_resume[:80] }}{% if url.erreurs_resume|length > 80 %}...{% endif %}</div>
+                                    <button class="btn view-btn" data-title="Chaîne d'erreurs - {{ url.identifiant }}" data-content="{{ url.erreurs_pipeline|e }}">🔍 Erreurs</button>
                                     {% else %}
                                     <span style="color: #dc3545; font-weight: 500;">❌ Extraction échouée</span>
+                                    {% endif %}
+                                    {% if url.comparaison_horaires and url.comparaison_horaires != url.erreurs_resume %}
+                                    <br><button class="btn view-btn" data-title="Détails comparaison - {{ url.identifiant }}" data-content="{{ url.comparaison_horaires|e }}">📋 Détails</button>
                                     {% endif %}
                                 {% endif %}
                             </td>

@@ -163,11 +163,15 @@ def _extract_data_from_database(db_file: str) -> list:
             l.horaires_data_gl,
             r.statut_url AS statut, 
             r.message_url AS message, 
+            r.markdown_brut,
+            r.markdown_nettoye,
+            r.markdown_filtre,
             r.llm_horaires_json, 
             r.llm_horaires_osm, 
             r.code_http,
             r.horaires_identiques,
-            r.differences_horaires
+            r.differences_horaires,
+            r.erreurs_pipeline
         FROM resultats_extraction AS r 
         JOIN lieux AS l ON r.lieu_id = l.identifiant 
         ORDER BY l.identifiant
@@ -187,7 +191,9 @@ def _process_data(donnees_urls: list) -> None:
         try:
             # Convertir llm_horaires_json en objet Python si c'est une chaîne JSON
             if "llm_horaires_json" in url and url["llm_horaires_json"]:
-                if isinstance(url["llm_horaires_json"], str):
+                if isinstance(url["llm_horaires_json"], str) and not url[
+                    "llm_horaires_json"
+                ].startswith("Erreur"):
                     try:
                         url["llm_horaires_json"] = json.loads(url["llm_horaires_json"])
                     except json.JSONDecodeError:
@@ -198,6 +204,9 @@ def _process_data(donnees_urls: list) -> None:
             # Créer le champ comparaison_horaires pour compatibilité avec le template
             _create_comparison_field(url)
 
+            # Traiter la chaîne d'erreurs pour affichage
+            _process_error_chain(url)
+
             # S'assurer que les champs requis existent avec des valeurs par défaut
             _set_default_fields(url)
 
@@ -207,13 +216,41 @@ def _process_data(donnees_urls: list) -> None:
             )
 
 
+def _process_error_chain(url: dict) -> None:
+    """Traite la chaîne d'erreurs pour l'affichage dans le rapport."""
+    erreurs_pipeline = url.get("erreurs_pipeline", "")
+
+    if erreurs_pipeline:
+        # Parser les erreurs individuelles
+        erreurs_list = erreurs_pipeline.split(" | ")
+        url["erreurs_formatees"] = erreurs_list
+        url["nombre_erreurs"] = len(erreurs_list)
+
+        # Créer un résumé court pour l'affichage en tableau
+        if len(erreurs_list) == 1:
+            url["erreurs_resume"] = erreurs_list[0]
+        else:
+            url["erreurs_resume"] = (
+                f"{erreurs_list[0]} (et {len(erreurs_list) - 1} autre{'s' if len(erreurs_list) > 2 else ''})"
+            )
+    else:
+        url["erreurs_formatees"] = []
+        url["nombre_erreurs"] = 0
+        url["erreurs_resume"] = ""
+
+
 def _create_comparison_field(url: dict) -> None:
     """Crée le champ de comparaison pour le template."""
     horaires_identiques = url.get("horaires_identiques")
     differences_horaires = url.get("differences_horaires", "")
+    erreurs_resume = url.get("erreurs_resume", "")
 
     if horaires_identiques is None:
-        url["comparaison_horaires"] = "Non comparé"
+        # Ajouter les erreurs si disponibles
+        if erreurs_resume:
+            url["comparaison_horaires"] = f"Non comparé - {erreurs_resume}"
+        else:
+            url["comparaison_horaires"] = "Non comparé"
     elif horaires_identiques is True:
         url["comparaison_horaires"] = "IDENTIQUE - Aucune différence détectée"
     elif horaires_identiques is False:
@@ -236,6 +273,13 @@ def _set_default_fields(url: dict) -> None:
         "nom": "",
         "identifiant": "",
         "type_lieu": "",
+        "markdown_brut": "",
+        "markdown_nettoye": "",
+        "markdown_filtre": "",
+        "erreurs_pipeline": "",
+        "erreurs_formatees": [],
+        "nombre_erreurs": 0,
+        "erreurs_resume": "",
     }
 
     for field, default_value in defaults.items():
