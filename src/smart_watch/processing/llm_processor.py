@@ -10,10 +10,10 @@ from typing import Dict
 from ..core.ConfigManager import ConfigManager
 from ..core.GetPrompt import get_prompt
 from ..core.LLMClient import (
+    MistralAPIClient,
+    OpenAICompatibleClient,
     get_mistral_tool_format,
     get_structured_response_format,
-    llm_mistral,
-    llm_openai,
 )
 from ..utils.CustomJsonToOSM import OSMConverter
 from ..utils.JoursFeries import get_jours_feries
@@ -36,7 +36,7 @@ class LLMProcessor:
         llm_config = self.config.llm
 
         if llm_config.fournisseur == "OPENAI":
-            self.llm_client = llm_openai(
+            self.llm_client = OpenAICompatibleClient(
                 api_key=llm_config.api_key,
                 model=llm_config.modele,
                 base_url=llm_config.base_url,
@@ -44,7 +44,7 @@ class LLMProcessor:
                 timeout=llm_config.timeout,
             )
         elif llm_config.fournisseur == "MISTRAL":
-            self.llm_client = llm_mistral(
+            self.llm_client = MistralAPIClient(
                 api_key=llm_config.api_key,
                 model=llm_config.modele,
                 temperature=llm_config.temperature,
@@ -136,8 +136,9 @@ class LLMProcessor:
                 "nom": lieu.nom,
                 "url": lieu.url,
                 "type_lieu": lieu.type_lieu,
-                "markdown": resultat.markdown_horaires
-                or resultat.markdown,  # Utiliser le markdown filtré en priorité
+                "markdown": resultat.markdown_filtre
+                or resultat.markdown_nettoye
+                or resultat.markdown_brut,
             }
 
             messages = get_prompt(row_data, self.opening_hours_schema)
@@ -162,7 +163,7 @@ class LLMProcessor:
                     )
 
                 # Vérifier si l'appel LLM a réussi
-                if llm_result is not None and not llm_result.startswith("Erreur"):
+                if llm_result is not None and not str(llm_result).startswith("Erreur"):
                     # Enrichissement avec les jours fériés pour les mairies
                     enriched_result = self._enrich_with_jours_feries(llm_result, lieu)
 
@@ -177,21 +178,32 @@ class LLMProcessor:
                         self.logger.error(
                             f"Erreur conversion OSM pour {lieu.identifiant}: {e}"
                         )
-                        result_data["llm_horaires_json"] = f"Erreur conversion OSM: {e}"
-                        result_data["llm_horaires_osm"] = ""
+                        result_data["llm_horaires_json"] = enriched_result
+                        result_data["llm_horaires_osm"] = f"Erreur Conversion OSM: {e}"
                 else:
+                    # Gestion des erreurs LLM avec messages plus explicites
+                    if llm_result is None:
+                        error_msg = f"Erreur LLM: reçu '{llm_result}' - réponse vide"
+                    elif str(llm_result).startswith("Erreur"):
+                        error_msg = str(llm_result)
+                    else:
+                        error_msg = (
+                            f"Erreur LLM: reçu '{llm_result}' - réponse inattendue"
+                        )
+
                     self.logger.error(
-                        f"Appel LLM échoué pour {lieu.identifiant}: {llm_result}"
+                        f"Appel LLM échoué pour {lieu.identifiant}: {error_msg}"
                     )
-                    result_data["llm_horaires_json"] = f"Erreur LLM: {llm_result}"
-                    result_data["llm_horaires_osm"] = ""
+                    result_data["llm_horaires_json"] = error_msg
+                    result_data["llm_horaires_osm"] = error_msg
 
             except Exception as e:
                 self.logger.error(
                     f"Erreur lors de l'appel LLM pour {lieu.identifiant}: {e}"
                 )
-                result_data["llm_horaires_json"] = f"Erreur LLM: {e}"
-                result_data["llm_horaires_osm"] = ""
+                error_msg = f"Erreur LLM: {e}"
+                result_data["llm_horaires_json"] = error_msg
+                result_data["llm_horaires_osm"] = error_msg
 
             return result_data
 
