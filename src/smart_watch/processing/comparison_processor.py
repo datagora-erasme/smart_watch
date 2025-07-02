@@ -121,6 +121,15 @@ class ComparisonProcessor:
             if resultat:
                 resultat.horaires_identiques = result_data.get("identique")
                 resultat.differences_horaires = result_data.get("differences", "")
+
+                # Ajouter erreur de comparaison si échec
+                if result_data.get("identique") is None:
+                    db_manager._add_error_to_result(
+                        resultat,
+                        "COMPARAISON",
+                        result_data.get("differences", "Erreur inconnue"),
+                    )
+
                 session.commit()
         finally:
             session.close()
