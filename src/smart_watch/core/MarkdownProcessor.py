@@ -7,11 +7,12 @@ import re
 from dataclasses import dataclass
 from typing import Dict, List, Tuple
 
-from sentence_transformers import SentenceTransformer
+import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 
 from ..data_models.schema_bdd import Lieux, ResultatsExtraction
 from .ConfigManager import ConfigManager
+from .LLMClient import OpenAICompatibleClient
 
 
 @dataclass
@@ -43,15 +44,20 @@ class MarkdownProcessor:
         self.config = config
         self.logger = logger
 
-        # Initialisation du modèle d'embeddings
+        # Initialisation du client LLM pour les embeddings
         try:
-            self.model = SentenceTransformer(
-                self.config.markdown_filtering.embedding_model
+            self.llm_client = OpenAICompatibleClient(
+                api_key=config.llm.api_key,
+                model=config.markdown_filtering.embedding_model,
+                base_url=config.llm.base_url,
+                timeout=30,
             )
-            self.logger.info("Modèle d'embeddings chargé avec succès")
+            self.logger.info(
+                f"Client embeddings initialisé avec {self.config.markdown_filtering.embedding_model}"
+            )
         except Exception as e:
-            self.logger.error(f"Erreur chargement modèle embeddings: {e}")
-            self.model = None
+            self.logger.error(f"Erreur initialisation client embeddings: {e}")
+            self.llm_client = None
 
         # Phrases de référence pour identifier les sections d'horaires (depuis la config)
         self.reference_phrases = self.config.markdown_filtering.reference_phrases
@@ -64,8 +70,8 @@ class MarkdownProcessor:
 
         stats = ProcessingStats()
 
-        if not self.model:
-            self.logger.warning("Modèle d'embeddings non disponible - filtrage ignoré")
+        if not self.llm_client:
+            self.logger.warning("Client embeddings non disponible - filtrage ignoré")
             return stats
 
         # Récupérer les enregistrements avec markdown à filtrer
@@ -144,6 +150,42 @@ class MarkdownProcessor:
         end_idx = min(len(phrases), phrase_index + context_window + 1)
         return list(range(start_idx, end_idx))
 
+    def _get_embeddings_via_api(self, texts: List[str]) -> List[List[float]]:
+        """
+        Obtient les embeddings via l'API Ollama compatible OpenAI.
+
+        Args:
+            texts: Liste des textes à encoder
+
+        Returns:
+            Liste des vecteurs d'embeddings
+        """
+        if not texts:
+            return []
+
+        try:
+            # URL de l'endpoint embeddings
+            url = f"{self.llm_client.base_url}/embeddings"
+
+            # Préparer la requête
+            payload = {
+                "model": self.config.markdown_filtering.embedding_model,
+                "input": texts,
+            }
+
+            response = self.llm_client.session.post(url, json=payload, timeout=30)
+            response.raise_for_status()
+
+            result = response.json()
+            embeddings = [data["embedding"] for data in result["data"]]
+
+            self.logger.debug(f"Embeddings calculés: {len(embeddings)} vecteurs")
+            return embeddings
+
+        except Exception as e:
+            self.logger.error(f"Erreur calcul embeddings: {e}")
+            raise
+
     def _filter_single_markdown(
         self, markdown_content: str, nom: str = "", type_lieu: str = ""
     ) -> str:
@@ -160,15 +202,16 @@ class MarkdownProcessor:
             themes = self.reference_phrases.copy()
             if nom:
                 if type_lieu:
-                    themes.extend([f"horaires d'ouverture {nom} ({type_lieu})"])
+                    themes.extend([f"horaires d'ouverture {type_lieu} de {nom}"])
                 else:
                     themes.extend([f"horaires d'ouverture {nom}"])
             else:
                 if type_lieu:
                     themes.extend([f"horaires d'ouverture {type_lieu}"])
 
-            # Pré-calculer les embeddings des thèmes
-            embed_themes = self.model.encode(themes)
+            # Pré-calculer les embeddings des thèmes avec l'API
+            embed_themes = self._get_embeddings_via_api(themes)
+            embed_themes = np.array(embed_themes)
 
             # Segmenter le texte en phrases
             split_chars = ["."]
@@ -180,8 +223,9 @@ class MarkdownProcessor:
             if not phrases:
                 return markdown_content
 
-            # Générer les embeddings des phrases
-            embed_phrases = self.model.encode(phrases)
+            # Générer les embeddings des phrases avec l'API
+            embed_phrases = self._get_embeddings_via_api(phrases)
+            embed_phrases = np.array(embed_phrases)
 
             # Calculer les similarités
             similarites = cosine_similarity(embed_themes, embed_phrases)
@@ -196,14 +240,10 @@ class MarkdownProcessor:
                 similarites_norm = similarites_max * 0  # all zeros
 
             # Filtrer les phrases ayant un score élevé
-            threshold = getattr(
-                self.config.markdown_filtering, "similarity_threshold", 0.25
-            )
+            threshold = self.config.markdown_filtering.similarity_threshold
 
             # Obtenir le contexte autour des phrases pertinentes
-            context_window = getattr(
-                self.config.markdown_filtering, "context_window", 1
-            )
+            context_window = self.config.markdown_filtering.context_window
 
             relevant_indices = set()
 
