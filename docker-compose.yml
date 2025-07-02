@@ -7,9 +7,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: smart_watch_container
-    volumes:
-      - .:/app
-      - /app/logs # Exclude logs directory from host
+
     env_file:
       - .env
-      
+

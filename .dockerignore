@@ -12,5 +12,5 @@ docs/
 notebooks/
 .venv
 .env
-SmartWatch.db
-SmartWatch.log
+data/SmartWatch.db
+data/SmartWatch.log

@@ -38,28 +38,42 @@ class BaseConfig:
         self._load_environment()
 
     def _reset_environment(self):
-        """Remet à zéro les variables d'environnement pour éviter les conflits."""
-        # Variables LLM
-        for key in ["API_KEY_OPENAI", "API_KEY_MISTRAL", "BASE_URL_OPENAI"]:
-            os.environ.pop(key, None)
-
-        # Variables du fichier .env
+        """Remet à zéro seulement les variables du fichier .env pour éviter les conflits."""
+        # Ne supprimer que les variables du fichier .env, pas celles de l'environnement système/Docker
         if self.env_file.exists():
-            dotenv_vars = dotenv_values(self.env_file)
-            for key in dotenv_vars.keys():
-                os.environ.pop(key, None)
+            try:
+                dotenv_vars = dotenv_values(self.env_file)
+                for key in dotenv_vars.keys():
+                    # Ne supprimer que si la variable vient du fichier .env et pas de l'environnement
+                    if key in os.environ and os.environ[key] == dotenv_vars[key]:
+                        os.environ.pop(key, None)
+            except Exception:
+                # Si erreur de lecture du .env, ne rien supprimer
+                pass
 
     def _load_environment(self):
         """Charge les variables d'environnement."""
-        self._reset_environment()
+        # Ne pas reset si on est dans un environnement containerisé
+        if not os.getenv("DOCKER_CONTAINER") and not os.getenv(
+            "KUBERNETES_SERVICE_HOST"
+        ):
+            self._reset_environment()
 
+        # Charger depuis le fichier .env si présent, sinon utiliser les variables système
         if self.env_file.exists():
-            load_dotenv(self.env_file)
-            logger.debug(
-                f"Variables d'environnement chargées depuis: {self.env_file.name}"
-            )
+            try:
+                load_dotenv(
+                    self.env_file, override=False
+                )  # Ne pas écraser les variables existantes
+                logger.debug(
+                    f"Variables d'environnement chargées depuis: {self.env_file.name}"
+                )
+            except Exception as e:
+                logger.warning(f"Erreur lors du chargement du fichier .env: {e}")
         else:
-            logger.warning(f"Fichier .env non trouvé: {self.env_file}")
+            logger.info(
+                f"Fichier .env non trouvé ({self.env_file.name}), utilisation des variables système"
+            )
 
     def get_env_var(self, key: str, default: str = None, required: bool = False):
         """
@@ -78,7 +92,7 @@ class BaseConfig:
         """
         value = os.getenv(key, default)
 
-        if required and not value:
+        if required and (value is None or value == ""):
             context = self.error_handler.create_error_context(
                 module="BaseConfig",
                 function="get_env_var",
