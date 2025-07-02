@@ -1,12 +1,14 @@
 """
 Système de logging pour le projet smart_watch
-Écrit uniquement vers un fichier logs/SmartWatch.log
+Support flexible pour fichier et/ou console
 """
 
 import logging
 import os
+import sys
 from enum import Enum
 from pathlib import Path
+from typing import List
 
 from dotenv import load_dotenv
 
@@ -21,92 +23,129 @@ class LogLevel(Enum):
     CRITICAL = logging.CRITICAL
 
 
+class LogOutput(Enum):
+    """Types de sortie de log disponibles"""
+
+    FILE = "file"
+    CONSOLE = "console"
+
+
 class SmartWatchLogger:
     """
-    Logger fichier uniquement
+    Logger avec outputs configurables (fichier et/ou console)
     """
 
     def __init__(
         self,
         module_name: str = "main",
+        outputs: List[LogOutput] = None,
     ):
         """
         Initialise le logger
 
         Args:
             module_name: Nom du module utilisant le logger
+            outputs: Liste des sorties désirées. Défaut: [FILE, CONSOLE]
         """
-        load_dotenv()  # Charge les variables d'environnement depuis .env
+        load_dotenv()
         self.module_name = module_name
+        self.outputs = (
+            outputs if outputs is not None else [LogOutput.FILE, LogOutput.CONSOLE]
+        )
         self.log_file = Path(__file__).resolve().parents[3] / "logs" / "SmartWatch.log"
-        self._setup_file_logging()
+        self._setup_logging()
 
-    def _setup_file_logging(self):
-        """Configure le logging vers fichier"""
+    def _setup_logging(self):
+        """Configure le logging selon les outputs demandés"""
         try:
             log_level_str = os.getenv("LOG_LEVEL", "INFO").upper()
             log_level = LogLevel[log_level_str].value
 
-            self.log_file.parent.mkdir(parents=True, exist_ok=True)
-            self.file_logger = logging.getLogger(self.module_name)
-            self.file_logger.setLevel(log_level)
-            # Éviter les doublons de handlers
-            if not self.file_logger.handlers:
-                handler = logging.FileHandler(self.log_file, encoding="utf-8")
-                formatter = logging.Formatter(
-                    "%(asctime)s - %(levelname)s - %(name)s : %(message)s"
-                )
-                handler.setFormatter(formatter)
-                self.file_logger.addHandler(handler)
-            self.file_available = True
-        except Exception as e:
-            print(f"Erreur lors de la configuration du fichier de log: {e}")
-            self.file_available = False
+            self.logger = logging.getLogger(self.module_name)
+            self.logger.setLevel(log_level)
 
-    def _log_to_file(self, level: LogLevel, message: str):
-        """Écrit le log vers le fichier"""
-        if not hasattr(self, "file_available") or not self.file_available:
+            if self.logger.hasHandlers():
+                return
+
+            formatter = logging.Formatter(
+                "%(asctime)s - %(levelname)s - %(name)s : %(message)s"
+            )
+
+            handler_map = {
+                LogOutput.FILE: logging.FileHandler(self.log_file, encoding="utf-8"),
+                LogOutput.CONSOLE: logging.StreamHandler(sys.stdout),
+            }
+
+            for output_type in self.outputs:
+                if output_type in handler_map:
+                    handler = handler_map[output_type]
+                    handler.setFormatter(formatter)
+                    self.logger.addHandler(handler)
+
+            self.available = True
+        except Exception as e:
+            print(f"Erreur lors de la configuration du logger: {e}")
+            self.available = False
+
+    def _log(self, level: LogLevel, message: str):
+        """Écrit le log vers fichier et/ou console"""
+        if not hasattr(self, "available") or not self.available:
             return
         try:
-            self.file_logger.log(level.value, f"{message}")
+            self.logger.log(level.value, f"{message}")
         except Exception as e:
-            print(f"Erreur lors de l'écriture dans le fichier de log: {e}")
+            print(f"Erreur lors de l'écriture du log: {e}")
 
     def log(self, level: LogLevel, message: str):
         """Log avec niveau spécifique"""
-        self._log_to_file(level, message)
+        self._log(level, message)
 
     def debug(self, message: str):
-        self._log_to_file(LogLevel.DEBUG, message)
+        self._log(LogLevel.DEBUG, message)
 
     def info(self, message: str):
-        self._log_to_file(LogLevel.INFO, message)
+        self._log(LogLevel.INFO, message)
 
     def warning(self, message: str):
-        self._log_to_file(LogLevel.WARNING, message)
+        self._log(LogLevel.WARNING, message)
 
     def error(self, message: str):
-        self._log_to_file(LogLevel.ERROR, message)
+        self._log(LogLevel.ERROR, message)
 
     def critical(self, message: str):
-        self._log_to_file(LogLevel.CRITICAL, message)
+        self._log(LogLevel.CRITICAL, message)
 
     def section(self, title: str, level: LogLevel = LogLevel.INFO):
         """Log une section avec formatage spécial"""
         separator = "=" * len(title) + "=" * 4
-        self._log_to_file(level, "")
-        self._log_to_file(level, separator)
-        self._log_to_file(level, f"  {title}  ")
-        self._log_to_file(level, separator)
-        self._log_to_file(level, "")
+        self._log(level, "")
+        self._log(level, separator)
+        self._log(level, f"  {title}  ")
+        self._log(level, separator)
+        self._log(level, "")
 
 
 def create_logger(
     module_name: str = "main",
+    outputs: List[str] = None,
 ) -> SmartWatchLogger:
     """
-    Factory function pour créer un logger configuré (log fichier uniquement)
+    Factory function pour créer un logger configuré avec outputs flexibles
+
+    Args:
+        module_name: Nom du module
+        outputs: Liste des sorties ["file", "console"]. Défaut: ["file", "console"]
+
     Returns:
         Instance configurée de SmartWatchLogger
     """
-    return SmartWatchLogger(module_name=module_name)
+    output_map = {"file": LogOutput.FILE, "console": LogOutput.CONSOLE}
+
+    if outputs is None:
+        log_outputs = list(output_map.values())
+    else:
+        log_outputs = [output_map[out] for out in outputs if out in output_map]
+        if len(log_outputs) != len(outputs or []):
+            print("Warning: Certains outputs non reconnus ont été ignorés.")
+
+    return SmartWatchLogger(module_name=module_name, outputs=log_outputs)
