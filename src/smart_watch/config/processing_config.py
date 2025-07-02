@@ -27,18 +27,34 @@ class ProcessingConfigManager(BaseConfig):
 
     def _init_processing_config(self) -> ProcessingConfig:
         """Initialise la configuration de traitement."""
-        # Remplacements de caractères par défaut
+        # Remplacements de caractères pour le nettoyage markdown
         char_replacements = {
+            # Guillemets
+            "«": '"',
+            "»": '"',
+            """: '"',
+            """: '"',
             "'": "'",
             "'": "'",
-            "-": " ",
+            # Tirets
+            "–": "-",
+            "—": "-",
+            # Espaces spéciaux
+            "\u00a0": " ",  # Non-breaking space
+            "\u2009": " ",  # Thin space
+            "\u200b": "",  # Zero-width space
+            # Caractères de formatage markdown
             "*": " ",
             "_": " ",
             "`": " ",
             "+": " ",
             "\\": " ",
-            "\n\n\n": "\n",
-            "\n\n\n\n": "\n",
+            # Nettoyage des espaces (ordre important pour éviter les récursions infinies)
+            "\t": " ",  # Tabulations vers espaces
+            "    ": " ",  # 4 espaces vers 1 (en premier)
+            "   ": " ",  # 3 espaces vers 1
+            "  ": " ",  # 2 espaces vers 1 (en dernier)
+            " \n": "\n",  # Espaces en fin de ligne
         }
 
         return ProcessingConfig(

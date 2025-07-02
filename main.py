@@ -38,6 +38,7 @@ from src.smart_watch.processing import (
 from src.smart_watch.processing.url_processor import ProcessingStats
 from src.smart_watch.reporting import ReportManager
 from src.smart_watch.utils.CSVToPolars import CSVToPolars
+from src.smart_watch.utils.MarkdownCleaner import MarkdownCleaner
 
 
 class HoraireExtractor:
@@ -61,6 +62,7 @@ class HoraireExtractor:
         # Initialisation des composants modulaires
         self.db_manager = DatabaseManager(self.config, self.logger)
         self.url_processor = URLProcessor(self.config, self.logger)
+        self.markdown_cleaner = MarkdownCleaner(self.config, self.logger)
         self.markdown_processor = MarkdownProcessor(self.config, self.logger)
         self.llm_processor = LLMProcessor(self.config, self.logger)
         self.comparison_processor = ComparisonProcessor(self.config, self.logger)
@@ -87,19 +89,25 @@ class HoraireExtractor:
             # 2. Pipeline de traitement
             # a. Extraction des URLs
             url_stats = self.url_processor.process_urls(self.db_manager, execution_id)
-            # b. Traitement des fichiers Markdown
+            # b. Nettoyage du contenu Markdown
+            cleaning_stats = self.markdown_cleaner.process_markdown_cleaning(
+                self.db_manager, execution_id
+            )
+            # c. Traitement des fichiers Markdown (filtrage sémantique)
             markdown_stats = self.markdown_processor.process_markdown_filtering(
                 self.db_manager, execution_id
             )
-            # c. Extraction des horaires via LLM
+            # d. Extraction des horaires via LLM
             llm_stats = self.llm_processor.process_llm_extractions(
                 self.db_manager, execution_id
             )
-            # d. Comparaison des horaires extraits avec les données de référence
+            # e. Comparaison des horaires extraits avec les données de référence
             comp_stats = self.comparison_processor.process_comparisons(self.db_manager)
 
             # 3. Consolidation des statistiques
-            self._consolidate_stats(url_stats, markdown_stats, llm_stats, comp_stats)
+            self._consolidate_stats(
+                url_stats, cleaning_stats, markdown_stats, llm_stats, comp_stats
+            )
 
             # 4. Génération et envoi du rapport
             self.report_manager.generate_and_send_report(self.stats)
@@ -133,6 +141,7 @@ class HoraireExtractor:
     def _consolidate_stats(
         self,
         url_stats: ProcessingStats,
+        cleaning_stats,
         markdown_stats: ProcessingStats,
         llm_stats: ProcessingStats,
         comp_stats: ProcessingStats,

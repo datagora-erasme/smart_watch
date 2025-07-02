@@ -103,5 +103,5 @@ class URLProcessor:
             row_data,
             sortie="markdown",
             encoding_errors="ignore",
-            char_replacements=self.config.processing.char_replacements,
+            config=self.config,
         )
