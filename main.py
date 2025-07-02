@@ -86,22 +86,26 @@ class HoraireExtractor:
             # 1. Configuration et chargement des données
             execution_id = self._setup_execution()
 
-            # 2. Pipeline de traitement
-            # a. Extraction des URLs
+            # 2. Pipeline de traitement séquentiel
+            # 2.a. Extraction des URLs (produit markdown_brut)
             url_stats = self.url_processor.process_urls(self.db_manager, execution_id)
-            # b. Nettoyage du contenu Markdown
+
+            # 2.b. Nettoyage du contenu Markdown (markdown_brut -> markdown_nettoye)
             cleaning_stats = self.markdown_cleaner.process_markdown_cleaning(
                 self.db_manager, execution_id
             )
-            # c. Traitement des fichiers Markdown (filtrage sémantique)
+
+            # 2.c. Filtrage sémantique du Markdown (markdown_nettoye -> markdown_filtre)
             markdown_stats = self.markdown_processor.process_markdown_filtering(
                 self.db_manager, execution_id
             )
-            # d. Extraction des horaires via LLM
+
+            # 2.d. Extraction des horaires via LLM (utilise markdown_filtre)
             llm_stats = self.llm_processor.process_llm_extractions(
                 self.db_manager, execution_id
             )
-            # e. Comparaison des horaires extraits avec les données de référence
+
+            # 2.e. Comparaison des horaires extraits avec les données de référence
             comp_stats = self.comparison_processor.process_comparisons(self.db_manager)
 
             # 3. Consolidation des statistiques
@@ -115,7 +119,7 @@ class HoraireExtractor:
             # 5. Résumé final
             self._display_final_summary()
 
-            self.logger.section("FIN PIPELINE EXTRACTION HORAIRES : SUCCÈS")
+            self.logger.section("FIN PIPELINE EXTRACTION HORAIRES")
 
         except Exception as e:
             self.logger.error(f"Erreur pipeline: {e}")

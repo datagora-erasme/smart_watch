@@ -62,6 +62,26 @@ class MarkdownProcessor:
         # Phrases de référence pour identifier les sections d'horaires (depuis la config)
         self.reference_phrases = self.config.markdown_filtering.reference_phrases
 
+    def _get_pending_markdown_filtering(
+        self, db_manager, execution_id: int
+    ) -> List[Tuple]:
+        """Récupère les enregistrements nécessitant un filtrage de markdown."""
+        session = db_manager.Session()
+        try:
+            return (
+                session.query(ResultatsExtraction, Lieux)
+                .join(Lieux, ResultatsExtraction.lieu_id == Lieux.identifiant)
+                .filter(
+                    ResultatsExtraction.id_execution == execution_id,
+                    ResultatsExtraction.statut_url == "ok",
+                    ResultatsExtraction.markdown_nettoye != "",
+                    ResultatsExtraction.markdown_filtre == "",  # Pas encore filtré
+                )
+                .all()
+            )
+        finally:
+            session.close()
+
     def process_markdown_filtering(
         self, db_manager, execution_id: int
     ) -> "ProcessingStats":
@@ -91,12 +111,12 @@ class MarkdownProcessor:
 
             try:
                 filtered_markdown = self._filter_single_markdown(
-                    resultat.markdown, lieu.nom, lieu.type_lieu
+                    resultat.markdown_nettoye, lieu.nom, lieu.type_lieu
                 )
 
                 # Mise à jour en base
-                self._update_filtered_markdown(
-                    db_manager, resultat.id_resultats_extraction, filtered_markdown
+                db_manager.update_filtered_markdown(
+                    resultat.id_resultats_extraction, filtered_markdown
                 )
 
                 if filtered_markdown and len(filtered_markdown.strip()) > 0:
@@ -111,36 +131,21 @@ class MarkdownProcessor:
 
             except Exception as e:
                 self.logger.error(f"Erreur filtrage markdown {lieu.nom}: {e}")
-                # Stocker le markdown original en cas d'erreur
-                self._update_filtered_markdown(
-                    db_manager, resultat.id_resultats_extraction, resultat.markdown
+                # Ajouter l'erreur à la chaîne
+                db_manager.add_pipeline_error(
+                    resultat.id_resultats_extraction,
+                    "FILTRAGE",
+                    f"Erreur filtrage markdown: {str(e)}",
+                )
+                # Stocker le markdown nettoyé en cas d'erreur
+                db_manager.update_filtered_markdown(
+                    resultat.id_resultats_extraction, resultat.markdown_nettoye
                 )
 
         self.logger.info(
             f"Markdown filtré: {stats.urls_successful}/{stats.urls_processed} réussies"
         )
         return stats
-
-    def _get_pending_markdown_filtering(
-        self, db_manager, execution_id: int
-    ) -> List[Tuple]:
-        """Récupère les enregistrements nécessitant un filtrage de markdown."""
-        session = db_manager.Session()
-        try:
-            return (
-                session.query(ResultatsExtraction, Lieux)
-                .join(Lieux, ResultatsExtraction.lieu_id == Lieux.identifiant)
-                .filter(
-                    ResultatsExtraction.id_execution == execution_id,
-                    ResultatsExtraction.statut_url == "ok",
-                    ResultatsExtraction.markdown != "",
-                    (ResultatsExtraction.markdown_horaires == "")
-                    | (ResultatsExtraction.markdown_horaires.is_(None)),
-                )
-                .all()
-            )
-        finally:
-            session.close()
 
     def _extract_context_around_phrase(
         self, phrases: List[str], phrase_index: int, context_window: int = 1
@@ -272,6 +277,7 @@ class MarkdownProcessor:
 
         except Exception as e:
             self.logger.error(f"Erreur lors du filtrage: {e}")
+            return markdown_content
             return markdown_content
 
     def _update_filtered_markdown(

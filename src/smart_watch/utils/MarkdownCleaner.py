@@ -57,6 +57,25 @@ class MarkdownCleaner:
         # Utiliser la configuration des caractères de remplacement
         self.char_replacements = self.config.processing.char_replacements
 
+    def _get_pending_cleaning(self, db_manager, execution_id: int) -> List[Tuple]:
+        """Récupère les enregistrements nécessitant un nettoyage de markdown."""
+        session = db_manager.Session()
+        try:
+            return (
+                session.query(ResultatsExtraction, Lieux)
+                .join(Lieux, ResultatsExtraction.lieu_id == Lieux.identifiant)
+                .filter(
+                    ResultatsExtraction.id_execution == execution_id,
+                    ResultatsExtraction.statut_url == "ok",
+                    ResultatsExtraction.markdown_brut != "",
+                    ResultatsExtraction.markdown_brut != None,
+                    ResultatsExtraction.markdown_nettoye == "",  # Pas encore nettoyé
+                )
+                .all()
+            )
+        finally:
+            session.close()
+
     def process_markdown_cleaning(self, db_manager, execution_id: int) -> CleaningStats:
         """Nettoie le contenu markdown pour tous les enregistrements d'une exécution."""
         self.logger.section("NETTOYAGE MARKDOWN")
@@ -75,7 +94,7 @@ class MarkdownCleaner:
             self.logger.debug(f"Nettoyage {i}/{len(resultats_a_nettoyer)}: {lieu.nom}")
 
             try:
-                original_markdown = resultat.markdown or ""
+                original_markdown = resultat.markdown_brut or ""
                 if not original_markdown.strip():
                     continue
 
@@ -89,49 +108,24 @@ class MarkdownCleaner:
                     )
 
                 # Mettre à jour en base
-                self._update_cleaned_markdown(
-                    db_manager, resultat.id_resultats_extraction, cleaned_markdown
+                db_manager.update_cleaned_markdown(
+                    resultat.id_resultats_extraction, cleaned_markdown
                 )
                 stats.texts_successful += 1
 
             except Exception as e:
                 self.logger.error(f"Erreur nettoyage markdown {lieu.nom}: {e}")
+                # Ajouter l'erreur à la chaîne
+                db_manager.add_pipeline_error(
+                    resultat.id_resultats_extraction,
+                    "NETTOYAGE",
+                    f"Erreur nettoyage markdown: {str(e)}",
+                )
 
         self.logger.info(
             f"Markdown nettoyé: {stats.texts_successful}/{stats.texts_processed} réussies"
         )
         return stats
-
-    def _get_pending_cleaning(self, db_manager, execution_id: int) -> List[Tuple]:
-        """Récupère les enregistrements nécessitant un nettoyage de markdown."""
-        session = db_manager.Session()
-        try:
-            return (
-                session.query(ResultatsExtraction, Lieux)
-                .join(Lieux, ResultatsExtraction.lieu_id == Lieux.identifiant)
-                .filter(
-                    ResultatsExtraction.id_execution == execution_id,
-                    ResultatsExtraction.statut_url == "ok",
-                    ResultatsExtraction.markdown != "",
-                    ResultatsExtraction.markdown != None,
-                )
-                .all()
-            )
-        finally:
-            session.close()
-
-    def _update_cleaned_markdown(
-        self, db_manager, resultat_id: int, cleaned_markdown: str
-    ):
-        """Met à jour le markdown nettoyé en base de données."""
-        session = db_manager.Session()
-        try:
-            resultat = session.get(ResultatsExtraction, resultat_id)
-            if resultat:
-                resultat.markdown = cleaned_markdown
-                session.commit()
-        finally:
-            session.close()
 
     def clean_markdown_content(self, text: str) -> str:
         """

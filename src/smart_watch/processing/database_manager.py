@@ -262,11 +262,14 @@ class DatabaseManager:
                         statut_url="",
                         code_http=0,
                         message_url="",
-                        markdown="",
+                        markdown_brut="",
+                        markdown_nettoye="",
+                        markdown_filtre="",
                         prompt_message="",
                         llm_consommation_requete="",
                         llm_horaires_json="",
                         llm_horaires_osm="",
+                        erreurs_pipeline="",
                     )
                     session.add(nouveau_resultat)
                     nouveaux_lieux_count += 1
@@ -302,8 +305,8 @@ class DatabaseManager:
                 .filter(
                     ResultatsExtraction.id_execution == execution_id,
                     ResultatsExtraction.statut_url == "ok",
-                    ResultatsExtraction.markdown_horaires
-                    != "",  # Changé: utiliser le markdown filtré
+                    ResultatsExtraction.markdown_filtre
+                    != "",  # Utiliser le markdown filtré
                     ResultatsExtraction.llm_horaires_json == "",
                 )
                 .all()
@@ -320,7 +323,37 @@ class DatabaseManager:
                 resultat.statut_url = result_data.get("statut", "error")
                 resultat.code_http = int(result_data.get("code_http", 0))
                 resultat.message_url = result_data.get("message", "")
-                resultat.markdown = result_data.get("markdown", "")
+                resultat.markdown_brut = result_data.get(
+                    "markdown", ""
+                )  # Sauvegarder comme markdown brut
+
+                # Ajouter erreur URL si échec
+                if result_data.get("statut") != "ok":
+                    error_msg = result_data.get("message", "Erreur inconnue")
+                    self._add_error_to_result(resultat, "URL", error_msg)
+
+                session.commit()
+        finally:
+            session.close()
+
+    def update_cleaned_markdown(self, resultat_id: int, cleaned_markdown: str):
+        """Met à jour le markdown nettoyé."""
+        session = self.Session()
+        try:
+            resultat = session.get(ResultatsExtraction, resultat_id)
+            if resultat:
+                resultat.markdown_nettoye = cleaned_markdown
+                session.commit()
+        finally:
+            session.close()
+
+    def update_filtered_markdown(self, resultat_id: int, filtered_markdown: str):
+        """Met à jour le markdown filtré."""
+        session = self.Session()
+        try:
+            resultat = session.get(ResultatsExtraction, resultat_id)
+            if resultat:
+                resultat.markdown_filtre = filtered_markdown
                 session.commit()
         finally:
             session.close()
@@ -335,17 +368,66 @@ class DatabaseManager:
                 if llm_data.get("prompt_message"):
                     resultat.prompt_message = llm_data["prompt_message"]
 
-                # Ne mettre à jour les résultats LLM que s'ils sont fournis et valides
-                if llm_data.get("llm_horaires_json") and not llm_data[
-                    "llm_horaires_json"
-                ].startswith("Erreur"):
-                    resultat.llm_horaires_json = llm_data["llm_horaires_json"]
+                # Variable pour éviter les erreurs dupliquées
+                error_added = False
 
-                if llm_data.get("llm_horaires_osm") and not llm_data[
-                    "llm_horaires_osm"
-                ].startswith("Erreur"):
+                # Mettre à jour les résultats LLM (JSON et OSM), y compris les erreurs
+                if "llm_horaires_json" in llm_data:
+                    resultat.llm_horaires_json = llm_data["llm_horaires_json"]
+                    # Ajouter erreur LLM si échec (une seule fois)
+                    if (
+                        llm_data["llm_horaires_json"].startswith("Erreur")
+                        and not error_added
+                    ):
+                        self._add_error_to_result(
+                            resultat, "LLM", llm_data["llm_horaires_json"]
+                        )
+                        error_added = True
+
+                if "llm_horaires_osm" in llm_data:
                     resultat.llm_horaires_osm = llm_data["llm_horaires_osm"]
+                    # Ajouter erreur OSM seulement si c'est différent de l'erreur LLM
+                    if llm_data["llm_horaires_osm"].startswith("Erreur") and llm_data[
+                        "llm_horaires_osm"
+                    ] != llm_data.get("llm_horaires_json", ""):
+                        self._add_error_to_result(
+                            resultat, "OSM", llm_data["llm_horaires_osm"]
+                        )
 
                 session.commit()
         finally:
             session.close()
+
+    def add_pipeline_error(self, resultat_id: int, error_type: str, error_message: str):
+        """Ajoute une erreur à la chaîne d'erreurs du pipeline."""
+        session = self.Session()
+        try:
+            resultat = session.get(ResultatsExtraction, resultat_id)
+            if resultat:
+                # Créer l'entrée d'erreur avec timestamp
+                from datetime import datetime
+
+                timestamp = datetime.now().strftime("%H:%M:%S")
+                error_entry = f"[{timestamp}] {error_type}: {error_message}"
+
+                # Ajouter à la chaîne existante
+                if resultat.erreurs_pipeline:
+                    resultat.erreurs_pipeline += f" | {error_entry}"
+                else:
+                    resultat.erreurs_pipeline = error_entry
+
+                session.commit()
+        finally:
+            session.close()
+
+    def _add_error_to_result(self, resultat, error_type: str, error_message: str):
+        """Ajoute une erreur à la chaîne d'erreurs (méthode interne)."""
+        from datetime import datetime
+
+        timestamp = datetime.now().strftime("%H:%M:%S")
+        error_entry = f"[{timestamp}] {error_type}: {error_message}"
+
+        if resultat.erreurs_pipeline:
+            resultat.erreurs_pipeline += f" | {error_entry}"
+        else:
+            resultat.erreurs_pipeline = error_entry
