@@ -12,9 +12,7 @@ class MarkdownFilteringConfig:
 
     def __init__(self, config_data: Dict):
         # Modèle d'embeddings à utiliser
-        self.embedding_model = config_data.get(
-            "embedding_model", "paraphrase-multilingual-MiniLM-L12-v2"
-        )
+        self.embedding_model = config_data.get("embedding_model", "nomic-embed-text")
 
         # Seuil de similarité pour considérer une phrase comme pertinente
         self.similarity_threshold = config_data.get("similarity_threshold", 0.25)
@@ -47,13 +45,15 @@ class MarkdownFilteringConfigManager(BaseConfig):
         return MarkdownFilteringConfig(
             {
                 "embedding_model": self.get_env_var(
-                    "EMBEDDING_MODEL", "paraphrase-multilingual-MiniLM-L12-v2"
+                    "EMBEDDING_MODEL", "nomic-embed-text"
                 ),
                 "similarity_threshold": float(
-                    self.get_env_var("SIMILARITY_THRESHOLD", "0.5")
+                    self.get_env_var("SIMILARITY_THRESHOLD", "0.4")
                 ),
                 "context_window": int(self.get_env_var("CONTEXT_WINDOW", "1")),
-                "min_content_length": int(self.get_env_var("MIN_CONTENT_LENGTH", "50")),
+                "min_content_length": int(
+                    self.get_env_var("MIN_CONTENT_LENGTH", "1000")
+                ),
                 "reference_phrases": reference_phrases,
             }
         )
