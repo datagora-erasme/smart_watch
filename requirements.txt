@@ -3,10 +3,12 @@ dotenv
 html_to_markdown
 jinja2
 lxml
+matplotlib
 pandas
 polars
 pyarrow
 requests
+scikit-learn
 sphinx
 sqlalchemy
 urllib3
