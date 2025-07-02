@@ -9,12 +9,14 @@
 ## ✨ Fonctionnalités
 
 *   **Collecte de Données** : Charge les URLs des établissements à analyser depuis un fichier CSV.
-*   **Filtrage de Contenu Intelligent** : Utilise des embeddings (via `sentence-transformers`) pour identifier et extraire uniquement les sections de page web pertinentes aux horaires, optimisant ainsi les appels aux LLM.
-*   **Extraction par LLM** : Interroge des LLM (compatibles OpenAI ou Mistral) pour extraire les horaires dans un format structuré (JSON et OSM).
-*   **Comparaison Automatisée** : Compare les horaires extraits par le LLM avec des données de référence (par exemple, depuis data.grandlyon.com) pour détecter les divergences.
+*   **Conversion des Données** : Converti les pages web en Markdown et nettoie ce dernier pour ne garder que l'essentiel
+*   **Filtrage de Contenu Intelligent** : Utilise des embeddings (via `nomic-embed`) pour identifier et extraire uniquement les sections de page web pertinentes aux horaires, optimisant ainsi les appels aux LLM.
+*   **Extraction par LLM** : Interroge des LLM (compatibles OpenAI ou Mistral) pour extraire les horaires dans un format structuré customisé (JSON).
+*   **Conversion des horaires** : Le format JSON customisé est converti au format OSM.
+*   **Comparaison Automatisée** : Compare les horaires extraits par le LLM avec des données de référence (depuis data.grandlyon.com) pour détecter les divergences.
 *   **Rapports Détaillés** : Génère des rapports HTML interactifs et un résumé simple, permettant de visualiser les statistiques globales, les statuts de traitement, et les détails de chaque URL.
 *   **Notifications** : Envoie automatiquement les rapports par email.
-*   **Orchestration Robuste** : Le pipeline complet est géré par la classe [`HoraireExtractor`](main.py) dans [`main.py`](main.py), assurant une exécution séquentielle des différentes étapes (URL processing, filtrage Markdown, extraction LLM, comparaison).
+*   **Orchestration Robuste** : Un pipeline assure une exécution séquentielle et contrôlée.
 *   **Conteneurisation** : Prêt à l'emploi avec Docker et Docker Compose pour un déploiement simplifié.
 
 ## 🚀 Installation
@@ -41,9 +43,8 @@
 1.  Créez un fichier `.env` à la racine du projet en vous basant sur le modèle [`env.model`](.env.model).
 2.  Configurez les variables d'environnement requises :
     *   `CSV_URL_HORAIRES`: L'URL ou le chemin local du fichier CSV contenant les lieux à analyser.
-    *   `LOG_LEVEL`: Le niveau de log (ex: `INFO`, `DEBUG`).
     *   **Configuration LLM** : Renseignez les clés d'API et les modèles pour le fournisseur de votre choix (OpenAI, Mistral, etc.).
-    *   **Configuration Email** (optionnel) : Paramétrez les informations SMTP pour l'envoi des rapports.
+    *   **Configuration Email** : Paramétrez les informations SMTP pour l'envoi des rapports.
 
 ## ▶️ Utilisation
 
@@ -57,7 +58,7 @@ Le programme effectuera les actions suivantes :
 1.  Initialisera la base de données SQLite (`data/SmartWatch.db`).
 2.  Traitera chaque URL, filtrera le contenu, et extraira les horaires via le LLM.
 3.  Comparera les résultats et stockera tout en base de données.
-4.  Générera un rapport HTML dans le répertoire racine (ex: `Rapport_SmartWatch_YYYYMMDD_HHMM.html`).
+4.  Enverra un rapport par mail.
 5.  Écrira les logs dans `logs/SmartWatch.log`.
 
 ## 🐳 Utilisation avec Docker
