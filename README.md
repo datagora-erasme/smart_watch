@@ -19,6 +19,54 @@
 *   **Orchestration Robuste** : Un pipeline assure une exécution séquentielle et contrôlée.
 *   **Conteneurisation** : Prêt à l'emploi avec Docker et Docker Compose pour un déploiement simplifié.
 
+## Diagramme
+```
+[ main.py ] (Orchestrateur du Pipeline)
+     │
+     ├─> 1. Initialise [ core.ConfigManager ] (Charge la configuration depuis .env)
+     │         └─> Agrège [ config.* ] (LLMConfig, DatabaseConfig, etc.)
+     │
+     ├─> 2. Initialise les processeurs principaux avec la configuration
+     │
+     └─> 3. Exécute le pipeline séquentiel :
+         │
+         ├─> [A] SETUP : [ utils.CSVToPolars ] -> [ processing.DatabaseManager ]
+         │     (Charge les URLs depuis le CSV et prépare une nouvelle exécution en base)
+         │
+         ├─> [B] FETCH : [ processing.URLProcessor ]
+         │     (Récupère le contenu des URLs)
+         │     └─> Utilise [ utils.HtmlToMarkdown ] pour la conversion
+         │
+         ├─> [C] CLEAN : [ utils.MarkdownCleaner ]
+         │     (Nettoie le Markdown brut)
+         │
+         ├─> [D] FILTER : [ core.MarkdownProcessor ]
+         │     (Filtre sémantiquement le Markdown pour ne garder que les sections pertinentes)
+         │     └─> Utilise [ core.LLMClient ] pour les embeddings (ex: nomic-embed-text)
+         │
+         ├─> [E] EXTRACT : [ processing.LLMProcessor ]
+         │     (Extrait les horaires du Markdown filtré au format JSON)
+         │     ├─> Utilise [ core.LLMClient ] pour l'appel au LLM (ex: OpenAI, Mistral)
+         │     └─> Utilise [ utils.CustomJsonToOSM ] pour convertir le JSON en format OSM
+         │
+         ├─> [F] COMPARE : [ processing.ComparisonProcessor ]
+         │     (Compare les horaires extraits (OSM) avec les données de référence)
+         │     └─> Utilise [ core.ComparateurHoraires ] pour la logique de comparaison
+         │
+         └─> [G] REPORT : [ reporting.ReportManager ]
+               (Génère et envoie le rapport final)
+               ├─> Utilise [ reporting.GenererRapportHTML ] pour créer le fichier HTML
+               └─> Utilise [ core.EmailSender ] pour envoyer l'email avec pièces jointes
+
+-----------------------------------------------------------------------------------------
+Modules Transversaux (utilisés par de nombreux composants) :
+-----------------------------------------------------------------------------------------
+  - [ core.Logger ] : Utilisé par tous les modules pour la journalisation.
+  - [ core.ErrorHandler ] : Utilisé pour une gestion centralisée des erreurs.
+  - [ processing.DatabaseManager ] : Utilisé par toutes les étapes du pipeline pour lire et écrire les résultats dans la base de données SQLite.
+  - [ data_models.schema_bdd ] : Définit la structure de la base de données pour SQLAlchemy.
+  ```
+
 ## 🚀 Installation
 
 1.  **Clonez le dépôt :**
