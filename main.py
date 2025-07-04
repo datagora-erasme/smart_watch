@@ -132,7 +132,7 @@ class HoraireExtractor:
         # Chargement du CSV depuis l'URL
         csv_loader = CSVToPolars(
             source=self.config.database.csv_url,
-            separator=";",
+            separator="auto",
             has_header=True,
         )
         df_csv = csv_loader.load_csv()
