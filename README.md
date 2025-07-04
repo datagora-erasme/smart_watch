@@ -18,8 +18,14 @@
 *   **Conteneurisation** : Prêt à l'emploi avec Docker et Docker Compose pour un déploiement simplifié.
 
 ## Capture d'écran
+### Aperçu du rapport
 <div align="center">
-  <img src="src/smart_watch/assets/images/capture_ecran_1.jpg" alt="Visualisation des différences d'horaires d'ouverture" />
+  <img src="src/smart_watch/assets/images/capture_ecran_1.jpg" alt="Vue globale du rapport html" />
+</div>
+
+### Fenêtre modal des différences détectées
+<div align="center">
+  <img src="src/smart_watch/assets/images/capture_ecran_2_modal.jpg" alt="Modal de visualisation des différences d'horaires d'ouverture" />
 </div>
 
 ## Diagramme de fonctionnement
