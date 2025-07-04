@@ -82,7 +82,7 @@ Modèles de rapports et des structures de données
 
 L'extraction des horaires d'ouverture depuis les pages web (via un Markdown nettoyé et filtré) est soumis au fonctionnement du LLM choisi. L'utilisation d'un modèle destiné au développement (comme `devstral`) est préférable à un modèle généraliste et/ou plus "littéraire" (tel que `gemma3`).
 
-Le modèle JSON sera automatiquement passé en argument du prompt et assure normalement une sortie structuré et reproductible. Ce modèle est passé en argument au LLM, en tant que `response_format` pour les modèles compatible OpenAI, et en tant que `tool_params` pour les modèles Mistral via API (cf `processing.llm_processor.py`).
+Le modèle JSON sera automatiquement passé en argument du prompt et assure normalement une sortie structurée et reproductible. Ce modèle est passé en argument au LLM, en tant que `response_format` pour les modèles compatible OpenAI, et en tant que `tool_params` pour les modèles Mistral via API (cf `processing.llm_processor.py`).
 
 ## 🚀 Installation
 
