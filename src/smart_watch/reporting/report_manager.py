@@ -20,35 +20,45 @@ class ReportManager:
         self.logger = logger
 
     def _create_logs_zip(self) -> str:
-        """Crée un fichier zip contenant tous les logs."""
+        """Crée un fichier zip contenant tous les logs et la base de données."""
         try:
             # Dossier des logs
             logs_dir = Path(__file__).resolve().parents[3] / "logs"
 
-            if not logs_dir.exists():
-                self.logger.warning("Dossier logs introuvable")
-                return None
+            # Dossier data pour la base de données
+            data_dir = Path(__file__).resolve().parents[3] / "data"
 
             # Créer le nom du fichier zip avec timestamp
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            zip_path = logs_dir / f"SmartWatch_logs_{timestamp}.zip"
+            zip_path = logs_dir / f"SmartWatch_logs_et_bdd_{timestamp}.zip"
 
-            # Créer le zip avec tous les fichiers .log
+            # Créer le zip avec les fichiers log et la base de données
             with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zip_file:
-                log_files_added = 0
-                for log_file in logs_dir.glob("*.log"):
-                    if log_file.is_file():
-                        zip_file.write(log_file, log_file.name)
-                        log_files_added += 1
-                        self.logger.debug(f"Log ajouté au zip: {log_file.name}")
+                files_added = 0
 
-            if log_files_added > 0:
-                self.logger.info(
-                    f"Zip des logs créé: {zip_path.name} ({log_files_added} fichiers)"
-                )
+                # Ajouter le fichier log principal
+                log_file = logs_dir / "SmartWatch.log"
+                if log_file.exists():
+                    zip_file.write(log_file, log_file.name)
+                    files_added += 1
+                    self.logger.debug(f"Log ajouté au zip: {log_file.name}")
+                else:
+                    self.logger.warning("Fichier SmartWatch.log introuvable")
+
+                # Ajouter la base de données
+                db_file = data_dir / "SmartWatch.db"
+                if db_file.exists():
+                    zip_file.write(db_file, db_file.name)
+                    files_added += 1
+                    self.logger.debug(f"Base de données ajoutée au zip: {db_file.name}")
+                else:
+                    self.logger.warning("Base de données SmartWatch.db introuvable")
+
+            if files_added > 0:
+                self.logger.info(f"Zip créé: {zip_path.name} ({files_added} fichiers)")
                 return str(zip_path)
             else:
-                self.logger.warning("Aucun fichier log trouvé pour le zip")
+                self.logger.warning("Aucun fichier trouvé pour le zip")
                 return None
 
         except Exception as e:
