@@ -66,24 +66,20 @@ exclude_patterns = [
 language = "fr"
 
 # -- Options for HTML output -------------------------------------------------
-html_theme = "alabaster"  # Utiliser un seul thème
+html_theme = "sphinx_rtd_theme"  # Utiliser un seul thème
 # html_static_path = ["_static"] # Commenté car le dossier n'existe pas
 
-# Configuration alabaster avec navigation réduite
+# Configuration sphinx_rtd_theme
 html_theme_options = {
-    "description": "Extracteur d'Horaires Intelligent",
-    "github_user": "datagora-erasme",
-    "github_repo": "smart_watch",
-    "github_button": True,
-    "github_count": False,
-    "show_powered_by": False,
-    "sidebar_width": "280px",
-    "page_width": "1200px",
-    "body_text_align": "left",
-    "show_related": False,  # Masquer les liens connexes
-    "sidebar_includehidden": False,  # Ne pas inclure les éléments cachés
-    "sidebar_collapse": True,  # Permettre la réduction des sections
-    "navigation_depth": 2,  # Limiter à 2 niveaux de profondeur max
+    "display_version": True,
+    "prev_next_buttons_location": "bottom",
+    "style_external_links": False,
+    "vcs_pageview_mode": "",
+    "collapse_navigation": True,
+    "sticky_navigation": True,
+    "navigation_depth": 2,
+    "includehidden": False,
+    "titles_only": False,
 }
 
 # Configuration pour le support du code

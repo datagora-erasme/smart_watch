@@ -10,5 +10,6 @@ pyarrow
 requests
 scikit-learn
 sphinx
+sphinx_rtd_theme
 sqlalchemy
 urllib3
