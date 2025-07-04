@@ -23,9 +23,9 @@
   <img src="src/smart_watch/assets/images/capture_ecran_1.jpg" alt="Vue globale du rapport html" />
 </div>
 
-### Fenêtre modal des différences détectées
+### Fenêtre modale des différences détectées
 <div align="center">
-  <img src="src/smart_watch/assets/images/capture_ecran_2_modal.jpg" alt="Modal de visualisation des différences d'horaires d'ouverture" />
+  <img src="src/smart_watch/assets/images/capture_ecran_2_modal.jpg" alt="Modale de visualisation des différences d'horaires d'ouverture" />
 </div>
 
 ## Diagramme de fonctionnement
