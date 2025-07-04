@@ -39,7 +39,7 @@ class ScheduleNormalizer:
         """Normalise un créneau horaire."""
         normalized = {"debut": slot.get("debut", ""), "fin": slot.get("fin", "")}
 
-        # Gère l'occurrence
+        # Gère l'occurrence (1er et 3eme mardis du mois, etc.)
         occurrence = slot.get("occurence")
         if occurrence is not None:
             if isinstance(occurrence, list):
