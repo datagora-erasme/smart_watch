@@ -6,14 +6,15 @@ __pycache__/
 # C extensions
 *.so
 
-# Fichiers originaux
-originaux/
-
 # Rapports générés
 rapport*.html
 
 # Notebooks
 notebooks/
+
+# Fichiers de prod
+data/SmartWatch.db
+logs/SmartWatch.log
 
 # Distribution / packaging
 .Python
