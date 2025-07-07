@@ -1,12 +1,13 @@
 """
 Système de logging pour le projet smart_watch
-Support flexible pour fichier et/ou console
+Support flexible pour fichier et/ou console avec rotation automatique
 """
 
 import logging
 import os
 import sys
 from enum import Enum
+from logging.handlers import RotatingFileHandler
 from pathlib import Path
 from typing import List
 
@@ -71,8 +72,16 @@ class SmartWatchLogger:
                 "%(asctime)s - %(levelname)s - %(name)s : %(message)s"
             )
 
+            # Créer le dossier logs s'il n'existe pas
+            self.log_file.parent.mkdir(parents=True, exist_ok=True)
+
             handler_map = {
-                LogOutput.FILE: logging.FileHandler(self.log_file, encoding="utf-8"),
+                LogOutput.FILE: RotatingFileHandler(
+                    self.log_file,
+                    maxBytes=10 * 1024 * 1024,  # 10 MB par fichier
+                    backupCount=5,  # Garder 5 fichiers de sauvegarde
+                    encoding="utf-8",
+                ),
                 LogOutput.CONSOLE: logging.StreamHandler(sys.stdout),
             }
 
