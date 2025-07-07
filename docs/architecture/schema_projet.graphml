@@ -57,7 +57,7 @@
       <data key="d3" xml:space="preserve"><![CDATA[Logger (Unifié)]]></data>
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="102.61149444303777" width="131.65771632403624" x="1288.5893958062359" y="170.45969286037484"/>
+          <y:Geometry height="102.61149444303777" width="131.65771632403624" x="808.6270942189344" y="170.45969286037484"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Open Sans Semibold" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="36.68359375" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="46.087890625" x="42.78491284951815" xml:space="preserve" y="32.963950346518885">Logger
@@ -917,13 +917,12 @@ Jours fériés</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e36" source="n3" target="n21">
+    <edge id="e36" source="n3" target="n22">
       <data key="d8" xml:space="preserve"/>
       <data key="d11">
         <y:PolyLineEdge>
-          <y:Path sx="-32.91442908100906" sy="51.305747221518885" tx="296.9136629974876" ty="-57.16798709087027">
-            <y:Point x="1321.503824887245" y="288.5711873034126"/>
-            <y:Point x="874.4565201403448" y="288.5711873034126"/>
+          <y:Path sx="65.80567010729055" sy="37.119240337310856" tx="0.0" ty="-75.22984643018742">
+            <y:Point x="1387.3325396825396" y="258.8846804192046"/>
           </y:Path>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
@@ -931,18 +930,7 @@ Jours fériés</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e37" source="n3" target="n22">
-      <data key="d8" xml:space="preserve"/>
-      <data key="d11">
-        <y:PolyLineEdge>
-          <y:Path sx="32.91442908100906" sy="51.305747221518885" tx="0.0" ty="-75.22984643018742"/>
-          <y:LineStyle color="#000000" type="line" width="1.0"/>
-          <y:Arrows source="none" target="standard"/>
-          <y:BendStyle smoothed="false"/>
-        </y:PolyLineEdge>
-      </data>
-    </edge>
-    <edge id="e38" source="n30" target="n6">
+    <edge id="e37" source="n30" target="n6">
       <data key="d8" xml:space="preserve"/>
       <data key="d11">
         <y:PolyLineEdge>
@@ -956,11 +944,23 @@ Jours fériés</y:NodeLabel>
         </y:PolyLineEdge>
       </data>
     </edge>
-    <edge id="e39" source="n19" target="n30">
+    <edge id="e38" source="n19" target="n30">
       <data key="d8" xml:space="preserve"/>
       <data key="d11">
         <y:PolyLineEdge>
           <y:Path sx="0.0" sy="57.16798709087027" tx="0.0" ty="-51.305747221518885"/>
+          <y:LineStyle color="#000000" type="line" width="1.0"/>
+          <y:Arrows source="none" target="standard"/>
+          <y:BendStyle smoothed="false"/>
+        </y:PolyLineEdge>
+      </data>
+    </edge>
+    <edge id="e39" source="n3" target="n21">
+      <data key="d8"/>
+      <data key="d10"/>
+      <data key="d11">
+        <y:PolyLineEdge>
+          <y:Path sx="0.0" sy="0.0" tx="296.9130952380955" ty="-33.77005772898269"/>
           <y:LineStyle color="#000000" type="line" width="1.0"/>
           <y:Arrows source="none" target="standard"/>
           <y:BendStyle smoothed="false"/>

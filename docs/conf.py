@@ -9,11 +9,12 @@ import sys
 # Ajouter le chemin du projet pour que Sphinx puisse importer les modules
 # Depuis docs/, on remonte d'un niveau pour accéder à la racine du projet
 sys.path.insert(0, os.path.abspath(".."))
-sys.path.insert(0, os.path.abspath("../src"))
+# sys.path.insert(0, os.path.abspath("../src"))
+
 
 # -- Project information -----------------------------------------------------
 project = "SmartWatch"
-copyright = '2025, <a href="https://github.com/berangerthomas">Béranger THOMAS</a>, <a href="https://erasme.org/">ERASME</a>'
+copyright = "2025, Béranger THOMAS, ERASME, Métropole de Lyon"
 author = "Béranger THOMAS"
 release = "2025-06"
 
@@ -26,9 +27,11 @@ extensions = [
     "sphinx.ext.intersphinx",  # Liens inter-documentation
     "sphinx.ext.todo",  # Support des TODOs
     "sphinx.ext.coverage",  # Couverture de la documentation
+    "sphinx.ext.githubpages",  # Support pour la publication sur GitHub Pages
 ]
 
-# Configuration autodoc - RÉDUCTION DE LA VERBOSITÉ
+
+# Configuration autodoc
 autodoc_default_options = {
     "members": True,
     "member-order": "bysource",
@@ -38,15 +41,23 @@ autodoc_default_options = {
     "show-inheritance": False,  # Masquer l'héritage pour réduire le bruit
 }
 
+
 # Configuration autosummary
 autosummary_generate = True
 autosummary_generate_overwrite = True
+
 
 # Configuration Napoleon pour les docstrings
 napoleon_google_docstring = True
 napoleon_numpy_docstring = True
 napoleon_include_init_with_doc = False
 napoleon_include_private_with_doc = False
+
+# Configuration de la page web
+html_title = "SmartWatch Documentation"
+html_short_title = "SmartWatch"
+# html_logo = "../src/smart_watch/assets/images/logo_carre.jpg"
+html_favicon = "../src/smart_watch/assets/images/favicon.jpg"
 
 # Configuration intersphinx
 intersphinx_mapping = {
@@ -56,7 +67,7 @@ intersphinx_mapping = {
 
 templates_path = ["_templates"]
 exclude_patterns = [
-    "build",
+    "_build",
     "Thumbs.db",
     ".DS_Store",
     "**/__pycache__",
@@ -66,8 +77,7 @@ exclude_patterns = [
 language = "fr"
 
 # -- Options for HTML output -------------------------------------------------
-html_theme = "sphinx_rtd_theme"  # Utiliser un seul thème
-# html_static_path = ["_static"] # Commenté car le dossier n'existe pas
+html_theme = "sphinx_rtd_theme"
 
 # Configuration sphinx_rtd_theme
 html_theme_options = {
@@ -89,7 +99,7 @@ highlight_language = "python"
 # Configuration TODO
 todo_include_todos = False  # Masquer les TODOs dans la navigation
 
-# Navigation latérale simplifiée - RÉDUCTION DES ÉLÉMENTS
+# Navigation latérale simplifiée
 html_sidebars = {
     "**": [
         "about.html",

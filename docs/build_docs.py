@@ -29,14 +29,16 @@ def build_docs():
         "html",  # Format HTML
         "-E",  # Reconstruction complète
         ".",  # Répertoire source
-        "build/html",  # Répertoire de destination
+        "_build/html",  # Répertoire de destination
     ]
 
     try:
         print("Génération de la documentation...")
         result = subprocess.run(cmd, check=True, capture_output=True, text=True)
         print("Documentation générée avec succès!")
-        print(f"Résultat disponible dans: {docs_dir / 'build' / 'html' / 'index.html'}")
+        print(
+            f"Résultat disponible dans: {docs_dir / '_build' / 'html' / 'index.html'}"
+        )
         return True
 
     except subprocess.CalledProcessError as e:
