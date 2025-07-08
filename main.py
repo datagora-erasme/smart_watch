@@ -23,7 +23,6 @@ Les modules principaux sont :
 from src.smart_watch.core.ConfigManager import ConfigManager
 from src.smart_watch.core.ErrorHandler import (
     ErrorCategory,
-    ErrorHandler,
     ErrorSeverity,
     handle_errors,
 )
@@ -174,30 +173,16 @@ class HoraireExtractor:
             self.logger.info("Aucune erreur détectée")
 
 
+@handle_errors(
+    category=ErrorCategory.UNKNOWN,
+    severity=ErrorSeverity.CRITICAL,
+    user_message="Erreur fatale dans le programme principal",
+    reraise=True,
+)
 def main():
-    """Point d'entrée principal avec gestion d'erreurs globale."""
-    try:
-        extractor = HoraireExtractor()
-        extractor.run()
-    except Exception as e:
-        error_handler = ErrorHandler()
-        context = error_handler.create_error_context(
-            module="main",
-            function="main",
-            operation="Exécution du programme principal",
-            user_message="Erreur fatale dans le programme principal",
-        )
-
-        error_handler.handle_error(
-            exception=e,
-            context=context,
-            category=ErrorCategory.UNKNOWN,
-            severity=ErrorSeverity.CRITICAL,
-        )
-
-        print(f"Erreur fatale: {e}")
-        print("Consultez les logs pour plus de détails")
-        raise
+    """Point d'entrée principal."""
+    extractor = HoraireExtractor()
+    extractor.run()
 
 
 if __name__ == "__main__":
