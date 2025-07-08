@@ -1,0 +1,58 @@
+name: Déploiement documentation Sphinx
+
+on:
+  push:
+    branches: [main]
+    
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Installer Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.13'
+
+    - name: Installer les dépendances
+      run: |
+        pip install sphinx sphinx-rtd-theme python-dotenv sqlalchemy
+
+    - name: Créer un fichier .env factice pour la génération de docs
+      run: |
+        cat > .env << 'EOF'
+        CSV_URL_HORAIRES="https://example.com/horaires.csv"
+        CSV_URL_PISCINES="https://data.grandlyon.com/piscines.csv"
+        CSV_URL_MAIRIES="https://data.grandlyon.com/mairies.csv"
+        CSV_URL_MEDIATHEQUES="https://data.grandlyon.com/mediatheques.csv"
+        API_KEY_OPENAI="sk-dummy"
+        MODELE_OPENAI="gpt-4"
+        NB_THREADS_URL=20
+        EMBEDDING_MODEL="nomic-embed-text"
+        SIMILARITY_THRESHOLD=0.5
+        CONTEXT_WINDOW=1
+        MIN_CONTENT_LENGTH=1000
+        REFERENCE_PHRASES="horaires d'ouverture et de fermeture"
+        LLM_TIMEOUT=300
+        EOF
+
+    - name: Créer les répertoires nécessaires
+      run: |
+        mkdir -p data
+        mkdir -p logs
+        mkdir -p src/smart_watch/data_models
+        touch src/smart_watch/data_models/opening_hours_schema.json
+
+    - name: Générer la documentation
+      run: |
+        sphinx-build -b html docs/ docs/_build/html
+
+    - name: Déployer sur GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: docs/_build/html
+        publish_branch: gh-pages
+        force_orphan: true
