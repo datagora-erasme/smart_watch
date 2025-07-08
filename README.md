@@ -2,9 +2,9 @@
   <img src="src/smart_watch/assets/images/logo_app.jpg" alt="Logo SmartWatch" />
 </div>
 
-# SmartWatch : Extracteur d'Horaires Intelligent
+# SmartWatch : extracteur d'horaires intelligent
 
-**SmartWatch** est un pipeline d'extractio de données conçu pour extraire, analyser, et comparer les horaires d'ouverture de divers établissements publiques (mairies, piscines, médiathèques) à partir de leurs sites web. Il utilise des modèles de langage pour interpréter le contenu et comparer les horaires d'ouverture extraits à des données de référence, puis génère et envoie par mail des rapports HTML interactifs pour visualiser les résultats.
+**SmartWatch** est un pipeline d'extraction de données conçu pour extraire, analyser, et comparer les horaires d'ouverture de divers établissements publics (mairies, piscines, médiathèques) à partir de leurs sites web. Il utilise des modèles de langage pour interpréter le contenu et comparer les horaires d'ouverture extraits à des données de référence, puis génère et envoie par mail des rapports HTML interactifs pour visualiser les résultats.
 
 ## <img src="src/smart_watch/assets/images/read the docs icon.png" alt="Logo ReadTheDocs" /> Documentation
 
@@ -12,14 +12,14 @@ La documentation complète est accessible sur [https://datagora-erasme.github.io
 
 ## ✨ Fonctionnalités
 
-*   **Collecte de Données** : Charge les URLs des établissements à analyser depuis un fichier CSV.
-*   **Conversion des Données** : Converti les pages web en Markdown et nettoie ce dernier pour ne garder que l'essentiel
-*   **Filtrage de Contenu Intelligent** : Utilise des embeddings (via `nomic-embed`) pour identifier et extraire uniquement les sections de page web pertinentes aux horaires, optimisant ainsi les appels aux LLM.
-*   **Extraction par LLM** : Interroge des LLM (compatibles OpenAI ou Mistral) pour extraire les horaires dans un format structuré customisé (JSON).
-*   **Comparaison Automatisée** : Compare les horaires extraits par le LLM avec des données de référence (depuis data.grandlyon.com) pour détecter les divergences.
-*   **Rapports Détaillés** : Génère des rapports HTML interactifs, permettant de visualiser les statistiques globales, les statuts de traitement, et les détails de chaque URL.
-*   **Orchestration** : Un pipeline assure une exécution séquentielle et contrôlée.
-*   **Conteneurisation** : Prêt à l'emploi avec Docker et Docker Compose pour un déploiement simplifié.
+*   **Collecte de données** : charge les URLs des établissements à analyser depuis un fichier CSV.
+*   **Conversion des données** : converti les pages web en Markdown et nettoie ce dernier pour ne garder que l'essentiel
+*   **Filtrage de contenu intelligent** : utilise des embeddings (via `nomic-embed`) pour identifier et extraire uniquement les sections de page web relatives aux horaires, optimisant ainsi les appels aux LLM.
+*   **Extraction par LLM** : interroge des LLM (compatibles OpenAI ou Mistral) pour extraire les horaires dans un format structuré customisé (JSON).
+*   **Comparaison automatisée** : compare les horaires extraits par le LLM avec des données de référence (depuis data.grandlyon.com) pour détecter les divergences.
+*   **Rapports détaillés** : génère des rapports HTML interactifs, permettant de visualiser les statistiques globales, les statuts de traitement, et les détails de chaque URL.
+*   **Orchestration** : un pipeline assure une exécution séquentielle et contrôlée.
+*   **Conteneurisation** : prêt à l'emploi avec Docker et Docker Compose pour un déploiement simplifié.
 
 ## Capture d'écran
 ### Aperçu du rapport
@@ -74,25 +74,25 @@ La documentation complète est accessible sur [https://datagora-erasme.github.io
 -----------------------------------------------------------------------------------------
 Modules Transversaux :
 -----------------------------------------------------------------------------------------
-  - [ core.Logger ] : Utilisé par tous les modules pour la journalisation.
-  - [ core.ErrorHandler ] : Utilisé pour une gestion centralisée des erreurs.
-  - [ processing.DatabaseManager ] : Utilisé par toutes les étapes du pipeline pour lire et écrire les résultats dans la base de données SQLite.
+  - [ core.Logger ] : utilisé par tous les modules pour la journalisation.
+  - [ core.ErrorHandler ] : utilisé pour une gestion centralisée des erreurs.
+  - [ processing.DatabaseManager ] : utilisé par toutes les étapes du pipeline pour lire et écrire les résultats dans la base de données SQLite.
 
 -----------------------------------------------------------------------------------------
 Modèles de rapports et des structures de données
 -----------------------------------------------------------------------------------------
-  - [ data_models.schema_bdd ] : Définit la structure de la base de données pour SQLAlchemy.
-  - [ data_models.opening_hours_schema.json ] : Modèle JSON décrivant des horaires d'ouverture
-  - [ assets.templates.ReportTemplate.html ] : Modèle html pour le rapport envoyé en pièce jointe du mail
-  - [ assets.templates.SimpleReportTemplate.html ] : Modèle html pour le corps du mail
+  - [ data_models.schema_bdd ] : définit la structure de la base de données pour SQLAlchemy.
+  - [ data_models.opening_hours_schema.json ] : modèle JSON décrivant des horaires d'ouverture
+  - [ assets.templates.ReportTemplate.html ] : modèle html pour le rapport envoyé en pièce jointe du mail
+  - [ assets.templates.SimpleReportTemplate.html ] : modèle html pour le corps du mail
 
   ```
 
 ## Fiabilité des informations
 
-L'extraction des horaires d'ouverture depuis les pages web (via un Markdown nettoyé et filtré) est soumis au fonctionnement du LLM choisi. L'utilisation d'un modèle destiné au développement (comme `devstral`) est préférable à un modèle généraliste et/ou plus "littéraire" (tel que `gemma3`).
+L'extraction des horaires d'ouverture depuis les pages web (via un Markdown nettoyé et filtré) est soumise au fonctionnement du LLM choisi. L'utilisation d'un modèle destiné au développement (comme `devstral`) est préférable à un modèle généraliste ou plus "littéraire" (tel que `gemma3`).
 
-Le modèle JSON sera automatiquement passé en argument du prompt et assure normalement une sortie structurée et reproductible. Ce modèle est passé en argument au LLM, en tant que `response_format` pour les modèles compatible OpenAI, et en tant que `tool_params` pour les modèles Mistral via API (cf `processing.llm_processor.py`).
+Le modèle JSON sera automatiquement passé en argument du prompt et assure normalement une sortie structurée et reproductible. Ce modèle est passé en argument au LLM, en tant que `response_format` pour les modèles compatibles OpenAI, et en tant que `tool_params` pour les modèles Mistral via API (cf `processing.llm_processor.py`).
 
 ## 🚀 Installation
 
@@ -117,9 +117,9 @@ Le modèle JSON sera automatiquement passé en argument du prompt et assure norm
 
 1.  Créez un fichier `.env` à la racine du projet en vous basant sur le modèle [`env.model`](.env.model).
 2.  Configurez les variables d'environnement requises :
-    *   `CSV_URL_HORAIRES`: L'URL ou le chemin local du fichier CSV contenant les lieux à analyser.
-    *   **Configuration LLM** : Renseignez les URL, clés API et le modèle pour le fournisseur de votre choix (OpenAI, Mistral, etc.).
-    *   **Configuration Email** : Paramétrez les emails et informations SMTP pour l'envoi des rapports.
+    *   `CSV_URL_HORAIRES`: l'URL ou le chemin local du fichier CSV contenant les lieux à analyser.
+    *   **Configuration LLM** : renseignez les URL, clés API et le modèle pour le fournisseur de votre choix (OpenAI, Mistral, etc.).
+    *   **Configuration Email** : paramétrez les emails et informations SMTP pour l'envoi des rapports.
 
 ## ▶️ Utilisation
 
@@ -130,11 +130,11 @@ python main.py
 ```
 
 Le programme effectuera les actions suivantes :
-1.  Initialisera la base de données SQLite (`data/SmartWatch.db`).
-2.  Traitera chaque URL, filtrera le contenu, et extraira les horaires via le LLM.
-3.  Comparera les résultats et stockera tout en base de données.
-4.  Enverra un rapport et les logs par mail.
-5.  Écrira les logs dans `logs/SmartWatch.log`.
+1.  initialisera la base de données SQLite (`data/SmartWatch.db`).
+2.  traitera chaque URL, filtrera le contenu, et extraiera les horaires via le LLM.
+3.  comparera les résultats et stockera tout en base de données.
+4.  enverra un rapport et les logs par mail.
+5.  écrira les logs dans `logs/SmartWatch.log`.
 
 ## 🐳 Utilisation avec Docker
 
