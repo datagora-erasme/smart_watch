@@ -6,6 +6,10 @@
 
 **SmartWatch** est un pipeline d'extractio de données conçu pour extraire, analyser, et comparer les horaires d'ouverture de divers établissements publiques (mairies, piscines, médiathèques) à partir de leurs sites web. Il utilise des modèles de langage pour interpréter le contenu et comparer les horaires d'ouverture extraits à des données de référence, puis génère et envoie par mail des rapports HTML interactifs pour visualiser les résultats.
 
+## <img src="src/smart_watch/assets/images/read the docs icon.png" alt="Logo ReadTheDocs" /> Documentation
+
+La documentation complète est accessible sur [https://datagora-erasme.github.io/smart_watch/](https://datagora-erasme.github.io/smart_watch/)
+
 ## ✨ Fonctionnalités
 
 *   **Collecte de Données** : Charge les URLs des établissements à analyser depuis un fichier CSV.
