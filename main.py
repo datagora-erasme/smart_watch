@@ -176,7 +176,7 @@ class HoraireExtractor:
 @handle_errors(
     category=ErrorCategory.UNKNOWN,
     severity=ErrorSeverity.CRITICAL,
-    user_message="Erreur fatale dans le programme principal",
+    user_message="Erreur dans le programme principal",
     reraise=True,
 )
 def main():

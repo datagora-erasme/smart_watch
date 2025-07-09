@@ -7,7 +7,12 @@ from pathlib import Path
 
 from dotenv import dotenv_values, load_dotenv
 
-from ..core.ErrorHandler import ErrorCategory, ErrorHandler, ErrorSeverity
+from ..core.ErrorHandler import (
+    ErrorCategory,
+    ErrorHandler,
+    ErrorSeverity,
+    handle_errors,
+)
 from ..core.Logger import create_logger
 
 logger = create_logger(
@@ -75,6 +80,12 @@ class BaseConfig:
                 f"Fichier .env non trouvé ({self.env_file.name}), utilisation des variables système"
             )
 
+    @handle_errors(
+        category=ErrorCategory.CONFIGURATION,
+        severity=ErrorSeverity.HIGH,
+        user_message="Erreur lors de la récupération d'une variable d'environnement",
+        reraise=True,
+    )
     def get_env_var(self, key: str, default: str = None, required: bool = False):
         """
         Récupère une variable d'environnement avec gestion d'erreurs.
@@ -93,19 +104,6 @@ class BaseConfig:
         value = os.getenv(key, default)
 
         if required and (value is None or value == ""):
-            context = self.error_handler.create_error_context(
-                module="BaseConfig",
-                function="get_env_var",
-                operation=f"Récupération variable {key}",
-                user_message=f"Variable d'environnement {key} requise mais manquante",
-            )
-
-            self.error_handler.handle_error(
-                exception=ValueError(f"Variable d'environnement {key} manquante"),
-                context=context,
-                category=ErrorCategory.CONFIGURATION,
-                severity=ErrorSeverity.HIGH,
-                reraise=True,
-            )
+            raise ValueError(f"Variable d'environnement {key} manquante")
 
         return value

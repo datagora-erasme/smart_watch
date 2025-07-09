@@ -1,6 +1,6 @@
 import csv
-import io
 from pathlib import Path
+from tempfile import NamedTemporaryFile
 
 import polars as pl
 import requests
@@ -48,20 +48,56 @@ class CSVToPolars:
             logger.warning("Impossible de détecter le séparateur, utilisation de ';'")
             return ";"
 
-    def _download_csv_content(self, url: str) -> bytes:
-        """Télécharge le contenu CSV depuis une URL."""
+    def _download_to_temp_file(self, url: str) -> Path:
+        """Télécharge l'URL vers un fichier temporaire et retourne le chemin."""
         try:
             logger.info(f"Téléchargement CSV depuis: {url}")
-
             response = requests.get(url, timeout=30)
             response.raise_for_status()
 
-            logger.info(f"CSV téléchargé: {len(response.content)} bytes")
-            return response.content
+            # Créer un fichier temporaire
+            temp_file = NamedTemporaryFile(mode="wb", suffix=".csv", delete=False)
+            temp_file.write(response.content)
+            temp_file.close()
+
+            temp_path = Path(temp_file.name)
+            logger.info(
+                f"CSV téléchargé vers fichier temporaire: {len(response.content)} bytes"
+            )
+            return temp_path
 
         except Exception as e:
             logger.error(f"Erreur téléchargement CSV: {e}")
             raise
+
+    def _process_local_file(
+        self, file_path: Path, cleanup_temp: bool = False
+    ) -> pl.DataFrame:
+        """Traite un fichier local."""
+        try:
+            # Détection automatique du séparateur si nécessaire
+            if self.separator == "auto":
+                with file_path.open("r", encoding="utf-8") as f:
+                    sample = "".join([next(f) for _ in range(5)])
+                self.separator = self._detect_separator(sample)
+
+            logger.info(f"Lecture CSV: {file_path.name}")
+
+            # Lecture avec Polars
+            df = pl.read_csv(
+                file_path,
+                has_header=self.has_header,
+                separator=self.separator,
+                truncate_ragged_lines=True,
+            ).filter(~pl.all_horizontal(pl.all().is_null()))
+
+            return df
+
+        finally:
+            # Nettoyage du fichier temporaire si nécessaire
+            if cleanup_temp and file_path.exists():
+                file_path.unlink()
+                logger.debug(f"Fichier temporaire supprimé: {file_path}")
 
     def load_csv(self) -> pl.DataFrame | str:
         """
@@ -78,40 +114,18 @@ class CSVToPolars:
 
         try:
             if self._is_url(self.source):
-                # Télécharger et lire directement depuis la mémoire
-                csv_content = self._download_csv_content(self.source)
-
-                if self.separator == "auto":
-                    # Détecter le séparateur à partir d'un échantillon
-                    sample = csv_content.splitlines(keepends=True)[100].decode("utf-8")
-                    self.separator = self._detect_separator(sample)
-
-                csv_stream = io.BytesIO(csv_content)
-
-                logger.info("Lecture CSV directe depuis la mémoire")
-                self.df = pl.read_csv(
-                    csv_stream,
-                    has_header=self.has_header,
-                    separator=self.separator,
-                ).filter(~pl.all_horizontal(pl.all().is_null()))
+                # Télécharger vers fichier temporaire puis traiter
+                temp_file_path = self._download_to_temp_file(self.source)
+                self.df = self._process_local_file(temp_file_path, cleanup_temp=True)
             else:
-                # Lire fichier local
+                # Fichier local - vérifier existence puis traiter
                 file_path = Path(self.source)
                 if not file_path.exists():
                     error_msg = f"Fichier {file_path} non trouvé"
                     logger.error(error_msg)
                     return error_msg
 
-                if self.separator == "auto":
-                    # Détecter le séparateur à partir d'un échantillon
-                    with file_path.open("r", encoding="utf-8") as f:
-                        sample = "".join([next(f) for _ in range(100)])
-                    self.separator = self._detect_separator(sample)
-
-                logger.info(f"Chargement CSV local: {file_path.name}")
-                self.df = pl.read_csv(
-                    file_path, has_header=self.has_header, separator=self.separator
-                )
+                self.df = self._process_local_file(file_path, cleanup_temp=False)
 
             logger.info(
                 f"CSV chargé: {len(self.df)} lignes, {len(self.df.columns)} colonnes"

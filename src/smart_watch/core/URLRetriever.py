@@ -23,6 +23,48 @@ HEADERS = {
 }
 
 
+def _create_ssl_context(strategy: str = "default") -> ssl.SSLContext:
+    """Crée un contexte SSL selon la stratégie spécifiée."""
+    ctx = ssl.create_default_context()
+
+    if strategy == "no_verify":
+        ctx.check_hostname = False
+        ctx.verify_mode = ssl.CERT_NONE
+    elif strategy == "low_security":
+        ctx.set_ciphers("DEFAULT@SECLEVEL=1")
+    elif strategy == "full_mitigation":
+        ctx.check_hostname = False
+        ctx.verify_mode = ssl.CERT_NONE
+        ctx.set_ciphers("DEFAULT@SECLEVEL=1")
+
+    return ctx
+
+
+def _make_request(url: str, strategy: str = "default") -> urllib3.HTTPResponse:
+    """Effectue une requête HTTP avec la stratégie SSL spécifiée."""
+    if strategy == "default":
+        http = urllib3.PoolManager(timeout=30.0)
+    else:
+        ssl_context = _create_ssl_context(strategy)
+        cert_reqs = (
+            ssl.CERT_NONE
+            if strategy in ["no_verify", "full_mitigation"]
+            else ssl.CERT_REQUIRED
+        )
+        http = urllib3.PoolManager(
+            cert_reqs=cert_reqs, ssl_context=ssl_context, timeout=30.0
+        )
+
+    return http.request(
+        "GET",
+        url,
+        headers=HEADERS,
+        redirect=True,
+        retries=10,
+        timeout=30.0,
+    )
+
+
 @handle_errors(
     category=ErrorCategory.NETWORK,
     severity=ErrorSeverity.MEDIUM,
@@ -67,75 +109,41 @@ def retrieve_url(
     try:
         logger.debug(f"[{identifiant}] Récupération URL: {url}")
 
-        # First try with normal SSL verification
-        try:
-            http = urllib3.PoolManager(timeout=30.0)
-            response = http.request(
-                "GET",
-                url,
-                headers=HEADERS,
-                redirect=True,
-                retries=10,
-                timeout=30.0,
-            )
-        except urllib3.exceptions.MaxRetryError as max_retry_err:
-            error_str = str(max_retry_err)
+        # Stratégies SSL progressives
+        ssl_strategies = ["default", "no_verify", "low_security", "full_mitigation"]
+        response = None
 
-            if "too many redirects" in error_str:
-                row_dict["statut"] = "warning"
-                row_dict["message"] = "too many redirects"
-                row_dict["code_http"] = 310
-                logger.warning(f"[{identifiant}] Trop de redirections: {url}")
-                return row_dict
-            elif "CERTIFICATE_VERIFY_FAILED" in error_str:
-                logger.debug(
-                    f"[{identifiant}] Erreur certificat, nouvelle tentative sans vérification"
-                )
-                ctx = ssl.create_default_context()
-                ctx.check_hostname = False
-                ctx.verify_mode = ssl.CERT_NONE
-                http = urllib3.PoolManager(cert_reqs=ssl.CERT_NONE, ssl_context=ctx)
-                response = http.request(
-                    "GET",
-                    url,
-                    headers=HEADERS,
-                    redirect=True,
-                    retries=10,
-                    timeout=30.0,
-                )
-            elif "DH_KEY_TOO_SMALL" in error_str:
-                logger.debug(
-                    f"[{identifiant}] Erreur DH_KEY, nouvelle tentative avec sécurité réduite"
-                )
-                ctx = ssl.create_default_context()
-                ctx.set_ciphers("DEFAULT@SECLEVEL=1")
-                http = urllib3.PoolManager(ssl_context=ctx)
-                response = http.request(
-                    "GET",
-                    url,
-                    headers=HEADERS,
-                    redirect=True,
-                    retries=10,
-                    timeout=30.0,
-                )
-            else:
-                logger.debug(
-                    f"[{identifiant}] Erreur SSL, nouvelle tentative avec mitigations complètes"
-                )
-                ctx = ssl.create_default_context()
-                ctx.check_hostname = False
-                ctx.verify_mode = ssl.CERT_NONE
-                ctx.set_ciphers("DEFAULT@SECLEVEL=1")
+        for strategy in ssl_strategies:
+            try:
+                response = _make_request(url, strategy)
+                if strategy != "default":
+                    logger.debug(
+                        f"[{identifiant}] Succès avec stratégie SSL: {strategy}"
+                    )
+                break
+            except urllib3.exceptions.MaxRetryError as max_retry_err:
+                error_str = str(max_retry_err)
 
-                http = urllib3.PoolManager(cert_reqs=ssl.CERT_NONE, ssl_context=ctx)
-                response = http.request(
-                    "GET",
-                    url,
-                    headers=HEADERS,
-                    redirect=True,
-                    retries=10,
-                    timeout=30.0,
-                )
+                # Gestion spéciale pour les redirections
+                if "too many redirects" in error_str:
+                    row_dict["statut"] = "warning"
+                    row_dict["message"] = "too many redirects"
+                    row_dict["code_http"] = 310
+                    logger.warning(f"[{identifiant}] Trop de redirections: {url}")
+                    return row_dict
+
+                # Si ce n'est pas un problème SSL ou si c'est la dernière stratégie, on relance
+                if (
+                    not any(
+                        ssl_error in error_str
+                        for ssl_error in [
+                            "CERTIFICATE_VERIFY_FAILED",
+                            "DH_KEY_TOO_SMALL",
+                        ]
+                    )
+                    or strategy == ssl_strategies[-1]
+                ):
+                    raise
 
         if response.status != 200:
             row_dict["statut"] = "warning"
@@ -145,39 +153,34 @@ def retrieve_url(
         else:
             # Decode content
             content_type = response.headers.get("Content-Type", "")
-            encoding = None
+            encoding = "utf-8"
             if "charset=" in content_type:
                 encoding = content_type.split("charset=")[-1].strip()
-            else:
-                encoding = "utf-8"
 
             html_content = response.data.decode(encoding, errors=encoding_errors)
             logger.debug(
                 f"[{identifiant}] Contenu décodé ({encoding}): {len(html_content)} caractères"
             )
 
+            # Stockage du contenu selon le format demandé
             if sortie == "html":
-                row_dict[sortie] = html_content
+                row_dict["html"] = html_content
             elif sortie == "markdown":
-                converter = HtmlToMarkdown(
-                    html=html_content,
-                    config=config,
-                )
+                converter = HtmlToMarkdown(html=html_content, config=config)
                 try:
-                    markdown_content = converter.convert()
-                    row_dict[sortie] = markdown_content
+                    row_dict["markdown"] = converter.convert()
                 except Exception as e:
                     logger.error(f"[{identifiant}] Erreur conversion Markdown: {e}")
-                    row_dict[sortie] = html_content
+                    row_dict["markdown"] = html_content
 
-            # Convert HTML to Markdown if HTML content is available
-            if row_dict.get("html") and row_dict["html"].strip():
-                converter = HtmlToMarkdown(
-                    html=row_dict["html"],
-                    config=config,
-                )
-                markdown_content = converter.convert()
-                row_dict["markdown"] = markdown_content
+            # Conversion automatique vers Markdown si HTML disponible
+            if (
+                row_dict.get("html")
+                and row_dict["html"].strip()
+                and "markdown" not in row_dict
+            ):
+                converter = HtmlToMarkdown(html=row_dict["html"], config=config)
+                row_dict["markdown"] = converter.convert()
 
             row_dict["statut"] = "ok"
             row_dict["code_http"] = response.status
