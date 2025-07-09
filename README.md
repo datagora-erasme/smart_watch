@@ -1,5 +1,25 @@
 <div align="center">
   <img src="src/smart_watch/assets/images/logo_app.jpg" alt="Logo SmartWatch" />
+  
+  <!-- Badges informatifs -->
+  <p>
+    <img src="https://img.shields.io/badge/Python-3.13+-blue.svg" alt="Python Version" />
+    <img src="https://img.shields.io/badge/License-GNU_GPL_v3-green.svg" alt="License" />
+    <img src="https://img.shields.io/badge/Code%20Style-Ruff-black.svg" alt="Code Style" />
+    <img src="https://img.shields.io/badge/AI-LLM_Powered-orange.svg" alt="LLM Powered" />
+    <img src="https://img.shields.io/badge/CO2-Tracking-brightgreen.svg" alt="CO2 Tracking" />
+    <img src="https://img.shields.io/badge/Docker-Ready-blue.svg" alt="Docker Ready" />
+    <img src="https://img.shields.io/badge/Docs-Sphinx-informational.svg" alt="Documentation" />
+  </p>
+  
+  <!-- Liens de navigation -->
+  <p>
+    <a href="https://github.com/datagora-erasme/smart_watch">Home</a> •
+    <a href="https://datagora-erasme.github.io/smart_watch/">Documentation</a> •
+    <a href="https://erasme.org/">Erasme</a> •
+    <a href="https://www.grandlyon.com/">Métropole de Lyon</a> •
+    <a href="https://data.grandlyon.com/">Data Grand Lyon</a>
+  </p>
 </div>
 
 # SmartWatch : extracteur d'horaires intelligent
@@ -16,6 +36,7 @@ La documentation complète est accessible sur [https://datagora-erasme.github.io
 *   **Conversion des données** : converti les pages web en Markdown et nettoie ce dernier pour ne garder que l'essentiel
 *   **Filtrage de contenu intelligent** : utilise des embeddings (via `nomic-embed`) pour identifier et extraire uniquement les sections de page web relatives aux horaires, optimisant ainsi les appels aux LLM.
 *   **Extraction par LLM** : interroge des LLM (compatibles OpenAI ou Mistral) pour extraire les horaires dans un format structuré customisé (JSON).
+*   **Suivi de la consommation carbone** : mesure les émissions de CO2 des appels aux LLM (extraction et embeddings) grâce à `codecarbon` et les affiche dans les rapports.
 *   **Comparaison automatisée** : compare les horaires extraits par le LLM avec des données de référence (depuis data.grandlyon.com) pour détecter les divergences.
 *   **Rapports détaillés** : génère des rapports HTML interactifs, permettant de visualiser les statistiques globales, les statuts de traitement, et les détails de chaque URL.
 *   **Orchestration** : un pipeline assure une exécution séquentielle et contrôlée.
@@ -24,12 +45,12 @@ La documentation complète est accessible sur [https://datagora-erasme.github.io
 ## Capture d'écran
 ### Aperçu du rapport
 <div align="center">
-  <img src="src/smart_watch/assets/images/capture_ecran_1.jpg" alt="Vue globale du rapport html" />
+  <img src="src/smart_watch/assets/images/capture_rapport.png" alt="Vue globale du rapport html" />
 </div>
 
 ### Fenêtre modale des différences détectées
 <div align="center">
-  <img src="src/smart_watch/assets/images/capture_ecran_2_modal.jpg" alt="Modale de visualisation des différences d'horaires d'ouverture" />
+  <img src="src/smart_watch/assets/images/capture_modale_rapport.png" alt="Modale de visualisation des différences d'horaires d'ouverture" />
 </div>
 
 ## Diagramme de fonctionnement
@@ -77,6 +98,7 @@ Modules Transversaux :
   - [ core.Logger ] : utilisé par tous les modules pour la journalisation.
   - [ core.ErrorHandler ] : utilisé pour une gestion centralisée des erreurs.
   - [ processing.DatabaseManager ] : utilisé par toutes les étapes du pipeline pour lire et écrire les résultats dans la base de données SQLite.
+  - [ codecarbon ] : mesure les émissions de CO2 des appels aux LLM.
 
 -----------------------------------------------------------------------------------------
 Modèles de rapports et des structures de données
