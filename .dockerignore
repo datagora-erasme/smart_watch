@@ -14,3 +14,4 @@ notebooks/
 .env
 data/SmartWatch.db
 data/SmartWatch.log
+*.7z
