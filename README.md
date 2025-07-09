@@ -2,15 +2,14 @@
   <img src="src/smart_watch/assets/images/logo_app.jpg" alt="Logo SmartWatch" />
   
   <!-- Badges informatifs -->
-  <p>
-    <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.13+-blue.svg" alt="Python Version" /></a>
-    <a href="LICENCE"><img src="https://img.shields.io/badge/License-GNU_GPL_v3-green.svg" alt="License" /></a>
-    <a href="https://docs.astral.sh/ruff/"><img src="https://img.shields.io/badge/Code%20Style-Ruff-black.svg" alt="Code Style" /></a>
-    <img src="https://img.shields.io/badge/AI-LLM_Powered-orange.svg" alt="LLM Powered" />
-    <a href="https://codecarbon.io/"><img src="https://img.shields.io/badge/CO2-Tracking-brightgreen.svg" alt="CO2 Tracking" /></a>
-    <a href="https://www.docker.com/"><img src="https://img.shields.io/badge/Docker-Ready-blue.svg" alt="Docker Ready" /></a>
-    <a href="https://www.sphinx-doc.org/"><img src="https://img.shields.io/badge/Docs-Sphinx-informational.svg" alt="Documentation" /></a>
-  </p>
+  [![Python](https://img.shields.io/badge/Python-3.13%2B-blue.svg)](https://www.python.org/)
+  [![License](https://img.shields.io/badge/License-GNU_GPL_v3-green.svg)](LICENCE)
+  [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+  [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
+  ![LLM Powered](https://img.shields.io/badge/AI-LLM_Powered-orange.svg)
+  [![CO2 Tracking](https://img.shields.io/badge/CO2-Tracking-brightgreen.svg)](https://codecarbon.io/)
+  [![Docker Ready](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://www.docker.com/)
+  [![Docs Sphinx](https://img.shields.io/badge/Docs-Sphinx-informational.svg)](https://www.sphinx-doc.org/)
   
   <!-- Liens de navigation -->
   <p>
