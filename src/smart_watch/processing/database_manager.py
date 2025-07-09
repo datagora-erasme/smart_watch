@@ -266,7 +266,7 @@ class DatabaseManager:
                         markdown_nettoye="",
                         markdown_filtre="",
                         prompt_message="",
-                        llm_consommation_requete="",
+                        llm_consommation_requete=0.0,
                         llm_horaires_json="",
                         llm_horaires_osm="",
                         erreurs_pipeline="",
@@ -347,13 +347,18 @@ class DatabaseManager:
         finally:
             session.close()
 
-    def update_filtered_markdown(self, resultat_id: int, filtered_markdown: str):
-        """Met à jour le markdown filtré."""
+    def update_filtered_markdown(
+        self, resultat_id: int, filtered_markdown: str, co2_emissions: float = 0.0
+    ):
+        """Met à jour le markdown filtré et ajoute les émissions CO2."""
         session = self.Session()
         try:
             resultat = session.get(ResultatsExtraction, resultat_id)
             if resultat:
                 resultat.markdown_filtre = filtered_markdown
+                # Ajouter les émissions de l'embedding à la consommation existante
+                current_emissions = resultat.llm_consommation_requete or 0.0
+                resultat.llm_consommation_requete = current_emissions + co2_emissions
                 session.commit()
         finally:
             session.close()
@@ -367,6 +372,13 @@ class DatabaseManager:
                 # Toujours mettre à jour le prompt s'il est fourni
                 if llm_data.get("prompt_message"):
                     resultat.prompt_message = llm_data["prompt_message"]
+
+                # Mettre à jour la consommation CO2 de la requête
+                if "llm_consommation_requete" in llm_data:
+                    current_emissions = resultat.llm_consommation_requete or 0.0
+                    resultat.llm_consommation_requete = (
+                        current_emissions + llm_data["llm_consommation_requete"]
+                    )
 
                 # Variable pour éviter les erreurs dupliquées
                 error_added = False
@@ -395,6 +407,43 @@ class DatabaseManager:
                         )
 
                 session.commit()
+        finally:
+            session.close()
+
+    def update_execution_emissions(self, execution_id: int, total_emissions: float):
+        """Met à jour les émissions CO2 totales d'une exécution en les ajoutant au total existant."""
+        session = self.Session()
+        try:
+            execution = session.get(Executions, execution_id)
+            if execution:
+                current_emissions = execution.llm_consommation_execution or 0.0
+                execution.llm_consommation_execution = (
+                    current_emissions + total_emissions
+                )
+                session.commit()
+                self.logger.debug(
+                    f"Émissions ajoutées à l'exécution {execution_id}: +{total_emissions:.6f} kg CO2"
+                )
+        finally:
+            session.close()
+
+    def update_execution_embeddings(
+        self, execution_id: int, embeddings_emissions: float
+    ):
+        """Met à jour les émissions CO2 des embeddings d'une exécution."""
+        session = self.Session()
+        try:
+            execution = session.get(Executions, execution_id)
+            if execution:
+                # Ajouter aux émissions existantes (LLM + embeddings)
+                current_emissions = execution.llm_consommation_execution or 0.0
+                execution.llm_consommation_execution = (
+                    current_emissions + embeddings_emissions
+                )
+                session.commit()
+                self.logger.debug(
+                    f"Émissions embeddings ajoutées à l'exécution {execution_id}: +{embeddings_emissions:.6f} kg CO2"
+                )
         finally:
             session.close()
 

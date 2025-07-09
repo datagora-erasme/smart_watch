@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, Text
+from sqlalchemy import Boolean, Column, DateTime, Float, ForeignKey, Integer, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
@@ -40,6 +40,7 @@ class Executions(Base):
     llm_modele = Column(Text, nullable=True)
     llm_fournisseur = Column(Text, nullable=True)  # OPENAI ou MISTRAL
     llm_url = Column(Text, nullable=True)  # http://api.openai.com/v1/ par exemple
+    llm_consommation_execution = Column(Float, nullable=True, default=0.0)  # En kg CO2
 
     # Relations
     resultats = relationship("ResultatsExtraction", back_populates="execution")
@@ -70,7 +71,7 @@ class ResultatsExtraction(Base):
 
     # Extraction LLM
     prompt_message = Column(Text, default="")
-    llm_consommation_requete = Column(Text, default="")
+    llm_consommation_requete = Column(Float, nullable=True, default=0.0)  # En kg CO2
     llm_horaires_json = Column(Text, default="")
     llm_horaires_osm = Column(Text, default="")
 

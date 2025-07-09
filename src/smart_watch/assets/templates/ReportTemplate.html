@@ -29,7 +29,7 @@
         table{width:100%;border-collapse:collapse;background:white;min-width:1200px}
         th,td{padding:8px 12px;text-align:left;border-bottom:1px solid #e0e0e0;white-space:nowrap}
         th{background:#f8f9fa;font-weight:600;position:sticky;top:0;font-size:13px}
-        tr:hover{background:#f8f9fa}
+        tr:hover{background:#f9f9f9}
 
         /* Badges et boutons unifiés */
         .badge{padding:4px 8px;border-radius:12px;font-size:11px;font-weight:600;text-transform:uppercase}
@@ -129,6 +129,11 @@
                 {% if model_info.base_url %} | {{ model_info.base_url }}{% endif %}
             </p>
             {% endif %}
+            {% if execution_data and execution_data.llm_consommation_execution > 0 %}
+            <p style="font-size:0.9em;opacity:0.8;">
+                Émissions CO2 totales dues aux appels LLM : <strong>{{ "%.3f"|format(execution_data.llm_consommation_execution * 1000) }} g</strong>
+            </p>
+            {% endif %}
         </div>
 
         <div class="tabs">
@@ -198,6 +203,7 @@
                             {% elif statut.code == 'extraction_error' %}
                             <th class="col-comparison">Erreur extraction</th>
                             {% endif %}
+                            <th onclick="sortTable(this, 12, 'number')">CO2 (g)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -251,6 +257,7 @@
                                     {% endif %}
                                 {% endif %}
                             </td>
+                            <td>{{ "%.3f"|format((url.llm_consommation_requete or 0) * 1000) }}</td>
                             {% endif %}
                         </tr>
                         {% endfor %}

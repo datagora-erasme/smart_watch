@@ -4,7 +4,7 @@ Stack technique
 
 Voici un aperçu des technologies employées.
 
-Langage principal
+Langage du projet
 =================
 
 **Python**
@@ -73,6 +73,9 @@ Logging et monitoring
 **Gestion d'erreurs centralisée**
     Capture et traitement uniforme des exceptions avec contexte détaillé.
 
+**CodeCarbon**
+    Mesure les émissions de CO2 des appels aux modèles de langage pour un suivi de l'impact environnemental.
+
 Communication
 ------------
 
@@ -89,7 +92,7 @@ Déploiement
     Conteneurisation pour un déploiement simplifié et reproductible.
 
 **GitHub Actions**
-    CI/CD pour les tests automatisés et le déploiement de la documentation.
+    CI/CD pour le déploiement Docker et de la documentation.
 
 **Sphinx + Read the Docs Theme**
     Génération automatique de documentation technique à partir du code.

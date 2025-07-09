@@ -46,10 +46,10 @@ Core (``core/``)
     Orchestrateur principal de la configuration qui initialise et valide tous les modules de configuration.
 
 **LLMClient**
-    Client unifié pour les interactions avec les modèles de langage. Abstrait les différences entre fournisseurs (OpenAI, Mistral).
+    Client unifié pour les interactions avec les modèles de langage. Abstrait les différences entre fournisseurs (OpenAI, Mistral) et intègre le suivi des émissions CO2 avec CodeCarbon.
 
 **MarkdownProcessor**
-    Processeur de filtrage sémantique du Markdown utilisant des embeddings pour extraire les sections pertinentes aux horaires.
+    Processeur de filtrage sémantique du Markdown utilisant des embeddings pour extraire les sections pertinentes aux horaires, tout en mesurant la consommation carbone de l'opération.
 
 **ComparateurHoraires**
     Moteur de comparaison des horaires extraits avec les données de référence OpenStreetMap.
@@ -67,7 +67,7 @@ Processing (``processing/``)
     Processeur parallèle pour récupérer le contenu des URLs avec gestion des erreurs HTTP et conversion HTML vers Markdown.
 
 **LLMProcessor**
-    Processeur d'extraction d'horaires utilisant les modèles de langage pour interpréter le contenu Markdown filtré.
+    Processeur d'extraction d'horaires utilisant les modèles de langage pour interpréter le contenu Markdown filtré et enregistrer la consommation carbone.
 
 **ComparisonProcessor**
     Processeur de comparaison qui analyse les différences entre horaires extraits et données de référence.
@@ -94,10 +94,10 @@ Reporting (``reporting/``)
 -------------------------
 
 **ReportManager**
-    Orchestrateur de génération de rapports avec statistiques globales et envoi automatique par email.
+    Orchestrateur de génération de rapports avec statistiques globales, y compris les émissions de CO2, et envoi automatique par email.
 
 **GenererRapportHTML**
-    Générateur de rapports HTML utilisant Jinja2 avec templates personnalisables et données interactives.
+    Générateur de rapports HTML utilisant Jinja2 avec templates personnalisables et données interactives, incluant la consommation carbone.
 
 Data Models (``data_models/``)
 -----------------------------
@@ -117,5 +117,5 @@ Assets (``assets/``)
 **templates/SimpleReportTemplate.html**
     Template HTML simplifié pour le corps des emails avec résumé exécutif.
 
-**images/logo_app.jpg**
-    Logo de l'application utilisé dans la documentation et les rapports.
+**images/**
+    Logos et captures d'écran de l'application utilisé dans la documentation et les rapports.

@@ -111,6 +111,9 @@ def generer_rapport_html(
         donnees_urls = _extract_data_from_database(db_file)
         logger.info(f"Données extraites: {len(donnees_urls)} enregistrements")
 
+        # Extraire les données de l'exécution
+        execution_data = _extract_execution_data(db_file)
+
         # Traitement des données
         _process_data(donnees_urls)
 
@@ -129,6 +132,7 @@ def generer_rapport_html(
             "types_lieu_stats": types_lieu_stats,
             "codes_http_stats": codes_http_stats,
             "model_info": model_info,
+            "execution_data": execution_data,
         }
 
         # Génération des rapports
@@ -148,6 +152,25 @@ def generer_rapport_html(
     except Exception as e:
         logger.error(f"Erreur génération rapport: {e}")
         raise
+
+
+def _extract_execution_data(db_file: str) -> Optional[dict]:
+    """Extrait les données de la dernière exécution."""
+    try:
+        uri = f"sqlite:///{db_file}"
+        query = """
+        SELECT llm_consommation_execution 
+        FROM executions 
+        ORDER BY date_execution DESC 
+        LIMIT 1
+        """
+        df = pl.read_database_uri(query=query, uri=uri, engine="connectorx")
+        if not df.is_empty():
+            return df.to_dicts()[0]
+        return None
+    except Exception as e:
+        logger.error(f"Erreur extraction données d'exécution: {e}")
+        return None
 
 
 def _extract_data_from_database(db_file: str) -> list:
@@ -171,7 +194,8 @@ def _extract_data_from_database(db_file: str) -> list:
             r.code_http,
             r.horaires_identiques,
             r.differences_horaires,
-            r.erreurs_pipeline
+            r.erreurs_pipeline,
+            r.llm_consommation_requete
         FROM resultats_extraction AS r 
         JOIN lieux AS l ON r.lieu_id = l.identifiant 
         ORDER BY l.identifiant
@@ -280,6 +304,7 @@ def _set_default_fields(url: dict) -> None:
         "erreurs_formatees": [],
         "nombre_erreurs": 0,
         "erreurs_resume": "",
+        "llm_consommation_requete": 0.0,  # Ajout du champ CO2
     }
 
     for field, default_value in defaults.items():

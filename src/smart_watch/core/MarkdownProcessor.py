@@ -43,6 +43,10 @@ class MarkdownProcessor:
     def __init__(self, config: ConfigManager, logger):
         self.config = config
         self.logger = logger
+        self.total_co2_emissions = (
+            0.0  # Accumulation des émissions pour cette exécution
+        )
+        self.reference_embeddings = None  # Pour stocker les embeddings de référence
 
         # Initialisation du client LLM pour les embeddings
         try:
@@ -88,6 +92,10 @@ class MarkdownProcessor:
         """Filtre le contenu markdown pour extraire les sections pertinentes aux horaires."""
         self.logger.section("FILTRAGE MARKDOWN POUR HORAIRES")
 
+        # Reset des émissions pour cette exécution
+        self.total_co2_emissions = 0.0
+        self.reference_embeddings = None  # Réinitialiser pour chaque exécution
+
         stats = ProcessingStats()
 
         if not self.llm_client:
@@ -106,17 +114,32 @@ class MarkdownProcessor:
         self.logger.info(f"{len(resultats_a_filtrer)} contenus markdown à filtrer")
         stats.urls_processed = len(resultats_a_filtrer)
 
+        # Pré-calculer les embeddings de référence une seule fois
+        try:
+            self.logger.info("Pré-calcul des embeddings de référence...")
+            embed_themes, _ = self._get_embeddings_via_api(self.reference_phrases)
+            self.reference_embeddings = np.array(embed_themes)
+            # La consommation est déjà ajoutée dans _get_embeddings_via_api
+            self.logger.info(
+                f"{len(self.reference_phrases)} embeddings de référence calculés."
+            )
+        except Exception as e:
+            self.logger.error(f"Erreur calcul embeddings de référence: {e}. Arrêt.")
+            return stats
+
         for i, (resultat, lieu) in enumerate(resultats_a_filtrer, 1):
             self.logger.info(f"Filtrage {i}/{len(resultats_a_filtrer)}: {lieu.nom}")
 
             try:
-                filtered_markdown = self._filter_single_markdown(
-                    resultat.markdown_nettoye, lieu.nom, lieu.type_lieu
+                filtered_markdown, co2_emissions = self._filter_single_markdown(
+                    resultat.markdown_nettoye
                 )
 
                 # Mise à jour en base
                 db_manager.update_filtered_markdown(
-                    resultat.id_resultats_extraction, filtered_markdown
+                    resultat.id_resultats_extraction,
+                    filtered_markdown,
+                    co2_emissions,
                 )
 
                 if filtered_markdown and len(filtered_markdown.strip()) > 0:
@@ -145,6 +168,16 @@ class MarkdownProcessor:
         self.logger.info(
             f"Markdown filtré: {stats.urls_successful}/{stats.urls_processed} réussies"
         )
+
+        # Mettre à jour les émissions totales d'embeddings dans la base
+        if self.total_co2_emissions > 0:
+            db_manager.update_execution_embeddings(
+                execution_id, self.total_co2_emissions
+            )
+            self.logger.info(
+                f"Émissions CO2 embeddings totales: {self.total_co2_emissions:.6f} kg"
+            )
+
         return stats
 
     def _extract_context_around_phrase(
@@ -155,85 +188,64 @@ class MarkdownProcessor:
         end_idx = min(len(phrases), phrase_index + context_window + 1)
         return list(range(start_idx, end_idx))
 
-    def _get_embeddings_via_api(self, texts: List[str]) -> List[List[float]]:
+    def _get_embeddings_via_api(
+        self, texts: List[str]
+    ) -> Tuple[List[List[float]], float]:
         """
-        Obtient les embeddings via l'API Ollama compatible OpenAI.
+        Obtient les embeddings via l'API avec mesure d'émissions.
 
         Args:
             texts: Liste des textes à encoder
 
         Returns:
-            Liste des vecteurs d'embeddings
+            Tuple(Liste des vecteurs d'embeddings, émissions de CO2)
         """
         if not texts:
-            return []
+            return [], 0.0
 
         try:
-            # URL de l'endpoint embeddings
-            url = f"{self.llm_client.base_url}/embeddings"
+            llm_response = self.llm_client.call_embeddings(texts)
 
-            # Préparer la requête
-            payload = {
-                "model": self.config.markdown_filtering.embedding_model,
-                "input": texts,
-            }
+            # Logger les émissions individuelles AVANT accumulation
+            individual_emissions = llm_response.co2_emissions
+            self.logger.debug(
+                f"Embeddings: {len(llm_response.content)} vecteurs, {individual_emissions:.6f} kg CO2 cet appel"
+            )
 
-            response = self.llm_client.session.post(url, json=payload, timeout=30)
-            response.raise_for_status()
+            # Puis accumuler pour le total de l'exécution
+            self.total_co2_emissions += individual_emissions
 
-            result = response.json()
-            embeddings = [data["embedding"] for data in result["data"]]
-
-            self.logger.debug(f"Embeddings calculés: {len(embeddings)} vecteurs")
-            return embeddings
+            return llm_response.content, individual_emissions
 
         except Exception as e:
             self.logger.error(f"Erreur calcul embeddings: {e}")
             raise
 
-    def _filter_single_markdown(
-        self, markdown_content: str, nom: str = "", type_lieu: str = ""
-    ) -> str:
-        """Filtre un contenu markdown pour extraire les sections pertinentes aux horaires."""
+    def _filter_single_markdown(self, markdown_content: str) -> Tuple[str, float]:
+        """Filtre un contenu markdown et retourne le contenu filtré et les émissions CO2."""
+        co2_for_this_document = 0.0
         if (
             not markdown_content
             or len(markdown_content.strip())
             < self.config.markdown_filtering.min_content_length
         ):
-            return markdown_content
+            return markdown_content, co2_for_this_document
 
         try:
-            # Créer des thèmes dynamiques incluant le nom et type d'établissement
-            themes = self.reference_phrases.copy()
-            if nom:
-                if type_lieu:
-                    themes.extend([f"horaires d'ouverture {type_lieu} de {nom}"])
-                else:
-                    themes.extend([f"horaires d'ouverture {nom}"])
-            else:
-                if type_lieu:
-                    themes.extend([f"horaires d'ouverture {type_lieu}"])
-
-            # Pré-calculer les embeddings des thèmes avec l'API
-            embed_themes = self._get_embeddings_via_api(themes)
-            embed_themes = np.array(embed_themes)
-
             # Segmenter le texte en phrases
-            split_chars = ["."]
-            regex = "|".join(map(re.escape, split_chars))
             phrases = [
-                p.strip() for p in re.split(regex, markdown_content) if p.strip()
+                p.strip() for p in re.split(r"[.\n]", markdown_content) if p.strip()
             ]
-
             if not phrases:
-                return markdown_content
+                return markdown_content, co2_for_this_document
 
-            # Générer les embeddings des phrases avec l'API
-            embed_phrases = self._get_embeddings_via_api(phrases)
+            # Générer les embeddings des phrases du document
+            embed_phrases, co2_phrases = self._get_embeddings_via_api(phrases)
+            co2_for_this_document += co2_phrases
             embed_phrases = np.array(embed_phrases)
 
-            # Calculer les similarités
-            similarites = cosine_similarity(embed_themes, embed_phrases)
+            # Calculer les similarités avec les embeddings de référence pré-calculés
+            similarites = cosine_similarity(self.reference_embeddings, embed_phrases)
             similarites_max = similarites.max(axis=0)
 
             # Normaliser pour obtenir des scores [0, 1]
@@ -246,39 +258,29 @@ class MarkdownProcessor:
 
             # Filtrer les phrases ayant un score élevé
             threshold = self.config.markdown_filtering.similarity_threshold
-
-            # Obtenir le contexte autour des phrases pertinentes
             context_window = self.config.markdown_filtering.context_window
-
             relevant_indices = set()
 
             for i, score in enumerate(similarites_norm):
                 if score >= threshold:
-                    # Ajouter le contexte autour de cette phrase
                     context_indices = self._extract_context_around_phrase(
                         phrases, i, context_window
                     )
                     relevant_indices.update(context_indices)
 
-            # Convertir en liste triée pour maintenir l'ordre
-            relevant_indices = sorted(list(relevant_indices))
-
-            # Extraire les phrases avec leur contexte
-            relevant_phrases = [phrases[i] for i in relevant_indices]
-
-            # Retourner les phrases pertinentes avec contexte concaténées
-            if relevant_phrases:
+            # Reconstruire le contenu
+            if relevant_indices:
+                relevant_phrases = [phrases[i] for i in sorted(list(relevant_indices))]
                 filtered_content = ". ".join(relevant_phrases)
                 return (
                     filtered_content if filtered_content.strip() else markdown_content
-                )
+                ), co2_for_this_document
             else:
-                return markdown_content
+                return markdown_content, co2_for_this_document
 
         except Exception as e:
             self.logger.error(f"Erreur lors du filtrage: {e}")
-            return markdown_content
-            return markdown_content
+            return markdown_content, co2_for_this_document
 
     def _update_filtered_markdown(
         self, db_manager, resultat_id: int, filtered_markdown: str

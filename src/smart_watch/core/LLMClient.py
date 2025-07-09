@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, Union
 
 import requests
+from codecarbon import EmissionsTracker
 
 from .ErrorHandler import ErrorCategory, ErrorHandler, ErrorSeverity, handle_errors
 from .Logger import create_logger
@@ -12,6 +13,14 @@ from .Logger import create_logger
 logger = create_logger(
     module_name="LLMClient",
 )
+
+
+@dataclass
+class LLMResponse:
+    """Réponse enrichie d'un appel LLM avec mesure de consommation."""
+
+    content: str
+    co2_emissions: float  # En kg CO2
 
 
 @dataclass
@@ -40,6 +49,7 @@ class BaseLLMClient(ABC):
         self.base_url = base_url.rstrip("/") if base_url else None
         self.session = self._create_session()
         self.error_handler = ErrorHandler()
+
         logger.debug(
             f"Client {self.__class__.__name__} initialisé pour le modèle {self.model}"
         )
@@ -64,8 +74,10 @@ class BaseLLMClient(ABC):
         ]
 
     @abstractmethod
-    def call_llm(self, messages: List[Union[Dict, LLMMessage]], **kwargs) -> str:
-        """Méthode abstraite pour effectuer un appel au LLM."""
+    def call_llm(
+        self, messages: List[Union[Dict, LLMMessage]], **kwargs
+    ) -> LLMResponse:
+        """Méthode abstraite pour effectuer un appel au LLM avec mesure d'émissions."""
         pass
 
     def send_message(
@@ -74,7 +86,7 @@ class BaseLLMClient(ABC):
         role: str = "user",
         system_prompt: Optional[str] = None,
         **kwargs,
-    ) -> str:
+    ) -> LLMResponse:
         """Envoie un message simple au LLM."""
         messages = []
         if system_prompt:
@@ -82,9 +94,51 @@ class BaseLLMClient(ABC):
         messages.append(LLMMessage(role=role, content=content))
         return self.call_llm(messages, **kwargs)
 
-    def conversation(self, messages: List[Union[Dict, LLMMessage]], **kwargs) -> str:
+    def conversation(
+        self, messages: List[Union[Dict, LLMMessage]], **kwargs
+    ) -> LLMResponse:
         """Raccourci pour `call_llm`."""
         return self.call_llm(messages, **kwargs)
+
+    def call_embeddings(self, texts: List[str]) -> LLMResponse:
+        """Appel d'embeddings avec mesure d'émissions."""
+        # Créer un tracker à la volée pour une mesure isolée
+        tracker = EmissionsTracker(
+            measure_power_secs=1,
+            tracking_mode="machine",
+            log_level="error",
+        )
+        tracker.start()
+
+        try:
+            # URL de l'endpoint embeddings
+            url = f"{self.base_url}/embeddings"
+
+            # Préparer la requête
+            payload = {
+                "model": self.model,
+                "input": texts,
+            }
+
+            response = self.session.post(url, json=payload, timeout=self.timeout)
+            response.raise_for_status()
+
+            result = response.json()
+            embeddings = [data["embedding"] for data in result["data"]]
+
+            # Arrêter le tracking et récupérer les émissions
+            emissions = tracker.stop()
+            logger.debug(
+                f"Embeddings API: {len(embeddings)} vecteurs, {emissions:.6f} kg CO2"
+            )
+
+            return LLMResponse(content=embeddings, co2_emissions=emissions)
+
+        except Exception as e:
+            # S'assurer que le tracker est arrêté même en cas d'erreur
+            tracker.stop()
+            logger.error(f"Erreur calcul embeddings: {e}")
+            raise
 
 
 class OpenAICompatibleClient(BaseLLMClient):
@@ -105,13 +159,15 @@ class OpenAICompatibleClient(BaseLLMClient):
         category=ErrorCategory.LLM,
         severity=ErrorSeverity.MEDIUM,
         user_message="Erreur lors de l'appel au LLM (type OpenAI)",
-        default_return="Erreur Timeout ou API indisponible",
+        default_return=LLMResponse(
+            content="Erreur Timeout ou API indisponible", co2_emissions=0.0
+        ),
     )
     def call_llm(
         self,
         messages: List[Union[Dict, LLMMessage]],
         response_format: Optional[Dict[str, Any]] = None,
-    ) -> str:
+    ) -> LLMResponse:
         """Effectue un appel au LLM."""
         formatted_messages = self._normalize_messages(messages)
         logger.debug(f"Appel OpenAI {self.model}: {len(formatted_messages)} messages")
@@ -126,18 +182,35 @@ class OpenAICompatibleClient(BaseLLMClient):
 
         url = f"{self.base_url}/chat/completions"
 
+        # Créer un tracker à la volée pour une mesure isolée
+        tracker = EmissionsTracker(
+            measure_power_secs=1,
+            tracking_mode="machine",
+            log_level="error",
+        )
+        tracker.start()
+
         try:
             response = self.session.post(url, json=payload, timeout=self.timeout)
             response.raise_for_status()
             response_data = response.json()
             result = response_data["choices"][0]["message"]["content"]
             logger.debug(f"Réponse OpenAI reçue: {len(result)} caractères")
-            return result
+
+            # Arrêter le tracking et récupérer les émissions
+            emissions = tracker.stop()
+            logger.debug(f"LLM API: {emissions:.6f} kg CO2")
+
+            return LLMResponse(content=result, co2_emissions=emissions)
+
         except requests.exceptions.Timeout:
+            tracker.stop()
             raise Exception(f"Timeout après {self.timeout} secondes")
         except requests.exceptions.ConnectionError:
+            tracker.stop()
             raise Exception("Erreur de connexion à l'API")
         except requests.exceptions.HTTPError as e:
+            tracker.stop()
             if e.response.status_code == 429:
                 raise Exception("Limite de taux API atteinte")
             elif e.response.status_code == 401:
@@ -145,8 +218,10 @@ class OpenAICompatibleClient(BaseLLMClient):
             else:
                 raise Exception(f"Erreur HTTP {e.response.status_code}")
         except (KeyError, IndexError):
+            tracker.stop()
             raise Exception("Format de réponse API invalide")
         except Exception as e:
+            tracker.stop()
             raise e
 
 
@@ -174,12 +249,13 @@ class MistralAPIClient(BaseLLMClient):
         category=ErrorCategory.LLM,
         severity=ErrorSeverity.MEDIUM,
         user_message="Erreur lors de l'appel au LLM Mistral",
+        default_return=LLMResponse(content="Erreur API Mistral", co2_emissions=0.0),
     )
     def call_llm(
         self,
         messages: List[Union[Dict, LLMMessage]],
         tool_params: Optional[Dict[str, Any]] = None,
-    ) -> str:
+    ) -> LLMResponse:
         """Effectue un appel au LLM Mistral."""
         formatted_messages = self._normalize_messages(messages)
         logger.debug(f"Appel Mistral {self.model}: {len(formatted_messages)} messages")
@@ -195,6 +271,14 @@ class MistralAPIClient(BaseLLMClient):
 
         url = f"{self.base_url}/chat/completions"
 
+        # Créer un tracker à la volée pour une mesure isolée
+        tracker = EmissionsTracker(
+            measure_power_secs=1,
+            tracking_mode="machine",
+            log_level="error",
+        )
+        tracker.start()
+
         try:
             response = self.session.post(url, json=payload, timeout=self.timeout)
             response.raise_for_status()
@@ -207,8 +291,15 @@ class MistralAPIClient(BaseLLMClient):
                 result = choice["message"]["content"]
 
             logger.debug(f"Réponse Mistral reçue: {len(result)} caractères")
-            return result
+
+            # Arrêter le tracking et récupérer les émissions
+            emissions = tracker.stop()
+            logger.debug(f"Émissions CO2 mesurées: {emissions:.6f} kg")
+
+            return LLMResponse(content=result, co2_emissions=emissions)
+
         except (requests.exceptions.RequestException, KeyError, IndexError) as e:
+            tracker.stop()
             # Laisse le décorateur @handle_errors gérer l'exception
             raise e
 

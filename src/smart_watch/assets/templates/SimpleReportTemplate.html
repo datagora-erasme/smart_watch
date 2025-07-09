@@ -58,6 +58,11 @@
         {% if model_info.fournisseur and not model_info.base_url %} | Fournisseur : {{ model_info.fournisseur }}{% endif %}
     </p>
     {% endif %}
+    {% if execution_data and execution_data.llm_consommation_execution > 0 %}
+    <p style="font-size: 0.9em; opacity: 0.8;">
+        <strong>Émissions CO2 totales dues aux appels LLM :</strong> {{ "%.3f"|format(execution_data.llm_consommation_execution * 1000) }} g
+    </p>
+    {% endif %}
     
     <h3>📊 Statistiques Globales</h3>
     <ul>

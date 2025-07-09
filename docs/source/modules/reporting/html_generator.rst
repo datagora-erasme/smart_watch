@@ -33,6 +33,7 @@ Le générateur HTML crée des rapports interactifs sophistiqués :
 - Traçabilité complète : markdown_brut → markdown_nettoye → markdown_filtre
 - Chaîne d'erreurs avec timestamps et types détaillés
 - Statistiques par type de lieu et codes HTTP
+- Suivi des émissions de CO2 par requête et pour l'exécution totale
 
 **Fonctionnalités interactives :**
 - Tri et filtrage dynamique par JavaScript
@@ -78,7 +79,7 @@ Structure des données du rapport
        r.markdown_brut, r.markdown_nettoye, r.markdown_filtre,
        r.llm_horaires_json, r.llm_horaires_osm,
        r.horaires_identiques, r.differences_horaires,
-       r.erreurs_pipeline
+       r.erreurs_pipeline, r.llm_consommation_requete
    FROM resultats_extraction r 
    JOIN lieux l ON r.lieu_id = l.identifiant
 
@@ -88,6 +89,7 @@ Structure des données du rapport
 - ``statuts_disponibles`` : Groupement par statut avec URLs détaillées
 - ``types_lieu_stats`` : Répartition par type d'établissement
 - ``codes_http_stats`` : Distribution des codes de réponse HTTP
+- ``execution_data`` : Données de l'exécution, comme la consommation CO2 totale
 
 Gestion des erreurs et edge cases
 =================================
