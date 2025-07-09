@@ -10,7 +10,6 @@ from typing import Dict
 from ..core.ConfigManager import ConfigManager
 from ..core.GetPrompt import get_prompt
 from ..core.LLMClient import (
-    LLMResponse,
     MistralAPIClient,
     OpenAICompatibleClient,
     get_mistral_tool_format,
@@ -213,13 +212,34 @@ class LLMProcessor:
             try:
                 # Appel LLM avec mesure d'émissions selon le fournisseur
                 if self.config.llm.fournisseur == "OPENAI":
-                    llm_response: LLMResponse = self.llm_client.call_llm(
+                    llm_response = self.llm_client.call_llm(
                         messages, response_format=self.structured_format
                     )
                 else:  # MISTRAL
-                    llm_response: LLMResponse = self.llm_client.call_llm(
+                    llm_response = self.llm_client.call_llm(
                         messages, tool_params=self.structured_format
                     )
+
+                # Vérifier si la réponse est un objet LLMResponse ou une chaîne d'erreur
+                if isinstance(llm_response, str):
+                    # La réponse est une chaîne d'erreur
+                    self.logger.error(
+                        f"Appel LLM échoué pour {lieu.identifiant}: {llm_response}"
+                    )
+                    result_data["llm_horaires_json"] = f"Erreur LLM: {llm_response}"
+                    result_data["llm_horaires_osm"] = f"Erreur LLM: {llm_response}"
+                    result_data["llm_consommation_requete"] = 0.0
+                    return result_data
+
+                # Vérifier si c'est bien un objet LLMResponse
+                if not hasattr(llm_response, "co2_emissions"):
+                    self.logger.error(
+                        f"Réponse LLM inattendue pour {lieu.identifiant}: {type(llm_response)}"
+                    )
+                    result_data["llm_horaires_json"] = "Erreur LLM: réponse inattendue"
+                    result_data["llm_horaires_osm"] = "Erreur LLM: réponse inattendue"
+                    result_data["llm_consommation_requete"] = 0.0
+                    return result_data
 
                 # Enregistrer les émissions individuelles AVANT accumulation
                 individual_emissions = llm_response.co2_emissions
