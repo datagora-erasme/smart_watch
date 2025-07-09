@@ -3,13 +3,13 @@
   
   <!-- Badges informatifs -->
   <p>
-    <img src="https://img.shields.io/badge/Python-3.13+-blue.svg" alt="Python Version" />
-    <img src="https://img.shields.io/badge/License-GNU_GPL_v3-green.svg" alt="License" />
-    <img src="https://img.shields.io/badge/Code%20Style-Ruff-black.svg" alt="Code Style" />
+    <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Python-3.13+-blue.svg" alt="Python Version" /></a>
+    <a href="LICENCE"><img src="https://img.shields.io/badge/License-GNU_GPL_v3-green.svg" alt="License" /></a>
+    <a href="https://docs.astral.sh/ruff/"><img src="https://img.shields.io/badge/Code%20Style-Ruff-black.svg" alt="Code Style" /></a>
     <img src="https://img.shields.io/badge/AI-LLM_Powered-orange.svg" alt="LLM Powered" />
-    <img src="https://img.shields.io/badge/CO2-Tracking-brightgreen.svg" alt="CO2 Tracking" />
-    <img src="https://img.shields.io/badge/Docker-Ready-blue.svg" alt="Docker Ready" />
-    <img src="https://img.shields.io/badge/Docs-Sphinx-informational.svg" alt="Documentation" />
+    <a href="https://codecarbon.io/"><img src="https://img.shields.io/badge/CO2-Tracking-brightgreen.svg" alt="CO2 Tracking" /></a>
+    <a href="https://www.docker.com/"><img src="https://img.shields.io/badge/Docker-Ready-blue.svg" alt="Docker Ready" /></a>
+    <a href="https://www.sphinx-doc.org/"><img src="https://img.shields.io/badge/Docs-Sphinx-informational.svg" alt="Documentation" /></a>
   </p>
   
   <!-- Liens de navigation -->
@@ -25,10 +25,6 @@
 # SmartWatch : extracteur d'horaires intelligent
 
 **SmartWatch** est un pipeline d'extraction de données conçu pour extraire, analyser, et comparer les horaires d'ouverture de divers établissements publics (mairies, piscines, médiathèques) à partir de leurs sites web. Il utilise des modèles de langage pour interpréter le contenu et comparer les horaires d'ouverture extraits à des données de référence, puis génère et envoie par mail des rapports HTML interactifs pour visualiser les résultats.
-
-## <img src="src/smart_watch/assets/images/read the docs icon.png" alt="Logo ReadTheDocs" /> Documentation
-
-La documentation complète est accessible sur [https://datagora-erasme.github.io/smart_watch/](https://datagora-erasme.github.io/smart_watch/)
 
 ## ✨ Fonctionnalités
 
