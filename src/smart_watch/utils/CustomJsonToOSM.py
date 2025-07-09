@@ -238,6 +238,7 @@ class OSMConverter:
         time_slots = day_data.get("creneaux", [])
 
         results = []
+        # Priorité aux créneaux, même si ouvert=false
         if time_slots:
             processed_slots = self._process_time_slots(time_slots)
             for slot in processed_slots:
@@ -247,9 +248,11 @@ class OSMConverter:
                 )
             return results if results else None
 
+        # Seulement si pas de créneaux, on regarde le statut ouvert
         is_open = day_data.get("ouvert", False)
-        if not is_open:
-            return None
+        if is_open:
+            # Lieu ouvert mais sans créneaux spécifiques
+            return [{"occurence": None, "slot_str": "open"}]
 
         return None
 
@@ -380,26 +383,29 @@ class OSMConverter:
                 if not osm_date:
                     osm_date = self.date_parser.parse_date_to_osm(date_desc)
 
-                # Traite l'horaire
+                # Traite l'horaire avec priorité aux créneaux
                 if isinstance(schedule_data, dict):
                     if not schedule_data.get("source_found", True):
                         continue
 
-                    if schedule_data.get("ouvert", False):
-                        slots = schedule_data.get("creneaux", [])
-                        if slots:
-                            processed_slots = self._process_time_slots(slots)
+                    slots = schedule_data.get("creneaux", [])
+                    is_open = schedule_data.get("ouvert", False)
 
-                            if processed_slots:
-                                schedule_str = ",".join(
-                                    slot.to_osm_format() for slot in processed_slots
-                                )
-                                date_part = osm_date if osm_date else "PH"
-                                osm_parts.append(f"{date_part} {schedule_str}")
-                        else:
+                    # Priorité aux créneaux, même si ouvert=false
+                    if slots:
+                        processed_slots = self._process_time_slots(slots)
+                        if processed_slots:
+                            schedule_str = ",".join(
+                                slot.to_osm_format() for slot in processed_slots
+                            )
                             date_part = osm_date if osm_date else "PH"
-                            osm_parts.append(f"{date_part} open")
+                            osm_parts.append(f"{date_part} {schedule_str}")
+                    elif is_open:
+                        # Ouvert mais sans créneaux spécifiques
+                        date_part = osm_date if osm_date else "PH"
+                        osm_parts.append(f"{date_part} open")
                     else:
+                        # Fermé et sans créneaux
                         date_part = osm_date if osm_date else "PH"
                         osm_parts.append(f"{date_part} off")
 
