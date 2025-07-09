@@ -30,11 +30,13 @@ Ton objectif est d'analyser le contenu markdown fourni et d'extraire les horaire
 - les occurences spécifiques (1er lundi du mois, 1er et 3eme mardi du mois, dernier samedi du mois, etc.) doivent être récupérées dans le champ "occurences" du JSON.
 - le format des dates doit être "YYYY-MM-DD" pour les dates spécifiques et "YYYY-MM" pour les mois.
 - L'année de référence pour les dates sans année est {datetime.now().year}.
+- les jours spéciaux (Noël, Jour de l'An, etc.) doivent être récupérés dans le champ "jours_speciaux" du JSON et leur date précise doit être indiquée.
+- s'il y a plusieurs jeux de créneaux horaires pour différents lieux ou services, prends uniquement celui qui correspond au lieu indiqué dans le markdown, et qui est le plus généraliste. Ne fais aucun mélange avec les autres jeux d'horaires.
 - Réponds UNIQUEMENT avec le JSON, sans aucun texte ou formatage supplémentaire.
 """
 
     # Construction du prompt utilisateur
-    user_prompt_content = f"""Analyse le contenu markdown suivant pour le lieu "{row.get("nom", "Non renseigné")}" et extrais les horaires d'ouverture.
+    user_prompt_content = f"""Analyse le contenu markdown suivant pour la {row.get("type_lieu", "")} nommée "{row.get("nom", "Non renseigné")}" et extrais les horaires d'ouverture.
 
 ### Markdown à analyser
 ```markdown
