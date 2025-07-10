@@ -99,40 +99,53 @@ class CSVToPolars:
                 file_path.unlink()
                 logger.debug(f"Fichier temporaire supprimé: {file_path}")
 
-    def load_csv(self) -> pl.DataFrame | str:
+    def _load_from_url(self) -> pl.DataFrame:
+        """Charge et traite un CSV depuis une URL."""
+        temp_file_path = self._download_to_temp_file(self.source)
+        return self._process_local_file(temp_file_path, cleanup_temp=True)
+
+    def _load_from_path(self) -> pl.DataFrame:
+        """Charge et traite un CSV depuis un chemin local."""
+        file_path = Path(self.source)
+        if not file_path.exists():
+            raise FileNotFoundError(f"Fichier CSV local non trouvé: {file_path}")
+        return self._process_local_file(file_path, cleanup_temp=False)
+
+    def load_csv(self) -> pl.DataFrame:
         """
         Charge un fichier CSV depuis une URL ou un chemin local.
 
         Renvoie :
-            pl.DataFrame : Le DataFrame Polars résultant si le fichier est accessible.
-            str : Message d'erreur si le fichier n'est pas accessible.
+            pl.DataFrame : Le DataFrame Polars résultant.
+
+        Lève :
+            ValueError: Si aucune source n'est spécifiée.
+            FileNotFoundError: Si le fichier local n'est pas trouvé.
+            requests.exceptions.RequestException: Pour les erreurs de téléchargement.
+            RuntimeError: Pour les autres erreurs de traitement.
         """
         if not self.source:
-            error_msg = "Aucune source spécifiée"
-            logger.error(error_msg)
-            return error_msg
+            raise ValueError("Aucune source de fichier CSV n'a été spécifiée.")
 
         try:
             if self._is_url(self.source):
-                # Télécharger vers fichier temporaire puis traiter
-                temp_file_path = self._download_to_temp_file(self.source)
-                self.df = self._process_local_file(temp_file_path, cleanup_temp=True)
+                self.df = self._load_from_url()
             else:
-                # Fichier local - vérifier existence puis traiter
-                file_path = Path(self.source)
-                if not file_path.exists():
-                    error_msg = f"Fichier {file_path} non trouvé"
-                    logger.error(error_msg)
-                    return error_msg
-
-                self.df = self._process_local_file(file_path, cleanup_temp=False)
+                self.df = self._load_from_path()
 
             logger.info(
-                f"CSV chargé: {len(self.df)} lignes, {len(self.df.columns)} colonnes"
+                f"CSV chargé avec succès: {len(self.df)} lignes, {len(self.df.columns)} colonnes"
             )
             return self.df
 
+        except (
+            ValueError,
+            FileNotFoundError,
+            requests.exceptions.RequestException,
+        ) as e:
+            logger.error(e)
+            raise
         except Exception as e:
-            error_msg = f"Erreur lors du chargement: {e}"
+            error_msg = f"Une erreur inattendue est survenue lors du chargement du CSV depuis '{self.source}': {e}"
             logger.error(error_msg)
-            return error_msg
+            raise RuntimeError(error_msg) from e
