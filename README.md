@@ -115,7 +115,7 @@ Le modèle JSON sera automatiquement passé en argument du prompt et assure norm
 
 1.  **Clonez le dépôt :**
     ```sh
-    git clone [https://github.com/datagora-erasme/smart_watch](https://github.com/datagora-erasme/smart_watch)
+    git clone https://github.com/datagora-erasme/smart_watch
     cd smart_watch
     ```
 
