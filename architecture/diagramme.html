@@ -1,0 +1,214 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Diagramme &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.jpg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d2e4462e"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=e6b791cb"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Recherche" href="../search.html" />
+    <link rel="next" title="Modules" href="modules.html" />
+    <link rel="prev" title="Stack technique" href="stack.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Présentation du projet</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stack.html">Stack technique</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Diagramme</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#flux-de-donnees">Flux de données</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#diagramme-de-flux">Diagramme de flux</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/utilisation_docker.html">Utilisation avec Docker</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/config/index.html">Modules Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/config/index.html#architecture-de-configuration">Architecture de configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/config/index.html#hierarchie-de-configuration">Hiérarchie de configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/core/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/core/index.html#modules">Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/processing/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/processing/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/processing/index.html#classes-de-statistiques">Classes de statistiques</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/utils/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/utils/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/utils/index.html#utilitaires-de-donnees-temporelles">Utilitaires de données temporelles</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reporting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/reporting/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/reporting/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/reporting/index.html#pipeline-de-reporting">Pipeline de reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/reporting/index.html#fonctionnalites-des-rapports">Fonctionnalités des rapports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/reporting/index.html#classes-de-donnees-utilisees">Classes de données utilisées</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Diagramme</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/architecture/diagramme.rst.txt" rel="nofollow"> Afficher la source de la page</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="diagramme">
+<h1>Diagramme<a class="headerlink" href="#diagramme" title="Lien vers cette rubrique"></a></h1>
+<section id="flux-de-donnees">
+<h2>Flux de données<a class="headerlink" href="#flux-de-donnees" title="Lien vers cette rubrique"></a></h2>
+<p>Le pipeline de données suit un flux séquentiel optimisé :</p>
+<ol class="arabic simple">
+<li><p><strong>Configuration</strong> : Chargement et validation des paramètres</p></li>
+<li><p><strong>Initialisation</strong> : Création de la base de données et chargement des URLs</p></li>
+<li><p><strong>Extraction</strong> : Récupération parallèle du contenu web, et conversion HTML → Markdown</p></li>
+<li><p><strong>Nettoyage</strong> : Normalisation et nettoyage du contenu Markdown</p></li>
+<li><p><strong>Filtrage</strong> : Sélection sémantique des sections pertinentes par embeddings</p></li>
+<li><p><strong>Extraction LLM</strong> : Interprétation du contenu pour extraire les horaires</p></li>
+<li><p><strong>Conversion</strong> : Transformation au format OpenStreetMap standardisé</p></li>
+<li><p><strong>Comparaison</strong> : Analyse des différences avec les données de référence</p></li>
+<li><p><strong>Rapport</strong> : Génération et envoi du rapport final</p></li>
+</ol>
+</section>
+<section id="diagramme-de-flux">
+<h2>Diagramme de flux<a class="headerlink" href="#diagramme-de-flux" title="Lien vers cette rubrique"></a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[ main.py ] (Orchestrateur)
+   │
+   ├─&gt; 1. Initialise [ core.ConfigManager ] (Charge la configuration depuis .env)
+   │         └─&gt; Agrège [ config.* ] (LLMConfig, DatabaseConfig, etc.)
+   │
+   ├─&gt; 2. Instancie les processeurs principaux avec la configuration
+   │
+   └─&gt; 3. Exécute séquentiellement le pipeline :
+         │
+         ├─&gt; [1] SETUP : [ utils.CSVToPolars ] -&gt; [ processing.DatabaseManager ]
+         │     (Charge les URLs depuis le CSV et prépare une nouvelle exécution)
+         │
+         ├─&gt; [2] FETCH : [ processing.URLProcessor ]
+         │     (Récupère le contenu des URLs)
+         │     └─&gt; Utilise [ utils.HtmlToMarkdown ] pour la conversion
+         │
+         ├─&gt; [3] CLEAN : [ utils.MarkdownCleaner ]
+         │     (Nettoie le Markdown brut)
+         │
+         ├─&gt; [4] FILTER : [ core.MarkdownProcessor ]
+         │     (Filtre sémantiquement le Markdown pour ne garder que les sections pertinentes)
+         │     └─&gt; Utilise [ core.LLMClient ] pour les embeddings
+         │
+         ├─&gt; [5] EXTRACT : [ processing.LLMProcessor ]
+         │     (Extrait les horaires du Markdown filtré au format JSON)
+         │     ├─&gt; Utilise [ core.LLMClient ] pour l&#39;appel au LLM
+         │     └─&gt; Utilise [ utils.CustomJsonToOSM ] pour convertir le JSON en format OSM
+         │
+         ├─&gt; [6] COMPARE : [ processing.ComparisonProcessor ]
+         │     (Compare les horaires extraits (OSM) avec les données de référence)
+         │     └─&gt; Utilise [ core.ComparateurHoraires ] pour la logique de comparaison
+         │
+         └─&gt; [7] REPORT : [ reporting.ReportManager ]
+               (Génère et envoie le rapport final)
+               ├─&gt; Utilise [ reporting.GenererRapportHTML ] pour créer le fichier HTML
+               └─&gt; Utilise [ core.EmailSender ] pour envoyer l&#39;email avec pièces jointes
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pied de page">
+        <a href="stack.html" class="btn btn-neutral float-left" title="Stack technique" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Précédent</a>
+        <a href="modules.html" class="btn btn-neutral float-right" title="Modules" accesskey="n" rel="next">Suivant <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

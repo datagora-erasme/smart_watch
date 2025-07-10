@@ -1,0 +1,320 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Email Sender &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.jpg"/>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=d2e4462e"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/translations.js?v=e6b791cb"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../search.html" />
+    <link rel="next" title="Vue d’ensemble" href="../processing/index.html" />
+    <link rel="prev" title="LLM Client" href="llm_client.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Présentation du projet</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/stack.html">Stack technique</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/diagramme.html">Diagramme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/modules.html">Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/utilisation_docker.html">Utilisation avec Docker</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html">Modules Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html#architecture-de-configuration">Architecture de configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html#hierarchie-de-configuration">Hiérarchie de configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html#modules">Modules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="config_manager.html">Configuration Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config_manager.html#classes-de-configuration">Classes de configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config_manager.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logger.html">Logger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logger.html#classes-principales">Classes principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logger.html#fonctions-utilitaires">Fonctions utilitaires</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logger.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="error_handler.html">Error Handler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="error_handler.html#classes-principales">Classes principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="error_handler.html#decorateurs">Décorateurs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="error_handler.html#fonctions-utilitaires">Fonctions utilitaires</a></li>
+<li class="toctree-l2"><a class="reference internal" href="error_handler.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markdown_processor.html">Markdown Processor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markdown_processor.html#classes-principales">Classes principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markdown_processor.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markdown_processor.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comparateur_horaires.html">Comparateur d’Horaires</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comparateur_horaires.html#classes-principales">Classes principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comparateur_horaires.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comparateur_horaires.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm_client.html">LLM Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm_client.html#classes-principales">Classes principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm_client.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm_client.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Email Sender</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#classes-principales">Classes principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configuration-smtp">Configuration SMTP</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../processing/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../processing/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../processing/index.html#classes-de-statistiques">Classes de statistiques</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../utils/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils/index.html#utilitaires-de-donnees-temporelles">Utilitaires de données temporelles</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reporting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html#pipeline-de-reporting">Pipeline de reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html#fonctionnalites-des-rapports">Fonctionnalités des rapports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html#classes-de-donnees-utilisees">Classes de données utilisées</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Vue d’ensemble</a></li>
+      <li class="breadcrumb-item active">Email Sender</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/source/modules/core/email_sender.rst.txt" rel="nofollow"> Afficher la source de la page</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-src.smart_watch.core.EnvoyerMail">
+<span id="email-sender"></span><h1>Email Sender<a class="headerlink" href="#module-src.smart_watch.core.EnvoyerMail" title="Lien vers cette rubrique"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.smart_watch.core.EnvoyerMail.EmailSender">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.smart_watch.core.EnvoyerMail.</span></span><span class="sig-name descname"><span class="pre">EmailSender</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="config_manager.html#id0" title="src.smart_watch.core.ConfigManager.ConfigManager"><span class="pre">ConfigManager</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/EnvoyerMail.html#EmailSender"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.EnvoyerMail.EmailSender" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(disponible dans Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Classe pour envoyer des emails via SMTP.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.EnvoyerMail.EmailSender.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="config_manager.html#id0" title="src.smart_watch.core.ConfigManager.ConfigManager"><span class="pre">ConfigManager</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/EnvoyerMail.html#EmailSender.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.EnvoyerMail.EmailSender.__init__" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.EnvoyerMail.EmailSender.send_email">
+<span class="sig-name descname"><span class="pre">send_email</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subject</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">attachments</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(disponible dans Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/EnvoyerMail.html#EmailSender.send_email"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.EnvoyerMail.EmailSender.send_email" title="Lien vers cette définition"></a></dt>
+<dd><p>Envoie un email avec support pour pièces jointes multiples.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subject</strong> – Sujet de l’email.</p></li>
+<li><p><strong>body</strong> – Corps de l’email (HTML).</p></li>
+<li><p><strong>attachments</strong> – Liste des chemins vers les fichiers à joindre.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="classes-principales">
+<h1>Classes principales<a class="headerlink" href="#classes-principales" title="Lien vers cette rubrique"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="id0">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.smart_watch.core.EnvoyerMail.</span></span><span class="sig-name descname"><span class="pre">EmailSender</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="config_manager.html#id0" title="src.smart_watch.core.ConfigManager.ConfigManager"><span class="pre">ConfigManager</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/EnvoyerMail.html#EmailSender"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(disponible dans Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Classe pour envoyer des emails via SMTP.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="config_manager.html#id0" title="src.smart_watch.core.ConfigManager.ConfigManager"><span class="pre">ConfigManager</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/EnvoyerMail.html#EmailSender.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id1" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">send_email</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subject</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">attachments</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(disponible dans Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/EnvoyerMail.html#EmailSender.send_email"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id2" title="Lien vers cette définition"></a></dt>
+<dd><p>Envoie un email avec support pour pièces jointes multiples.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subject</strong> – Sujet de l’email.</p></li>
+<li><p><strong>body</strong> – Corps de l’email (HTML).</p></li>
+<li><p><strong>attachments</strong> – Liste des chemins vers les fichiers à joindre.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="fonctionnalites">
+<h1>Fonctionnalités<a class="headerlink" href="#fonctionnalites" title="Lien vers cette rubrique"></a></h1>
+<p>Le module EmailSender gère l’envoi automatique d’emails avec pièces jointes :</p>
+<p><strong>Configuration SMTP :</strong></p>
+<ul class="simple">
+<li><p>Support des connexions SSL/TLS</p></li>
+<li><p>Authentification SMTP configurable</p></li>
+<li><p>Gestion des erreurs de connexion</p></li>
+<li><p>Configuration via variables d’environnement</p></li>
+</ul>
+<p><strong>Fonctionnalités d’envoi :</strong></p>
+<ul class="simple">
+<li><p><strong>Templates HTML</strong> : Corps d’email riche avec templates Jinja2</p></li>
+<li><p><strong>Pièces jointes multiples</strong> : Support des fichiers ZIP, HTML, logs</p></li>
+<li><p><strong>Encodage UTF-8</strong> : Gestion complète des caractères spéciaux</p></li>
+<li><p><strong>Headers personnalisés</strong> : Subject, From, To, Date automatiques</p></li>
+</ul>
+<p><strong>Intégration pipeline :</strong></p>
+<ul class="simple">
+<li><p>Envoi automatique des rapports après génération</p></li>
+<li><p>Fichiers joints : rapport HTML complet + logs zippés</p></li>
+<li><p>Email de résumé avec statistiques principales</p></li>
+<li><p>Gestion optionnelle (peut être désactivé)</p></li>
+</ul>
+<p><strong>Sécurité :</strong></p>
+<ul class="simple">
+<li><p>Validation des adresses email</p></li>
+<li><p>Gestion sécurisée des credentials SMTP</p></li>
+<li><p>Timeouts configurables pour éviter les blocages</p></li>
+</ul>
+</section>
+<section id="exemple-d-utilisation">
+<h1>Exemple d’utilisation<a class="headerlink" href="#exemple-d-utilisation" title="Lien vers cette rubrique"></a></h1>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">src.smart_watch.core.EnvoyerMail</span><span class="w"> </span><span class="kn">import</span> <span class="n">EmailSender</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.smart_watch.core.ConfigManager</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigManager</span>
+
+<span class="c1"># Initialisation</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">ConfigManager</span><span class="p">()</span>
+<span class="n">email_sender</span> <span class="o">=</span> <span class="n">EmailSender</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+
+<span class="c1"># Envoi d&#39;un rapport avec pièces jointes</span>
+<span class="n">attachments</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;rapport_complet.html&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;logs_execution.zip&quot;</span>
+<span class="p">]</span>
+
+<span class="n">success</span> <span class="o">=</span> <span class="n">email_sender</span><span class="o">.</span><span class="n">send_report_email</span><span class="p">(</span>
+    <span class="n">subject</span><span class="o">=</span><span class="s2">&quot;Rapport SmartWatch - Extraction horaires&quot;</span><span class="p">,</span>
+    <span class="n">html_body</span><span class="o">=</span><span class="s2">&quot;&lt;h1&gt;Rapport généré&lt;/h1&gt;&lt;p&gt;Voir pièces jointes.&lt;/p&gt;&quot;</span><span class="p">,</span>
+    <span class="n">attachments</span><span class="o">=</span><span class="n">attachments</span>
+<span class="p">)</span>
+
+<span class="k">if</span> <span class="n">success</span><span class="p">:</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Email envoyé avec succès&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Échec envoi email&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="configuration-smtp">
+<h1>Configuration SMTP<a class="headerlink" href="#configuration-smtp" title="Lien vers cette rubrique"></a></h1>
+<p>Variables d’environnement requises dans <cite>.env</cite> :</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">MAIL_EMETTEUR</span><span class="o">=</span><span class="s2">&quot;noreply@monsite.org&quot;</span>
+<span class="nv">MAIL_RECEPTEUR</span><span class="o">=</span><span class="s2">&quot;admin@monsite.org&quot;</span>
+<span class="nv">SMTP_SERVER</span><span class="o">=</span><span class="s2">&quot;smtp.monsite.org&quot;</span>
+<span class="nv">SMTP_PORT</span><span class="o">=</span><span class="m">465</span>
+<span class="nv">SMTP_LOGIN</span><span class="o">=</span><span class="s2">&quot;login&quot;</span>
+<span class="nv">SMTP_PASSWORD</span><span class="o">=</span><span class="s2">&quot;password&quot;</span>
+</pre></div>
+</div>
+<p><strong>Paramètres supportés :</strong></p>
+<ul class="simple">
+<li><p><strong>SMTP_PORT</strong> : 25 (non-sécurisé), 587 (STARTTLS), 465 (SSL)</p></li>
+<li><p><strong>Authentification</strong> : Login/password ou anonyme</p></li>
+<li><p><strong>Sécurité</strong> : Détection automatique SSL/TLS selon le port</p></li>
+</ul>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pied de page">
+        <a href="llm_client.html" class="btn btn-neutral float-left" title="LLM Client" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Précédent</a>
+        <a href="../processing/index.html" class="btn btn-neutral float-right" title="Vue d’ensemble" accesskey="n" rel="next">Suivant <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

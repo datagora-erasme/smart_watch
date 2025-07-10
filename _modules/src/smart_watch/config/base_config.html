@@ -1,0 +1,261 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.smart_watch.config.base_config &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.jpg"/>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=d2e4462e"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/translations.js?v=e6b791cb"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Présentation du projet</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/stack.html">Stack technique</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/diagramme.html">Diagramme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/modules.html">Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/utilisation_docker.html">Utilisation avec Docker</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/config/index.html">Modules Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/config/index.html#architecture-de-configuration">Architecture de configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/config/index.html#hierarchie-de-configuration">Hiérarchie de configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/core/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/core/index.html#modules">Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/processing/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/processing/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/processing/index.html#classes-de-statistiques">Classes de statistiques</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/utils/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/utils/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/utils/index.html#utilitaires-de-donnees-temporelles">Utilitaires de données temporelles</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reporting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html#pipeline-de-reporting">Pipeline de reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html#fonctionnalites-des-rapports">Fonctionnalités des rapports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html#classes-de-donnees-utilisees">Classes de données utilisées</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Code du module</a></li>
+      <li class="breadcrumb-item active">src.smart_watch.config.base_config</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Code source de src.smart_watch.config.base_config</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Configuration de base commune à tous les modules.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">dotenv_values</span><span class="p">,</span> <span class="n">load_dotenv</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..core.ErrorHandler</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ErrorCategory</span><span class="p">,</span>
+    <span class="n">ErrorHandler</span><span class="p">,</span>
+    <span class="n">ErrorSeverity</span><span class="p">,</span>
+    <span class="n">handle_errors</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..core.Logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_logger</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">create_logger</span><span class="p">(</span>
+    <span class="n">module_name</span><span class="o">=</span><span class="s2">&quot;BaseConfig&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="BaseConfig">
+<a class="viewcode-back" href="../../../../source/modules/config/base_config.html#src.smart_watch.config.base_config.BaseConfig">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">BaseConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration de base pour tous les modules.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="BaseConfig.__init__">
+<a class="viewcode-back" href="../../../../source/modules/config/base_config.html#src.smart_watch.config.base_config.BaseConfig.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env_file</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialise la configuration de base.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            env_file: Chemin vers le fichier .env</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Correction : pointer sur la racine du projet (2 parents au-dessus de config)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">project_root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env_file</span> <span class="o">=</span> <span class="n">env_file</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">project_root</span> <span class="o">/</span> <span class="s2">&quot;.env&quot;</span>
+
+        <span class="c1"># Initialiser le gestionnaire d&#39;erreurs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">error_handler</span> <span class="o">=</span> <span class="n">ErrorHandler</span><span class="p">(</span>
+            <span class="n">log_file</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">project_root</span> <span class="o">/</span> <span class="s2">&quot;logs&quot;</span> <span class="o">/</span> <span class="s2">&quot;errors.log&quot;</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Charger les variables d&#39;environnement</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_load_environment</span><span class="p">()</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_reset_environment</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remet à zéro seulement les variables du fichier .env pour éviter les conflits.&quot;&quot;&quot;</span>
+        <span class="c1"># Ne supprimer que les variables du fichier .env, pas celles de l&#39;environnement système/Docker</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">env_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">dotenv_vars</span> <span class="o">=</span> <span class="n">dotenv_values</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env_file</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">dotenv_vars</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="c1"># Ne supprimer que si la variable vient du fichier .env et pas de l&#39;environnement</span>
+                    <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">==</span> <span class="n">dotenv_vars</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="c1"># Si erreur de lecture du .env, ne rien supprimer</span>
+                <span class="k">pass</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_load_environment</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Charge les variables d&#39;environnement.&quot;&quot;&quot;</span>
+        <span class="c1"># Ne pas reset si on est dans un environnement containerisé</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;DOCKER_CONTAINER&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span>
+            <span class="s2">&quot;KUBERNETES_SERVICE_HOST&quot;</span>
+        <span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_reset_environment</span><span class="p">()</span>
+
+        <span class="c1"># Charger depuis le fichier .env si présent, sinon utiliser les variables système</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">env_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">load_dotenv</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">env_file</span><span class="p">,</span> <span class="n">override</span><span class="o">=</span><span class="kc">False</span>
+                <span class="p">)</span>  <span class="c1"># Ne pas écraser les variables existantes</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Variables d&#39;environnement chargées depuis: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">env_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur lors du chargement du fichier .env: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Fichier .env non trouvé (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">env_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">), utilisation des variables système&quot;</span>
+            <span class="p">)</span>
+
+    <span class="nd">@handle_errors</span><span class="p">(</span>
+        <span class="n">category</span><span class="o">=</span><span class="n">ErrorCategory</span><span class="o">.</span><span class="n">CONFIGURATION</span><span class="p">,</span>
+        <span class="n">severity</span><span class="o">=</span><span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">HIGH</span><span class="p">,</span>
+        <span class="n">user_message</span><span class="o">=</span><span class="s2">&quot;Erreur lors de la récupération d&#39;une variable d&#39;environnement&quot;</span><span class="p">,</span>
+        <span class="n">reraise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_env_var</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">required</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Récupère une variable d&#39;environnement avec gestion d&#39;erreurs.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            key: Nom de la variable</span>
+<span class="sd">            default: Valeur par défaut</span>
+<span class="sd">            required: Si True, lève une erreur si manquante</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Valeur de la variable</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: Si la variable est requise mais manquante</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">required</span> <span class="ow">and</span> <span class="p">(</span><span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Variable d&#39;environnement </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> manquante&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">value</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

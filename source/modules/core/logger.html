@@ -1,0 +1,460 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Logger &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.jpg"/>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=d2e4462e"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/translations.js?v=e6b791cb"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../search.html" />
+    <link rel="next" title="Error Handler" href="error_handler.html" />
+    <link rel="prev" title="Configuration Manager" href="config_manager.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Présentation du projet</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/stack.html">Stack technique</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/diagramme.html">Diagramme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/modules.html">Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/utilisation_docker.html">Utilisation avec Docker</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html">Modules Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html#architecture-de-configuration">Architecture de configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html#hierarchie-de-configuration">Hiérarchie de configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html#modules">Modules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="config_manager.html">Configuration Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config_manager.html#classes-de-configuration">Classes de configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config_manager.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Logger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#classes-principales">Classes principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fonctions-utilitaires">Fonctions utilitaires</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="error_handler.html">Error Handler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="error_handler.html#classes-principales">Classes principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="error_handler.html#decorateurs">Décorateurs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="error_handler.html#fonctions-utilitaires">Fonctions utilitaires</a></li>
+<li class="toctree-l2"><a class="reference internal" href="error_handler.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markdown_processor.html">Markdown Processor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markdown_processor.html#classes-principales">Classes principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markdown_processor.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markdown_processor.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comparateur_horaires.html">Comparateur d’Horaires</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comparateur_horaires.html#classes-principales">Classes principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comparateur_horaires.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comparateur_horaires.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm_client.html">LLM Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm_client.html#classes-principales">Classes principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm_client.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm_client.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="email_sender.html">Email Sender</a></li>
+<li class="toctree-l2"><a class="reference internal" href="email_sender.html#classes-principales">Classes principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="email_sender.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l2"><a class="reference internal" href="email_sender.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="email_sender.html#configuration-smtp">Configuration SMTP</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../processing/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../processing/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../processing/index.html#classes-de-statistiques">Classes de statistiques</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../utils/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils/index.html#utilitaires-de-donnees-temporelles">Utilitaires de données temporelles</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reporting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html#pipeline-de-reporting">Pipeline de reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html#fonctionnalites-des-rapports">Fonctionnalités des rapports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html#classes-de-donnees-utilisees">Classes de données utilisées</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Vue d’ensemble</a></li>
+      <li class="breadcrumb-item active">Logger</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/source/modules/core/logger.rst.txt" rel="nofollow"> Afficher la source de la page</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-src.smart_watch.core.Logger">
+<span id="logger"></span><h1>Logger<a class="headerlink" href="#module-src.smart_watch.core.Logger" title="Lien vers cette rubrique"></a></h1>
+<p>Système de logging pour le projet smart_watch
+Support flexible pour fichier et/ou console avec rotation automatique</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.smart_watch.core.Logger.LogLevel">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.smart_watch.core.Logger.</span></span><span class="sig-name descname"><span class="pre">LogLevel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/Logger.html#LogLevel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.Logger.LogLevel" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.Enum" title="(disponible dans Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></a></p>
+<p>Niveaux de log disponibles</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.Logger.LogLevel.DEBUG">
+<span class="sig-name descname"><span class="pre">DEBUG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10</span></em><a class="headerlink" href="#src.smart_watch.core.Logger.LogLevel.DEBUG" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.Logger.LogLevel.INFO">
+<span class="sig-name descname"><span class="pre">INFO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">20</span></em><a class="headerlink" href="#src.smart_watch.core.Logger.LogLevel.INFO" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.Logger.LogLevel.WARNING">
+<span class="sig-name descname"><span class="pre">WARNING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">30</span></em><a class="headerlink" href="#src.smart_watch.core.Logger.LogLevel.WARNING" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.Logger.LogLevel.ERROR">
+<span class="sig-name descname"><span class="pre">ERROR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">40</span></em><a class="headerlink" href="#src.smart_watch.core.Logger.LogLevel.ERROR" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.Logger.LogLevel.CRITICAL">
+<span class="sig-name descname"><span class="pre">CRITICAL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">50</span></em><a class="headerlink" href="#src.smart_watch.core.Logger.LogLevel.CRITICAL" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="src.smart_watch.core.Logger.LogOutput">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.smart_watch.core.Logger.</span></span><span class="sig-name descname"><span class="pre">LogOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/Logger.html#LogOutput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.Logger.LogOutput" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.Enum" title="(disponible dans Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></a></p>
+<p>Types de sortie de log disponibles</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.Logger.LogOutput.FILE">
+<span class="sig-name descname"><span class="pre">FILE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'file'</span></em><a class="headerlink" href="#src.smart_watch.core.Logger.LogOutput.FILE" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.Logger.LogOutput.CONSOLE">
+<span class="sig-name descname"><span class="pre">CONSOLE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'console'</span></em><a class="headerlink" href="#src.smart_watch.core.Logger.LogOutput.CONSOLE" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="src.smart_watch.core.Logger.SmartWatchLogger">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.smart_watch.core.Logger.</span></span><span class="sig-name descname"><span class="pre">SmartWatchLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'main'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(disponible dans Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#id15" title="src.smart_watch.core.Logger.LogOutput"><span class="pre">LogOutput</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/Logger.html#SmartWatchLogger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.Logger.SmartWatchLogger" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(disponible dans Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Logger avec outputs configurables (fichier et/ou console)</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.Logger.SmartWatchLogger.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'main'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(disponible dans Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#id15" title="src.smart_watch.core.Logger.LogOutput"><span class="pre">LogOutput</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/Logger.html#SmartWatchLogger.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.Logger.SmartWatchLogger.__init__" title="Lien vers cette définition"></a></dt>
+<dd><p>Initialise le logger</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module_name</strong> – Nom du module utilisant le logger</p></li>
+<li><p><strong>outputs</strong> – Liste des sorties désirées. Défaut: [FILE, CONSOLE]</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.Logger.SmartWatchLogger.log">
+<span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#id9" title="src.smart_watch.core.Logger.LogLevel"><span class="pre">LogLevel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/Logger.html#SmartWatchLogger.log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.Logger.SmartWatchLogger.log" title="Lien vers cette définition"></a></dt>
+<dd><p>Log avec niveau spécifique</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.Logger.SmartWatchLogger.debug">
+<span class="sig-name descname"><span class="pre">debug</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/Logger.html#SmartWatchLogger.debug"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.Logger.SmartWatchLogger.debug" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.Logger.SmartWatchLogger.info">
+<span class="sig-name descname"><span class="pre">info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/Logger.html#SmartWatchLogger.info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.Logger.SmartWatchLogger.info" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.Logger.SmartWatchLogger.warning">
+<span class="sig-name descname"><span class="pre">warning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/Logger.html#SmartWatchLogger.warning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.Logger.SmartWatchLogger.warning" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.Logger.SmartWatchLogger.error">
+<span class="sig-name descname"><span class="pre">error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/Logger.html#SmartWatchLogger.error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.Logger.SmartWatchLogger.error" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.Logger.SmartWatchLogger.critical">
+<span class="sig-name descname"><span class="pre">critical</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/Logger.html#SmartWatchLogger.critical"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.Logger.SmartWatchLogger.critical" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.Logger.SmartWatchLogger.section">
+<span class="sig-name descname"><span class="pre">section</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#id9" title="src.smart_watch.core.Logger.LogLevel"><span class="pre">LogLevel</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">LogLevel.INFO</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/Logger.html#SmartWatchLogger.section"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.Logger.SmartWatchLogger.section" title="Lien vers cette définition"></a></dt>
+<dd><p>Log une section avec formatage spécial</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.smart_watch.core.Logger.create_logger">
+<span class="sig-prename descclassname"><span class="pre">src.smart_watch.core.Logger.</span></span><span class="sig-name descname"><span class="pre">create_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'main'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(disponible dans Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#id0" title="src.smart_watch.core.Logger.SmartWatchLogger"><span class="pre">SmartWatchLogger</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/Logger.html#create_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.Logger.create_logger" title="Lien vers cette définition"></a></dt>
+<dd><p>Factory function pour créer un logger configuré avec outputs flexibles</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module_name</strong> – Nom du module</p></li>
+<li><p><strong>outputs</strong> – Liste des sorties [« file », « console »]. Défaut: [« file », « console »]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>Instance configurée de SmartWatchLogger</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="classes-principales">
+<h1>Classes principales<a class="headerlink" href="#classes-principales" title="Lien vers cette rubrique"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="id0">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.smart_watch.core.Logger.</span></span><span class="sig-name descname"><span class="pre">SmartWatchLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'main'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(disponible dans Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#id15" title="src.smart_watch.core.Logger.LogOutput"><span class="pre">LogOutput</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/Logger.html#SmartWatchLogger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(disponible dans Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Logger avec outputs configurables (fichier et/ou console)</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'main'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(disponible dans Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#id15" title="src.smart_watch.core.Logger.LogOutput"><span class="pre">LogOutput</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/Logger.html#SmartWatchLogger.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id1" title="Lien vers cette définition"></a></dt>
+<dd><p>Initialise le logger</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module_name</strong> – Nom du module utilisant le logger</p></li>
+<li><p><strong>outputs</strong> – Liste des sorties désirées. Défaut: [FILE, CONSOLE]</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#id9" title="src.smart_watch.core.Logger.LogLevel"><span class="pre">LogLevel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/Logger.html#SmartWatchLogger.log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id2" title="Lien vers cette définition"></a></dt>
+<dd><p>Log avec niveau spécifique</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">debug</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/Logger.html#SmartWatchLogger.debug"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id3" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/Logger.html#SmartWatchLogger.info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id4" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id5">
+<span class="sig-name descname"><span class="pre">warning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/Logger.html#SmartWatchLogger.warning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id5" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id6">
+<span class="sig-name descname"><span class="pre">error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/Logger.html#SmartWatchLogger.error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id6" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id7">
+<span class="sig-name descname"><span class="pre">critical</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/Logger.html#SmartWatchLogger.critical"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id7" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id8">
+<span class="sig-name descname"><span class="pre">section</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#id9" title="src.smart_watch.core.Logger.LogLevel"><span class="pre">LogLevel</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">LogLevel.INFO</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/Logger.html#SmartWatchLogger.section"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id8" title="Lien vers cette définition"></a></dt>
+<dd><p>Log une section avec formatage spécial</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="id9">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.smart_watch.core.Logger.</span></span><span class="sig-name descname"><span class="pre">LogLevel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/Logger.html#LogLevel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id9" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.Enum" title="(disponible dans Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></a></p>
+<p>Niveaux de log disponibles</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id10">
+<span class="sig-name descname"><span class="pre">DEBUG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10</span></em><a class="headerlink" href="#id10" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id11">
+<span class="sig-name descname"><span class="pre">INFO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">20</span></em><a class="headerlink" href="#id11" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id12">
+<span class="sig-name descname"><span class="pre">WARNING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">30</span></em><a class="headerlink" href="#id12" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id13">
+<span class="sig-name descname"><span class="pre">ERROR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">40</span></em><a class="headerlink" href="#id13" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id14">
+<span class="sig-name descname"><span class="pre">CRITICAL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">50</span></em><a class="headerlink" href="#id14" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="id15">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.smart_watch.core.Logger.</span></span><span class="sig-name descname"><span class="pre">LogOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/Logger.html#LogOutput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id15" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.Enum" title="(disponible dans Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></a></p>
+<p>Types de sortie de log disponibles</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id16">
+<span class="sig-name descname"><span class="pre">FILE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'file'</span></em><a class="headerlink" href="#id16" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id17">
+<span class="sig-name descname"><span class="pre">CONSOLE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'console'</span></em><a class="headerlink" href="#id17" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="fonctions-utilitaires">
+<h1>Fonctions utilitaires<a class="headerlink" href="#fonctions-utilitaires" title="Lien vers cette rubrique"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="id18">
+<span class="sig-prename descclassname"><span class="pre">src.smart_watch.core.Logger.</span></span><span class="sig-name descname"><span class="pre">create_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'main'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(disponible dans Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#id0" title="src.smart_watch.core.Logger.SmartWatchLogger"><span class="pre">SmartWatchLogger</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/Logger.html#create_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id18" title="Lien vers cette définition"></a></dt>
+<dd><p>Factory function pour créer un logger configuré avec outputs flexibles</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module_name</strong> – Nom du module</p></li>
+<li><p><strong>outputs</strong> – Liste des sorties [« file », « console »]. Défaut: [« file », « console »]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>Instance configurée de SmartWatchLogger</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="exemple-d-utilisation">
+<h1>Exemple d’utilisation<a class="headerlink" href="#exemple-d-utilisation" title="Lien vers cette rubrique"></a></h1>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">src.smart_watch.core.Logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_logger</span><span class="p">,</span> <span class="n">LogLevel</span>
+
+<span class="c1"># Création d&#39;un logger avec sorties par défaut (fichier + console)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">create_logger</span><span class="p">(</span><span class="s2">&quot;MonModule&quot;</span><span class="p">)</span>
+
+<span class="c1"># Logger avec sortie console uniquement</span>
+<span class="n">logger_console</span> <span class="o">=</span> <span class="n">create_logger</span><span class="p">(</span><span class="s2">&quot;MonModule&quot;</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;console&quot;</span><span class="p">])</span>
+
+<span class="c1"># Utilisation</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Message d&#39;information&quot;</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Message d&#39;erreur&quot;</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">section</span><span class="p">(</span><span class="s2">&quot;SECTION IMPORTANTE&quot;</span><span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Message de debug&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pied de page">
+        <a href="config_manager.html" class="btn btn-neutral float-left" title="Configuration Manager" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Précédent</a>
+        <a href="error_handler.html" class="btn btn-neutral float-right" title="Error Handler" accesskey="n" rel="next">Suivant <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,310 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Markdown Cleaner &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.jpg"/>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=d2e4462e"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/translations.js?v=e6b791cb"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../search.html" />
+    <link rel="next" title="HTML to Markdown" href="html_to_markdown.html" />
+    <link rel="prev" title="Vue d’ensemble" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Présentation du projet</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/stack.html">Stack technique</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/diagramme.html">Diagramme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/modules.html">Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/utilisation_docker.html">Utilisation avec Docker</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html">Modules Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html#architecture-de-configuration">Architecture de configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html#hierarchie-de-configuration">Hiérarchie de configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../core/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../core/index.html#modules">Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../processing/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../processing/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../processing/index.html#classes-de-statistiques">Classes de statistiques</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html#modules">Modules</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Markdown Cleaner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#classes-principales">Classes principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="html_to_markdown.html">HTML to Markdown</a></li>
+<li class="toctree-l2"><a class="reference internal" href="html_to_markdown.html#fonction-principale">Fonction principale</a></li>
+<li class="toctree-l2"><a class="reference internal" href="html_to_markdown.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="json_osm_converters.html">JSON/OSM Converters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="json_osm_converters.html#module-src.smart_watch.utils.CustomJsonToOSM">JSON vers OSM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="json_osm_converters.html#osm-vers-json">OSM vers JSON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="json_osm_converters.html#classes-de-donnees">Classes de données</a></li>
+<li class="toctree-l2"><a class="reference internal" href="json_osm_converters.html#exemples-d-utilisation">Exemples d’utilisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csv_polars.html">CSV to Polars</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csv_polars.html#classes-principales">Classes principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csv_polars.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jours_feries.html">Jours Fériés</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jours_feries.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jours_feries.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vacances_scolaires.html">Vacances Scolaires</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vacances_scolaires.html#fonctions-principales">Fonctions principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vacances_scolaires.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vacances_scolaires.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vacances_scolaires.html#api-et-format-des-donnees">API et format des données</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vacances_scolaires.html#gestion-des-erreurs">Gestion des erreurs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#utilitaires-de-donnees-temporelles">Utilitaires de données temporelles</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reporting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html#pipeline-de-reporting">Pipeline de reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html#fonctionnalites-des-rapports">Fonctionnalités des rapports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html#classes-de-donnees-utilisees">Classes de données utilisées</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Vue d’ensemble</a></li>
+      <li class="breadcrumb-item active">Markdown Cleaner</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/source/modules/utils/markdown_cleaner.rst.txt" rel="nofollow"> Afficher la source de la page</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-src.smart_watch.utils.MarkdownCleaner">
+<span id="markdown-cleaner"></span><h1>Markdown Cleaner<a class="headerlink" href="#module-src.smart_watch.utils.MarkdownCleaner" title="Lien vers cette rubrique"></a></h1>
+<p>Module pour le nettoyage et la normalisation de contenu Markdown.
+Ce module nettoie le markdown issu du téléchargement d’URLs.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.smart_watch.utils.MarkdownCleaner.CleaningStats">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.smart_watch.utils.MarkdownCleaner.</span></span><span class="sig-name descname"><span class="pre">CleaningStats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">texts_processed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">texts_successful</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chars_replaced</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/utils/MarkdownCleaner.html#CleaningStats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.utils.MarkdownCleaner.CleaningStats" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(disponible dans Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Statistiques de nettoyage pour chaque étape.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.utils.MarkdownCleaner.CleaningStats.texts_processed">
+<span class="sig-name descname"><span class="pre">texts_processed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#src.smart_watch.utils.MarkdownCleaner.CleaningStats.texts_processed" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.utils.MarkdownCleaner.CleaningStats.texts_successful">
+<span class="sig-name descname"><span class="pre">texts_successful</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#src.smart_watch.utils.MarkdownCleaner.CleaningStats.texts_successful" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.utils.MarkdownCleaner.CleaningStats.chars_replaced">
+<span class="sig-name descname"><span class="pre">chars_replaced</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#src.smart_watch.utils.MarkdownCleaner.CleaningStats.chars_replaced" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.utils.MarkdownCleaner.CleaningStats.get_summary">
+<span class="sig-name descname"><span class="pre">get_summary</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/utils/MarkdownCleaner.html#CleaningStats.get_summary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.utils.MarkdownCleaner.CleaningStats.get_summary" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.utils.MarkdownCleaner.CleaningStats.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">texts_processed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">texts_successful</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chars_replaced</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#src.smart_watch.utils.MarkdownCleaner.CleaningStats.__init__" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.smart_watch.utils.MarkdownCleaner.</span></span><span class="sig-name descname"><span class="pre">MarkdownCleaner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/utils/MarkdownCleaner.html#MarkdownCleaner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(disponible dans Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Classe pour le nettoyage et la normalisation de contenu Markdown.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/utils/MarkdownCleaner.html#MarkdownCleaner.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner.__init__" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner.process_markdown_cleaning">
+<span class="sig-name descname"><span class="pre">process_markdown_cleaning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">execution_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#id4" title="src.smart_watch.utils.MarkdownCleaner.CleaningStats"><span class="pre">CleaningStats</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/utils/MarkdownCleaner.html#MarkdownCleaner.process_markdown_cleaning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner.process_markdown_cleaning" title="Lien vers cette définition"></a></dt>
+<dd><p>Nettoie le contenu markdown pour tous les enregistrements d’une exécution.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner.clean_markdown_content">
+<span class="sig-name descname"><span class="pre">clean_markdown_content</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner.clean_markdown_content" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="classes-principales">
+<h1>Classes principales<a class="headerlink" href="#classes-principales" title="Lien vers cette rubrique"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="id0">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.smart_watch.utils.MarkdownCleaner.</span></span><span class="sig-name descname"><span class="pre">MarkdownCleaner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/utils/MarkdownCleaner.html#MarkdownCleaner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(disponible dans Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Classe pour le nettoyage et la normalisation de contenu Markdown.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/utils/MarkdownCleaner.html#MarkdownCleaner.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id1" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">process_markdown_cleaning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_manager</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">execution_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#id4" title="src.smart_watch.utils.MarkdownCleaner.CleaningStats"><span class="pre">CleaningStats</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/utils/MarkdownCleaner.html#MarkdownCleaner.process_markdown_cleaning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id2" title="Lien vers cette définition"></a></dt>
+<dd><p>Nettoie le contenu markdown pour tous les enregistrements d’une exécution.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">clean_markdown_content</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id3" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="id4">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.smart_watch.utils.MarkdownCleaner.</span></span><span class="sig-name descname"><span class="pre">CleaningStats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">texts_processed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">texts_successful</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chars_replaced</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/utils/MarkdownCleaner.html#CleaningStats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id4" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(disponible dans Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Statistiques de nettoyage pour chaque étape.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id5">
+<span class="sig-name descname"><span class="pre">texts_processed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#id5" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id6">
+<span class="sig-name descname"><span class="pre">texts_successful</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#id6" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id7">
+<span class="sig-name descname"><span class="pre">chars_replaced</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#id7" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id8">
+<span class="sig-name descname"><span class="pre">get_summary</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/utils/MarkdownCleaner.html#CleaningStats.get_summary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id8" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id9">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">texts_processed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">texts_successful</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chars_replaced</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#id9" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="exemple-d-utilisation">
+<h1>Exemple d’utilisation<a class="headerlink" href="#exemple-d-utilisation" title="Lien vers cette rubrique"></a></h1>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">src.smart_watch.utils.MarkdownCleaner</span><span class="w"> </span><span class="kn">import</span> <span class="n">MarkdownCleaner</span>
+
+<span class="c1"># Initialisation</span>
+<span class="n">cleaner</span> <span class="o">=</span> <span class="n">MarkdownCleaner</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+
+<span class="c1"># Nettoyage d&#39;un markdown</span>
+<span class="n">cleaned_markdown</span><span class="p">,</span> <span class="n">stats</span> <span class="o">=</span> <span class="n">cleaner</span><span class="o">.</span><span class="n">clean_markdown</span><span class="p">(</span><span class="n">raw_markdown</span><span class="p">)</span>
+
+<span class="c1"># Traitement par lot</span>
+<span class="n">cleaner</span><span class="o">.</span><span class="n">process_markdown_cleaning</span><span class="p">(</span><span class="n">db_manager</span><span class="p">,</span> <span class="n">execution_id</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pied de page">
+        <a href="index.html" class="btn btn-neutral float-left" title="Vue d’ensemble" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Précédent</a>
+        <a href="html_to_markdown.html" class="btn btn-neutral float-right" title="HTML to Markdown" accesskey="n" rel="next">Suivant <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

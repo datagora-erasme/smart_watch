@@ -1,0 +1,209 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jours Fériés &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.jpg"/>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=d2e4462e"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/translations.js?v=e6b791cb"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../search.html" />
+    <link rel="next" title="Vacances Scolaires" href="vacances_scolaires.html" />
+    <link rel="prev" title="CSV to Polars" href="csv_polars.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Présentation du projet</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/stack.html">Stack technique</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/diagramme.html">Diagramme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/modules.html">Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/utilisation_docker.html">Utilisation avec Docker</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html">Modules Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html#architecture-de-configuration">Architecture de configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html#hierarchie-de-configuration">Hiérarchie de configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../core/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../core/index.html#modules">Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../processing/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../processing/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../processing/index.html#classes-de-statistiques">Classes de statistiques</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html#modules">Modules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="markdown_cleaner.html">Markdown Cleaner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markdown_cleaner.html#classes-principales">Classes principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markdown_cleaner.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="html_to_markdown.html">HTML to Markdown</a></li>
+<li class="toctree-l2"><a class="reference internal" href="html_to_markdown.html#fonction-principale">Fonction principale</a></li>
+<li class="toctree-l2"><a class="reference internal" href="html_to_markdown.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="json_osm_converters.html">JSON/OSM Converters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="json_osm_converters.html#module-src.smart_watch.utils.CustomJsonToOSM">JSON vers OSM</a></li>
+<li class="toctree-l2"><a class="reference internal" href="json_osm_converters.html#osm-vers-json">OSM vers JSON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="json_osm_converters.html#classes-de-donnees">Classes de données</a></li>
+<li class="toctree-l2"><a class="reference internal" href="json_osm_converters.html#exemples-d-utilisation">Exemples d’utilisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csv_polars.html">CSV to Polars</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csv_polars.html#classes-principales">Classes principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="csv_polars.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Jours Fériés</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vacances_scolaires.html">Vacances Scolaires</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vacances_scolaires.html#fonctions-principales">Fonctions principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vacances_scolaires.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vacances_scolaires.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vacances_scolaires.html#api-et-format-des-donnees">API et format des données</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vacances_scolaires.html#gestion-des-erreurs">Gestion des erreurs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#utilitaires-de-donnees-temporelles">Utilitaires de données temporelles</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reporting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html#pipeline-de-reporting">Pipeline de reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html#fonctionnalites-des-rapports">Fonctionnalités des rapports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html#classes-de-donnees-utilisees">Classes de données utilisées</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Vue d’ensemble</a></li>
+      <li class="breadcrumb-item active">Jours Fériés</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/source/modules/utils/jours_feries.rst.txt" rel="nofollow"> Afficher la source de la page</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-src.smart_watch.utils.JoursFeries">
+<span id="jours-feries"></span><h1>Jours Fériés<a class="headerlink" href="#module-src.smart_watch.utils.JoursFeries" title="Lien vers cette rubrique"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.smart_watch.utils.JoursFeries.get_day_name">
+<span class="sig-prename descclassname"><span class="pre">src.smart_watch.utils.JoursFeries.</span></span><span class="sig-name descname"><span class="pre">get_day_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/utils/JoursFeries.html#get_day_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.utils.JoursFeries.get_day_name" title="Lien vers cette définition"></a></dt>
+<dd><p>Retourne le nom du jour de la semaine en français pour une date donnée.</p>
+<dl class="simple">
+<dt>Argument :</dt><dd><p>date_str (str): Date au format YYYY-MM-DD</p>
+</dd>
+<dt>retourne :</dt><dd><p>str: Nom du jour de la semaine</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="fonctionnalites">
+<h1>Fonctionnalités<a class="headerlink" href="#fonctionnalites" title="Lien vers cette rubrique"></a></h1>
+<p>Le module JoursFeries enrichit automatiquement les horaires des mairies avec les jours fériés français officiels.</p>
+</section>
+<section id="exemple-d-utilisation">
+<h1>Exemple d’utilisation<a class="headerlink" href="#exemple-d-utilisation" title="Lien vers cette rubrique"></a></h1>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">src.smart_watch.utils.JoursFeries</span><span class="w"> </span><span class="kn">import</span> <span class="n">enrichir_horaires_mairie</span>
+
+<span class="c1"># Enrichissement automatique</span>
+<span class="n">horaires_json</span> <span class="o">=</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span>  <span class="c1"># Horaires d&#39;une mairie</span>
+<span class="n">horaires_enrichis</span> <span class="o">=</span> <span class="n">enrichir_horaires_mairie</span><span class="p">(</span><span class="n">horaires_json</span><span class="p">)</span>
+
+<span class="c1"># Les jours fériés sont automatiquement ajoutés</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">horaires_enrichis</span><span class="p">[</span><span class="s2">&quot;horaires_ouverture&quot;</span><span class="p">][</span><span class="s2">&quot;periodes&quot;</span><span class="p">][</span><span class="s2">&quot;jours_feries&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pied de page">
+        <a href="csv_polars.html" class="btn btn-neutral float-left" title="CSV to Polars" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Précédent</a>
+        <a href="vacances_scolaires.html" class="btn btn-neutral float-right" title="Vacances Scolaires" accesskey="n" rel="next">Suivant <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

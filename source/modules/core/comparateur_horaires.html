@@ -1,0 +1,397 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Comparateur d’Horaires &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.jpg"/>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=d2e4462e"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/translations.js?v=e6b791cb"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../search.html" />
+    <link rel="next" title="LLM Client" href="llm_client.html" />
+    <link rel="prev" title="Markdown Processor" href="markdown_processor.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Présentation du projet</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/stack.html">Stack technique</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/diagramme.html">Diagramme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/modules.html">Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/utilisation_docker.html">Utilisation avec Docker</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html">Modules Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html#architecture-de-configuration">Architecture de configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html#hierarchie-de-configuration">Hiérarchie de configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html#modules">Modules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="config_manager.html">Configuration Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config_manager.html#classes-de-configuration">Classes de configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config_manager.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logger.html">Logger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logger.html#classes-principales">Classes principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logger.html#fonctions-utilitaires">Fonctions utilitaires</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logger.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="error_handler.html">Error Handler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="error_handler.html#classes-principales">Classes principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="error_handler.html#decorateurs">Décorateurs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="error_handler.html#fonctions-utilitaires">Fonctions utilitaires</a></li>
+<li class="toctree-l2"><a class="reference internal" href="error_handler.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markdown_processor.html">Markdown Processor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markdown_processor.html#classes-principales">Classes principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markdown_processor.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markdown_processor.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Comparateur d’Horaires</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#classes-principales">Classes principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm_client.html">LLM Client</a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm_client.html#classes-principales">Classes principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm_client.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm_client.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="email_sender.html">Email Sender</a></li>
+<li class="toctree-l2"><a class="reference internal" href="email_sender.html#classes-principales">Classes principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="email_sender.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l2"><a class="reference internal" href="email_sender.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="email_sender.html#configuration-smtp">Configuration SMTP</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../processing/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../processing/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../processing/index.html#classes-de-statistiques">Classes de statistiques</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../utils/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils/index.html#utilitaires-de-donnees-temporelles">Utilitaires de données temporelles</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reporting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html#pipeline-de-reporting">Pipeline de reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html#fonctionnalites-des-rapports">Fonctionnalités des rapports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html#classes-de-donnees-utilisees">Classes de données utilisées</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Vue d’ensemble</a></li>
+      <li class="breadcrumb-item active">Comparateur d’Horaires</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/source/modules/core/comparateur_horaires.rst.txt" rel="nofollow"> Afficher la source de la page</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-src.smart_watch.core.ComparateurHoraires">
+<span id="comparateur-d-horaires"></span><h1>Comparateur d’Horaires<a class="headerlink" href="#module-src.smart_watch.core.ComparateurHoraires" title="Lien vers cette rubrique"></a></h1>
+<p>Comparateur d’horaires d’ouverture au format JSON personnalisé.</p>
+<p>Ce module compare deux structures d’horaires et identifie les différences
+avec un rapport détaillé des changements.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.smart_watch.core.ComparateurHoraires.ComparisonResult">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.smart_watch.core.ComparateurHoraires.</span></span><span class="sig-name descname"><span class="pre">ComparisonResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identical</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(disponible dans Python v3.13)"><span class="pre">bool</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">differences</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">details</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ComparateurHoraires.html#ComparisonResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.ComparateurHoraires.ComparisonResult" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(disponible dans Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Résultat de la comparaison d’horaires.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.ComparateurHoraires.ComparisonResult.identical">
+<span class="sig-name descname"><span class="pre">identical</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(disponible dans Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#src.smart_watch.core.ComparateurHoraires.ComparisonResult.identical" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.ComparateurHoraires.ComparisonResult.differences">
+<span class="sig-name descname"><span class="pre">differences</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#src.smart_watch.core.ComparateurHoraires.ComparisonResult.differences" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.ComparateurHoraires.ComparisonResult.details">
+<span class="sig-name descname"><span class="pre">details</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#src.smart_watch.core.ComparateurHoraires.ComparisonResult.details" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.ComparateurHoraires.ComparisonResult.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identical</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(disponible dans Python v3.13)"><span class="pre">bool</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">differences</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">details</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#src.smart_watch.core.ComparateurHoraires.ComparisonResult.__init__" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="src.smart_watch.core.ComparateurHoraires.ScheduleNormalizer">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.smart_watch.core.ComparateurHoraires.</span></span><span class="sig-name descname"><span class="pre">ScheduleNormalizer</span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ComparateurHoraires.html#ScheduleNormalizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.ComparateurHoraires.ScheduleNormalizer" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(disponible dans Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Normalise les structures d’horaires pour faciliter la comparaison.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.ComparateurHoraires.ScheduleNormalizer.normalize_time_slot">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">normalize_time_slot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ComparateurHoraires.html#ScheduleNormalizer.normalize_time_slot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.ComparateurHoraires.ScheduleNormalizer.normalize_time_slot" title="Lien vers cette définition"></a></dt>
+<dd><p>Normalise un créneau horaire.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.ComparateurHoraires.ScheduleNormalizer.normalize_day_schedule">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">normalize_day_schedule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">day_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ComparateurHoraires.html#ScheduleNormalizer.normalize_day_schedule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.ComparateurHoraires.ScheduleNormalizer.normalize_day_schedule" title="Lien vers cette définition"></a></dt>
+<dd><p>Normalise les horaires d’un jour.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.ComparateurHoraires.ScheduleNormalizer.normalize_special_schedules">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">normalize_special_schedules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schedules</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ComparateurHoraires.html#ScheduleNormalizer.normalize_special_schedules"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.ComparateurHoraires.ScheduleNormalizer.normalize_special_schedules" title="Lien vers cette définition"></a></dt>
+<dd><p>Normalise les horaires spéciaux.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="src.smart_watch.core.ComparateurHoraires.HorairesComparator">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.smart_watch.core.ComparateurHoraires.</span></span><span class="sig-name descname"><span class="pre">HorairesComparator</span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ComparateurHoraires.html#HorairesComparator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.ComparateurHoraires.HorairesComparator" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(disponible dans Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Comparateur principal d’horaires d’ouverture.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.ComparateurHoraires.HorairesComparator.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ComparateurHoraires.html#HorairesComparator.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.ComparateurHoraires.HorairesComparator.__init__" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.ComparateurHoraires.HorairesComparator.compare_schedules">
+<span class="sig-name descname"><span class="pre">compare_schedules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schedule1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">schedule2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#id8" title="src.smart_watch.core.ComparateurHoraires.ComparisonResult"><span class="pre">ComparisonResult</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ComparateurHoraires.html#HorairesComparator.compare_schedules"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.ComparateurHoraires.HorairesComparator.compare_schedules" title="Lien vers cette définition"></a></dt>
+<dd><p>Compare deux structures d’horaires complètes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.ComparateurHoraires.HorairesComparator.compare_files">
+<span class="sig-name descname"><span class="pre">compare_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(disponible dans Python v3.13)"><span class="pre">Path</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">file2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(disponible dans Python v3.13)"><span class="pre">Path</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#id8" title="src.smart_watch.core.ComparateurHoraires.ComparisonResult"><span class="pre">ComparisonResult</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ComparateurHoraires.html#HorairesComparator.compare_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.ComparateurHoraires.HorairesComparator.compare_files" title="Lien vers cette définition"></a></dt>
+<dd><p>Compare deux fichiers JSON d’horaires.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.smart_watch.core.ComparateurHoraires.main">
+<span class="sig-prename descclassname"><span class="pre">src.smart_watch.core.ComparateurHoraires.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ComparateurHoraires.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.ComparateurHoraires.main" title="Lien vers cette définition"></a></dt>
+<dd><p>Exemple d’utilisation et tests.</p>
+</dd></dl>
+
+</section>
+<section id="classes-principales">
+<h1>Classes principales<a class="headerlink" href="#classes-principales" title="Lien vers cette rubrique"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="id0">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.smart_watch.core.ComparateurHoraires.</span></span><span class="sig-name descname"><span class="pre">HorairesComparator</span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ComparateurHoraires.html#HorairesComparator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(disponible dans Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Comparateur principal d’horaires d’ouverture.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ComparateurHoraires.html#HorairesComparator.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id1" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">compare_schedules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schedule1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">schedule2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#id8" title="src.smart_watch.core.ComparateurHoraires.ComparisonResult"><span class="pre">ComparisonResult</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ComparateurHoraires.html#HorairesComparator.compare_schedules"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id2" title="Lien vers cette définition"></a></dt>
+<dd><p>Compare deux structures d’horaires complètes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">compare_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(disponible dans Python v3.13)"><span class="pre">Path</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">file2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(disponible dans Python v3.13)"><span class="pre">Path</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#id8" title="src.smart_watch.core.ComparateurHoraires.ComparisonResult"><span class="pre">ComparisonResult</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ComparateurHoraires.html#HorairesComparator.compare_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id3" title="Lien vers cette définition"></a></dt>
+<dd><p>Compare deux fichiers JSON d’horaires.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="id4">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.smart_watch.core.ComparateurHoraires.</span></span><span class="sig-name descname"><span class="pre">ScheduleNormalizer</span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ComparateurHoraires.html#ScheduleNormalizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id4" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(disponible dans Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Normalise les structures d’horaires pour faciliter la comparaison.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="id5">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">normalize_time_slot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ComparateurHoraires.html#ScheduleNormalizer.normalize_time_slot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id5" title="Lien vers cette définition"></a></dt>
+<dd><p>Normalise un créneau horaire.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id6">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">normalize_day_schedule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">day_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ComparateurHoraires.html#ScheduleNormalizer.normalize_day_schedule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id6" title="Lien vers cette définition"></a></dt>
+<dd><p>Normalise les horaires d’un jour.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id7">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">normalize_special_schedules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schedules</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ComparateurHoraires.html#ScheduleNormalizer.normalize_special_schedules"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id7" title="Lien vers cette définition"></a></dt>
+<dd><p>Normalise les horaires spéciaux.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="id8">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.smart_watch.core.ComparateurHoraires.</span></span><span class="sig-name descname"><span class="pre">ComparisonResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identical</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(disponible dans Python v3.13)"><span class="pre">bool</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">differences</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">details</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ComparateurHoraires.html#ComparisonResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id8" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(disponible dans Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Résultat de la comparaison d’horaires.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id9">
+<span class="sig-name descname"><span class="pre">identical</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(disponible dans Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#id9" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id10">
+<span class="sig-name descname"><span class="pre">differences</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#id10" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id11">
+<span class="sig-name descname"><span class="pre">details</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#id11" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id12">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identical</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(disponible dans Python v3.13)"><span class="pre">bool</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">differences</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">details</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#id12" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="fonctionnalites">
+<h1>Fonctionnalités<a class="headerlink" href="#fonctionnalites" title="Lien vers cette rubrique"></a></h1>
+<p>Le comparateur d’horaires effectue une comparaison intelligente et robuste entre deux structures d’horaires JSON :</p>
+<p><strong>Normalisation :</strong></p>
+<ul class="simple">
+<li><p>Tri des créneaux par heure de début</p></li>
+<li><p>Gestion des occurrences (1er mardi du mois, etc.)</p></li>
+<li><p>Normalisation des formats de données</p></li>
+<li><p>Support des horaires spéciaux et jours fériés</p></li>
+</ul>
+<p><strong>Comparaison :</strong></p>
+<ul class="simple">
+<li><p>Détection des fermetures définitives</p></li>
+<li><p>Comparaison par période (hors vacances, vacances, fériés)</p></li>
+<li><p>Identification précise des différences</p></li>
+<li><p>Rapport détaillé des changements</p></li>
+</ul>
+<p><strong>Types de différences détectées :</strong></p>
+<ul class="simple">
+<li><p>Changements d’état (ouvert/fermé)</p></li>
+<li><p>Modification des créneaux horaires</p></li>
+<li><p>Ajout/suppression de créneaux</p></li>
+<li><p>Modifications des jours spéciaux</p></li>
+</ul>
+</section>
+<section id="exemple-d-utilisation">
+<h1>Exemple d’utilisation<a class="headerlink" href="#exemple-d-utilisation" title="Lien vers cette rubrique"></a></h1>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">src.smart_watch.core.ComparateurHoraires</span><span class="w"> </span><span class="kn">import</span> <span class="n">HorairesComparator</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+
+<span class="c1"># Initialisation</span>
+<span class="n">comparator</span> <span class="o">=</span> <span class="n">HorairesComparator</span><span class="p">()</span>
+
+<span class="c1"># Comparaison de deux structures JSON</span>
+<span class="n">horaires1</span> <span class="o">=</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span>  <span class="c1"># Structure d&#39;horaires 1</span>
+<span class="n">horaires2</span> <span class="o">=</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span>  <span class="c1"># Structure d&#39;horaires 2</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">comparator</span><span class="o">.</span><span class="n">compare_schedules</span><span class="p">(</span><span class="n">horaires1</span><span class="p">,</span> <span class="n">horaires2</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Identique: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">identical</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Différences: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">differences</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Comparaison de fichiers</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">comparator</span><span class="o">.</span><span class="n">compare_files</span><span class="p">(</span><span class="s2">&quot;horaires1.json&quot;</span><span class="p">,</span> <span class="s2">&quot;horaires2.json&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pied de page">
+        <a href="markdown_processor.html" class="btn btn-neutral float-left" title="Markdown Processor" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Précédent</a>
+        <a href="llm_client.html" class="btn btn-neutral float-right" title="LLM Client" accesskey="n" rel="next">Suivant <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

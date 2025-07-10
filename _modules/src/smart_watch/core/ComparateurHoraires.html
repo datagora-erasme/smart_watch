@@ -1,0 +1,562 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.smart_watch.core.ComparateurHoraires &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.jpg"/>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=d2e4462e"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/translations.js?v=e6b791cb"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Présentation du projet</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/stack.html">Stack technique</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/diagramme.html">Diagramme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/modules.html">Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/utilisation_docker.html">Utilisation avec Docker</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/config/index.html">Modules Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/config/index.html#architecture-de-configuration">Architecture de configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/config/index.html#hierarchie-de-configuration">Hiérarchie de configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/core/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/core/index.html#modules">Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/processing/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/processing/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/processing/index.html#classes-de-statistiques">Classes de statistiques</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/utils/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/utils/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/utils/index.html#utilitaires-de-donnees-temporelles">Utilitaires de données temporelles</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reporting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html#pipeline-de-reporting">Pipeline de reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html#fonctionnalites-des-rapports">Fonctionnalités des rapports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html#classes-de-donnees-utilisees">Classes de données utilisées</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Code du module</a></li>
+      <li class="breadcrumb-item active">src.smart_watch.core.ComparateurHoraires</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Code source de src.smart_watch.core.ComparateurHoraires</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Comparateur d&#39;horaires d&#39;ouverture au format JSON personnalisé.</span>
+
+<span class="sd">Ce module compare deux structures d&#39;horaires et identifie les différences</span>
+<span class="sd">avec un rapport détaillé des changements.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.Logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_logger</span>
+
+<span class="c1"># Initialize logger for this module</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">create_logger</span><span class="p">(</span>
+    <span class="n">module_name</span><span class="o">=</span><span class="s2">&quot;ComparateurHoraires&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="ComparisonResult">
+<a class="viewcode-back" href="../../../../source/modules/core/comparateur_horaires.html#src.smart_watch.core.ComparateurHoraires.ComparisonResult">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ComparisonResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Résultat de la comparaison d&#39;horaires.&quot;&quot;&quot;</span>
+
+    <span class="n">identical</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="n">differences</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">details</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">any</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;IDENTIQUE&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">identical</span> <span class="k">else</span> <span class="s2">&quot;DIFFÉRENT&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Statut: </span><span class="si">{</span><span class="n">status</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">differences</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="ScheduleNormalizer">
+<a class="viewcode-back" href="../../../../source/modules/core/comparateur_horaires.html#src.smart_watch.core.ComparateurHoraires.ScheduleNormalizer">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ScheduleNormalizer</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Normalise les structures d&#39;horaires pour faciliter la comparaison.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ScheduleNormalizer.normalize_time_slot">
+<a class="viewcode-back" href="../../../../source/modules/core/comparateur_horaires.html#src.smart_watch.core.ComparateurHoraires.ScheduleNormalizer.normalize_time_slot">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">normalize_time_slot</span><span class="p">(</span><span class="n">slot</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Normalise un créneau horaire.&quot;&quot;&quot;</span>
+        <span class="n">normalized</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;debut&quot;</span><span class="p">:</span> <span class="n">slot</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;debut&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span> <span class="s2">&quot;fin&quot;</span><span class="p">:</span> <span class="n">slot</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fin&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)}</span>
+
+        <span class="c1"># Gère l&#39;occurrence (1er et 3eme mardis du mois, etc.)</span>
+        <span class="n">occurrence</span> <span class="o">=</span> <span class="n">slot</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;occurence&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">occurrence</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">occurrence</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">normalized</span><span class="p">[</span><span class="s2">&quot;occurence&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">occurrence</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">normalized</span><span class="p">[</span><span class="s2">&quot;occurence&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">occurrence</span>
+
+        <span class="k">return</span> <span class="n">normalized</span></div>
+
+
+<div class="viewcode-block" id="ScheduleNormalizer.normalize_day_schedule">
+<a class="viewcode-back" href="../../../../source/modules/core/comparateur_horaires.html#src.smart_watch.core.ComparateurHoraires.ScheduleNormalizer.normalize_day_schedule">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">normalize_day_schedule</span><span class="p">(</span><span class="n">day_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Normalise les horaires d&#39;un jour.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">day_data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;ouvert&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;creneaux&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+
+        <span class="n">normalized</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;ouvert&quot;</span><span class="p">:</span> <span class="n">day_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ouvert&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+            <span class="s2">&quot;creneaux&quot;</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="p">}</span>
+
+        <span class="c1"># Normalise et trie les créneaux</span>
+        <span class="n">creneaux</span> <span class="o">=</span> <span class="n">day_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;creneaux&quot;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">creneaux</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">normalized_slots</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">ScheduleNormalizer</span><span class="o">.</span><span class="n">normalize_time_slot</span><span class="p">(</span><span class="n">slot</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">slot</span> <span class="ow">in</span> <span class="n">creneaux</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">slot</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+            <span class="p">]</span>
+            <span class="c1"># Trie par heure de début puis occurrence</span>
+            <span class="n">normalized</span><span class="p">[</span><span class="s2">&quot;creneaux&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+                <span class="n">normalized_slots</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s2">&quot;debut&quot;</span><span class="p">],</span> <span class="n">x</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;occurence&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">normalized</span></div>
+
+
+<div class="viewcode-block" id="ScheduleNormalizer.normalize_special_schedules">
+<a class="viewcode-back" href="../../../../source/modules/core/comparateur_horaires.html#src.smart_watch.core.ComparateurHoraires.ScheduleNormalizer.normalize_special_schedules">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">normalize_special_schedules</span><span class="p">(</span><span class="n">schedules</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Normalise les horaires spéciaux.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">schedules</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">{}</span>
+
+        <span class="n">normalized</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">date</span><span class="p">,</span> <span class="n">schedule</span> <span class="ow">in</span> <span class="n">schedules</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">schedule</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">normalized</span><span class="p">[</span><span class="n">date</span><span class="p">]</span> <span class="o">=</span> <span class="n">schedule</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">schedule</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="n">normalized</span><span class="p">[</span><span class="n">date</span><span class="p">]</span> <span class="o">=</span> <span class="n">ScheduleNormalizer</span><span class="o">.</span><span class="n">normalize_day_schedule</span><span class="p">(</span><span class="n">schedule</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">normalized</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="HorairesComparator">
+<a class="viewcode-back" href="../../../../source/modules/core/comparateur_horaires.html#src.smart_watch.core.ComparateurHoraires.HorairesComparator">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">HorairesComparator</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Comparateur principal d&#39;horaires d&#39;ouverture.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="HorairesComparator.__init__">
+<a class="viewcode-back" href="../../../../source/modules/core/comparateur_horaires.html#src.smart_watch.core.ComparateurHoraires.HorairesComparator.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">normalizer</span> <span class="o">=</span> <span class="n">ScheduleNormalizer</span><span class="p">()</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Comparateur d&#39;horaires initialisé&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="HorairesComparator.compare_schedules">
+<a class="viewcode-back" href="../../../../source/modules/core/comparateur_horaires.html#src.smart_watch.core.ComparateurHoraires.HorairesComparator.compare_schedules">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compare_schedules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">schedule1</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">schedule2</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ComparisonResult</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compare deux structures d&#39;horaires complètes.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Début comparaison horaires&quot;</span><span class="p">)</span>
+
+            <span class="n">differences</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">details</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;periods_compared&quot;</span><span class="p">:</span> <span class="p">[],</span>
+                <span class="s2">&quot;schedule_differences&quot;</span><span class="p">:</span> <span class="p">{},</span>
+            <span class="p">}</span>
+
+            <span class="c1"># Extrait les données d&#39;horaires</span>
+            <span class="n">horaires1</span> <span class="o">=</span> <span class="n">schedule1</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;horaires_ouverture&quot;</span><span class="p">,</span> <span class="p">{})</span>
+            <span class="n">horaires2</span> <span class="o">=</span> <span class="n">schedule2</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;horaires_ouverture&quot;</span><span class="p">,</span> <span class="p">{})</span>
+
+            <span class="c1"># Vérifie les fermetures définitives</span>
+            <span class="n">closed1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_permanently_closed</span><span class="p">(</span><span class="n">horaires1</span><span class="p">)</span>
+            <span class="n">closed2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_permanently_closed</span><span class="p">(</span><span class="n">horaires2</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">closed1</span> <span class="ow">and</span> <span class="n">closed2</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ComparisonResult</span><span class="p">(</span>
+                    <span class="n">identical</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">differences</span><span class="o">=</span><span class="s2">&quot;Aucune différence détectée.&quot;</span><span class="p">,</span>
+                    <span class="n">details</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;both_permanently_closed&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="n">closed1</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">closed2</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ComparisonResult</span><span class="p">(</span>
+                    <span class="n">identical</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">differences</span><span class="o">=</span><span class="s2">&quot;Établissement 1 définitivement fermé, établissement 2 ouvert&quot;</span><span class="p">,</span>
+                    <span class="n">details</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;schedule1_permanently_closed&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+                <span class="p">)</span>
+            <span class="k">elif</span> <span class="ow">not</span> <span class="n">closed1</span> <span class="ow">and</span> <span class="n">closed2</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">ComparisonResult</span><span class="p">(</span>
+                    <span class="n">identical</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">differences</span><span class="o">=</span><span class="s2">&quot;Établissement 1 ouvert, établissement 2 définitivement fermé&quot;</span><span class="p">,</span>
+                    <span class="n">details</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;schedule2_permanently_closed&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+                <span class="p">)</span>
+
+            <span class="c1"># Compare les périodes normalement</span>
+            <span class="n">periods1</span> <span class="o">=</span> <span class="n">horaires1</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;periodes&quot;</span><span class="p">,</span> <span class="p">{})</span>
+            <span class="n">periods2</span> <span class="o">=</span> <span class="n">horaires2</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;periodes&quot;</span><span class="p">,</span> <span class="p">{})</span>
+
+            <span class="n">all_periods</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">periods1</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">periods2</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="n">details</span><span class="p">[</span><span class="s2">&quot;periods_compared&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">all_periods</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">period</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">all_periods</span><span class="p">):</span>
+                <span class="n">period_diff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compare_period</span><span class="p">(</span>
+                    <span class="n">periods1</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">period</span><span class="p">,</span> <span class="p">{}),</span> <span class="n">periods2</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">period</span><span class="p">,</span> <span class="p">{}),</span> <span class="n">period</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">period_diff</span><span class="p">:</span>
+                    <span class="n">differences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">period</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">period_diff</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">details</span><span class="p">[</span><span class="s2">&quot;schedule_differences&quot;</span><span class="p">][</span><span class="n">period</span><span class="p">]</span> <span class="o">=</span> <span class="n">period_diff</span>
+
+            <span class="c1"># Détermine si identique</span>
+            <span class="n">identical</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">differences</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+
+            <span class="k">if</span> <span class="n">identical</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Horaires identiques&quot;</span><span class="p">)</span>
+                <span class="n">diff_text</span> <span class="o">=</span> <span class="s2">&quot;Aucune différence détectée.&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Différences trouvées: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">differences</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">diff_text</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">differences</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">ComparisonResult</span><span class="p">(</span>
+                <span class="n">identical</span><span class="o">=</span><span class="n">identical</span><span class="p">,</span> <span class="n">differences</span><span class="o">=</span><span class="n">diff_text</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="n">details</span>
+            <span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur comparaison: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">ComparisonResult</span><span class="p">(</span>
+                <span class="n">identical</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">differences</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Erreur lors de la comparaison: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">details</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)},</span>
+            <span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_is_permanently_closed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">horaires</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Vérifie si un établissement est définitivement fermé.&quot;&quot;&quot;</span>
+        <span class="n">periods</span> <span class="o">=</span> <span class="n">horaires</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;periodes&quot;</span><span class="p">,</span> <span class="p">{})</span>
+
+        <span class="c1"># Vérifie si toutes les périodes avec source indiquent une fermeture</span>
+        <span class="n">has_source</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">all_closed</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">for</span> <span class="n">period_key</span><span class="p">,</span> <span class="n">period_data</span> <span class="ow">in</span> <span class="n">periods</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">period_data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">period_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="s2">&quot;source_found&quot;</span><span class="p">,</span> <span class="kc">False</span>
+            <span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="n">has_source</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="k">if</span> <span class="n">period_key</span> <span class="ow">in</span> <span class="p">[</span>
+                <span class="s2">&quot;hors_vacances_scolaires&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;vacances_scolaires_ete&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;petites_vacances_scolaires&quot;</span><span class="p">,</span>
+            <span class="p">]:</span>
+                <span class="n">schedule</span> <span class="o">=</span> <span class="n">period_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;horaires&quot;</span><span class="p">,</span> <span class="p">{})</span>
+                <span class="k">for</span> <span class="n">day_data</span> <span class="ow">in</span> <span class="n">schedule</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">day_data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
+                        <span class="n">day_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ouvert&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> <span class="ow">or</span> <span class="n">day_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;creneaux&quot;</span><span class="p">,</span> <span class="p">[])</span>
+                    <span class="p">):</span>
+                        <span class="n">all_closed</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="k">break</span>
+            <span class="k">elif</span> <span class="n">period_key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;jours_feries&quot;</span><span class="p">,</span> <span class="s2">&quot;jours_speciaux&quot;</span><span class="p">]:</span>
+                <span class="n">specific_schedules</span> <span class="o">=</span> <span class="n">period_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;horaires_specifiques&quot;</span><span class="p">,</span> <span class="p">{})</span>
+                <span class="k">if</span> <span class="n">specific_schedules</span><span class="p">:</span>
+                    <span class="n">all_closed</span> <span class="o">=</span> <span class="kc">False</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">all_closed</span><span class="p">:</span>
+                <span class="k">break</span>
+
+        <span class="k">return</span> <span class="n">has_source</span> <span class="ow">and</span> <span class="n">all_closed</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compare_period</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">period1</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">period2</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">period_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compare une période spécifique.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">period1</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">period2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="c1"># Compare selon le type de période</span>
+        <span class="k">if</span> <span class="n">period_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;jours_feries&quot;</span><span class="p">,</span> <span class="s2">&quot;jours_speciaux&quot;</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compare_special_period</span><span class="p">(</span><span class="n">period1</span><span class="p">,</span> <span class="n">period2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compare_weekly_period</span><span class="p">(</span><span class="n">period1</span><span class="p">,</span> <span class="n">period2</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compare_weekly_period</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">period1</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">period2</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compare une période d&#39;horaires hebdomadaires.&quot;&quot;&quot;</span>
+        <span class="n">horaires1</span> <span class="o">=</span> <span class="n">period1</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;horaires&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">horaires2</span> <span class="o">=</span> <span class="n">period2</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;horaires&quot;</span><span class="p">,</span> <span class="p">{})</span>
+
+        <span class="n">differences</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">all_days</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">horaires1</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">horaires2</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+        <span class="k">for</span> <span class="n">day</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="s2">&quot;lundi&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;mardi&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;mercredi&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;jeudi&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;vendredi&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;samedi&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;dimanche&quot;</span><span class="p">,</span>
+        <span class="p">]:</span>
+            <span class="k">if</span> <span class="n">day</span> <span class="ow">in</span> <span class="n">all_days</span><span class="p">:</span>
+                <span class="n">day_diff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compare_day_schedule</span><span class="p">(</span>
+                    <span class="n">horaires1</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">day</span><span class="p">,</span> <span class="p">{}),</span> <span class="n">horaires2</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">day</span><span class="p">,</span> <span class="p">{}),</span> <span class="n">day</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">day_diff</span><span class="p">:</span>
+                    <span class="n">differences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">day</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">day_diff</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="s2">&quot; | &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">differences</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compare_day_schedule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">day1</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">day2</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">day_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compare les horaires d&#39;un jour.&quot;&quot;&quot;</span>
+        <span class="n">norm1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalizer</span><span class="o">.</span><span class="n">normalize_day_schedule</span><span class="p">(</span><span class="n">day1</span><span class="p">)</span>
+        <span class="n">norm2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalizer</span><span class="o">.</span><span class="n">normalize_day_schedule</span><span class="p">(</span><span class="n">day2</span><span class="p">)</span>
+
+        <span class="n">differences</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Compare ouvert/fermé</span>
+        <span class="k">if</span> <span class="n">norm1</span><span class="p">[</span><span class="s2">&quot;ouvert&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">norm2</span><span class="p">[</span><span class="s2">&quot;ouvert&quot;</span><span class="p">]:</span>
+            <span class="n">status1</span> <span class="o">=</span> <span class="s2">&quot;ouvert&quot;</span> <span class="k">if</span> <span class="n">norm1</span><span class="p">[</span><span class="s2">&quot;ouvert&quot;</span><span class="p">]</span> <span class="k">else</span> <span class="s2">&quot;fermé&quot;</span>
+            <span class="n">status2</span> <span class="o">=</span> <span class="s2">&quot;ouvert&quot;</span> <span class="k">if</span> <span class="n">norm2</span><span class="p">[</span><span class="s2">&quot;ouvert&quot;</span><span class="p">]</span> <span class="k">else</span> <span class="s2">&quot;fermé&quot;</span>
+            <span class="n">differences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">status1</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">status2</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Compare les créneaux</span>
+        <span class="n">slots_diff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compare_time_slots</span><span class="p">(</span><span class="n">norm1</span><span class="p">[</span><span class="s2">&quot;creneaux&quot;</span><span class="p">],</span> <span class="n">norm2</span><span class="p">[</span><span class="s2">&quot;creneaux&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">slots_diff</span><span class="p">:</span>
+            <span class="n">differences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;créneaux: </span><span class="si">{</span><span class="n">slots_diff</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="s2">&quot; | &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">differences</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compare_time_slots</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">slots1</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">],</span> <span class="n">slots2</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compare les créneaux horaires.&quot;&quot;&quot;</span>
+        <span class="c1"># Convertit en ensembles pour comparaison</span>
+        <span class="n">set1</span> <span class="o">=</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_slot_to_string</span><span class="p">(</span><span class="n">slot</span><span class="p">)</span> <span class="k">for</span> <span class="n">slot</span> <span class="ow">in</span> <span class="n">slots1</span><span class="p">}</span>
+        <span class="n">set2</span> <span class="o">=</span> <span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_slot_to_string</span><span class="p">(</span><span class="n">slot</span><span class="p">)</span> <span class="k">for</span> <span class="n">slot</span> <span class="ow">in</span> <span class="n">slots2</span><span class="p">}</span>
+
+        <span class="n">added</span> <span class="o">=</span> <span class="n">set2</span> <span class="o">-</span> <span class="n">set1</span>
+        <span class="n">removed</span> <span class="o">=</span> <span class="n">set1</span> <span class="o">-</span> <span class="n">set2</span>
+
+        <span class="n">differences</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">added</span><span class="p">:</span>
+            <span class="n">differences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ajoutés: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">added</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">removed</span><span class="p">:</span>
+            <span class="n">differences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;supprimés: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">removed</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="s2">&quot; | &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">differences</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_slot_to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">slot</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convertit un créneau en chaîne pour comparaison.&quot;&quot;&quot;</span>
+        <span class="n">base</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">slot</span><span class="p">[</span><span class="s1">&#39;debut&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">slot</span><span class="p">[</span><span class="s1">&#39;fin&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;occurence&quot;</span> <span class="ow">in</span> <span class="n">slot</span><span class="p">:</span>
+            <span class="n">occur</span> <span class="o">=</span> <span class="n">slot</span><span class="p">[</span><span class="s2">&quot;occurence&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">occur</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">base</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="w"> </span><span class="n">occur</span><span class="p">))</span><span class="si">}</span><span class="s2">]&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">base</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">occur</span><span class="si">}</span><span class="s2">]&quot;</span>
+        <span class="k">return</span> <span class="n">base</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compare_special_period</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">period1</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">period2</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compare une période de jours spéciaux.&quot;&quot;&quot;</span>
+        <span class="n">schedules1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalizer</span><span class="o">.</span><span class="n">normalize_special_schedules</span><span class="p">(</span>
+            <span class="n">period1</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;horaires_specifiques&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="p">)</span>
+        <span class="n">schedules2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalizer</span><span class="o">.</span><span class="n">normalize_special_schedules</span><span class="p">(</span>
+            <span class="n">period2</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;horaires_specifiques&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="p">)</span>
+
+        <span class="n">differences</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">all_dates</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">schedules1</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">schedules2</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+        <span class="k">for</span> <span class="n">date</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">all_dates</span><span class="p">):</span>
+            <span class="n">sched1</span> <span class="o">=</span> <span class="n">schedules1</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
+            <span class="n">sched2</span> <span class="o">=</span> <span class="n">schedules2</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">date</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">sched1</span> <span class="o">!=</span> <span class="n">sched2</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">sched1</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">differences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">date</span><span class="si">}</span><span class="s2">: ajouté&quot;</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">sched2</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">differences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">date</span><span class="si">}</span><span class="s2">: supprimé&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Compare les détails</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sched1</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sched2</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                        <span class="n">differences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">date</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">sched1</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">sched2</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">day_diff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compare_day_schedule</span><span class="p">(</span><span class="n">sched1</span><span class="p">,</span> <span class="n">sched2</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">day_diff</span><span class="p">:</span>
+                            <span class="n">differences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">date</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">day_diff</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="s2">&quot; | &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">differences</span><span class="p">)</span>
+
+<div class="viewcode-block" id="HorairesComparator.compare_files">
+<a class="viewcode-back" href="../../../../source/modules/core/comparateur_horaires.html#src.smart_watch.core.ComparateurHoraires.HorairesComparator.compare_files">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compare_files</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">file1</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span> <span class="n">file2</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ComparisonResult</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compare deux fichiers JSON d&#39;horaires.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Comparaison fichiers: </span><span class="si">{</span><span class="n">Path</span><span class="p">(</span><span class="n">file1</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> vs </span><span class="si">{</span><span class="n">Path</span><span class="p">(</span><span class="n">file2</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Lit les fichiers</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file1</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">data1</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file2</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">data2</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">compare_schedules</span><span class="p">(</span><span class="n">data1</span><span class="p">,</span> <span class="n">data2</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fichier non trouvé: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">ComparisonResult</span><span class="p">(</span>
+                <span class="n">identical</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">differences</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Fichier non trouvé: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">details</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)},</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur JSON: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">ComparisonResult</span><span class="p">(</span>
+                <span class="n">identical</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">differences</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Erreur de format JSON: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">details</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)},</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur comparaison fichiers: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">ComparisonResult</span><span class="p">(</span>
+                <span class="n">identical</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">differences</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Erreur: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">details</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)},</span>
+            <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../../../source/modules/core/comparateur_horaires.html#src.smart_watch.core.ComparateurHoraires.main">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Exemple d&#39;utilisation et tests.&quot;&quot;&quot;</span>
+    <span class="n">json1</span> <span class="o">=</span> <span class="s1">&#39;{&quot;horaires_ouverture&quot;: {&quot;metadata&quot;: {&quot;identifiant&quot;: &quot;S1433&quot;, &quot;nom&quot;: &quot;Mairie de Lyon 1&quot;, &quot;type_lieu&quot;: &quot;mairie&quot;, &quot;url&quot;: &quot;https://mairie1.lyon.fr/lieu/mairies/mairie-du-1er-arrondissement&quot;}, &quot;periodes&quot;: {&quot;hors_vacances_scolaires&quot;: {&quot;source_found&quot;: true, &quot;label&quot;: &quot;Période hors vacances scolaires&quot;, &quot;condition&quot;: &quot;default&quot;, &quot;horaires&quot;: {&quot;lundi&quot;: {&quot;source_found&quot;: true, &quot;ouvert&quot;: true, &quot;creneaux&quot;: [{&quot;debut&quot;: &quot;08:45&quot;, &quot;fin&quot;: &quot;16:45&quot;}]}, &quot;mardi&quot;: {&quot;source_found&quot;: true, &quot;ouvert&quot;: true, &quot;creneaux&quot;: [{&quot;debut&quot;: &quot;08:45&quot;, &quot;fin&quot;: &quot;16:45&quot;}]}, &quot;mercredi&quot;: {&quot;source_found&quot;: true, &quot;ouvert&quot;: true, &quot;creneaux&quot;: [{&quot;debut&quot;: &quot;08:45&quot;, &quot;fin&quot;: &quot;16:45&quot;}]}, &quot;jeudi&quot;: {&quot;source_found&quot;: false, &quot;ouvert&quot;: false, &quot;creneaux&quot;: []}, &quot;vendredi&quot;: {&quot;source_found&quot;: true, &quot;ouvert&quot;: true, &quot;creneaux&quot;: [{&quot;debut&quot;: &quot;08:45&quot;, &quot;fin&quot;: &quot;16:45&quot;}]}, &quot;samedi&quot;: {&quot;source_found&quot;: false, &quot;ouvert&quot;: false, &quot;creneaux&quot;: []}, &quot;dimanche&quot;: {&quot;source_found&quot;: false, &quot;ouvert&quot;: false, &quot;creneaux&quot;: []}}}, &quot;vacances_scolaires_ete&quot;: {&quot;source_found&quot;: false, &quot;label&quot;: &quot;Grandes vacances scolaires&quot;, &quot;condition&quot;: &quot;SH&quot;, &quot;horaires&quot;: {&quot;lundi&quot;: {&quot;source_found&quot;: false, &quot;ouvert&quot;: false, &quot;creneaux&quot;: []}, &quot;mardi&quot;: {&quot;source_found&quot;: false, &quot;ouvert&quot;: false, &quot;creneaux&quot;: []}, &quot;mercredi&quot;: {&quot;source_found&quot;: false, &quot;ouvert&quot;: false, &quot;creneaux&quot;: []}, &quot;jeudi&quot;: {&quot;source_found&quot;: false, &quot;ouvert&quot;: false, &quot;creneaux&quot;: []}, &quot;vendredi&quot;: {&quot;source_found&quot;: false, &quot;ouvert&quot;: false, &quot;creneaux&quot;: []}, &quot;samedi&quot;: {&quot;source_found&quot;: false, &quot;ouvert&quot;: false, &quot;creneaux&quot;: []}, &quot;dimanche&quot;: {&quot;source_found&quot;: false, &quot;ouvert&quot;: false, &quot;creneaux&quot;: []}}}, &quot;petites_vacances_scolaires&quot;: {&quot;source_found&quot;: false, &quot;label&quot;: &quot;Petites vacances scolaires&quot;, &quot;condition&quot;: &quot;SH&quot;, &quot;horaires&quot;: {&quot;lundi&quot;: {&quot;source_found&quot;: false, &quot;ouvert&quot;: false, &quot;creneaux&quot;: []}, &quot;mardi&quot;: {&quot;source_found&quot;: false, &quot;ouvert&quot;: false, &quot;creneaux&quot;: []}, &quot;mercredi&quot;: {&quot;source_found&quot;: false, &quot;ouvert&quot;: false, &quot;creneaux&quot;: []}, &quot;jeudi&quot;: {&quot;source_found&quot;: false, &quot;ouvert&quot;: false, &quot;creneaux&quot;: []}, &quot;vendredi&quot;: {&quot;source_found&quot;: false, &quot;ouvert&quot;: false, &quot;creneaux&quot;: []}, &quot;samedi&quot;: {&quot;source_found&quot;: false, &quot;ouvert&quot;: false, &quot;creneaux&quot;: []}, &quot;dimanche&quot;: {&quot;source_found&quot;: false, &quot;ouvert&quot;: false, &quot;creneaux&quot;: []}}}, &quot;jours_feries&quot;: {&quot;source_found&quot;: true, &quot;label&quot;: &quot;Jours fériés&quot;, &quot;condition&quot;: &quot;PH&quot;, &quot;mode&quot;: &quot;ferme&quot;, &quot;horaires_specifiques&quot;: {&quot;2025-07-05&quot;: &quot;ferme&quot;, &quot;2025-10-18&quot;: &quot;ferme&quot;, &quot;2025-12-20&quot;: &quot;ferme&quot;, &quot;2025-12-26&quot;: &quot;ferme&quot;, &quot;2026-02-07&quot;: &quot;ferme&quot;, &quot;2026-04-04&quot;: &quot;ferme&quot;, &quot;2026-05-14&quot;: &quot;ferme&quot;, &quot;2025-07-12&quot;: &quot;ferme&quot;, &quot;2025-07-14&quot;: &quot;ferme&quot;, &quot;2025-08-02&quot;: &quot;ferme&quot;, &quot;2025-08-09&quot;: &quot;ferme&quot;, &quot;2025-08-15&quot;: &quot;ferme&quot;, &quot;2025-08-16&quot;: &quot;ferme&quot;, &quot;2025-08-23&quot;: &quot;ferme&quot;, &quot;2025-11-01&quot;: &quot;ferme&quot;, &quot;2025-11-11&quot;: &quot;ferme&quot;, &quot;2025-12-25&quot;: &quot;ferme&quot;, &quot;2026-01-01&quot;: &quot;ferme&quot;, &quot;2026-04-06&quot;: &quot;ferme&quot;, &quot;2026-05-01&quot;: &quot;ferme&quot;, &quot;2026-05-08&quot;: &quot;ferme&quot;, &quot;2026-05-25&quot;: &quot;ferme&quot;, &quot;2026-07-14&quot;: &quot;ferme&quot;, &quot;2026-08-15&quot;: &quot;ferme&quot;, &quot;2026-11-01&quot;: &quot;ferme&quot;, &quot;2026-11-11&quot;: &quot;ferme&quot;, &quot;2026-12-25&quot;: &quot;ferme&quot;}}, &quot;jours_speciaux&quot;: {&quot;source_found&quot;: false, &quot;label&quot;: &quot;Jours spéciaux&quot;, &quot;mode&quot;: &quot;ferme&quot;, &quot;horaires_specifiques&quot;: </span><span class="si">{}</span><span class="s1">}}, &quot;extraction_info&quot;: {&quot;source_found&quot;: true, &quot;notes&quot;: &quot;Converti depuis format OSM&quot;}}}&#39;</span>
+    <span class="n">json2</span> <span class="o">=</span> <span class="s1">&#39;{&quot;horaires_ouverture&quot;:{&quot;metadata&quot;:{&quot;identifiant&quot;:&quot;mairie1&quot;,&quot;nom&quot;:&quot;MairiedeLyon1&quot;,&quot;type_lieu&quot;:&quot;Mairie&quot;,&quot;timezone&quot;:&quot;Europe/Paris&quot;},&quot;periodes&quot;:{&quot;hors_vacances_scolaires&quot;:{&quot;source_found&quot;:true,&quot;horaires&quot;:{&quot;lundi&quot;:{&quot;source_found&quot;:true,&quot;ouvert&quot;:true,&quot;creneaux&quot;:[{&quot;debut&quot;:&quot;08:45&quot;,&quot;fin&quot;:&quot;16:45&quot;}]},&quot;mardi&quot;:{&quot;source_found&quot;:true,&quot;ouvert&quot;:true,&quot;creneaux&quot;:[{&quot;debut&quot;:&quot;08:45&quot;,&quot;fin&quot;:&quot;16:45&quot;}]},&quot;mercredi&quot;:{&quot;source_found&quot;:true,&quot;ouvert&quot;:true,&quot;creneaux&quot;:[{&quot;debut&quot;:&quot;08:45&quot;,&quot;fin&quot;:&quot;16:45&quot;}]},&quot;jeudi&quot;:{&quot;source_found&quot;:true,&quot;ouvert&quot;:true,&quot;creneaux&quot;:[{&quot;debut&quot;:&quot;10:00&quot;,&quot;fin&quot;:&quot;16:45&quot;}]},&quot;vendredi&quot;:{&quot;source_found&quot;:true,&quot;ouvert&quot;:true,&quot;creneaux&quot;:[{&quot;debut&quot;:&quot;08:45&quot;,&quot;fin&quot;:&quot;16:45&quot;}]},&quot;samedi&quot;:{&quot;source_found&quot;:true,&quot;ouvert&quot;:true,&quot;creneaux&quot;:[{&quot;debut&quot;:&quot;09:30&quot;,&quot;fin&quot;:&quot;12:00&quot;}]},&quot;dimanche&quot;:{&quot;source_found&quot;:false,&quot;ouvert&quot;:false,&quot;creneaux&quot;:[]}}},&quot;vacances_scolaires_ete&quot;:{&quot;source_found&quot;:true,&quot;horaires&quot;:{&quot;lundi&quot;:{&quot;source_found&quot;:true,&quot;ouvert&quot;:true,&quot;creneaux&quot;:[{&quot;debut&quot;:&quot;08:45&quot;,&quot;fin&quot;:&quot;12:30&quot;},{&quot;debut&quot;:&quot;13:30&quot;,&quot;fin&quot;:&quot;16:45&quot;}]},&quot;mardi&quot;:{&quot;source_found&quot;:true,&quot;ouvert&quot;:true,&quot;creneaux&quot;:[{&quot;debut&quot;:&quot;08:45&quot;,&quot;fin&quot;:&quot;12:30&quot;},{&quot;debut&quot;:&quot;13:30&quot;,&quot;fin&quot;:&quot;16:45&quot;}]},&quot;mercredi&quot;:{&quot;source_found&quot;:true,&quot;ouvert&quot;:true,&quot;creneaux&quot;:[{&quot;debut&quot;:&quot;08:45&quot;,&quot;fin&quot;:&quot;12:30&quot;},{&quot;debut&quot;:&quot;13:30&quot;,&quot;fin&quot;:&quot;16:45&quot;}]},&quot;jeudi&quot;:{&quot;source_found&quot;:true,&quot;ouvert&quot;:true,&quot;creneaux&quot;:[{&quot;debut&quot;:&quot;10:00&quot;,&quot;fin&quot;:&quot;12:30&quot;},{&quot;debut&quot;:&quot;13:30&quot;,&quot;fin&quot;:&quot;16:45&quot;}]},&quot;vendredi&quot;:{&quot;source_found&quot;:true,&quot;ouvert&quot;:true,&quot;creneaux&quot;:[{&quot;debut&quot;:&quot;08:45&quot;,&quot;fin&quot;:&quot;12:30&quot;},{&quot;debut&quot;:&quot;13:30&quot;,&quot;fin&quot;:&quot;16:45&quot;}]},&quot;samedi&quot;:{&quot;source_found&quot;:true,&quot;ouvert&quot;:true,&quot;creneaux&quot;:[{&quot;debut&quot;:&quot;09:30&quot;,&quot;fin&quot;:&quot;12:00&quot;}]},&quot;dimanche&quot;:{&quot;source_found&quot;:false,&quot;ouvert&quot;:false,&quot;creneaux&quot;:[]}}},&quot;jours_speciaux&quot;:{&quot;source_found&quot;:true,&quot;horaires_specifiques&quot;:{&quot;2025-01-01&quot;:{&quot;source_found&quot;:true,&quot;ouvert&quot;:false,&quot;creneaux&quot;:[]},&quot;2025-04-01&quot;:{&quot;source_found&quot;:true,&quot;ouvert&quot;:true,&quot;creneaux&quot;:[{&quot;debut&quot;:&quot;13:30&quot;,&quot;fin&quot;:&quot;16:45&quot;}]}}}},&quot;extraction_info&quot;:{&quot;source_found&quot;:true,&quot;permanently_closed&quot;:false}}}&#39;</span>
+    <span class="n">comparator</span> <span class="o">=</span> <span class="n">HorairesComparator</span><span class="p">()</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">comparator</span><span class="o">.</span><span class="n">compare_schedules</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json1</span><span class="p">),</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json2</span><span class="p">)))</span>
+
+    <span class="c1"># Test avec des fichiers JSON d&#39;exemple</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Comparateur d&#39;horaires initialisé&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Utilisation: comparator.compare_schedules(json1, json2)&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ou comparator.compare_files(file1, file2)&quot;</span><span class="p">)</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

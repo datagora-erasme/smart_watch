@@ -1,0 +1,420 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.smart_watch.utils.MarkdownCleaner &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.jpg"/>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=d2e4462e"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/translations.js?v=e6b791cb"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Présentation du projet</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/stack.html">Stack technique</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/diagramme.html">Diagramme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/modules.html">Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/utilisation_docker.html">Utilisation avec Docker</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/config/index.html">Modules Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/config/index.html#architecture-de-configuration">Architecture de configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/config/index.html#hierarchie-de-configuration">Hiérarchie de configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/core/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/core/index.html#modules">Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/processing/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/processing/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/processing/index.html#classes-de-statistiques">Classes de statistiques</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/utils/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/utils/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/utils/index.html#utilitaires-de-donnees-temporelles">Utilitaires de données temporelles</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reporting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html#pipeline-de-reporting">Pipeline de reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html#fonctionnalites-des-rapports">Fonctionnalités des rapports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html#classes-de-donnees-utilisees">Classes de données utilisées</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Code du module</a></li>
+      <li class="breadcrumb-item active">src.smart_watch.utils.MarkdownCleaner</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Code source de src.smart_watch.utils.MarkdownCleaner</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module pour le nettoyage et la normalisation de contenu Markdown.</span>
+<span class="sd">Ce module nettoie le markdown issu du téléchargement d&#39;URLs.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..core.ErrorHandler</span><span class="w"> </span><span class="kn">import</span> <span class="n">ErrorCategory</span><span class="p">,</span> <span class="n">ErrorSeverity</span><span class="p">,</span> <span class="n">handle_errors</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..core.Logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_logger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..data_models.schema_bdd</span><span class="w"> </span><span class="kn">import</span> <span class="n">Lieux</span><span class="p">,</span> <span class="n">ResultatsExtraction</span>
+
+<span class="c1"># Initialize logger for this module</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">create_logger</span><span class="p">(</span>
+    <span class="n">module_name</span><span class="o">=</span><span class="s2">&quot;MarkdownCleaner&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="CleaningStats">
+<a class="viewcode-back" href="../../../../source/modules/utils/markdown_cleaner.html#src.smart_watch.utils.MarkdownCleaner.CleaningStats">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CleaningStats</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Statistiques de nettoyage pour chaque étape.&quot;&quot;&quot;</span>
+
+    <span class="n">texts_processed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">texts_successful</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">chars_replaced</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="CleaningStats.get_summary">
+<a class="viewcode-back" href="../../../../source/modules/utils/markdown_cleaner.html#src.smart_watch.utils.MarkdownCleaner.CleaningStats.get_summary">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;texts_processed&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">texts_processed</span><span class="p">,</span>
+            <span class="s2">&quot;texts_successful&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">texts_successful</span><span class="p">,</span>
+            <span class="s2">&quot;chars_replaced&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">chars_replaced</span><span class="p">,</span>
+        <span class="p">}</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="MarkdownCleaner">
+<a class="viewcode-back" href="../../../../source/modules/utils/markdown_cleaner.html#src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MarkdownCleaner</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Classe pour le nettoyage et la normalisation de contenu Markdown.&quot;&quot;&quot;</span>
+
+    <span class="c1"># Regex pour supprimer les liens markdown (avec ou sans titre)</span>
+    <span class="c1"># [texte](url) ou [texte](url &quot;titre&quot;)</span>
+    <span class="n">_RE_MARKDOWN_LINKS</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\[([^\]]*)\]\([^)]*(?: </span><span class="se">\&quot;</span><span class="s2">[^</span><span class="se">\&quot;</span><span class="s2">]*</span><span class="se">\&quot;</span><span class="s2">)?\)&quot;</span><span class="p">)</span>
+
+    <span class="c1"># &lt;http://example.com&gt;</span>
+    <span class="n">_RE_AUTO_LINKS</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;&lt;(https?://[^&gt;]+)&gt;&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Regex pour les liens avec images (liens complexes)</span>
+    <span class="c1"># [![alt](img_url)](link_url &quot;titre&quot;)</span>
+    <span class="n">_RE_IMAGE_LINKS</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\[!\[[^\]]*\]\([^)]*\)\]\([^)]*(?: </span><span class="se">\&quot;</span><span class="s2">[^</span><span class="se">\&quot;</span><span class="s2">]*</span><span class="se">\&quot;</span><span class="s2">)?\)&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Regex pour les images standalone</span>
+    <span class="c1"># ![alt](img_url)</span>
+    <span class="n">_RE_STANDALONE_IMAGES</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;!\[[^\]]*\]\([^)]*\)&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Regex pour les sauts de ligne multiples</span>
+    <span class="c1"># 3 sauts de ligne ou plus</span>
+    <span class="n">_RE_MULTI_NEWLINES</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\n{3,}&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Regex pour les lignes composées uniquement de caractères de formatage</span>
+    <span class="n">_RE_FORMATTING_LINES</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[\s#\-</span><span class="se">\&quot;</span><span class="s2">=_\(\[\]\)\.]+$&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">)</span>
+
+<div class="viewcode-block" id="MarkdownCleaner.__init__">
+<a class="viewcode-back" href="../../../../source/modules/utils/markdown_cleaner.html#src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
+        <span class="c1"># Utiliser la configuration des caractères de remplacement</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">char_replacements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">processing</span><span class="o">.</span><span class="n">char_replacements</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_pending_cleaning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_manager</span><span class="p">,</span> <span class="n">execution_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Récupère les enregistrements nécessitant un nettoyage de markdown.&quot;&quot;&quot;</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="n">db_manager</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">ResultatsExtraction</span><span class="p">,</span> <span class="n">Lieux</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Lieux</span><span class="p">,</span> <span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">lieu_id</span> <span class="o">==</span> <span class="n">Lieux</span><span class="o">.</span><span class="n">identifiant</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+                    <span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">id_execution</span> <span class="o">==</span> <span class="n">execution_id</span><span class="p">,</span>
+                    <span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">statut_url</span> <span class="o">==</span> <span class="s2">&quot;ok&quot;</span><span class="p">,</span>
+                    <span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">markdown_brut</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                    <span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">markdown_brut</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">markdown_nettoye</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>  <span class="c1"># Pas encore nettoyé</span>
+                <span class="p">)</span>
+                <span class="o">.</span><span class="n">all</span><span class="p">()</span>
+            <span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<div class="viewcode-block" id="MarkdownCleaner.process_markdown_cleaning">
+<a class="viewcode-back" href="../../../../source/modules/utils/markdown_cleaner.html#src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner.process_markdown_cleaning">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">process_markdown_cleaning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_manager</span><span class="p">,</span> <span class="n">execution_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CleaningStats</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Nettoie le contenu markdown pour tous les enregistrements d&#39;une exécution.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">section</span><span class="p">(</span><span class="s2">&quot;NETTOYAGE MARKDOWN&quot;</span><span class="p">)</span>
+
+        <span class="n">stats</span> <span class="o">=</span> <span class="n">CleaningStats</span><span class="p">()</span>
+        <span class="n">resultats_a_nettoyer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_pending_cleaning</span><span class="p">(</span><span class="n">db_manager</span><span class="p">,</span> <span class="n">execution_id</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">resultats_a_nettoyer</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Aucun markdown à nettoyer&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">stats</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">resultats_a_nettoyer</span><span class="p">)</span><span class="si">}</span><span class="s2"> contenus markdown à nettoyer&quot;</span><span class="p">)</span>
+        <span class="n">stats</span><span class="o">.</span><span class="n">texts_processed</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">resultats_a_nettoyer</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">resultat</span><span class="p">,</span> <span class="n">lieu</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">resultats_a_nettoyer</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Nettoyage </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">resultats_a_nettoyer</span><span class="p">)</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">lieu</span><span class="o">.</span><span class="n">nom</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="n">original_markdown</span> <span class="o">=</span> <span class="n">resultat</span><span class="o">.</span><span class="n">markdown_brut</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">original_markdown</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># Nettoyer le markdown (la gestion d&#39;erreur est dans la méthode)</span>
+            <span class="n">cleaned_markdown</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">clean_markdown_content</span><span class="p">(</span><span class="n">original_markdown</span><span class="p">)</span>
+
+            <span class="c1"># Compter les modifications</span>
+            <span class="k">if</span> <span class="n">cleaned_markdown</span> <span class="o">!=</span> <span class="n">original_markdown</span><span class="p">:</span>
+                <span class="n">stats</span><span class="o">.</span><span class="n">chars_replaced</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">original_markdown</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">cleaned_markdown</span><span class="p">)</span>
+
+            <span class="c1"># Mettre à jour en base</span>
+            <span class="n">db_manager</span><span class="o">.</span><span class="n">update_cleaned_markdown</span><span class="p">(</span>
+                <span class="n">resultat</span><span class="o">.</span><span class="n">id_resultats_extraction</span><span class="p">,</span> <span class="n">cleaned_markdown</span>
+            <span class="p">)</span>
+            <span class="n">stats</span><span class="o">.</span><span class="n">texts_successful</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Markdown nettoyé: </span><span class="si">{</span><span class="n">stats</span><span class="o">.</span><span class="n">texts_successful</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">stats</span><span class="o">.</span><span class="n">texts_processed</span><span class="si">}</span><span class="s2"> réussies&quot;</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">stats</span></div>
+
+
+    <span class="nd">@handle_errors</span><span class="p">(</span>
+        <span class="n">category</span><span class="o">=</span><span class="n">ErrorCategory</span><span class="o">.</span><span class="n">CONVERSION</span><span class="p">,</span>
+        <span class="n">severity</span><span class="o">=</span><span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">LOW</span><span class="p">,</span>
+        <span class="n">user_message</span><span class="o">=</span><span class="s2">&quot;Erreur lors du nettoyage du contenu Markdown.&quot;</span><span class="p">,</span>
+        <span class="n">reraise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">clean_markdown_content</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Nettoie un contenu markdown en appliquant les remplacements de caractères et suppression des liens.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            text: Contenu markdown à nettoyer</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Contenu markdown nettoyé</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">text</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="c1"># 1. Supprimer les liens markdown</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remove_markdown_links</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+        <span class="c1"># 2. Supprimer les lignes de formatage</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remove_formatting_lines</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+        <span class="c1"># 3. Appliquer les remplacements de caractères</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_char_replacements</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+        <span class="c1"># 4. Nettoyer les sauts de ligne multiples</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clean_multiple_newlines</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+        <span class="c1"># 5. Supprimer les lignes en double successives</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remove_consecutive_duplicate_lines</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+    <span class="nd">@handle_errors</span><span class="p">(</span>
+        <span class="n">category</span><span class="o">=</span><span class="n">ErrorCategory</span><span class="o">.</span><span class="n">CONVERSION</span><span class="p">,</span>
+        <span class="n">severity</span><span class="o">=</span><span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">LOW</span><span class="p">,</span>
+        <span class="n">reraise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_remove_markdown_links</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Supprime les liens markdown en gardant seulement le texte d&#39;affichage.</span>
+<span class="sd">        Gère les formats:</span>
+<span class="sd">        - [texte](url)</span>
+<span class="sd">        - [texte](url &quot;titre&quot;)</span>
+<span class="sd">        - [![alt](img)](url &quot;titre&quot;) - liens avec images</span>
+<span class="sd">        - ![alt](img) - images standalone</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            text: Texte contenant des liens markdown</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Texte sans les liens markdown</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">text</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="c1"># 1. Liens complexes avec images</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_RE_IMAGE_LINKS</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+
+        <span class="c1"># 2. Images standalone</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_RE_STANDALONE_IMAGES</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+
+        <span class="c1"># 3. Liens texte simples</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_RE_MARKDOWN_LINKS</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+
+        <span class="c1"># 4. Liens automatiques &lt;http://...&gt;</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_RE_AUTO_LINKS</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">text</span>
+
+    <span class="nd">@handle_errors</span><span class="p">(</span>
+        <span class="n">category</span><span class="o">=</span><span class="n">ErrorCategory</span><span class="o">.</span><span class="n">CONVERSION</span><span class="p">,</span>
+        <span class="n">severity</span><span class="o">=</span><span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">LOW</span><span class="p">,</span>
+        <span class="n">reraise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_apply_char_replacements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Applique les remplacements de caractères depuis la configuration.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">char_replacements</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">text</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">text</span>
+        <span class="c1"># Appliquer plusieurs fois pour gérer les cas récursifs (espaces multiples)</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">source</span><span class="p">,</span> <span class="n">target</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">char_replacements</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">text</span>
+
+    <span class="nd">@handle_errors</span><span class="p">(</span>
+        <span class="n">category</span><span class="o">=</span><span class="n">ErrorCategory</span><span class="o">.</span><span class="n">CONVERSION</span><span class="p">,</span>
+        <span class="n">severity</span><span class="o">=</span><span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">LOW</span><span class="p">,</span>
+        <span class="n">reraise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_clean_multiple_newlines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remplace 3 sauts de ligne ou plus par exactement 2.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_RE_MULTI_NEWLINES</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span> <span class="k">if</span> <span class="n">text</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="nd">@handle_errors</span><span class="p">(</span>
+        <span class="n">category</span><span class="o">=</span><span class="n">ErrorCategory</span><span class="o">.</span><span class="n">CONVERSION</span><span class="p">,</span>
+        <span class="n">severity</span><span class="o">=</span><span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">LOW</span><span class="p">,</span>
+        <span class="n">reraise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_remove_formatting_lines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Supprime les lignes composées uniquement de caractères de formatage.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_RE_FORMATTING_LINES</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span> <span class="k">if</span> <span class="n">text</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="nd">@handle_errors</span><span class="p">(</span>
+        <span class="n">category</span><span class="o">=</span><span class="n">ErrorCategory</span><span class="o">.</span><span class="n">CONVERSION</span><span class="p">,</span>
+        <span class="n">severity</span><span class="o">=</span><span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">LOW</span><span class="p">,</span>
+        <span class="n">reraise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_remove_consecutive_duplicate_lines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Supprime les lignes en double, même si elles sont séparées par des retours chariot.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">text</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">cleaned_lines</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">last_non_empty_line</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="n">stripped_line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">stripped_line</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">cleaned_lines</span> <span class="ow">and</span> <span class="n">cleaned_lines</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                    <span class="n">cleaned_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">stripped_line</span> <span class="o">!=</span> <span class="n">last_non_empty_line</span><span class="p">:</span>
+                    <span class="n">cleaned_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+                    <span class="n">last_non_empty_line</span> <span class="o">=</span> <span class="n">stripped_line</span>
+
+        <span class="c1"># Supprimer les lignes vides de fin</span>
+        <span class="k">while</span> <span class="n">cleaned_lines</span> <span class="ow">and</span> <span class="n">cleaned_lines</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="n">cleaned_lines</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cleaned_lines</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

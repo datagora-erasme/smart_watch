@@ -1,0 +1,211 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>URL Processor &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.jpg"/>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=d2e4462e"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/translations.js?v=e6b791cb"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../search.html" />
+    <link rel="next" title="LLM Processor" href="llm_processor.html" />
+    <link rel="prev" title="Database Manager" href="database_manager.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Présentation du projet</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/stack.html">Stack technique</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/diagramme.html">Diagramme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/modules.html">Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/utilisation_docker.html">Utilisation avec Docker</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html">Modules Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html#architecture-de-configuration">Architecture de configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html#hierarchie-de-configuration">Hiérarchie de configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../core/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../core/index.html#modules">Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html#modules">Modules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="database_manager.html">Database Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_manager.html#classes-principales">Classes principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_manager.html#fonctions-utilitaires">Fonctions utilitaires</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_manager.html#structure-de-la-base">Structure de la base</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_manager.html#fonctionnalites-avancees">Fonctionnalités avancées</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_manager.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">URL Processor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#classes-principales">Classes principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm_processor.html">LLM Processor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm_processor.html#classes-principales">Classes principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm_processor.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm_processor.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comparison_processor.html">Comparison Processor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comparison_processor.html#classes-principales">Classes principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comparison_processor.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comparison_processor.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#classes-de-statistiques">Classes de statistiques</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../utils/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils/index.html#utilitaires-de-donnees-temporelles">Utilitaires de données temporelles</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reporting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html#pipeline-de-reporting">Pipeline de reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html#fonctionnalites-des-rapports">Fonctionnalités des rapports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html#classes-de-donnees-utilisees">Classes de données utilisées</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Vue d’ensemble</a></li>
+      <li class="breadcrumb-item active">URL Processor</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/source/modules/processing/url_processor.rst.txt" rel="nofollow"> Afficher la source de la page</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="url-processor">
+<h1>URL Processor<a class="headerlink" href="#url-processor" title="Lien vers cette rubrique"></a></h1>
+</section>
+<section id="classes-principales">
+<h1>Classes principales<a class="headerlink" href="#classes-principales" title="Lien vers cette rubrique"></a></h1>
+</section>
+<section id="fonctionnalites">
+<h1>Fonctionnalités<a class="headerlink" href="#fonctionnalites" title="Lien vers cette rubrique"></a></h1>
+<p>Le URLProcessor gère l’extraction parallèle du contenu web :</p>
+<p><strong>Traitement parallèle :</strong>
+- Utilise <cite>ThreadPoolExecutor</cite> avec nombre de threads configurable
+- Traitement par batch optimisé pour les mises à jour base de données
+- Gestion robuste des timeouts et erreurs réseau</p>
+<p><strong>Pipeline de conversion :</strong>
+1. Récupération HTML via <cite>URLRetriever</cite>
+2. Conversion HTML → Markdown avec <cite>HtmlToMarkdown</cite>
+3. Nettoyage et normalisation du contenu
+4. Stockage du <cite>markdown_brut</cite> en base</p>
+<p><strong>Gestion d’erreurs :</strong>
+- Codes HTTP détaillés (200, 404, timeout, etc.)
+- Messages d’erreur explicites
+- Traçabilité complète dans la chaîne d’erreurs</p>
+</section>
+<section id="exemple-d-utilisation">
+<h1>Exemple d’utilisation<a class="headerlink" href="#exemple-d-utilisation" title="Lien vers cette rubrique"></a></h1>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">src.smart_watch.processing.url_processor</span><span class="w"> </span><span class="kn">import</span> <span class="n">URLProcessor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.smart_watch.core.ConfigManager</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigManager</span>
+
+<span class="c1"># Initialisation</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">ConfigManager</span><span class="p">()</span>
+<span class="n">processor</span> <span class="o">=</span> <span class="n">URLProcessor</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+
+<span class="c1"># Traitement des URLs en attente</span>
+<span class="n">stats</span> <span class="o">=</span> <span class="n">processor</span><span class="o">.</span><span class="n">process_urls</span><span class="p">(</span><span class="n">db_manager</span><span class="p">,</span> <span class="n">execution_id</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;URLs traitées: </span><span class="si">{</span><span class="n">stats</span><span class="o">.</span><span class="n">urls_successful</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">stats</span><span class="o">.</span><span class="n">urls_processed</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pied de page">
+        <a href="database_manager.html" class="btn btn-neutral float-left" title="Database Manager" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Précédent</a>
+        <a href="llm_processor.html" class="btn btn-neutral float-right" title="LLM Processor" accesskey="n" rel="next">Suivant <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

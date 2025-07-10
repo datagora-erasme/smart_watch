@@ -1,0 +1,277 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modules Configuration &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.jpg"/>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=d2e4462e"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/translations.js?v=e6b791cb"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../search.html" />
+    <link rel="next" title="Base Configuration" href="base_config.html" />
+    <link rel="prev" title="Utilisation avec Docker" href="../../../guide/utilisation_docker.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Présentation du projet</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/stack.html">Stack technique</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/diagramme.html">Diagramme</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/modules.html">Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/utilisation_docker.html">Utilisation avec Docker</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Modules Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="base_config.html">Base Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="base_config.html#classes-principales">Classes principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="base_config.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l2"><a class="reference internal" href="base_config.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm_config.html">LLM Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm_config.html#classes-principales">Classes principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm_config.html#fournisseurs-supportes">Fournisseurs supportés</a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm_config.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_config.html">Database Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_config.html#classes-principales">Classes principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_config.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_config.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="email_config.html">Email Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="email_config.html#classes-principales">Classes principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="email_config.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l2"><a class="reference internal" href="email_config.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing_config.html">Processing Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing_config.html#classes-principales">Classes principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing_config.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing_config.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markdown_filtering_config.html">Markdown Filtering Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markdown_filtering_config.html#classes-principales">Classes principales</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markdown_filtering_config.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markdown_filtering_config.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#architecture-de-configuration">Architecture de configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#hierarchie-de-configuration">Hiérarchie de configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../core/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../core/index.html#modules">Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../processing/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../processing/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../processing/index.html#classes-de-statistiques">Classes de statistiques</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../utils/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils/index.html#utilitaires-de-donnees-temporelles">Utilitaires de données temporelles</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reporting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html#pipeline-de-reporting">Pipeline de reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html#fonctionnalites-des-rapports">Fonctionnalités des rapports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html#classes-de-donnees-utilisees">Classes de données utilisées</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Modules Configuration</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/source/modules/config/index.rst.txt" rel="nofollow"> Afficher la source de la page</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="modules-configuration">
+<h1>Modules Configuration<a class="headerlink" href="#modules-configuration" title="Lien vers cette rubrique"></a></h1>
+<p>Les modules de configuration fournissent une gestion modulaire et flexible de tous les paramètres du système.</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="base_config.html">Base Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="base_config.html#src.smart_watch.config.base_config.BaseConfig"><code class="docutils literal notranslate"><span class="pre">BaseConfig</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="base_config.html#classes-principales">Classes principales</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="base_config.html#id0"><code class="docutils literal notranslate"><span class="pre">BaseConfig</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="base_config.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l1"><a class="reference internal" href="base_config.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="llm_config.html">LLM Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="llm_config.html#src.smart_watch.config.llm_config.LLMConfig"><code class="docutils literal notranslate"><span class="pre">LLMConfig</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm_config.html#src.smart_watch.config.llm_config.LLMConfigManager"><code class="docutils literal notranslate"><span class="pre">LLMConfigManager</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="llm_config.html#classes-principales">Classes principales</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="llm_config.html#id0"><code class="docutils literal notranslate"><span class="pre">LLMConfig</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm_config.html#id8"><code class="docutils literal notranslate"><span class="pre">LLMConfigManager</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="llm_config.html#fournisseurs-supportes">Fournisseurs supportés</a></li>
+<li class="toctree-l1"><a class="reference internal" href="llm_config.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="database_config.html">Database Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="database_config.html#src.smart_watch.config.database_config.DatabaseConfig"><code class="docutils literal notranslate"><span class="pre">DatabaseConfig</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_config.html#src.smart_watch.config.database_config.DatabaseConfigManager"><code class="docutils literal notranslate"><span class="pre">DatabaseConfigManager</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="database_config.html#classes-principales">Classes principales</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="database_config.html#id0"><code class="docutils literal notranslate"><span class="pre">DatabaseConfig</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="database_config.html#id7"><code class="docutils literal notranslate"><span class="pre">DatabaseConfigManager</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="database_config.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l1"><a class="reference internal" href="database_config.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="email_config.html">Email Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="email_config.html#src.smart_watch.config.email_config.EmailConfig"><code class="docutils literal notranslate"><span class="pre">EmailConfig</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="email_config.html#src.smart_watch.config.email_config.EmailConfigManager"><code class="docutils literal notranslate"><span class="pre">EmailConfigManager</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="email_config.html#classes-principales">Classes principales</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="email_config.html#id0"><code class="docutils literal notranslate"><span class="pre">EmailConfig</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="email_config.html#id8"><code class="docutils literal notranslate"><span class="pre">EmailConfigManager</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="email_config.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l1"><a class="reference internal" href="email_config.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="processing_config.html">Processing Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="processing_config.html#src.smart_watch.config.processing_config.ProcessingConfig"><code class="docutils literal notranslate"><span class="pre">ProcessingConfig</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing_config.html#src.smart_watch.config.processing_config.ProcessingConfigManager"><code class="docutils literal notranslate"><span class="pre">ProcessingConfigManager</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="processing_config.html#classes-principales">Classes principales</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="processing_config.html#id0"><code class="docutils literal notranslate"><span class="pre">ProcessingConfig</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="processing_config.html#id6"><code class="docutils literal notranslate"><span class="pre">ProcessingConfigManager</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="processing_config.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l1"><a class="reference internal" href="processing_config.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="markdown_filtering_config.html">Markdown Filtering Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="markdown_filtering_config.html#src.smart_watch.config.markdown_filtering_config.MarkdownFilteringConfig"><code class="docutils literal notranslate"><span class="pre">MarkdownFilteringConfig</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="markdown_filtering_config.html#src.smart_watch.config.markdown_filtering_config.MarkdownFilteringConfigManager"><code class="docutils literal notranslate"><span class="pre">MarkdownFilteringConfigManager</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="markdown_filtering_config.html#classes-principales">Classes principales</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="markdown_filtering_config.html#id0"><code class="docutils literal notranslate"><span class="pre">MarkdownFilteringConfig</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="markdown_filtering_config.html#id2"><code class="docutils literal notranslate"><span class="pre">MarkdownFilteringConfigManager</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="markdown_filtering_config.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l1"><a class="reference internal" href="markdown_filtering_config.html#exemple-d-utilisation">Exemple d’utilisation</a></li>
+</ul>
+</div>
+</section>
+<section id="architecture-de-configuration">
+<h1>Architecture de configuration<a class="headerlink" href="#architecture-de-configuration" title="Lien vers cette rubrique"></a></h1>
+<ul class="simple">
+<li><p><strong>BaseConfig</strong> : Configuration de base commune à tous les modules</p></li>
+<li><p><strong>LLMConfig</strong> : Configuration des modèles de langage (OpenAI, Mistral)</p></li>
+<li><p><strong>DatabaseConfig</strong> : Configuration de la base de données SQLite</p></li>
+<li><p><strong>EmailConfig</strong> : Configuration SMTP pour l’envoi de rapports</p></li>
+<li><p><strong>ProcessingConfig</strong> : Configuration du traitement (threads, délais)</p></li>
+<li><p><strong>MarkdownFilteringConfig</strong> : Configuration du filtrage sémantique</p></li>
+</ul>
+</section>
+<section id="hierarchie-de-configuration">
+<h1>Hiérarchie de configuration<a class="headerlink" href="#hierarchie-de-configuration" title="Lien vers cette rubrique"></a></h1>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>ConfigManager
+├── LLMConfig (API keys, modèles)
+├── DatabaseConfig (fichiers, URLs)
+├── EmailConfig (SMTP, destinataires)
+├── ProcessingConfig (threads, remplacements)
+└── MarkdownFilteringConfig (embeddings, seuils)
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pied de page">
+        <a href="../../../guide/utilisation_docker.html" class="btn btn-neutral float-left" title="Utilisation avec Docker" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Précédent</a>
+        <a href="base_config.html" class="btn btn-neutral float-right" title="Base Configuration" accesskey="n" rel="next">Suivant <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
