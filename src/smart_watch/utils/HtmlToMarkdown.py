@@ -9,79 +9,30 @@ logger = create_logger(
 )
 
 
-class HtmlToMarkdown:
+def convert_html_to_markdown(html: str) -> str:
     """
-    A class to convert HTML to Markdown using BeautifulSoup and html-to-markdown.
+    Convertit une chaîne HTML en Markdown.
+
+    Utilise BeautifulSoup pour un parsing robuste avant la conversion,
+    ce qui permet de nettoyer le HTML et de gérer les balises mal formées.
+
+    Args:
+        html (str): Le contenu HTML à convertir.
+
+    Returns:
+        str: Le contenu converti en Markdown.
+
+    Lève:
+        Exception: Si une erreur survient pendant la conversion.
     """
-
-    def __init__(self, html: str, config=None):
-        """
-        Initialize the HtmlToMarkdown instance.
-
-        Args:
-            html (str): The HTML content to convert.
-            config: Configuration manager instance (ConfigManager ou BaseConfig).
-        """
-        self.html = html
-        self.config = config
-        logger.debug("HtmlToMarkdown initialisé")
-
-    def convert(self) -> str:
-        """
-        Convert HTML to Markdown.
-
-        Returns:
-            str: The converted Markdown content.
-        """
-        try:
-            logger.debug("Conversion avec BeautifulSoup + lxml")
-            soup = bs4.BeautifulSoup(self.html, "lxml")
-            return convert_to_markdown(str(soup))
-        except Exception as e:
-            logger.error(f"Erreur conversion HTML: {e}")
-            raise
-
-
-# Example usage
-if __name__ == "__main__":
-    logger.section("TEST HTML TO MARKDOWN")
-
-    HTML = """
-    <article>
-        <h1>Welcome</h1>
-        <p>This is a <strong>sample</strong> with a <a href="https://example.com">link</a>.</p>
-        <ul>
-            <li>Item 1</li>
-            <li>Item 2</li>
-        </ul>
-        <script>console.log('test');</script>
-        <style>body { color: red; }</style>
-        <hr>
-    </article>
-    """
-
-    converter = HtmlToMarkdown(HTML)
-    logger.info("Test de conversion")
-    print("--- Résultat ---")
-    markdown_content = converter.convert()
-    print(markdown_content)
-
-    # Enregistrer le résultat dans un fichier Markdown
-    with open("output.md", "w", encoding="utf-8") as md_file:
-        md_file.write(markdown_content)
-        logger.info("Résultat sauvegardé dans output.md")
-
-    def convert(self) -> str:
-        """
-        Convert HTML to Markdown.
-
-        Returns:
-            str: The converted Markdown content.
-        """
-        try:
-            logger.debug("Conversion avec BeautifulSoup + lxml")
-            soup = bs4.BeautifulSoup(self.html, "lxml")
-            return convert_to_markdown(str(soup))
-        except Exception as e:
-            logger.error(f"Erreur conversion HTML: {e}")
-            raise
+    if not html:
+        return ""
+    try:
+        logger.debug("Conversion HTML vers Markdown avec BeautifulSoup + lxml")
+        # Utiliser BeautifulSoup pour parser et nettoyer le HTML
+        soup = bs4.BeautifulSoup(html, "lxml")
+        # Convertir l'objet Soup en Markdown
+        return convert_to_markdown(str(soup))
+    except Exception as e:
+        logger.error(f"Erreur lors de la conversion HTML vers Markdown: {e}")
+        raise

@@ -6,25 +6,21 @@ HTML to Markdown
    :undoc-members:
    :show-inheritance:
 
-Classes principales
-==================
+Fonction principale
+===================
 
-.. autoclass:: src.smart_watch.utils.HtmlToMarkdown.HtmlToMarkdown
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. autofunction:: src.smart_watch.utils.HtmlToMarkdown.convert_html_to_markdown
 
 Exemple d'utilisation
 ====================
 
 .. code-block:: python
 
-   from src.smart_watch.utils.HtmlToMarkdown import HtmlToMarkdown
+   from src.smart_watch.utils.HtmlToMarkdown import convert_html_to_markdown
 
    # Conversion HTML vers Markdown
    html_content = "<h1>Titre</h1><p>Contenu</p>"
-   converter = HtmlToMarkdown(html_content)
-   markdown = converter.convert()
+   markdown = convert_html_to_markdown(html_content)
    
    print(markdown)
    # # Titre

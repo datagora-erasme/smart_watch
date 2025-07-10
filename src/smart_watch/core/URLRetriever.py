@@ -2,7 +2,7 @@ import ssl
 
 import urllib3
 
-from ..utils.HtmlToMarkdown import HtmlToMarkdown
+from ..utils.HtmlToMarkdown import convert_html_to_markdown
 from .ErrorHandler import ErrorCategory, ErrorHandler, ErrorSeverity, handle_errors
 from .Logger import create_logger
 
@@ -166,9 +166,8 @@ def retrieve_url(
             if sortie == "html":
                 row_dict["html"] = html_content
             elif sortie == "markdown":
-                converter = HtmlToMarkdown(html=html_content, config=config)
                 try:
-                    row_dict["markdown"] = converter.convert()
+                    row_dict["markdown"] = convert_html_to_markdown(html=html_content)
                 except Exception as e:
                     logger.error(f"[{identifiant}] Erreur conversion Markdown: {e}")
                     row_dict["markdown"] = html_content
@@ -179,8 +178,7 @@ def retrieve_url(
                 and row_dict["html"].strip()
                 and "markdown" not in row_dict
             ):
-                converter = HtmlToMarkdown(html=row_dict["html"], config=config)
-                row_dict["markdown"] = converter.convert()
+                row_dict["markdown"] = convert_html_to_markdown(html=row_dict["html"])
 
             row_dict["statut"] = "ok"
             row_dict["code_http"] = response.status
