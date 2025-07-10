@@ -201,8 +201,6 @@ class OSMConverter:
 
     def __init__(self):
         """Initialise le convertisseur OSM."""
-        self.day_mapper = OSMDayMapper()
-        self.date_parser = DateParser()
         logger.debug("Convertisseur OSM initialisé")
 
     def _process_time_slots(self, slots: List[Dict]) -> List[TimeSlot]:
@@ -266,7 +264,7 @@ class OSMConverter:
         has_any_source = False
 
         for day_name, day_data in schedule.items():
-            osm_day = self.day_mapper.normalize_day(day_name)
+            osm_day = OSMDayMapper.normalize_day(day_name)
             if not osm_day:
                 continue
 
@@ -284,7 +282,7 @@ class OSMConverter:
         day_slots = {}
 
         for day_name, day_data in schedule.items():
-            osm_day = self.day_mapper.normalize_day(day_name)
+            osm_day = OSMDayMapper.normalize_day(day_name)
             if not osm_day:
                 continue
 
@@ -318,7 +316,7 @@ class OSMConverter:
         # Génération du format OSM
         osm_parts = []
         for (occur_key, slot_str), days in slot_groups.items():
-            day_ranges = self.day_mapper.compress_day_ranges(days)
+            day_ranges = OSMDayMapper.compress_day_ranges(days)
             # Ajout du [n] ou [n,m] si occurence
             if occur_key and any(x is not None for x in occur_key):
                 occur_list = [str(x) for x in occur_key if x is not None]
@@ -329,11 +327,11 @@ class OSMConverter:
 
         # Gestion des jours fermés (off)
         closed_days = []
-        for day in self.day_mapper.DAY_ORDER:
+        for day in OSMDayMapper.DAY_ORDER:
             if day not in day_slots:
                 closed_days.append(day)
         if closed_days:
-            day_ranges = self.day_mapper.compress_day_ranges(closed_days)
+            day_ranges = OSMDayMapper.compress_day_ranges(closed_days)
             osm_parts.append(f"{day_ranges} off")
 
         return "; ".join(osm_parts)
@@ -381,7 +379,7 @@ class OSMConverter:
 
                 # Fallback sur l'analyseur de date existant
                 if not osm_date:
-                    osm_date = self.date_parser.parse_date_to_osm(date_desc)
+                    osm_date = DateParser.parse_date_to_osm(date_desc)
 
                 # Traite l'horaire avec priorité aux créneaux
                 if isinstance(schedule_data, dict):
