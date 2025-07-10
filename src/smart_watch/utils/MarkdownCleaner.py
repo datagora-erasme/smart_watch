@@ -126,7 +126,7 @@ class MarkdownCleaner:
         category=ErrorCategory.CONVERSION,
         severity=ErrorSeverity.LOW,
         user_message="Erreur lors du nettoyage du contenu Markdown.",
-        default_return_arg_index=0,  # Retourne le premier argument (text) en cas d'erreur
+        reraise=True,
     )
     def clean_markdown_content(self, text: str) -> str:
         """
@@ -161,7 +161,7 @@ class MarkdownCleaner:
     @handle_errors(
         category=ErrorCategory.CONVERSION,
         severity=ErrorSeverity.LOW,
-        default_return_arg_index=0,
+        reraise=True,
     )
     def _remove_markdown_links(self, text: str) -> str:
         """
@@ -198,7 +198,7 @@ class MarkdownCleaner:
     @handle_errors(
         category=ErrorCategory.CONVERSION,
         severity=ErrorSeverity.LOW,
-        default_return_arg_index=0,
+        reraise=True,
     )
     def _apply_char_replacements(self, text: str) -> str:
         """Applique les remplacements de caractères depuis la configuration."""
@@ -213,7 +213,7 @@ class MarkdownCleaner:
     @handle_errors(
         category=ErrorCategory.CONVERSION,
         severity=ErrorSeverity.LOW,
-        default_return_arg_index=0,
+        reraise=True,
     )
     def _clean_multiple_newlines(self, text: str) -> str:
         """Remplace 3 sauts de ligne ou plus par exactement 2."""
@@ -222,7 +222,7 @@ class MarkdownCleaner:
     @handle_errors(
         category=ErrorCategory.CONVERSION,
         severity=ErrorSeverity.LOW,
-        default_return_arg_index=0,
+        reraise=True,
     )
     def _remove_formatting_lines(self, text: str) -> str:
         """Supprime les lignes composées uniquement de caractères de formatage."""
@@ -231,7 +231,7 @@ class MarkdownCleaner:
     @handle_errors(
         category=ErrorCategory.CONVERSION,
         severity=ErrorSeverity.LOW,
-        default_return_arg_index=0,
+        reraise=True,
     )
     def _remove_consecutive_duplicate_lines(self, text: str) -> str:
         """Supprime les lignes en double, même si elles sont séparées par des retours chariot."""
