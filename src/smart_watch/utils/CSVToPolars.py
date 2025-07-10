@@ -5,6 +5,7 @@ from tempfile import NamedTemporaryFile
 import polars as pl
 import requests
 
+from ..core.ErrorHandler import ErrorCategory, ErrorSeverity, handle_errors
 from ..core.Logger import create_logger
 
 # Initialize logger for this module
@@ -111,6 +112,12 @@ class CSVToPolars:
             raise FileNotFoundError(f"Fichier CSV local non trouvé: {file_path}")
         return self._process_local_file(file_path, cleanup_temp=False)
 
+    @handle_errors(
+        category=ErrorCategory.FILE_IO,
+        severity=ErrorSeverity.HIGH,
+        user_message="Impossible de charger ou traiter le fichier CSV source.",
+        reraise=True,
+    )
     def load_csv(self) -> pl.DataFrame:
         """
         Charge un fichier CSV depuis une URL ou un chemin local.
@@ -127,25 +134,12 @@ class CSVToPolars:
         if not self.source:
             raise ValueError("Aucune source de fichier CSV n'a été spécifiée.")
 
-        try:
-            if self._is_url(self.source):
-                self.df = self._load_from_url()
-            else:
-                self.df = self._load_from_path()
+        if self._is_url(self.source):
+            self.df = self._load_from_url()
+        else:
+            self.df = self._load_from_path()
 
-            logger.info(
-                f"CSV chargé avec succès: {len(self.df)} lignes, {len(self.df.columns)} colonnes"
-            )
-            return self.df
-
-        except (
-            ValueError,
-            FileNotFoundError,
-            requests.exceptions.RequestException,
-        ) as e:
-            logger.error(e)
-            raise
-        except Exception as e:
-            error_msg = f"Une erreur inattendue est survenue lors du chargement du CSV depuis '{self.source}': {e}"
-            logger.error(error_msg)
-            raise RuntimeError(error_msg) from e
+        logger.info(
+            f"CSV chargé avec succès: {len(self.df)} lignes, {len(self.df.columns)} colonnes"
+        )
+        return self.df
