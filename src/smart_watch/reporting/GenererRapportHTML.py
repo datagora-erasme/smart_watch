@@ -82,131 +82,127 @@ def generer_rapport_html(
         FileNotFoundError: Si le fichier de base de données n'existe pas
         RuntimeError: Si les templates ne sont pas trouvés
     """
+    logger.info(f"Génération rapport HTML depuis: {Path(db_file).name}")
+
+    # Vérification de l'existence de la base de données
+    db_path = Path(db_file)
+    if not db_path.exists():
+        raise FileNotFoundError(f"Base de données non trouvée: {db_file}")
+
+    # Configuration du moteur de templates
+    templates_dir = Path(__file__).parent.parent / "assets" / "templates"
+    if not templates_dir.exists():
+        raise FileNotFoundError(f"Répertoire des templates non trouvé: {templates_dir}")
+
+    env = Environment(loader=FileSystemLoader(str(templates_dir)))
+    env.filters["tojson"] = to_json
+
     try:
-        logger.info(f"Génération rapport HTML depuis: {Path(db_file).name}")
-
-        # Vérification de l'existence de la base de données
-        db_path = Path(db_file)
-        if not db_path.exists():
-            raise FileNotFoundError(f"Base de données non trouvée: {db_file}")
-
-        # Configuration du moteur de templates
-        templates_dir = Path(__file__).parent.parent / "assets" / "templates"
-        if not templates_dir.exists():
-            raise FileNotFoundError(
-                f"Répertoire des templates non trouvé: {templates_dir}"
-            )
-
-        env = Environment(loader=FileSystemLoader(str(templates_dir)))
-        env.filters["tojson"] = to_json
-
-        try:
-            template = env.get_template("ReportTemplate.html")
-            simple_template = env.get_template("SimpleReportTemplate.html")
-            logger.debug("Templates chargés avec succès")
-        except Exception as e:
-            raise RuntimeError(f"Erreur chargement templates: {e}")
-
-        # Extraction des données depuis la base de données
-        donnees_urls = _extract_data_from_database(db_file)
-        logger.info(f"Données extraites: {len(donnees_urls)} enregistrements")
-
-        # Extraire les données de l'exécution
-        execution_data = _extract_execution_data(db_file)
-
-        # Traitement des données
-        _process_data(donnees_urls)
-
-        # Calcul des statistiques
-        stats_globales = _calculate_global_stats(donnees_urls)
-        statuts_disponibles = _group_by_status(donnees_urls)
-        types_lieu_stats = _calculate_type_stats(donnees_urls)
-        codes_http_stats = _calculate_http_stats(donnees_urls)
-
-        # Préparation des données pour le template
-        donnees_template = {
-            "titre_rapport": titre_rapport,
-            "date_generation": datetime.now().strftime("%d/%m/%Y à %H:%M"),
-            "stats_globales": stats_globales,
-            "statuts_disponibles": statuts_disponibles,
-            "types_lieu_stats": types_lieu_stats,
-            "codes_http_stats": codes_http_stats,
-            "model_info": model_info,
-            "execution_data": execution_data,
-        }
-
-        # Génération des rapports
-        try:
-            resume_html = simple_template.render(**donnees_template)
-            html_content = template.render(**donnees_template)
-            logger.debug("Templates rendus avec succès")
-        except Exception as e:
-            raise RuntimeError(f"Erreur rendu template: {e}")
-
-        # Sauvegarde du fichier
-        fichier_rapport_html = _save_report(html_content)
-
-        logger.info(f"Rapport généré avec succès: {fichier_rapport_html}")
-        return resume_html, fichier_rapport_html
-
+        template = env.get_template("ReportTemplate.html")
+        simple_template = env.get_template("SimpleReportTemplate.html")
+        logger.debug("Templates chargés avec succès")
     except Exception as e:
-        logger.error(f"Erreur génération rapport: {e}")
-        raise
+        raise RuntimeError(f"Erreur chargement templates: {e}")
+
+    # Extraction des données depuis la base de données
+    donnees_urls = _extract_data_from_database(db_file)
+    logger.info(f"Données extraites: {len(donnees_urls)} enregistrements")
+
+    # Extraire les données de l'exécution
+    execution_data = _extract_execution_data(db_file)
+
+    # Traitement des données
+    _process_data(donnees_urls)
+
+    # Calcul des statistiques
+    stats_globales = _calculate_global_stats(donnees_urls)
+    statuts_disponibles = _group_by_status(donnees_urls)
+    types_lieu_stats = _calculate_type_stats(donnees_urls)
+    codes_http_stats = _calculate_http_stats(donnees_urls)
+
+    # Préparation des données pour le template
+    donnees_template = {
+        "titre_rapport": titre_rapport,
+        "date_generation": datetime.now().strftime("%d/%m/%Y à %H:%M"),
+        "stats_globales": stats_globales,
+        "statuts_disponibles": statuts_disponibles,
+        "types_lieu_stats": types_lieu_stats,
+        "codes_http_stats": codes_http_stats,
+        "model_info": model_info,
+        "execution_data": execution_data,
+    }
+
+    # Génération des rapports
+    try:
+        resume_html = simple_template.render(**donnees_template)
+        html_content = template.render(**donnees_template)
+        logger.debug("Templates rendus avec succès")
+    except Exception as e:
+        raise RuntimeError(f"Erreur rendu template: {e}")
+
+    # Sauvegarde du fichier
+    fichier_rapport_html = _save_report(html_content)
+
+    logger.info(f"Rapport généré avec succès: {fichier_rapport_html}")
+    return resume_html, fichier_rapport_html
 
 
+@handle_errors(
+    category=ErrorCategory.DATABASE,
+    severity=ErrorSeverity.HIGH,
+    user_message="Erreur lors de l'extraction des données d'exécution.",
+    default_return=None,
+)
 def _extract_execution_data(db_file: str) -> Optional[dict]:
     """Extrait les données de la dernière exécution."""
-    try:
-        uri = f"sqlite:///{db_file}"
-        query = """
-        SELECT llm_consommation_execution 
-        FROM executions 
-        ORDER BY date_execution DESC 
-        LIMIT 1
-        """
-        df = pl.read_database_uri(query=query, uri=uri, engine="connectorx")
-        if not df.is_empty():
-            return df.to_dicts()[0]
-        return None
-    except Exception as e:
-        logger.error(f"Erreur extraction données d'exécution: {e}")
-        return None
+    uri = f"sqlite:///{db_file}"
+    query = """
+    SELECT llm_consommation_execution 
+    FROM executions 
+    ORDER BY date_execution DESC 
+    LIMIT 1
+    """
+    df = pl.read_database_uri(query=query, uri=uri, engine="connectorx")
+    if not df.is_empty():
+        return df.to_dicts()[0]
+    return None
 
 
+@handle_errors(
+    category=ErrorCategory.DATABASE,
+    severity=ErrorSeverity.HIGH,
+    user_message="Erreur lors de l'extraction des données depuis la base.",
+    default_return=[],
+)
 def _extract_data_from_database(db_file: str) -> list:
     """Extrait les données depuis la base de données."""
-    try:
-        uri = f"sqlite:///{db_file}"
-        query = """
-        SELECT 
-            l.type_lieu, 
-            l.identifiant, 
-            l.nom, 
-            l.url, 
-            l.horaires_data_gl,
-            r.statut_url AS statut, 
-            r.message_url AS message, 
-            r.markdown_brut,
-            r.markdown_nettoye,
-            r.markdown_filtre,
-            r.llm_horaires_json, 
-            r.llm_horaires_osm, 
-            r.code_http,
-            r.horaires_identiques,
-            r.differences_horaires,
-            r.erreurs_pipeline,
-            r.llm_consommation_requete
-        FROM resultats_extraction AS r 
-        JOIN lieux AS l ON r.lieu_id = l.identifiant 
-        ORDER BY l.identifiant
-        """
+    uri = f"sqlite:///{db_file}"
+    query = """
+    SELECT 
+        l.type_lieu, 
+        l.identifiant, 
+        l.nom, 
+        l.url, 
+        l.horaires_data_gl,
+        r.statut_url AS statut, 
+        r.message_url AS message, 
+        r.markdown_brut,
+        r.markdown_nettoye,
+        r.markdown_filtre,
+        r.llm_horaires_json, 
+        r.llm_horaires_osm, 
+        r.code_http,
+        r.horaires_identiques,
+        r.differences_horaires,
+        r.erreurs_pipeline,
+        r.llm_consommation_requete
+    FROM resultats_extraction AS r 
+    JOIN lieux AS l ON r.lieu_id = l.identifiant 
+    ORDER BY l.identifiant
+    """
 
-        df = pl.read_database_uri(query=query, uri=uri, engine="connectorx")
-        return df.to_dicts()
-
-    except Exception as e:
-        logger.error(f"Erreur extraction données: {e}")
-        raise RuntimeError(f"Erreur lors de l'extraction des données: {e}")
+    df = pl.read_database_uri(query=query, uri=uri, engine="connectorx")
+    return df.to_dicts()
 
 
 def _process_data(donnees_urls: list) -> None:
@@ -304,7 +300,7 @@ def _set_default_fields(url: dict) -> None:
         "erreurs_formatees": [],
         "nombre_erreurs": 0,
         "erreurs_resume": "",
-        "llm_consommation_requete": 0.0,  # Ajout du champ CO2
+        "llm_consommation_requete": 0.0,
     }
 
     for field, default_value in defaults.items():
@@ -464,39 +460,3 @@ def _save_report(html_content: str) -> str:
     except Exception as e:
         logger.error(f"Erreur sauvegarde rapport: {e}")
         raise RuntimeError(f"Erreur lors de la sauvegarde: {e}")
-
-
-def main():
-    """Exemple d'utilisation et tests."""
-    logger.section("TEST GÉNÉRATION RAPPORT")
-
-    try:
-        script_dir = Path(__file__).parent.parent / "data"
-        nom_fic = "alerte_modif_horaire_lieu_devstral"
-        db_file = script_dir / f"{nom_fic}.db"
-
-        if not db_file.exists():
-            logger.error(f"Base de données de test non trouvée: {db_file}")
-            return
-
-        model_info = {
-            "modele": "test-model",
-            "base_url": "http://localhost:8000",
-            "fournisseur": "TEST",
-        }
-
-        resume_html, fichier_html = generer_rapport_html(
-            db_file=str(db_file),
-            table_name="resultats_extraction",
-            titre_rapport="Rapport de test",
-            model_info=model_info,
-        )
-
-        logger.info(f"Test réussi - rapport généré: {fichier_html}")
-
-    except Exception as e:
-        logger.error(f"Erreur lors du test: {e}")
-
-
-if __name__ == "__main__":
-    main()
