@@ -8,7 +8,7 @@ SmartWatch : extracteur d'horaires intelligent
    :alt: Logo SmartWatch
    :align: center
 |
-**SmartWatch** est un pipeline de données conçu pour extraire, analyser et comparer les horaires d'ouverture de divers établissements (mairies, piscines, médiathèques) à partir de leurs sites web. Il utilise des modèles de langage pour interpréter le contenu et le comparer à des données de référence (issues de data.grandlyon.com), puis génère et envoie par mail des rapports HTML interactifs.
+**SmartWatch** est un pipeline d'extraction de données conçu pour extraire, analyser, et comparer les horaires d'ouverture de divers établissements publics de la Métropole de Lyon (mairies, piscines, médiathèques), à partir de leurs sites web. Il utilise des modèles de langage pour interpréter le contenu et comparer les horaires d'ouverture extraits à des données de référence (issues de data.grandlyon.com), puis génère et envoie par mail des rapports HTML interactifs pour visualiser les résultats.
 
 .. toctree::
    :maxdepth: 1
