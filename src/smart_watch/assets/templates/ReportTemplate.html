@@ -119,6 +119,12 @@
     </style>
 </head>
 <body>
+    {% macro view_button(title, content, text='👁️ Voir') %}
+        {% if content %}
+            <button class="btn view-btn" data-title="{{ title }}" data-content="{{ content|e }}">{{ text }}</button>
+        {% endif %}
+    {% endmacro %}
+
     <div class="container">
         <div class="header">
             <h1>{{ titre_rapport }}</h1>
@@ -126,7 +132,7 @@
             {% if model_info and model_info.modele %}
             <p style="font-size:0.9em;opacity:0.8">
                 Modèle: {{ model_info.modele }}
-                {% if model_info.base_url %} | {{ model_info.base_url }}{% endif %}
+                {{- ' | ' ~ model_info.base_url if model_info.base_url }}
             </p>
             {% endif %}
             {% if execution_data and execution_data.llm_consommation_execution > 0 %}
@@ -225,13 +231,13 @@
                             <td class="col-gl">
                                 {% if url.horaires_data_gl %}
                                 <div class="preview gl">{{ url.horaires_data_gl[:60] }}{% if url.horaires_data_gl|length > 60 %}...{% endif %}</div>
-                                <button class="btn view-btn" data-title="Horaires GL - {{ url.identifiant }}" data-content="{{ url.horaires_data_gl|e }}">👁️ Voir</button>
+                                {{ view_button('Horaires GL - ' ~ url.identifiant, url.horaires_data_gl) }}
                                 {% else %}-{% endif %}
                             </td>
                             <td class="col-llm">
                                 {% if url.llm_horaires_osm %}
                                 <div class="preview llm">{{ url.llm_horaires_osm[:60] }}{% if url.llm_horaires_osm|length > 60 %}...{% endif %}</div>
-                                <button class="btn view-btn" data-title="Horaires LLM OSM - {{ url.identifiant }}" data-content="{{ url.llm_horaires_osm|e }}">👁️ Voir</button>
+                                {{ view_button('Horaires LLM OSM - ' ~ url.identifiant, url.llm_horaires_osm) }}
                                 {% else %}-{% endif %}
                             </td>
                             {% if statut.code != 'access_error' %}
@@ -241,19 +247,19 @@
                                 {% elif statut.code == 'schedule_diff' %}
                                     {% if url.differences_horaires %}
                                     <div class="preview comparison">{{ url.differences_horaires[:80] }}{% if url.differences_horaires|length > 80 %}...{% endif %}</div>
-                                    <button class="btn view-btn" data-title="Différences détaillées - {{ url.identifiant }}" data-content="{{ url.differences_horaires|e }}">👁️ Voir</button>
+                                    {{ view_button('Différences détaillées - ' ~ url.identifiant, url.differences_horaires) }}
                                     {% else %}
                                     <span style="color: #ffc107; font-weight: 500;">⚠️ Différences détectées</span>
                                     {% endif %}
                                 {% elif statut.code == 'extraction_error' %}
                                     {% if url.erreurs_resume %}
                                     <div class="preview comparison" style="background:#fff3cd;border-color:#ffeaa7;">{{ url.erreurs_resume[:80] }}{% if url.erreurs_resume|length > 80 %}...{% endif %}</div>
-                                    <button class="btn view-btn" data-title="Chaîne d'erreurs - {{ url.identifiant }}" data-content="{{ url.erreurs_pipeline|e }}">🔍 Erreurs</button>
+                                    {{ view_button('Chaîne d\'erreurs - ' ~ url.identifiant, url.erreurs_pipeline, '🔍 Erreurs') }}
                                     {% else %}
                                     <span style="color: #dc3545; font-weight: 500;">❌ Extraction échouée</span>
                                     {% endif %}
                                     {% if url.comparaison_horaires and url.comparaison_horaires != url.erreurs_resume %}
-                                    <br><button class="btn view-btn" data-title="Détails comparaison - {{ url.identifiant }}" data-content="{{ url.comparaison_horaires|e }}">📋 Détails</button>
+                                    <br>{{ view_button('Détails comparaison - ' ~ url.identifiant, url.comparaison_horaires, '📋 Détails') }}
                                     {% endif %}
                                 {% endif %}
                             </td>
