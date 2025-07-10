@@ -166,11 +166,16 @@ def retrieve_url(
             if sortie == "html":
                 row_dict["html"] = html_content
             elif sortie == "markdown":
-                try:
-                    row_dict["markdown"] = convert_html_to_markdown(html=html_content)
-                except Exception as e:
-                    logger.error(f"[{identifiant}] Erreur conversion Markdown: {e}")
+                markdown_content = convert_html_to_markdown(html=html_content)
+                # Si la conversion échoue, elle renvoie une chaîne vide.
+                # On utilise le HTML comme fallback, préservant l'ancien comportement.
+                if not markdown_content and html_content:
+                    logger.warning(
+                        f"[{identifiant}] La conversion Markdown a échoué (voir logs précédents). Utilisation du HTML brut comme fallback."
+                    )
                     row_dict["markdown"] = html_content
+                else:
+                    row_dict["markdown"] = markdown_content
 
             # Conversion automatique vers Markdown si HTML disponible
             if (
