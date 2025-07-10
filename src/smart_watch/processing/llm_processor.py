@@ -7,6 +7,8 @@ import time
 from datetime import datetime
 from typing import Dict
 
+import requests
+
 from ..core.ConfigManager import ConfigManager
 from ..core.GetPrompt import get_prompt
 from ..core.LLMClient import (
@@ -109,29 +111,26 @@ class LLMProcessor:
 
             # Récupérer les jours fériés pour année courante et suivante
             annee_courante = datetime.now().year
-            jours_feries_courants = get_jours_feries(annee=annee_courante)
-            jours_feries_suivants = get_jours_feries(annee=annee_courante + 1)
-
-            if not jours_feries_courants and not jours_feries_suivants:
-                self.logger.warning(
-                    f"Impossible de récupérer les jours fériés pour {lieu.nom}"
-                )
-                return llm_result
+            jours_feries_courants = get_jours_feries(annee=annee_courante) or {}
+            jours_feries_suivants = get_jours_feries(annee=annee_courante + 1) or {}
 
             # Filtrer les jours fériés pour ne garder que ceux qui dépassent
             # la date actuelle (pour éviter les jours fériés passés)
             jours_feries_courants = {
                 date_ferie: nom_ferie
                 for date_ferie, nom_ferie in jours_feries_courants.items()
-                if datetime.strptime(date_ferie, "%Y-%m-%d") >= datetime.now()
+                if datetime.strptime(date_ferie, "%Y-%m-%d").date()
+                >= datetime.now().date()
             }
 
             # Combiner les jours fériés des deux années
             tous_jours_feries = {}
-            if jours_feries_courants:
-                tous_jours_feries.update(jours_feries_courants)
-            if jours_feries_suivants:
-                tous_jours_feries.update(jours_feries_suivants)
+            tous_jours_feries.update(jours_feries_courants)
+            tous_jours_feries.update(jours_feries_suivants)
+
+            if not tous_jours_feries:
+                self.logger.debug(f"Aucun jour férié futur à ajouter pour {lieu.nom}")
+                return llm_result
 
             # Accéder à la structure des périodes
             periodes = llm_data.get("horaires_ouverture", {}).get("periodes", {})
@@ -178,6 +177,11 @@ class LLMProcessor:
 
             return json.dumps(llm_data, ensure_ascii=False)
 
+        except requests.exceptions.RequestException as e:
+            self.logger.warning(
+                f"Impossible de récupérer les jours fériés pour {lieu.identifiant} (erreur réseau): {e}"
+            )
+            return llm_result  # On continue sans enrichissement
         except Exception as e:
             self.logger.error(
                 f"Erreur enrichissement jours fériés pour {lieu.identifiant}: {e}"
