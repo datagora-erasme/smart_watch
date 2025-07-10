@@ -18,7 +18,7 @@ from ..data_models.schema_bdd import (
     Lieux,
     ResultatsExtraction,
 )
-from ..utils.OSMToCustomJson import OSMConverter
+from ..utils.OSMToCustomJson import OsmToJsonConverter
 
 
 def download_csv(url_or_path, separator=";", has_header=True):
@@ -109,7 +109,7 @@ class DatabaseManager:
     def _update_horaires_lieux_depuis_gl(self, session):
         """Met à jour les horaires des lieux depuis data.grandlyon.com."""
         try:
-            osm_converter = OSMConverter()
+            osm_converter = OsmToJsonConverter()
         except ImportError:
             self.logger.error("Convertisseur OSM non disponible")
             osm_converter = None

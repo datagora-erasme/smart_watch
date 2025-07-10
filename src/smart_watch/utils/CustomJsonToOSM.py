@@ -7,7 +7,6 @@ en spécification opening_hours d'OSM.
 """
 
 import json
-import sqlite3
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
@@ -18,6 +17,7 @@ try:
 except ImportError:
     date_parser = None
 
+from ..core.ErrorHandler import ErrorCategory, ErrorSeverity, handle_errors
 from ..core.Logger import create_logger
 
 # Initialize logger for this module
@@ -194,7 +194,7 @@ class DateParser:
         return None
 
 
-class OSMConverter:
+class JsonToOsmConverter:
     """
     Convertisseur d'horaires d'ouverture OpenStreetMap.
     """
@@ -450,6 +450,13 @@ class OSMConverter:
 
         return True
 
+    @handle_errors(
+        category=ErrorCategory.CONVERSION,
+        severity=ErrorSeverity.MEDIUM,
+        user_message="Erreur lors de la conversion du JSON personnalisé au format OSM.",
+        reraise=False,
+        default_return=ConversionResult(osm_periods={}),
+    )
     def convert_to_osm(self, data: Dict) -> ConversionResult:
         """
         Méthode principale de conversion.
@@ -460,61 +467,56 @@ class OSMConverter:
         Returns:
             ConversionResult avec les périodes OSM
         """
-        try:
-            logger.debug("Début conversion vers OSM")
+        logger.debug("Début conversion vers OSM")
 
-            # Vérifie d'abord si l'établissement est définitivement fermé
-            horaires_data = data.get("horaires_ouverture", {})
-            periods = horaires_data.get("periodes", {})
+        # Vérifie d'abord si l'établissement est définitivement fermé
+        horaires_data = data.get("horaires_ouverture", {})
+        periods = horaires_data.get("periodes", {})
 
-            # Vérifie si toutes les périodes indiquent une fermeture
-            all_periods_closed = True
-            has_any_period = False
+        # Vérifie si toutes les périodes indiquent une fermeture
+        all_periods_closed = True
+        has_any_period = False
 
-            for period_key, period_data in periods.items():
-                if not isinstance(period_data, dict):
-                    continue
+        for period_key, period_data in periods.items():
+            if not isinstance(period_data, dict):
+                continue
 
-                if period_data.get("source_found", False):
-                    has_any_period = True
+            if period_data.get("source_found", False):
+                has_any_period = True
 
-                    if period_key in [
-                        "hors_vacances_scolaires",
-                        "vacances_scolaires_ete",
-                        "petites_vacances_scolaires",
-                    ]:
-                        schedule = period_data.get("horaires", {})
-                        if schedule:
-                            # Vérifie si au moins un jour est ouvert
-                            for day_data in schedule.values():
-                                if isinstance(day_data, dict) and (
-                                    day_data.get("ouvert", False)
-                                    or day_data.get("creneaux", [])
-                                ):
-                                    all_periods_closed = False
-                                    break
-                    elif period_key in ["jours_feries", "jours_speciaux"]:
-                        specific_schedules = period_data.get("horaires_specifiques", {})
-                        if specific_schedules:
-                            all_periods_closed = False
+                if period_key in [
+                    "hors_vacances_scolaires",
+                    "vacances_scolaires_ete",
+                    "petites_vacances_scolaires",
+                ]:
+                    schedule = period_data.get("horaires", {})
+                    if schedule:
+                        # Vérifie si au moins un jour est ouvert
+                        for day_data in schedule.values():
+                            if isinstance(day_data, dict) and (
+                                day_data.get("ouvert", False)
+                                or day_data.get("creneaux", [])
+                            ):
+                                all_periods_closed = False
+                                break
+                elif period_key in ["jours_feries", "jours_speciaux"]:
+                    specific_schedules = period_data.get("horaires_specifiques", {})
+                    if specific_schedules:
+                        all_periods_closed = False
 
-                if not all_periods_closed:
-                    break
+            if not all_periods_closed:
+                break
 
-            # Si tout est fermé, retourne une fermeture définitive
-            if all_periods_closed and has_any_period:
-                logger.info("Établissement définitivement fermé")
-                return ConversionResult(osm_periods={"general": "off"})
+        # Si tout est fermé, retourne une fermeture définitive
+        if all_periods_closed and has_any_period:
+            logger.info("Établissement définitivement fermé")
+            return ConversionResult(osm_periods={"general": "off"})
 
-            # Convertit par périodes normalement
-            periods_result = self._convert_by_periods(data)
+        # Convertit par périodes normalement
+        periods_result = self._convert_by_periods(data)
 
-            logger.info(f"Conversion OSM réussie: {len(periods_result)} périodes")
-            return ConversionResult(osm_periods=periods_result)
-
-        except Exception as e:
-            logger.error(f"Erreur conversion OSM: {e}")
-            return ConversionResult(osm_periods={})
+        logger.info(f"Conversion OSM réussie: {len(periods_result)} périodes")
+        return ConversionResult(osm_periods=periods_result)
 
     def _convert_by_periods(self, data: Dict) -> Dict[str, str]:
         """Convertit les données par périodes individuelles."""
@@ -597,61 +599,3 @@ class OSMConverter:
 
         logger.info(f"Conversion terminée: {len(results)} éléments")
         return results
-
-
-def main():
-    """Exemple d'utilisation et tests."""
-    logger.section("CONVERTISSEUR OSM")
-
-    # Initialise le convertisseur
-    converter = OSMConverter()
-
-    logger.info("Test conversion depuis base de données")
-
-    # Test avec une base de données
-    db_path = Path(
-        r"C:\Users\beranger\Documents\GitHub\smart_watch\data\alerte_modif_horaire_lieu_unique_devstral.db"
-    )
-
-    if not db_path.exists():
-        logger.error(f"Base de données introuvable: {db_path}")
-        return
-
-    logger.info("Connexion à la base de données")
-    try:
-        with sqlite3.connect(db_path) as conn:
-            cursor = conn.cursor()
-            cursor.execute("""
-                SELECT identifiant, nom, url, llm_horaires_json 
-                FROM alerte_modif_horaire_lieu_unique 
-                WHERE llm_horaires_json IS NOT NULL 
-                LIMIT 5
-            """)
-
-            for record in cursor.fetchall():
-                item_id, nom, url, llm_horaires_json = record
-
-                try:
-                    horaires_data = json.loads(llm_horaires_json)
-                    result = converter.convert_to_osm(horaires_data)
-
-                    logger.info(f"ID : {item_id}, Nom : {nom}")
-
-                    if result.osm_periods:
-                        logger.info("Périodes :")
-                        for period, osm_format in result.osm_periods.items():
-                            logger.info(f"  {period} : {osm_format}")
-                    else:
-                        logger.info("Aucune période trouvée")
-
-                except json.JSONDecodeError:
-                    logger.error(f"Erreur de décodage JSON pour {item_id}")
-                except Exception:
-                    logger.error(f"Erreur de conversion pour {item_id}")
-
-    except sqlite3.Error as e:
-        logger.error(f"Erreur de base de données : {e}")
-
-
-if __name__ == "__main__":
-    main()

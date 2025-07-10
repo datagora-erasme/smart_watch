@@ -6,7 +6,6 @@ Ce module fournit des fonctionnalités complètes pour convertir une spécificat
 opening_hours d'OSM en format JSON personnalisé.
 """
 
-import json
 import re
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Union
@@ -437,7 +436,7 @@ class OSMParser:
 
 
 # --- Converter Class (Mise en forme du résultat du parsing en JSON final) ---
-class OSMConverter:
+class OsmToJsonConverter:
     """Convertisseur principal d'OSM vers JSON personnalisé."""
 
     def __init__(self):
@@ -558,83 +557,3 @@ class OSMConverter:
         for day in day_names:
             schedule[day] = {"source_found": False, "ouvert": False, "creneaux": []}
         return schedule
-
-
-# --- Fonctions et classes de compatibilité ---
-class OSMToCustomConverter(OSMConverter):
-    """Classe de compatibilité avec l'ancien nommage."""
-
-    pass
-
-
-def convert_osm_to_json(osm_string: str, metadata: Dict[str, str]) -> str:
-    """
-    Fonction principale pour convertir une chaîne OSM en JSON.
-    """
-    converter = OSMConverter()
-    result = converter.convert_osm_string(osm_string, metadata)
-    return json.dumps(result, indent=2, ensure_ascii=False)
-
-
-# --- Point d'entrée pour tests ---
-def main():
-    """Test et exemple d'utilisation."""
-    logger.section("OSM TO CUSTOM JSON CONVERTER - TESTS COMPLETS")
-
-    converter = OSMConverter()
-
-    test_cases = {
-        "Test 1 - Horaires séparés": 'Tu-Fr 16:00-19:00, We,Sa 10:00-13:00,14:00-18:00; 2025 Jul 14 closed "14 juillet"',
-        "Test 2 - Horaires matin/après-midi": 'Mo-Fr 08:30-12:30, Mo-We,Fr 13:30-17:00, Sa 09:00-12:00; 2025 Jul 14 closed "14 juillet"',
-        "Test 3 - Horaires simples": "Mo-Fr 07:00-21:30, Sa,Su 08:00-20:00",
-        "Test 4 - Fermé définitivement": "closed",
-        "Test 5 - Horaires complexes": "Mo,Tu,We,Fr 08:45-16:45, Th 10:00-16:45, Sa 09:30-12:00; Th[1] 13:30-16:45",
-    }
-
-    metadata_test = {
-        "identifiant": "TEST001",
-        "nom": "Lieu de test",
-        "type_lieu": "Test",
-        "url": "http://test.com",
-    }
-
-    for test_name, osm_string in test_cases.items():
-        logger.info(f"\n=== {test_name} ===")
-        logger.info(f"OSM: {osm_string}")
-
-        result = converter.convert_osm_string(osm_string, metadata_test)
-        if not result:
-            logger.error("La conversion a échoué.")
-            continue
-
-        # Affichage des résultats pour le debug
-        horaires = (
-            result.get("horaires_ouverture", {})
-            .get("periodes", {})
-            .get("hors_vacances_scolaires", {})
-            .get("horaires", {})
-        )
-        logger.info("Résultat:")
-        for jour, infos in horaires.items():
-            if infos.get("ouvert"):
-                creneaux_str = ", ".join(
-                    [f"{c['debut']}-{c['fin']}" for c in infos.get("creneaux", [])]
-                )
-                logger.info(f"  {jour}: {creneaux_str}")
-            elif infos.get("source_found"):
-                logger.info(f"  {jour}: fermé")
-            else:
-                logger.info(f"  {jour}: non spécifié")
-
-        jours_feries = (
-            result.get("horaires_ouverture", {})
-            .get("periodes", {})
-            .get("jours_feries", {})
-            .get("horaires_specifiques", {})
-        )
-        if jours_feries:
-            logger.info(f"Jours fériés: {len(jours_feries)} dates")
-
-
-if __name__ == "__main__":
-    main()

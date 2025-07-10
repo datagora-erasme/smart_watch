@@ -17,7 +17,7 @@ from ..core.LLMClient import (
     get_mistral_tool_format,
     get_structured_response_format,
 )
-from ..utils.CustomJsonToOSM import OSMConverter
+from ..utils.CustomJsonToOSM import JsonToOsmConverter
 from ..utils.JoursFeries import get_jours_feries
 from .database_manager import DatabaseManager
 from .url_processor import ProcessingStats
@@ -29,7 +29,7 @@ class LLMProcessor:
     def __init__(self, config: ConfigManager, logger):
         self.config = config
         self.logger = logger
-        self.converter = OSMConverter()
+        self.json_converter = JsonToOsmConverter()
         self._init_llm_client()
         self._load_schema()
         self.total_co2_emissions = 0.0  # Accumulation des émissions pour l'exécution
@@ -74,25 +74,42 @@ class LLMProcessor:
 
     def _convert_to_osm(self, llm_result: str, identifiant: str) -> str:
         """Convertit le résultat LLM au format OSM."""
+        if not llm_result or llm_result.startswith("Erreur"):
+            return ""
+
         try:
-            if llm_result is None or llm_result.startswith("Erreur"):
-                return ""
+            llm_data = json.loads(llm_result)
+        except json.JSONDecodeError as e:
+            self.logger.warning(
+                f"Le résultat LLM pour {identifiant} n'est pas un JSON valide: {e}"
+            )
+            return "Erreur Conversion OSM: JSON invalide"
 
-            llm_horaires_json = json.loads(llm_result)
-            conversion_result = self.converter.convert_to_osm(llm_horaires_json)
+        # L'appel à convert_to_osm est maintenant sécurisé par le @handle_errors
+        # Il ne lèvera plus d'exception mais retournera un résultat vide en cas d'erreur.
+        conversion_result = self.json_converter.convert_to_osm(llm_data)
 
-            if conversion_result.osm_periods:
-                return " / ".join(
-                    [
-                        f"{period}: {osm_format}"
-                        for period, osm_format in conversion_result.osm_periods.items()
-                    ]
-                )
-            return "No periods found"
+        # Joindre les différentes périodes OSM en une seule chaîne
+        osm_horaires = "; ".join(
+            f"{period_name}: {osm_string}"
+            for period_name, osm_string in conversion_result.osm_periods.items()
+            if osm_string and period_name != "general"
+        )
 
-        except Exception as e:
-            self.logger.error(f"Erreur conversion OSM {identifiant}: {e}")
-            return f"Erreur Conversion OSM: {e}"
+        # Ajouter la période générale si elle existe
+        general_schedule = conversion_result.osm_periods.get("general")
+        if general_schedule:
+            if osm_horaires:
+                osm_horaires = f"{general_schedule}; {osm_horaires}"
+            else:
+                osm_horaires = general_schedule
+
+        if not osm_horaires:
+            self.logger.debug(
+                f"La conversion OSM n'a produit aucun résultat pour {identifiant}"
+            )
+
+        return osm_horaires
 
     def _enrich_with_jours_feries(self, llm_result: str, lieu) -> str:
         """Enrichit le JSON LLM avec les jours fériés pour les mairies."""
@@ -258,27 +275,18 @@ class LLMProcessor:
                 self.total_co2_emissions += individual_emissions
 
                 # Vérifier si l'appel LLM a réussi
-                if llm_response.content is not None and not str(
-                    llm_response.content
-                ).startswith("Erreur"):
+                if llm_response.content and not str(llm_response.content).startswith(
+                    "Erreur"
+                ):
                     # Enrichissement avec les jours fériés pour les mairies
                     enriched_result = self._enrich_with_jours_feries(
                         llm_response.content, lieu
                     )
 
-                    # Conversion OSM seulement si LLM a réussi
-                    try:
-                        osm_result = self._convert_to_osm(
-                            enriched_result, lieu.identifiant
-                        )
-                        result_data["llm_horaires_json"] = enriched_result
-                        result_data["llm_horaires_osm"] = osm_result
-                    except Exception as e:
-                        self.logger.error(
-                            f"Erreur conversion OSM pour {lieu.identifiant}: {e}"
-                        )
-                        result_data["llm_horaires_json"] = enriched_result
-                        result_data["llm_horaires_osm"] = f"Erreur Conversion OSM: {e}"
+                    # Conversion OSM (le try/except n'est plus nécessaire ici)
+                    osm_result = self._convert_to_osm(enriched_result, lieu.identifiant)
+                    result_data["llm_horaires_json"] = enriched_result
+                    result_data["llm_horaires_osm"] = osm_result
                 else:
                     # Gestion des erreurs LLM avec messages plus explicites
                     if llm_response.content is None:

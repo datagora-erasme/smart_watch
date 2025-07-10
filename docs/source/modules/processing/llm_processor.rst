@@ -34,7 +34,7 @@ Le LLMProcessor gère l'extraction d'horaires via modèles de langage :
 2. Génération du prompt avec schéma intégré
 3. Appel LLM avec structured outputs
 4. Enrichissement automatique jours fériés (mairies)
-5. Conversion JSON → OSM via `OSMConverter`
+5. Conversion JSON → OSM via `JsonToOsmConverter`
 
 **Gestion robuste :**
 - Traitement séquentiel avec délais configurables
