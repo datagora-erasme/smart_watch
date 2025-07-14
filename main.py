@@ -20,6 +20,8 @@ Les modules principaux sont :
 """
 
 # Modules du projet
+import time
+
 from src.smart_watch.core.ConfigManager import ConfigManager
 from src.smart_watch.core.ErrorHandler import (
     ErrorCategory,
@@ -34,8 +36,8 @@ from src.smart_watch.processing import (
     LLMProcessor,
     URLProcessor,
 )
-from src.smart_watch.processing.url_processor import ProcessingStats
 from src.smart_watch.reporting import ReportManager
+from src.smart_watch.stats import PipelineStats  # Import unifié
 from src.smart_watch.utils.CSVToPolars import CSVToPolars
 from src.smart_watch.utils.MarkdownCleaner import MarkdownCleaner
 
@@ -51,9 +53,7 @@ class HoraireExtractor:
             raise ValueError("Configuration invalide")
 
         # Initialisation du logger
-        self.logger = create_logger(
-            module_name="Main",
-        )
+        self.logger = create_logger(module_name="Main")
 
         # Affichage de la configuration
         self.config.display_summary()
@@ -67,8 +67,8 @@ class HoraireExtractor:
         self.comparison_processor = ComparisonProcessor(self.config, self.logger)
         self.report_manager = ReportManager(self.config, self.logger)
 
-        # Statistiques globales
-        self.stats = ProcessingStats()
+        # Statistiques globales unifiées
+        self.stats = PipelineStats()
 
         self.logger.info("HoraireExtractor initialisé")
 
@@ -81,36 +81,48 @@ class HoraireExtractor:
         """Exécute le pipeline d'extraction complet"""
         self.logger.section("DÉBUT PIPELINE EXTRACTION HORAIRES")
 
+        start_time = time.time()
+
         try:
             # 1. Configuration et chargement des données
             execution_id = self._setup_execution()
 
             # 2. Pipeline de traitement séquentiel
-            # a. Extraction des URLs (produit markdown_brut)
-            url_stats = self.url_processor.process_urls(self.db_manager, execution_id)
-
-            # b. Nettoyage du contenu Markdown (markdown_brut -> markdown_nettoye)
-            cleaning_stats = self.markdown_cleaner.process_markdown_cleaning(
+            # a. Extraction des URLs
+            self.stats.url_stats = self.url_processor.process_urls(
                 self.db_manager, execution_id
             )
 
-            # c. Filtrage sémantique du Markdown (markdown_nettoye -> markdown_filtre)
-            markdown_stats = self.markdown_processor.process_markdown_filtering(
+            # b. Nettoyage du contenu Markdown
+            markdown_cleaning_stats = self.markdown_cleaner.process_markdown_cleaning(
                 self.db_manager, execution_id
             )
 
-            # d. Extraction des horaires via LLM (utilise markdown_filtre)
-            llm_stats = self.llm_processor.process_llm_extractions(
+            # c. Filtrage sémantique du Markdown
+            markdown_filtering_stats = (
+                self.markdown_processor.process_markdown_filtering(
+                    self.db_manager, execution_id
+                )
+            )
+
+            # Fusionner les statistiques markdown
+            self.stats.markdown_stats = markdown_cleaning_stats
+            self.stats.markdown_stats.merge(markdown_filtering_stats)
+
+            # d. Extraction des horaires via LLM
+            self.stats.llm_stats = self.llm_processor.process_llm_extractions(
                 self.db_manager, execution_id
             )
 
-            # e. Comparaison des horaires extraits avec les données de référence
-            comp_stats = self.comparison_processor.process_comparisons(self.db_manager)
-
-            # 3. Consolidation des statistiques
-            self._consolidate_stats(
-                url_stats, cleaning_stats, markdown_stats, llm_stats, comp_stats
+            # e. Comparaison des horaires extraits
+            self.stats.comparison_stats = self.comparison_processor.process_comparisons(
+                self.db_manager
             )
+
+            # 3. Finalisation des statistiques
+            self.stats.total_processing_time = time.time() - start_time
+            self.stats.update_co2_emissions()
+            self.stats.pipeline_success = True
 
             # 4. Génération et envoi du rapport
             self.report_manager.generate_and_send_report(self.stats)
@@ -121,6 +133,8 @@ class HoraireExtractor:
             self.logger.section("FIN PIPELINE EXTRACTION HORAIRES")
 
         except Exception as e:
+            self.stats.pipeline_success = False
+            self.stats.total_processing_time = time.time() - start_time
             self.logger.error(f"Erreur pipeline: {e}")
             raise
 
@@ -141,27 +155,11 @@ class HoraireExtractor:
 
         return self.db_manager.setup_execution(df_csv)
 
-    def _consolidate_stats(
-        self,
-        url_stats: ProcessingStats,
-        cleaning_stats,
-        markdown_stats: ProcessingStats,
-        llm_stats: ProcessingStats,
-        comp_stats: ProcessingStats,
-    ):
-        """Consolide les statistiques de tous les processeurs."""
-        self.stats.urls_processed = url_stats.urls_processed
-        self.stats.urls_successful = url_stats.urls_successful
-        self.stats.llm_processed = llm_stats.llm_processed
-        self.stats.llm_successful = llm_stats.llm_successful
-        self.stats.comparisons_processed = comp_stats.comparisons_processed
-        self.stats.comparisons_successful = comp_stats.comparisons_successful
-
     def _display_final_summary(self):
         """Affiche le résumé final des statistiques."""
         self.logger.section("RÉSUMÉ FINAL")
 
-        summary = self.stats.get_summary()
+        summary = self.stats.get_summary_for_report()
         for key, value in summary.items():
             self.logger.info(f"{key}: {value}")
 

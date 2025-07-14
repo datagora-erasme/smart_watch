@@ -8,8 +8,8 @@ from typing import Dict, List, Tuple
 from ..core.ComparateurHoraires import HorairesComparator
 from ..core.ConfigManager import ConfigManager
 from ..data_models.schema_bdd import Lieux, ResultatsExtraction
+from ..stats import ComparisonProcessingStats
 from .database_manager import DatabaseManager
-from .url_processor import ProcessingStats
 
 
 class ComparisonProcessor:
@@ -134,10 +134,12 @@ class ComparisonProcessor:
         finally:
             session.close()
 
-    def process_comparisons(self, db_manager: DatabaseManager) -> ProcessingStats:
+    def process_comparisons(
+        self, db_manager: DatabaseManager
+    ) -> ComparisonProcessingStats:
         """Traite les comparaisons avec data.grandlyon.com."""
         self.logger.section("COMPARAISON HORAIRES")
-        stats = ProcessingStats()
+        stats = ComparisonProcessingStats()
 
         try:
             comparator = HorairesComparator()
@@ -162,7 +164,7 @@ class ComparisonProcessor:
             for exec_id, count in executions_stats.items():
                 self.logger.info(f"  - Exécution {exec_id}: {count} comparaisons")
 
-            stats.comparisons_processed = len(resultats_pour_comparaison)
+            stats.processed = len(resultats_pour_comparaison)
 
             for i, (resultat, lieu) in enumerate(resultats_pour_comparaison, 1):
                 self.logger.info(
@@ -179,18 +181,28 @@ class ComparisonProcessor:
                             resultat.id_resultats_extraction,
                             comparison_result,
                         )
-                        stats.comparisons_successful += 1
+                        stats.successful += 1
+
+                        # Catégoriser les résultats
+                        if comparison_result.get("identique") is True:
+                            stats.identical_schedules += 1
+                        elif comparison_result.get("identique") is False:
+                            stats.different_schedules += 1
                     else:
+                        stats.errors += 1
+                        stats.comparison_errors += 1
                         self.logger.warning(
                             f"Comparaison échouée pour {lieu.nom} : {comparison_result.get('differences', 'Erreur inconnue')} - Base non modifiée"
                         )
 
                 except Exception as e:
+                    stats.errors += 1
+                    stats.comparison_errors += 1
                     self.logger.error(f"Erreur comparaison pour {lieu.nom}: {e}")
                     # Ne pas mettre à jour la base en cas d'erreur
 
             self.logger.info(
-                f"Comparaisons: {stats.comparisons_successful}/{stats.comparisons_processed} réussies"
+                f"Comparaisons: {stats.successful}/{stats.processed} réussies"
             )
 
         except ImportError as e:

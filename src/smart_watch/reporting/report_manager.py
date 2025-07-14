@@ -11,8 +11,8 @@ from ..core.ConfigManager import ConfigManager
 from ..core.EnvoyerMail import EmailSender
 from ..core.ErrorHandler import ErrorCategory, ErrorSeverity, handle_errors
 from ..core.Logger import create_logger
-from ..processing.url_processor import ProcessingStats
 from ..reporting.GenererRapportHTML import generer_rapport_html
+from ..stats import PipelineStats
 
 # Initialize logger for this module
 logger = create_logger(
@@ -75,9 +75,9 @@ class ReportManager:
                 zip_path.unlink()  # Supprimer le zip vide
             return None
 
-    def generate_and_send_report(self, stats: ProcessingStats):
+    def generate_and_send_report(self, stats: PipelineStats):
         """Génère et envoie le rapport par email."""
-        self.logger.section("GÉNÉRATION RAPPORT")
+        self.logger.section("GÉNÉRATION ET ENVOI RAPPORT")
 
         model_info = {
             "modele": self.config.llm.modele,
@@ -92,21 +92,23 @@ class ReportManager:
             model_info=model_info,
         )
 
-        # Envoi par email si configuré
-        if self.config.email and self.config.email.emetteur:
-            self._send_email_report(resume_html, fichier_html, stats)
-        else:
-            self.logger.warning(
-                f"Email non configuré. Rapport sauvegardé localement: {fichier_html}"
+        # Validation de la configuration email
+        if not self.config.email or not self.config.email.emetteur:
+            raise ValueError(
+                "Configuration email manquante - l'envoi par email est obligatoire"
             )
+
+        # Envoi par email obligatoire
+        self._send_email_report(resume_html, fichier_html, stats)
 
     @handle_errors(
         category=ErrorCategory.EMAIL,
-        severity=ErrorSeverity.HIGH,
+        severity=ErrorSeverity.CRITICAL,  # Changé de HIGH à CRITICAL car obligatoire
         user_message="Erreur lors de l'envoi de l'email de rapport.",
+        reraise=True,  # Ajouté pour faire remonter l'erreur car critique
     )
     def _send_email_report(
-        self, resume_html: str, fichier_html: str, stats: ProcessingStats
+        self, resume_html: str, fichier_html: str, stats: PipelineStats
     ):
         """Envoie le rapport par email."""
         self.logger.section("ENVOI EMAIL")
@@ -118,14 +120,22 @@ class ReportManager:
             # Préparer les pièces jointes
             attachments = []
 
-            # Ajouter le rapport HTML
-            if fichier_html and Path(fichier_html).exists():
-                attachments.append(fichier_html)
+            # Ajouter le rapport HTML (obligatoire)
+            if not fichier_html or not Path(fichier_html).exists():
+                raise ValueError("Fichier rapport HTML manquant ou introuvable")
 
-            # Ajouter le zip des logs
+            attachments.append(fichier_html)
+            self.logger.info(
+                f"Rapport HTML ajouté en pièce jointe: {Path(fichier_html).name}"
+            )
+
+            # Ajouter le zip des logs (optionnel)
             logs_zip = self._create_logs_zip()
             if logs_zip:
                 attachments.append(logs_zip)
+                self.logger.info(
+                    f"Archive logs ajoutée en pièce jointe: {Path(logs_zip).name}"
+                )
 
             # Utiliser EmailSender pour envoyer l'email
             email_sender = EmailSender(self.config)

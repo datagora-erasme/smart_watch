@@ -10,6 +10,7 @@ from typing import Dict, List, Tuple
 from ..core.ErrorHandler import ErrorCategory, ErrorSeverity, handle_errors
 from ..core.Logger import create_logger
 from ..data_models.schema_bdd import Lieux, ResultatsExtraction
+from ..stats import MarkdownProcessingStats
 
 # Initialize logger for this module
 logger = create_logger(
@@ -83,18 +84,21 @@ class MarkdownCleaner:
         finally:
             session.close()
 
-    def process_markdown_cleaning(self, db_manager, execution_id: int) -> CleaningStats:
-        """Nettoie le contenu markdown pour tous les enregistrements d'une exécution."""
+    def process_markdown_cleaning(
+        self, db_manager, execution_id
+    ) -> MarkdownProcessingStats:
+        """Nettoie le contenu markdown et retourne des statistiques unifiées."""
         self.logger.section("NETTOYAGE MARKDOWN")
 
-        stats = CleaningStats()
         resultats_a_nettoyer = self._get_pending_cleaning(db_manager, execution_id)
 
         if not resultats_a_nettoyer:
             self.logger.info("Aucun markdown à nettoyer")
-            return stats
+            return MarkdownProcessingStats()  # Retourne le bon type, même si vide
 
         self.logger.info(f"{len(resultats_a_nettoyer)} contenus markdown à nettoyer")
+
+        stats = CleaningStats()
         stats.texts_processed = len(resultats_a_nettoyer)
 
         for i, (resultat, lieu) in enumerate(resultats_a_nettoyer, 1):
@@ -120,7 +124,16 @@ class MarkdownCleaner:
         self.logger.info(
             f"Markdown nettoyé: {stats.texts_successful}/{stats.texts_processed} réussies"
         )
-        return stats
+
+        # Convertir les statistiques locales en statistiques unifiées
+        markdown_stats = MarkdownProcessingStats(
+            processed=stats.texts_processed,
+            successful=stats.texts_successful,
+            chars_cleaned=stats.chars_replaced,
+            errors=(stats.texts_processed - stats.texts_successful),
+        )
+
+        return markdown_stats
 
     @handle_errors(
         category=ErrorCategory.CONVERSION,

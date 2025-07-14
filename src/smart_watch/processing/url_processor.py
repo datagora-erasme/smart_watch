@@ -7,29 +7,8 @@ from typing import Dict
 
 from ..core.ConfigManager import ConfigManager
 from ..core.URLRetriever import retrieve_url
+from ..stats import URLProcessingStats
 from .database_manager import DatabaseManager
-
-
-class ProcessingStats:
-    """Statistiques de traitement pour chaque étape."""
-
-    def __init__(self):
-        self.urls_processed: int = 0
-        self.urls_successful: int = 0
-        self.llm_processed: int = 0
-        self.llm_successful: int = 0
-        self.comparisons_processed: int = 0
-        self.comparisons_successful: int = 0
-
-    def get_summary(self) -> Dict[str, int]:
-        return {
-            "urls_processed": self.urls_processed,
-            "urls_successful": self.urls_successful,
-            "llm_processed": self.llm_processed,
-            "llm_successful": self.llm_successful,
-            "comparisons_processed": self.comparisons_processed,
-            "comparisons_successful": self.comparisons_successful,
-        }
 
 
 class URLProcessor:
@@ -41,19 +20,19 @@ class URLProcessor:
 
     def process_urls(
         self, db_manager: DatabaseManager, execution_id: int
-    ) -> ProcessingStats:
+    ) -> URLProcessingStats:
         """Traite les URLs en parallèle."""
         self.logger.section("EXTRACTION CONTENU URLs")
 
         resultats_a_traiter = db_manager.get_pending_urls(execution_id)
-        stats = ProcessingStats()
+        stats = URLProcessingStats()
 
         if not resultats_a_traiter:
             self.logger.info("Aucune URL à traiter")
             return stats
 
         self.logger.info(f"{len(resultats_a_traiter)} URLs à traiter")
-        stats.urls_processed = len(resultats_a_traiter)
+        stats.processed = len(resultats_a_traiter)
 
         # Traitement parallèle optimisé
         with concurrent.futures.ThreadPoolExecutor(
@@ -82,16 +61,37 @@ class URLProcessor:
                     db_manager.update_url_result(resultat_id, result_data)
 
                     if result_data.get("statut") == "ok":
-                        stats.urls_successful += 1
+                        stats.successful += 1
+                        stats.markdown_extracted += 1
                         self.logger.debug(f"URL OK: {nom}")
                     else:
+                        stats.errors += 1
+                        # Catégoriser les erreurs
+                        if result_data.get("code_http", 0) >= 400:
+                            stats.http_errors += 1
+                        elif "timeout" in result_data.get("message", "").lower():
+                            stats.timeout_errors += 1
                         self.logger.warning(
                             f"URL échec: {nom} - {result_data.get('message')}"
                         )
 
                 except Exception as e:
+                    stats.errors += 1
                     self.logger.error(f"Erreur traitement URL {nom}: {e}")
 
+        self.logger.info(
+            f"URLs traitées: {stats.successful}/{stats.processed} réussies"
+        )
+        return stats
+
+    def _process_single_url(self, row_data: Dict, resultat_id: int) -> Dict:
+        """Traite une URL individuelle."""
+        return retrieve_url(
+            row_data,
+            sortie="markdown",
+            encoding_errors="ignore",
+            config=self.config,
+        )
         self.logger.info(
             f"URLs traitées: {stats.urls_successful}/{stats.urls_processed} réussies"
         )

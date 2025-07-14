@@ -17,10 +17,10 @@ from ..core.LLMClient import (
     get_mistral_tool_format,
     get_structured_response_format,
 )
+from ..stats import LLMProcessingStats
 from ..utils.CustomJsonToOSM import JsonToOsmConverter
 from ..utils.JoursFeries import get_jours_feries
 from .database_manager import DatabaseManager
-from .url_processor import ProcessingStats
 
 
 class LLMProcessor:
@@ -320,7 +320,7 @@ class LLMProcessor:
 
     def process_llm_extractions(
         self, db_manager: DatabaseManager, execution_id: int
-    ) -> ProcessingStats:
+    ) -> LLMProcessingStats:
         """Traite les extractions LLM."""
         self.logger.section("EXTRACTION HORAIRES LLM")
 
@@ -328,14 +328,14 @@ class LLMProcessor:
         self.total_co2_emissions = 0.0
 
         resultats_pour_llm = db_manager.get_pending_llm(execution_id)
-        stats = ProcessingStats()
+        stats = LLMProcessingStats()
 
         if not resultats_pour_llm:
             self.logger.info("Aucune extraction LLM nécessaire")
             return stats
 
         self.logger.info(f"{len(resultats_pour_llm)} extractions LLM à effectuer")
-        stats.llm_processed = len(resultats_pour_llm)
+        stats.processed = len(resultats_pour_llm)
 
         # Traitement séquentiel
         for i, (resultat, lieu) in enumerate(resultats_pour_llm, 1):
@@ -354,8 +354,18 @@ class LLMProcessor:
                     if llm_result.get("llm_horaires_json") and not llm_result[
                         "llm_horaires_json"
                     ].startswith("Erreur"):
-                        stats.llm_successful += 1
+                        stats.successful += 1
+                        stats.json_extractions += 1
+
+                        # Vérifier si la conversion OSM a réussi
+                        if llm_result.get("llm_horaires_osm") and not llm_result[
+                            "llm_horaires_osm"
+                        ].startswith("Erreur"):
+                            stats.osm_conversions += 1
+                    else:
+                        stats.errors += 1
                 else:
+                    stats.errors += 1
                     # Erreur critique (pas de prompt généré)
                     self.logger.warning(
                         f"Échec critique LLM pour {lieu.nom} - aucune donnée générée"
@@ -371,15 +381,19 @@ class LLMProcessor:
                     time.sleep(delay)
 
             except Exception as e:
+                stats.errors += 1
                 self.logger.error(f"Erreur LLM pour {lieu.nom}: {e}")
                 # Ne pas mettre à jour la base de données en cas d'exception
+
+        # Ajouter les émissions CO2 totales aux statistiques
+        stats.co2_emissions = self.total_co2_emissions
+        # Calculer les tokens totaux (approximatif)
+        stats.total_tokens = stats.processed * 1000  # Estimation
 
         # Mettre à jour les émissions totales dans la table executions
         db_manager.update_execution_emissions(execution_id, self.total_co2_emissions)
 
-        self.logger.info(
-            f"LLM traité: {stats.llm_successful}/{stats.llm_processed} réussies"
-        )
+        self.logger.info(f"LLM traité: {stats.successful}/{stats.processed} réussies")
         self.logger.info(
             f"Émissions CO2 (appels LLM): {self.total_co2_emissions:.6f} kg"
         )
