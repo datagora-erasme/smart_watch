@@ -67,7 +67,7 @@ class HoraireExtractor:
         self.llm_processor = LLMProcessor(self.config, self.logger)
         self.comparison_processor = ComparisonProcessor(self.config, self.logger)
         self.report_manager = ReportManager(self.config, self.logger)
-        self.stats_manager = StatsManager(self.config, self.db_manager, self.logger)
+        self.stats_manager = StatsManager(self.config, self.logger)
 
         self.logger.info("HoraireExtractor initialisé")
 

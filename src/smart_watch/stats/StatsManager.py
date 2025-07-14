@@ -7,8 +7,8 @@ from datetime import datetime
 from typing import Any, Dict, Optional
 
 from ..core.ConfigManager import ConfigManager
+from ..core.DatabaseManager import DatabaseManager
 from ..core.Logger import create_logger
-from ..processing.database_manager import DatabaseManager
 
 logger = create_logger("StatsManager")
 
@@ -16,10 +16,12 @@ logger = create_logger("StatsManager")
 class StatsManager:
     """Gestionnaire de statistiques basé sur les requêtes SQL."""
 
-    def __init__(self, config: ConfigManager, db_manager: DatabaseManager, logger):
+    def __init__(self, config: ConfigManager, logger):
         self.config = config
         self.logger = logger
-        self.db_manager = db_manager
+        self.db_manager = DatabaseManager(
+            db_file=config.database.db_file, table_name="resultats_extraction"
+        )
 
     def get_pipeline_stats(self) -> Dict[str, Any]:
         """

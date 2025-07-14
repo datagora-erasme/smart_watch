@@ -168,7 +168,7 @@
             background: #138496
         }
 
-        /* Aperçus unifiés */
+        /* Aperçus */
         .preview {
             border-radius: 4px;
             padding: 6px;
@@ -448,46 +448,6 @@
                             <td style="font-size: 0.9em; line-height: 1.4;">{{ statut.description }}</td>
                         </tr>
                         {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-
-            <h3>📊 Statistiques de traitement</h3>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Étape</th>
-                            <th>Traités</th>
-                            <th>Réussis</th>
-                            <th>Taux</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>🌐 Extraction URLs</td>
-                            <td>{{ stats_globales.get('urls_total', 0) }}</td>
-                            <td>{{ stats_globales.get('urls_successful', 0) }}</td>
-                            <td>{{ stats_globales.get('urls_success_rate', '0%') }}</td>
-                        </tr>
-                        <tr>
-                            <td>📝 Traitement Markdown</td>
-                            <td>{{ stats_globales.get('markdown_processed', 0) }}</td>
-                            <td>{{ stats_globales.get('markdown_filtered', 0) }}</td>
-                            <td>{{ stats_globales.get('markdown_success_rate', '0%') }}</td>
-                        </tr>
-                        <tr>
-                            <td>🤖 Extraction LLM</td>
-                            <td>{{ stats_globales.get('llm_attempted', 0) }}</td>
-                            <td>{{ stats_globales.get('llm_successful', 0) }}</td>
-                            <td>{{ stats_globales.get('llm_success_rate', '0%') }}</td>
-                        </tr>
-                        <tr>
-                            <td>⚖️ Comparaisons</td>
-                            <td>{{ stats_globales.get('comparisons_done', 0) }}</td>
-                            <td>{{ stats_globales.get('comparisons_identical', 0) }}</td>
-                            <td>{{ stats_globales.get('comparisons_accuracy', '0%') }}</td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
