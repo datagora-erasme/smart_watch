@@ -31,6 +31,7 @@ class ErrorCategory(Enum):
     FILE_IO = "file_io"
     VALIDATION = "validation"
     CONVERSION = "conversion"
+    PARSING = "parsing"
     EMAIL = "email"
     UNKNOWN = "unknown"
 
@@ -77,24 +78,7 @@ class ErrorHandler:
         # Registre des erreurs traitées
         self.error_registry: List[HandledError] = []
 
-        # Mapping des exceptions vers les catégories
-        self.exception_mapping = {
-            # Configuration
-            ValueError: ErrorCategory.CONFIGURATION,
-            KeyError: ErrorCategory.CONFIGURATION,
-            AttributeError: ErrorCategory.CONFIGURATION,
-            # Base de données
-            Exception: ErrorCategory.DATABASE,  # Sera affiné par le nom du module
-            # Réseau
-            ConnectionError: ErrorCategory.NETWORK,
-            TimeoutError: ErrorCategory.NETWORK,
-            # Fichiers
-            FileNotFoundError: ErrorCategory.FILE_IO,
-            PermissionError: ErrorCategory.FILE_IO,
-            OSError: ErrorCategory.FILE_IO,
-        }
-
-        # Gestionnaires spécialisés par catégorie
+        # Les gestionnaires spécialisés sont conservés
         self.category_handlers = {
             ErrorCategory.CONFIGURATION: self._handle_configuration_error,
             ErrorCategory.DATABASE: self._handle_database_error,
@@ -102,6 +86,7 @@ class ErrorHandler:
             ErrorCategory.LLM: self._handle_llm_error,
             ErrorCategory.FILE_IO: self._handle_file_io_error,
             ErrorCategory.VALIDATION: self._handle_validation_error,
+            ErrorCategory.PARSING: self._handle_parsing_error,
             ErrorCategory.EMAIL: self._handle_email_error,
         }
 
@@ -109,37 +94,16 @@ class ErrorHandler:
         self,
         exception: Exception,
         context: ErrorContext,
-        severity: Optional[ErrorSeverity] = None,
-        category: Optional[ErrorCategory] = None,
+        severity: ErrorSeverity,
+        category: ErrorCategory,
         reraise: bool = False,
         default_return: Any = None,
     ) -> Any:
         """
         Traite une erreur de manière centralisée.
-
-        Args:
-            exception: L'exception à traiter
-            context: Contexte de l'erreur
-            severity: Gravité de l'erreur (auto-déterminée si None)
-            category: Catégorie de l'erreur (auto-déterminée si None)
-            reraise: Si True, relance l'exception après traitement
-            default_return: Valeur de retour par défaut
-
-        Returns:
-            default_return ou résultat du gestionnaire spécialisé
-
-        Raises:
-            Exception: Si reraise=True
+        La catégorie et la gravité doivent être fournies explicitement.
         """
         import datetime
-
-        # Auto-détermination de la catégorie
-        if category is None:
-            category = self._determine_category(exception, context)
-
-        # Auto-détermination de la gravité
-        if severity is None:
-            severity = self._determine_severity(exception, context, category)
 
         # Création de l'erreur traitée
         handled_error = HandledError(
@@ -165,64 +129,6 @@ class ErrorHandler:
             raise exception
 
         return result if result is not None else default_return
-
-    def _determine_category(
-        self, exception: Exception, context: ErrorContext
-    ) -> ErrorCategory:
-        """Détermine automatiquement la catégorie de l'erreur."""
-
-        # Mapping basé sur le type d'exception
-        exc_type = type(exception)
-        if exc_type in self.exception_mapping:
-            base_category = self.exception_mapping[exc_type]
-        else:
-            base_category = ErrorCategory.UNKNOWN
-
-        # Affinement basé sur le contexte
-        module_name = context.module.lower()
-
-        if "llm" in module_name or "llm" in context.operation.lower():
-            return ErrorCategory.LLM
-        elif "database" in module_name or "db" in module_name:
-            return ErrorCategory.DATABASE
-        elif "mail" in module_name or "email" in module_name:
-            return ErrorCategory.EMAIL
-        elif "url" in module_name or "network" in module_name:
-            return ErrorCategory.NETWORK
-        elif "config" in module_name:
-            return ErrorCategory.CONFIGURATION
-        elif "convert" in module_name or "osm" in module_name:
-            return ErrorCategory.CONVERSION
-
-        return base_category
-
-    def _determine_severity(
-        self, exception: Exception, context: ErrorContext, category: ErrorCategory
-    ) -> ErrorSeverity:
-        """Détermine automatiquement la gravité de l'erreur."""
-
-        # Erreurs critiques par type
-        critical_exceptions = (
-            FileNotFoundError,  # Fichiers de configuration manquants
-            PermissionError,  # Problèmes d'accès
-        )
-
-        if isinstance(exception, critical_exceptions):
-            return ErrorSeverity.CRITICAL
-
-        # Gravité par catégorie
-        severity_mapping = {
-            ErrorCategory.CONFIGURATION: ErrorSeverity.HIGH,
-            ErrorCategory.DATABASE: ErrorSeverity.HIGH,
-            ErrorCategory.LLM: ErrorSeverity.MEDIUM,
-            ErrorCategory.NETWORK: ErrorSeverity.MEDIUM,
-            ErrorCategory.EMAIL: ErrorSeverity.LOW,
-            ErrorCategory.FILE_IO: ErrorSeverity.MEDIUM,
-            ErrorCategory.VALIDATION: ErrorSeverity.MEDIUM,
-            ErrorCategory.CONVERSION: ErrorSeverity.LOW,
-        }
-
-        return severity_mapping.get(category, ErrorSeverity.MEDIUM)
 
     def _log_error(self, handled_error: HandledError):
         """Journalise l'erreur selon sa gravité."""
@@ -281,8 +187,8 @@ class ErrorHandler:
 
             # Suggestions de solutions
             config_suggestions = {
-                "API_KEY_OPENAI": "Ajoutez votre clé API OpenAI dans le fichier .env",
-                "API_KEY_MISTRAL": "Ajoutez votre clé API Mistral dans le fichier .env",
+                "LLM_API_KEY_OPENAI": "Ajoutez votre clé API OpenAI pour LLM dans le fichier .env",
+                "LLM_API_KEY_MISTRAL": "Ajoutez votre clé API Mistral dans le fichier .env",
                 "DB_FILE": "Vérifiez le chemin de la base de données",
             }
 
@@ -353,6 +259,15 @@ class ErrorHandler:
         elif isinstance(error.exception, PermissionError):
             error.solution_attempted = "Permissions insuffisantes"
 
+        return None
+
+    def _handle_parsing_error(self, error: HandledError) -> Any:
+        """Traite les erreurs de parsing."""
+        error.solution_attempted = "Erreur de parsing des données"
+        self.logger.info(
+            "Solution: Vérifiez le format des données d'entrée. L'opération a continué avec une valeur par défaut."
+        )
+        # Retourne None pour que la valeur par défaut du décorateur soit utilisée
         return None
 
     def _handle_validation_error(self, error: HandledError) -> Any:
@@ -433,21 +348,27 @@ class ErrorHandler:
 
 # Décorateur pour simplifier l'usage
 def handle_errors(
-    category: Optional[ErrorCategory] = None,
-    severity: Optional[ErrorSeverity] = None,
+    category: ErrorCategory,
+    severity: ErrorSeverity,
     reraise: bool = False,
     default_return: Any = None,
     user_message: Optional[str] = None,
 ):
     """
-    Décorateur pour gérer automatiquement les erreurs d'une fonction.
+    Décorateur pour la gestion centralisée des erreurs dans les fonctions.
+    Ce décorateur permet d'intercepter les exceptions levées lors de l'exécution d'une fonction,
+    de créer un contexte d'erreur enrichi, puis de déléguer le traitement de l'erreur à un gestionnaire
+    (ErrorHandler). Il offre la possibilité de relancer l'exception ou de retourner une valeur par défaut.
 
-    Args:
-        category: Catégorie de l'erreur
-        severity: Gravité de l'erreur
-        reraise: Si True, relance l'exception
-        default_return: Valeur de retour par défaut
-        user_message: Message utilisateur personnalisé
+    Paramètres :
+        category (ErrorCategory) : Catégorie de l'erreur à signaler.
+        severity (ErrorSeverity) : Niveau de sévérité de l'erreur.
+        reraise (bool, optionnel) : Si True, relance l'exception après traitement. Par défaut False.
+        default_return (Any, optionnel) : Valeur à retourner en cas d'erreur si reraise est False.
+        user_message (str, optionnel) : Message personnalisé destiné à l'utilisateur.
+
+    Renvoie :
+        Callable : La fonction décorée avec gestion des erreurs intégrée.
     """
 
     def decorator(func: Callable) -> Callable:
