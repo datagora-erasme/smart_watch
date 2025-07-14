@@ -6,7 +6,7 @@ import json
 from datetime import datetime
 from typing import List, Tuple
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.dialects.sqlite import insert
 from sqlalchemy.orm import sessionmaker
 
@@ -32,6 +32,16 @@ class DatabaseManager:
 
         # Créer les tables si nécessaire
         Base.metadata.create_all(self.engine)
+
+    def execute_query(self, query: str, params: tuple = None) -> List[Tuple]:
+        """Exécute une requête SQL brute et retourne les résultats."""
+        with self.engine.connect() as connection:
+            try:
+                result = connection.execute(text(query), params or {})
+                return result.fetchall()
+            except Exception as e:
+                self.logger.error(f"Erreur exécution requête: {e}")
+                raise
 
     def setup_execution(self, df_csv) -> int:
         """Configure une nouvelle exécution et retourne son ID."""
@@ -212,7 +222,7 @@ class DatabaseManager:
             self.logger.info(f"  - {len(llm_manquant)} extractions LLM à effectuer")
             self.logger.info(f"  - {len(osm_manquant)} conversions OSM à effectuer")
 
-            # La vérification des comparaisons manquantes est gérée globalement par le ComparisonProcessor.
+            # Les comparaisons manquantes seront traitées par le ComparisonProcessor
             self.logger.info(
                 "  - Les comparaisons manquantes seront traitées globalement."
             )
