@@ -27,8 +27,8 @@ jobs:
         CSV_URL_PISCINES="https://data.grandlyon.com/piscines.csv"
         CSV_URL_MAIRIES="https://data.grandlyon.com/mairies.csv"
         CSV_URL_MEDIATHEQUES="https://data.grandlyon.com/mediatheques.csv"
-        API_KEY_OPENAI="sk-dummy"
-        MODELE_OPENAI="gpt-4"
+        LLM_API_KEY_OPENAI="sk-dummy"
+        LLM_MODELE_OPENAI="gpt-4"
         NB_THREADS_URL=20
         EMBEDDING_MODEL="nomic-embed-text"
         SIMILARITY_THRESHOLD=0.5
