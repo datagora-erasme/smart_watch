@@ -17,14 +17,10 @@ class Lieux(Base):
 
     identifiant = Column(Text, primary_key=True)
     nom = Column(Text, nullable=True)
-    type_lieu = Column(Text, nullable=True)  # Piscine, bibliotheque, mairie
+    type_lieu = Column(Text, nullable=True)
     url = Column(Text, nullable=True)
-    horaires_data_gl = Column(
-        Text, nullable=True
-    )  # Horaires de référence, pris sur data.grandlyon.com
-    horaires_data_gl_json = Column(
-        Text, nullable=True
-    )  # Conversion JSON des horaires OSM GL, à l'aide de OSMToCustomJson.py
+    horaires_data_gl = Column(Text, nullable=True)
+    horaires_data_gl_json = Column(Text, nullable=True)
 
     # Relations
     resultats = relationship("ResultatsExtraction", back_populates="lieu")
@@ -38,9 +34,9 @@ class Executions(Base):
     id_executions = Column(Integer, primary_key=True, autoincrement=True)
     date_execution = Column(DateTime, nullable=False)
     llm_modele = Column(Text, nullable=True)
-    llm_fournisseur = Column(Text, nullable=True)  # OPENAI ou MISTRAL
-    llm_url = Column(Text, nullable=True)  # http://api.openai.com/v1/ par exemple
-    llm_consommation_execution = Column(Float, nullable=True, default=0.0)  # En kg CO2
+    llm_fournisseur = Column(Text, nullable=True)
+    llm_url = Column(Text, nullable=True)
+    llm_consommation_execution = Column(Float, nullable=True, default=0.0)
 
     # Relations
     resultats = relationship("ResultatsExtraction", back_populates="execution")
@@ -56,30 +52,18 @@ class ResultatsExtraction(Base):
     id_execution = Column(
         Integer, ForeignKey("executions.id_executions"), nullable=False
     )
-
-    # Extraction URL
     statut_url = Column(Text, default="")
-    code_http = Column(Integer, default=0)  # 200, 404, etc.
+    code_http = Column(Integer, default=0)
     message_url = Column(Text, default="")
-
-    # Traçabilité du markdown (3 étapes)
-    markdown_brut = Column(Text, default="")  # Markdown brut depuis l'URL
-    markdown_nettoye = Column(
-        Text, default=""
-    )  # Markdown après nettoyage (suppr liens, formatage)
-    markdown_filtre = Column(Text, default="")  # Markdown après filtrage sémantique
-
-    # Extraction LLM
+    markdown_brut = Column(Text, default="")
+    markdown_nettoye = Column(Text, default="")
+    markdown_filtre = Column(Text, default="")
     prompt_message = Column(Text, default="")
-    llm_consommation_requete = Column(Float, nullable=True, default=0.0)  # En kg CO2
+    llm_consommation_requete = Column(Float, nullable=True, default=0.0)
     llm_horaires_json = Column(Text, default="")
     llm_horaires_osm = Column(Text, default="")
-
-    # Comparaison avec data.grandlyon.com
     horaires_identiques = Column(Boolean, nullable=True)
     differences_horaires = Column(Text, default="")
-
-    # Chaîne d'erreurs détaillée
     erreurs_pipeline = Column(Text, default="")
 
     # Relations
