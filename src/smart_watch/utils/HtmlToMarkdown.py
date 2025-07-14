@@ -33,6 +33,6 @@ def convert_html_to_markdown(html: str) -> str:
         return ""
     logger.debug("Conversion HTML vers Markdown avec BeautifulSoup + lxml")
     # Utiliser BeautifulSoup pour parser et nettoyer le HTML
-    soup = bs4.BeautifulSoup(html, "lxml")
+    soup = bs4.BeautifulSoup(html, "lxml").get_text()
     # Convertir l'objet Soup en Markdown
     return convert_to_markdown(str(soup))
