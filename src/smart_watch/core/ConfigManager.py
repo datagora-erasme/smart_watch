@@ -12,6 +12,7 @@ from ..config.email_config import EmailConfigManager
 from ..config.llm_config import LLMConfigManager
 from ..config.markdown_filtering_config import MarkdownFilteringConfigManager
 from ..config.processing_config import ProcessingConfigManager
+from ..core.ErrorHandler import ErrorCategory, ErrorSeverity
 from .Logger import create_logger
 
 # Initialize logger for this module
@@ -50,11 +51,12 @@ class ConfigManager:
                 operation="Initialisation de la configuration",
                 user_message="Erreur lors du chargement de la configuration",
             )
-
             self.error_handler.handle_error(
                 exception=e,
                 context=context,
                 reraise=True,
+                severity=ErrorSeverity.CRITICAL,
+                category=ErrorCategory.CONFIGURATION,
             )
 
     def _init_config_managers(self):
@@ -88,8 +90,11 @@ class ConfigManager:
 
         # Valider chaque configuration modulaire
         for name, manager in self._managers.items():
-            if not manager.validate():
-                errors.append(f"Configuration {name} invalide")
+            try:
+                if not manager.validate():
+                    errors.append(f"Configuration {name} invalide")
+            except Exception as e:
+                errors.append(f"Configuration {name} - Erreur: {e}")
 
         if errors:
             for error in errors:
@@ -104,19 +109,35 @@ class ConfigManager:
         logger.info("=== RÉSUMÉ CONFIGURATION ===")
         logger.info(f"LLM: {self.llm.fournisseur} - {self.llm.modele}")
         if self.llm.base_url:
-            logger.info(f"URL: {self.llm.base_url}")
-        logger.info(f"Base: {self.database.db_file.name}")
-        logger.info(f"CSV: {self.database.csv_file.name}")
-        if self.email:
-            logger.info(f"Email: {self.email.emetteur} → {self.email.recepteur}")
+            logger.info(f"  URL: {self.llm.base_url}")
+
+        logger.info("---")
+        logger.info(f"Embeddings: {self.markdown_filtering.embed_fournisseur}")
+        if self.markdown_filtering.embed_fournisseur == "OPENAI":
+            logger.info(f"  Modèle: {self.markdown_filtering.embed_modele_openai}")
+            logger.info(f"  URL: {self.markdown_filtering.embed_base_url_openai}")
+        else:  # MISTRAL
+            logger.info(f"  Modèle: {self.markdown_filtering.embed_modele_mistral}")
+
+        logger.info(
+            f"  Seuil similarité: {self.markdown_filtering.similarity_threshold}"
+        )
+        logger.info(f"  Fenêtre contexte: {self.markdown_filtering.context_window}")
+        logger.info(
+            f"  Taille min contenu: {self.markdown_filtering.min_content_length}"
+        )
+        logger.info(
+            f"  Phrases référence: {len(self.markdown_filtering.reference_phrases)} phrases"
+        )
+
+        logger.info("---")
+        logger.info(f"Base de données: {self.database.db_file.name}")
+        logger.info(f"Fichier CSV: {self.database.csv_file.name}")
+        if self.email and self.email.emetteur:
+            logger.info(
+                f"Email: {self.email.emetteur} → {', '.join(self.email.recepteurs)}"
+            )
         else:
             logger.info("Email: Non configuré")
         logger.info(f"Threads: {self.processing.nb_threads_url}")
-        logger.info("=== CONFIGURATION FILTRAGE MARKDOWN ===")
-        logger.info(f"Modèle embedding: {self.markdown_filtering.embedding_model}")
-        logger.info(f"Seuil similarité: {self.markdown_filtering.similarity_threshold}")
-        logger.info(f"Fenêtre contexte: {self.markdown_filtering.context_window}")
-        logger.info(f"Taille min contenu: {self.markdown_filtering.min_content_length}")
-        logger.info(
-            f"Phrases référence: {len(self.markdown_filtering.reference_phrases)} phrases"
-        )
+        logger.info("=== FIN CONFIGURATION ===")
