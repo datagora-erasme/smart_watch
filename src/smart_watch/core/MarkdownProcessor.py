@@ -4,37 +4,15 @@ Utilise des embeddings sémantiques pour identifier les sections les plus pertin
 """
 
 import re
-from dataclasses import dataclass
-from typing import Dict, List, Tuple
+from typing import List, Tuple
 
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 
 from ..data_models.schema_bdd import Lieux, ResultatsExtraction
+from ..stats import MarkdownProcessingStats
 from .ConfigManager import ConfigManager
-from .LLMClient import OpenAICompatibleClient
-
-
-@dataclass
-class ProcessingStats:
-    """Statistiques de traitement pour chaque étape."""
-
-    urls_processed: int = 0
-    urls_successful: int = 0
-    llm_processed: int = 0
-    llm_successful: int = 0
-    comparisons_processed: int = 0
-    comparisons_successful: int = 0
-
-    def get_summary(self) -> Dict[str, int]:
-        return {
-            "urls_processed": self.urls_processed,
-            "urls_successful": self.urls_successful,
-            "llm_processed": self.llm_processed,
-            "llm_successful": self.llm_successful,
-            "comparisons_processed": self.comparisons_processed,
-            "comparisons_successful": self.comparisons_successful,
-        }
+from .LLMClient import LLMResponse, MistralAPIClient, OpenAICompatibleClient
 
 
 class MarkdownProcessor:
@@ -48,23 +26,79 @@ class MarkdownProcessor:
         )
         self.reference_embeddings = None  # Pour stocker les embeddings de référence
 
-        # Initialisation du client LLM pour les embeddings
+        # Initialisation du client pour les embeddings selon le fournisseur configuré
         try:
-            self.llm_client = OpenAICompatibleClient(
-                api_key=config.llm.api_key,
-                model=config.markdown_filtering.embedding_model,
-                base_url=config.llm.base_url,
-                timeout=30,
-            )
+            self._init_embedding_client()
             self.logger.info(
-                f"Client embeddings initialisé avec {self.config.markdown_filtering.embedding_model}"
+                f"Client embeddings initialisé avec fournisseur: {self.config.markdown_filtering.embed_fournisseur}"
             )
         except Exception as e:
             self.logger.error(f"Erreur initialisation client embeddings: {e}")
-            self.llm_client = None
+            self.embed_client = None
 
         # Phrases de référence pour identifier les sections d'horaires (depuis la config)
         self.reference_phrases = self.config.markdown_filtering.reference_phrases
+
+    def _init_embedding_client(self):
+        """Initialise le client approprié pour les embeddings selon la configuration."""
+        embed_config = self.config.markdown_filtering
+
+        if embed_config.embed_fournisseur == "MISTRAL":
+            self.embed_client = MistralAPIClient(
+                api_key=embed_config.embed_api_key_mistral,
+                model=embed_config.embed_modele_mistral,
+                timeout=30,
+            )
+            self.logger.debug(
+                f"Client embeddings Mistral initialisé avec modèle {embed_config.embed_modele_mistral}"
+            )
+        else:  # Par défaut ou si "OPENAI"
+            self.embed_client = OpenAICompatibleClient(
+                api_key=embed_config.embed_api_key_openai,
+                model=embed_config.embed_modele_openai,
+                base_url=embed_config.embed_base_url_openai,
+                timeout=30,
+            )
+            self.logger.debug(
+                f"Client embeddings OpenAI initialisé avec modèle {embed_config.embed_modele_openai}"
+            )
+
+    def _get_embeddings(self, texts: List[str]) -> Tuple[np.ndarray, float]:
+        """Obtient les embeddings pour une liste de textes."""
+        if not self.embed_client:
+            raise ValueError("Le client embeddings n'est pas initialisé")
+
+        try:
+            # Appel aux embeddings avec le client approprié
+            response: LLMResponse = self.embed_client.call_embeddings(texts)
+
+            if isinstance(response.content, list):
+                embeddings = np.array(response.content)
+
+                # Accumuler les émissions CO2
+                self.total_co2_emissions += response.co2_emissions
+
+                return embeddings, response.co2_emissions
+            else:
+                self.logger.error("Format de réponse embeddings inattendu")
+                raise ValueError("Format de réponse embeddings inattendu")
+
+        except Exception as e:
+            self.logger.error(f"Erreur lors du calcul des embeddings: {e}")
+            raise
+
+    def _calculate_reference_embeddings(self):
+        """Calcule les embeddings pour les phrases de référence."""
+        if not self.reference_phrases:
+            raise ValueError("Aucune phrase de référence configurée")
+
+        # Calculer les embeddings pour toutes les phrases de référence
+        embeddings, _ = self._get_embeddings(self.reference_phrases)
+
+        # Stocker pour réutilisation
+        self.reference_embeddings = embeddings
+
+        return embeddings
 
     def _get_pending_markdown_filtering(
         self, db_manager, execution_id: int
@@ -88,17 +122,17 @@ class MarkdownProcessor:
 
     def process_markdown_filtering(
         self, db_manager, execution_id: int
-    ) -> "ProcessingStats":
-        """Filtre le contenu markdown pour extraire les sections pertinentes aux horaires."""
+    ) -> MarkdownProcessingStats:
+        """Filtre le contenu markdown et retourne des statistiques unifiées."""
         self.logger.section("FILTRAGE MARKDOWN POUR HORAIRES")
 
         # Reset des émissions pour cette exécution
         self.total_co2_emissions = 0.0
         self.reference_embeddings = None  # Réinitialiser pour chaque exécution
 
-        stats = ProcessingStats()
+        stats = MarkdownProcessingStats()
 
-        if not self.llm_client:
+        if not self.embed_client:
             self.logger.warning("Client embeddings non disponible - filtrage ignoré")
             return stats
 
@@ -112,14 +146,15 @@ class MarkdownProcessor:
             return stats
 
         self.logger.info(f"{len(resultats_a_filtrer)} contenus markdown à filtrer")
-        stats.urls_processed = len(resultats_a_filtrer)
+        stats.processed = len(resultats_a_filtrer)
 
         # Pré-calculer les embeddings de référence une seule fois
         try:
             self.logger.info("Pré-calcul des embeddings de référence...")
-            embed_themes, _ = self._get_embeddings_via_api(self.reference_phrases)
+            embed_themes, _ = self._get_embeddings(self.reference_phrases)
             self.reference_embeddings = np.array(embed_themes)
-            # La consommation est déjà ajoutée dans _get_embeddings_via_api
+            stats.embedding_calls += 1
+            # La consommation est déjà ajoutée dans _get_embeddings
             self.logger.info(
                 f"{len(self.reference_phrases)} embeddings de référence calculés."
             )
@@ -143,16 +178,22 @@ class MarkdownProcessor:
                 )
 
                 if filtered_markdown and len(filtered_markdown.strip()) > 0:
-                    stats.urls_successful += 1
+                    stats.successful += 1
+                    stats.sections_filtered += 1
                     self.logger.debug(
                         f"Markdown filtré: {len(filtered_markdown)} caractères"
                     )
                 else:
+                    stats.errors += 1
                     self.logger.warning(
                         f"Aucun contenu pertinent trouvé pour {lieu.nom}"
                     )
 
+                # Compter les appels d'embedding
+                stats.embedding_calls += 1
+
             except Exception as e:
+                stats.errors += 1
                 self.logger.error(f"Erreur filtrage markdown {lieu.nom}: {e}")
                 # Ajouter l'erreur à la chaîne
                 db_manager.add_pipeline_error(
@@ -165,8 +206,11 @@ class MarkdownProcessor:
                     resultat.id_resultats_extraction, resultat.markdown_nettoye
                 )
 
+        # Ajouter les émissions CO2 aux statistiques
+        stats.co2_emissions = self.total_co2_emissions
+
         self.logger.info(
-            f"Markdown filtré: {stats.urls_successful}/{stats.urls_processed} réussies"
+            f"Markdown filtré: {stats.successful}/{stats.processed} réussies"
         )
 
         # Mettre à jour les émissions totales d'embeddings dans la base
@@ -188,39 +232,6 @@ class MarkdownProcessor:
         end_idx = min(len(phrases), phrase_index + context_window + 1)
         return list(range(start_idx, end_idx))
 
-    def _get_embeddings_via_api(
-        self, texts: List[str]
-    ) -> Tuple[List[List[float]], float]:
-        """
-        Obtient les embeddings via l'API avec mesure d'émissions.
-
-        Args:
-            texts: Liste des textes à encoder
-
-        Returns:
-            Tuple(Liste des vecteurs d'embeddings, émissions de CO2)
-        """
-        if not texts:
-            return [], 0.0
-
-        try:
-            llm_response = self.llm_client.call_embeddings(texts)
-
-            # Logger les émissions individuelles AVANT accumulation
-            individual_emissions = llm_response.co2_emissions
-            self.logger.debug(
-                f"Embeddings: {len(llm_response.content)} vecteurs, {individual_emissions:.6f} kg CO2 cet appel"
-            )
-
-            # Puis accumuler pour le total de l'exécution
-            self.total_co2_emissions += individual_emissions
-
-            return llm_response.content, individual_emissions
-
-        except Exception as e:
-            self.logger.error(f"Erreur calcul embeddings: {e}")
-            raise
-
     def _filter_single_markdown(self, markdown_content: str) -> Tuple[str, float]:
         """Filtre un contenu markdown et retourne le contenu filtré et les émissions CO2."""
         co2_for_this_document = 0.0
@@ -240,7 +251,7 @@ class MarkdownProcessor:
                 return markdown_content, co2_for_this_document
 
             # Générer les embeddings des phrases du document
-            embed_phrases, co2_phrases = self._get_embeddings_via_api(phrases)
+            embed_phrases, co2_phrases = self._get_embeddings(phrases)
             co2_for_this_document += co2_phrases
             embed_phrases = np.array(embed_phrases)
 
@@ -285,6 +296,19 @@ class MarkdownProcessor:
     def _update_filtered_markdown(
         self, db_manager, resultat_id: int, filtered_markdown: str
     ):
+        """Met à jour le markdown filtré en base de données."""
+        session = db_manager.Session()
+        try:
+            resultat = session.get(ResultatsExtraction, resultat_id)
+            if resultat:
+                resultat.markdown_horaires = filtered_markdown
+                session.commit()
+        finally:
+            session.close()
+            resultat = session.get(ResultatsExtraction, resultat_id)
+            if resultat:
+                resultat.markdown_horaires = filtered_markdown
+                session.commit()
         """Met à jour le markdown filtré en base de données."""
         session = db_manager.Session()
         try:
