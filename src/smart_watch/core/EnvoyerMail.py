@@ -32,7 +32,10 @@ class EmailSender:
         """
         message = MIMEMultipart()
         message["From"] = self.config.emetteur
-        message["To"] = self.config.recepteur
+
+        # Joindre tous les destinataires dans le header "To"
+        message["To"] = ", ".join(self.config.recepteurs)
+
         message["Subject"] = subject
         message.attach(MIMEText(body, "html"))
 
@@ -60,7 +63,7 @@ class EmailSender:
 
         try:
             self.logger.info(
-                f"Envoi email: {self.config.emetteur} → {self.config.recepteur}"
+                f"Envoi email: {self.config.emetteur} → {len(self.config.recepteurs)} destinataires"
             )
             if self.config.smtp_port == 465:
                 self._send_ssl(email_string)
@@ -72,22 +75,32 @@ class EmailSender:
 
     def _send_ssl(self, email_string: str):
         """Envoie via SSL."""
-        context = ssl.create_default_context()
+        # NOTE: Utilisation d'un contexte non vérifié pour contourner les erreurs de certificat SSL.
+        # Ceci est INSECURISÉ et ne devrait être utilisé que si vous faites confiance au réseau et au serveur.
+        context = ssl._create_unverified_context()
         self.logger.debug(f"Connexion SMTP SSL/TLS port {self.config.smtp_port}")
         with smtplib.SMTP_SSL(
             self.config.smtp_server, self.config.smtp_port, context=context
         ) as server:
             if self.config.smtp_login and self.config.smtp_password:
                 server.login(self.config.smtp_login, self.config.smtp_password)
-            server.sendmail(self.config.emetteur, self.config.recepteur, email_string)
-            self.logger.info("Email envoyé avec succès (SSL/TLS)")
+            # Utiliser la liste des destinataires pour l'envoi effectif
+            server.sendmail(self.config.emetteur, self.config.recepteurs, email_string)
+            self.logger.info(
+                f"Email envoyé avec succès (SSL/TLS) à {len(self.config.recepteurs)} destinataires"
+            )
 
     def _send_starttls(self, email_string: str):
         """Envoie via STARTTLS."""
         self.logger.debug(f"Connexion SMTP STARTTLS port {self.config.smtp_port}")
         with smtplib.SMTP(self.config.smtp_server, self.config.smtp_port) as server:
+            # NOTE: Utilisation d'un contexte non vérifié pour contourner les erreurs de certificat SSL.
+            #
             server.starttls()
             if self.config.smtp_login and self.config.smtp_password:
                 server.login(self.config.smtp_login, self.config.smtp_password)
-            server.sendmail(self.config.emetteur, self.config.recepteur, email_string)
-            self.logger.info("Email envoyé avec succès (STARTTLS)")
+            # Utiliser la liste des destinataires pour l'envoi effectif
+            server.sendmail(self.config.emetteur, self.config.recepteurs, email_string)
+            self.logger.info(
+                f"Email envoyé avec succès (STARTTLS) à {len(self.config.recepteurs)} destinataires"
+            )
