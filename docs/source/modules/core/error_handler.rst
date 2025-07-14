@@ -6,8 +6,37 @@ Error Handler
    :undoc-members:
    :show-inheritance:
 
+Fonctionnalités
+---------------
+
+Le module ErrorHandler fournit un système centralisé de gestion d'erreurs avec catégorisation, traçabilité et solutions automatiques. Il standardise le traitement des erreurs dans tout le système SmartWatch.
+
+**Système de catégorisation :**
+- Classification des erreurs par catégorie (CONFIGURATION, DATABASE, NETWORK, LLM, etc.)
+- Niveaux de gravité (LOW, MEDIUM, HIGH, CRITICAL)
+- Traitement spécialisé selon la catégorie d'erreur
+- Suggestions de solutions automatiques
+
+**Traçabilité complète :**
+- Contexte enrichi avec module, fonction et opération
+- Registre centralisé de toutes les erreurs traitées
+- Timestamps et tracebacks détaillés
+- Données contextuelles pour debugging
+
+**Gestion adaptative :**
+- Décorateur @handle_errors pour simplifier l'usage
+- Valeurs de retour par défaut en cas d'erreur
+- Option de relancer ou continuer selon le contexte
+- Logging automatique selon la gravité
+
+**Solutions automatiques :**
+- Détection de patterns d'erreur courants
+- Suggestions de configuration pour les erreurs API
+- Messages d'aide contextuels
+- Résumés d'erreurs pour reporting
+
 Classes principales
-===================
+-------------------
 
 .. autoclass:: src.smart_watch.core.ErrorHandler.ErrorHandler
    :members:
@@ -31,48 +60,11 @@ Classes principales
    :undoc-members:
 
 Décorateurs
-===========
+-----------
 
 .. autofunction:: src.smart_watch.core.ErrorHandler.handle_errors
 
 Fonctions utilitaires
-=====================
+---------------------
 
 .. autofunction:: src.smart_watch.core.ErrorHandler.get_error_handler
-
-Exemple d'utilisation
-=====================
-
-.. code-block:: python
-
-   from src.smart_watch.core.ErrorHandler import ErrorHandler, ErrorCategory, ErrorSeverity, handle_errors
-
-   # Utilisation directe
-   error_handler = ErrorHandler()
-   
-   try:
-       # Code pouvant générer une erreur
-       pass
-   except Exception as e:
-       context = error_handler.create_error_context(
-           module="MonModule",
-           function="ma_fonction", 
-           operation="Opération critique"
-       )
-       
-       error_handler.handle_error(
-           exception=e,
-           context=context,
-           category=ErrorCategory.LLM,
-           severity=ErrorSeverity.MEDIUM
-       )
-   
-   # Utilisation avec décorateur
-   @handle_errors(
-       category=ErrorCategory.LLM,
-       severity=ErrorSeverity.MEDIUM,
-       user_message="Erreur lors de l'appel LLM"
-   )
-   def ma_fonction_llm():
-       # Code avec gestion automatique d'erreurs
-       pass

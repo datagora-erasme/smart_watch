@@ -1,5 +1,5 @@
 Vue d'ensemble
-===============
+==============
 
 - **ConfigManager** : Configuration centralisée modulaire agrégant toutes les configurations
 - **Logger** : Système de logs unifié avec support fichier/console et rotation
@@ -8,9 +8,12 @@ Vue d'ensemble
 - **ComparateurHoraires** : Comparaison intelligente d'horaires JSON avec normalisation
 - **LLMClient** : Abstraction pour APIs LLM (OpenAI, Mistral, compatibles)
 - **EmailSender** : Envoi d'emails avec pièces jointes et templates
+- **GetPrompt** : Génération de prompts optimisés pour extraction d'horaires
+- **URLRetriever** : Récupération robuste de contenu web avec gestion SSL avancée
+- **NotificationManager** : Orchestration des rapports et envoi par email
 
 Modules
-========
+--------
 
 Les modules Core constituent le cœur du système SmartWatch, fournissant les fonctionnalités essentielles pour la configuration, les logs, la gestion d'erreurs et les interactions avec les LLM.
 
@@ -24,3 +27,6 @@ Les modules Core constituent le cœur du système SmartWatch, fournissant les fo
    comparateur_horaires
    llm_client
    email_sender
+   get_prompt
+   url_retriever
+   notification_manager

@@ -6,8 +6,31 @@ Email Configuration
    :undoc-members:
    :show-inheritance:
 
+Fonctionnalités
+---------------
+
+Le module EmailConfig gère la configuration SMTP pour l'envoi de rapports par email. Il supporte les protocoles SSL/TLS et STARTTLS avec authentification optionnelle.
+
+**Configuration SMTP :**
+- Support des protocoles SSL/TLS (port 465) et STARTTLS (port 587)
+- Authentification SMTP avec login/mot de passe
+- Configuration des adresses émetteur et récepteur
+- Serveur SMTP configurable avec port personnalisé
+
+**Gestion optionnelle :**
+- Configuration email entièrement optionnelle
+- Validation intelligente selon la présence des paramètres
+- Fallback gracieux si email non configuré
+- Gestion des erreurs de configuration avec messages explicites
+
+**Sécurité :**
+- Mots de passe chargés depuis variables d'environnement
+- Support des contextes SSL sécurisés
+- Validation des paramètres obligatoires
+- Gestion des erreurs d'authentification
+
 Classes principales
-===================
+-------------------
 
 .. autoclass:: src.smart_watch.config.email_config.EmailConfig
    :members:
@@ -17,25 +40,3 @@ Classes principales
    :members:
    :undoc-members:
    :show-inheritance:
-
-Fonctionnalités
-================
-
-- Configuration SMTP complète
-- Support SSL/TLS
-- Gestion des pièces jointes
-- Configuration optionnelle (peut être désactivée)
-
-Exemple d'utilisation
-=====================
-
-.. code-block:: python
-
-   from src.smart_watch.config.email_config import EmailConfigManager
-
-   # Initialisation
-   email_config = EmailConfigManager()
-   
-   if email_config.config:
-       print(f"SMTP: {email_config.config.smtp_server}")
-       print(f"Destinataire: {email_config.config.recepteur}")

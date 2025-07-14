@@ -43,7 +43,25 @@ Ces paramètres contrôlent la manière dont le contenu HTML (converti en Markdo
 *   ``CONTEXT_WINDOW``: Nombre de phrases de contexte à inclure avant et après une phrase pertinente. (Défaut: 1)
 *   ``MIN_CONTENT_LENGTH``: Longueur minimale (en caractères) du Markdown pour que le filtrage soit appliqué. (Défaut: 1000)
 *   ``REFERENCE_PHRASES``: Phrases de référence (séparées par ``;;``) utilisées pour trouver les sections d'horaires. (Défaut: "horaires d'ouverture et de fermeture")
-*   ``EMBEDDING_MODEL``: Modèle d'embedding à utiliser. (Défaut: "nomic-embed-text")
+
+Configuration des embeddings
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Configurez ici le modèle à utiliser pour le filtrage sémantique du contenu. Vous pouvez utiliser soit une API compatible OpenAI, soit l'API Mistral, indépendamment du LLM principal.
+
+**Pour embeddings via API compatible OpenAI :**
+
+*   ``EMBED_API_KEY_OPENAI``: Votre clé d'API pour les embeddings.
+*   ``EMBED_BASE_URL_OPENAI``: L'URL de base de l'API (ex: ``http://localhost:1234/v1``).
+*   ``EMBED_MODELE_OPENAI``: Le nom/identifiant du modèle à utiliser (ex: ``nomic-embed-text``).
+
+**Pour embeddings via API Mistral :**
+
+*   ``EMBED_API_KEY_MISTRAL``: Votre clé d'API Mistral pour les embeddings.
+*   ``EMBED_MODELE_MISTRAL``: Le nom du modèle (ex: ``nomic-embed-text``).
+
+.. note::
+   Si vous définissez des clés API pour les deux fournisseurs, Mistral sera prioritaire pour les embeddings.
 
 Configuration du LLM
 ~~~~~~~~~~~~~~~~~~~~
@@ -54,14 +72,14 @@ Configurez ici le modèle de langage qui extraira les horaires.
 
 **Pour un LLM compatible OpenAI (LM Studio, etc.) :**
 
-*   ``API_KEY_OPENAI``: Votre clé d'API.
-*   ``BASE_URL_OPENAI``: L'URL de base de l'API (ex: ``http://localhost:1234/v1``).
-*   ``MODELE_OPENAI``: Le nom/identifiant du modèle à utiliser.
+*   ``LLM_API_KEY_OPENAI``: Votre clé d'API.
+*   ``LLM_BASE_URL_OPENAI``: L'URL de base de l'API (ex: ``http://localhost:1234/v1``).
+*   ``LLM_MODELE_OPENAI``: Le nom/identifiant du modèle à utiliser.
 
 **Pour Mistral AI :**
 
-*   ``API_KEY_MISTRAL``: Votre clé d'API Mistral.
-*   ``MODELE_MISTRAL``: Le nom du modèle (ex: ``mistral-large-latest``).
+*   ``LLM_API_KEY_MISTRAL``: Votre clé d'API Mistral.
+*   ``LLM_MODELE_MISTRAL``: Le nom du modèle (ex: ``mistral-large-latest``).
 
 .. note::
    Vous devez définir la clé API pour **un seul** fournisseur. Si les deux sont définies, la configuration OpenAI sera prioritaire.

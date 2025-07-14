@@ -6,8 +6,24 @@ Processing Configuration
    :undoc-members:
    :show-inheritance:
 
+Fonctionnalités
+---------------
+
+Le module ProcessingConfig configure les paramètres de traitement des URLs et du contenu markdown. Il gère la concurrence, les délais entre appels et les règles de nettoyage du contenu.
+
+**Configuration du traitement parallèle :**
+- Nombre de threads pour le traitement des URLs
+- Délais entre les appels API pour éviter les limitations
+- Délais d'attente en cas d'erreur avec progression géométrique
+- Configuration des timeouts pour les requêtes HTTP
+
+**Nettoyage du contenu :**
+- Dictionnaire de remplacements de caractères pour le nettoyage markdown
+- Patterns de suppression des éléments indésirables
+- Règles de normalisation du contenu textuel
+
 Classes principales
-===================
+-------------------
 
 .. autoclass:: src.smart_watch.config.processing_config.ProcessingConfig
    :members:
@@ -17,23 +33,7 @@ Classes principales
    :members:
    :undoc-members:
    :show-inheritance:
-
-Fonctionnalités
-===============
-
-- Configuration du nombre de threads pour le traitement des URLs
-- Délais entre les appels et en cas d'erreur
-- Remplacements de caractères pour le nettoyage markdown
-
-Exemple d'utilisation
-=====================
-
-.. code-block:: python
-
-   from src.smart_watch.config.processing_config import ProcessingConfigManager
-
-   # Initialisation
-   proc_config = ProcessingConfigManager()
+   proc_config - ProcessingConfigManager()
    
    print(f"Threads: {proc_config.config.nb_threads_url}")
    print(f"Délai: {proc_config.config.delai_entre_appels}s")

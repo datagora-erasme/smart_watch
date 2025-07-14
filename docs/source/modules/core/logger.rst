@@ -6,8 +6,31 @@ Logger
    :undoc-members:
    :show-inheritance:
 
+Fonctionnalités
+---------------
+
+Le module Logger fournit un système de logging unifié pour SmartWatch avec support des sorties multiples, formatage avancé et gestion des sections. Il utilise une approche modulaire avec des loggers nommés et une configuration flexible.
+
+**Système de logging avancé :**
+- Loggers nommés par module avec hiérarchie
+- Support des sorties multiples (fichier, console, ou les deux)
+- Formatage personnalisé avec timestamps et niveaux colorés
+- Rotation automatique des fichiers de log avec conservation
+
+**Niveaux de log :**
+- Support des niveaux standard (DEBUG, INFO, WARNING, ERROR, CRITICAL)
+- Méthode section() pour délimiter les étapes importantes
+- Formatage spécial pour les sections avec séparateurs visuels
+- Gestion des logs par module avec filtrage possible
+
+**Configuration flexible :**
+- Choix des sorties via paramètre (file, console, both)
+- Répertoire de logs configurable avec création automatique
+- Formatage des messages avec module, niveau et timestamp
+- Gestion des encodages pour compatibilité multiplateforme
+
 Classes principales
-===================
+-------------------
 
 .. autoclass:: src.smart_watch.core.Logger.SmartWatchLogger
    :members:
@@ -23,25 +46,6 @@ Classes principales
    :undoc-members:
 
 Fonctions utilitaires
-=====================
+---------------------
 
 .. autofunction:: src.smart_watch.core.Logger.create_logger
-
-Exemple d'utilisation
-=====================
-
-.. code-block:: python
-
-   from src.smart_watch.core.Logger import create_logger, LogLevel
-
-   # Création d'un logger avec sorties par défaut (fichier + console)
-   logger = create_logger("MonModule")
-   
-   # Logger avec sortie console uniquement
-   logger_console = create_logger("MonModule", outputs=["console"])
-   
-   # Utilisation
-   logger.info("Message d'information")
-   logger.error("Message d'erreur")
-   logger.section("SECTION IMPORTANTE")
-   logger.debug("Message de debug")

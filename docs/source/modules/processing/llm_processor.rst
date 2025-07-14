@@ -6,55 +6,45 @@ LLM Processor
    :undoc-members:
    :show-inheritance:
 
+Fonctionnalités
+---------------
+
+Le LLMProcessor gère l'extraction d'horaires via modèles de langage avec structured outputs. Il utilise un pipeline d'enrichissement automatique et supporte plusieurs fournisseurs LLM.
+
+**Support multi-providers :**
+- OpenAI-compatible (OpenAI, LM Studio, Ollama, LiteLLM)
+- Mistral API native avec support des tools/functions
+- Détection automatique du fournisseur selon la configuration
+- Adaptation des formats de requête par provider
+
+**Structured Outputs :**
+- Utilisation du schéma JSON `opening_hours_schema.json`
+- Validation automatique de la structure retournée
+- Gestion des erreurs de parsing avec fallback
+- Support des formats OpenAI (response_format) et Mistral (tools)
+
+**Pipeline d'enrichissement :**
+- Utilisation prioritaire du `markdown_filtre` avec fallback
+- Génération de prompts avec schéma JSON intégré
+- Enrichissement automatique des mairies avec jours fériés français
+- Conversion JSON → OSM via JsonToOsmConverter
+
+**Gestion robuste :**
+- Traitement séquentiel avec délais configurables entre appels
+- Délais adaptatifs en cas d'erreur (progression géométrique)
+- Traçabilité complète des prompts et réponses
+- Accumulation des émissions CO2 avec reporting
+
+**Enrichissement spécialisé :**
+- Détection automatique des mairies par type_lieu
+- Intégration des jours fériés français via API gouvernementale
+- Enrichissement conditionnel selon le type d'établissement
+- Préservation des horaires d'origine avec enrichissement
+
 Classes principales
-==================
+-------------------
 
 .. autoclass:: src.smart_watch.processing.llm_processor.LLMProcessor
    :members:
    :undoc-members:
    :show-inheritance:
-
-Fonctionnalités
-===============
-
-Le LLMProcessor gère l'extraction d'horaires via modèles de langage :
-
-**Support multi-providers :**
-- **OpenAI-compatible** : OpenAI, LM Studio, Ollama, LiteLLM
-- **Mistral** : API native avec tools/functions
-- Détection automatique selon la configuration
-
-**Structured Outputs :**
-- Utilise le schéma JSON `opening_hours_schema.json`
-- Formats adaptés par provider (response_format vs tools)
-- Validation automatique de la structure retournée
-
-**Pipeline d'enrichissement :**
-1. Utilisation du `markdown_filtre` (ou fallback vers nettoyé/brut)
-2. Génération du prompt avec schéma intégré
-3. Appel LLM avec structured outputs
-4. Enrichissement automatique jours fériés (mairies)
-5. Conversion JSON → OSM via `JsonToOsmConverter`
-
-**Gestion robuste :**
-- Traitement séquentiel avec délais configurables
-- Délais adaptatifs en cas d'erreur
-- Traçabilité complète des prompts et réponses
-- Enrichissement automatique des mairies avec jours fériés français
-
-Exemple d'utilisation
-=====================
-
-.. code-block:: python
-
-   from src.smart_watch.processing.llm_processor import LLMProcessor
-   from src.smart_watch.core.ConfigManager import ConfigManager
-
-   # Initialisation
-   config = ConfigManager()
-   processor = LLMProcessor(config, logger)
-   
-   # Traitement des extractions LLM
-   stats = processor.process_llm_extractions(db_manager, execution_id)
-   
-   print(f"Extractions LLM: {stats.llm_successful}/{stats.llm_processed}")

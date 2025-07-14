@@ -23,11 +23,16 @@ Avant de commencer, assurez-vous d'avoir :
     .. code-block:: bash
 
        git clone https://github.com/datagora-erasme/smart_watch
+
+    Ensuite, accédez au répertoire du projet :
+
+    .. code-block:: bash
+
        cd smart_watch
 
 2.  **Créer un environnement virtuel**
 
-    Il est fortement recommandé d'utiliser un environnement virtuel pour isoler les dépendances du projet.
+    Facultatif mais permet d'isoler les dépendances du projet.
 
     .. code-block:: bash
 
@@ -50,7 +55,7 @@ Avant de commencer, assurez-vous d'avoir :
 
 4.  **Installer les dépendances**
 
-    Installez toutes les bibliothèques Python requises à l'aide du fichier ``requirements.txt``.
+    Installez les bibliothèques Python requises à l'aide du fichier ``requirements.txt``.
 
     .. code-block:: bash
 

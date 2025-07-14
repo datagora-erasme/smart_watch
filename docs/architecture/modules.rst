@@ -4,10 +4,30 @@ Modules
 
 SmartWatch est organisé en modules spécialisés qui collaborent pour former un pipeline de traitement complet.
 
-Architecture modulaire
-======================
+Structure du projet
+===================
 
-Le projet SmartWatch suit une architecture en couches :
+Le projet SmartWatch suit une architecture en couches organisée dans les répertoires suivants :
+
+.. code-block:: text
+
+   smart_watch/
+   ├── src/smart_watch/          # Code source principal
+   │   ├── config/               # Modules de configuration
+   │   ├── core/                 # Modules centraux
+   │   ├── processing/           # Pipeline de traitement
+   │   ├── utils/                # Utilitaires
+   │   ├── reporting/            # Génération de rapports
+   │   ├── data_models/          # Modèles de données
+   │   ├── assets/               # Ressources (templates, images)
+   │   └── evaluation/           # Système d'évaluation
+   ├── data/                     # Données de production
+   ├── logs/                     # Fichiers de logs
+   ├── docs/                     # Documentation Sphinx
+   └── tests/                    # Tests unitaires
+
+Code source (``src/smart_watch/``)
+==================================
 
 Configuration (``config/``)
 ---------------------------
@@ -72,9 +92,6 @@ Processing (``processing/``)
 **ComparisonProcessor**
     Processeur de comparaison qui analyse les différences entre horaires extraits et données de référence.
 
-**ReportManager**
-    Gestionnaire de génération et d'envoi des rapports HTML avec statistiques détaillées et visualisations.
-
 Utils (``utils/``)
 -----------------
 
@@ -87,8 +104,17 @@ Utils (``utils/``)
 **MarkdownCleaner**
     Nettoyeur de contenu Markdown avec remplacement intelligent des caractères et normalisation du texte.
 
-**CustomJsonToOSM**
+**JsonConverter** (``CustomJsonToOSM``)
     Convertisseur de format JSON vers format OpenStreetMap pour les horaires d'ouverture standardisés.
+
+**OSMConverter** (``OSMToCustomJson``)
+    Convertisseur de format OpenStreetMap vers format JSON personnalisé pour les horaires d'ouverture.
+
+**JoursFeries**
+    Enrichissement automatique des horaires de mairies avec les jours fériés français officiels.
+
+**VacancesScolaires**
+    Récupération des données de vacances scolaires via l'API gouvernementale française.
 
 Reporting (``reporting/``)
 -------------------------
@@ -118,4 +144,53 @@ Assets (``assets/``)
     Template HTML simplifié pour le corps des emails avec résumé exécutif.
 
 **images/**
-    Logos et captures d'écran de l'application utilisé dans la documentation et les rapports.
+    Logos et captures d'écran de l'application utilisés dans la documentation et les rapports.
+
+Evaluation (``evaluation/``)
+---------------------------
+
+**EvaluationManager**
+    Gestionnaire principal des évaluations de performance des modèles de langage.
+
+**EvaluationDatabase**
+    Base de données dédiée aux évaluations avec gestion des datasets, configurations et résultats.
+
+**HorairesComparator**
+    Comparateur spécialisé pour les évaluations avec métriques de similarité détaillées.
+
+Répertoires de données et logs
+==============================
+
+Data (``data/``)
+---------------
+
+**SmartWatch.db**
+    Base de données SQLite principale contenant les lieux, exécutions et résultats d'extraction.
+
+**evaluation.db**
+    Base de données SQLite dédiée aux évaluations et tests de performance.
+
+Logs (``logs/``)
+---------------
+
+**SmartWatch.log**
+    Fichier de log principal avec rotation automatique, contenant toutes les traces d'exécution.
+
+Documentation (``docs/``)
+========================
+
+**Source Sphinx**
+    Documentation technique générée automatiquement à partir du code source.
+
+**Architecture**
+    Documentation de l'architecture technique, des flux de données et des modules.
+
+**Guides utilisateur**
+    Guides d'installation, de configuration et d'utilisation.
+
+**API Reference**
+    Documentation automatique des classes et méthodes générée par Sphinx.
+
+**Templates**
+    Templates personnalisés pour la génération de la documentation HTML.
+

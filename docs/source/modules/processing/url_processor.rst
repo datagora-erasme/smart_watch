@@ -6,8 +6,37 @@ URL Processor
    :undoc-members:
    :show-inheritance:
 
+Fonctionnalités
+---------------
+
+Le URLProcessor gère l'extraction parallèle du contenu web avec conversion HTML vers markdown. Il utilise un ThreadPoolExecutor pour optimiser les performances et fournit une gestion robuste des erreurs réseau.
+
+**Traitement parallèle :**
+- ThreadPoolExecutor avec nombre de threads configurable
+- Traitement par batch pour optimiser les mises à jour base de données
+- Gestion des timeouts et retry avec délais adaptatifs
+- Limitation du taux de requêtes pour éviter les blocages
+
+**Pipeline de conversion :**
+- Récupération HTML via URLRetriever avec User-Agent personnalisé
+- Conversion HTML → Markdown avec HtmlToMarkdown et BeautifulSoup
+- Nettoyage et normalisation du contenu markdown
+- Stockage du `markdown_brut` en base avec métadonnées
+
+**Gestion d'erreurs :**
+- Codes HTTP détaillés avec messages explicites
+- Gestion des timeouts, connexions échouées, et erreurs serveur
+- Traçabilité complète dans la chaîne d'erreurs
+- Continuation du traitement même en cas d'erreurs partielles
+
+**Statistiques et monitoring :**
+- Compteurs de succès/échec par type d'erreur
+- Temps de traitement et performance par thread
+- Logging détaillé des opérations et erreurs
+- Reporting des statistiques consolidées
+
 Classes principales
-===================
+-------------------
 
 .. autoclass:: src.smart_watch.processing.url_processor.URLProcessor
    :members:
@@ -17,41 +46,3 @@ Classes principales
 .. autoclass:: src.smart_watch.processing.url_processor.ProcessingStats
    :members:
    :undoc-members:
-
-Fonctionnalités
-===============
-
-Le URLProcessor gère l'extraction parallèle du contenu web :
-
-**Traitement parallèle :**
-- Utilise `ThreadPoolExecutor` avec nombre de threads configurable
-- Traitement par batch optimisé pour les mises à jour base de données
-- Gestion robuste des timeouts et erreurs réseau
-
-**Pipeline de conversion :**
-1. Récupération HTML via `URLRetriever`
-2. Conversion HTML → Markdown avec `HtmlToMarkdown`
-3. Nettoyage et normalisation du contenu
-4. Stockage du `markdown_brut` en base
-
-**Gestion d'erreurs :**
-- Codes HTTP détaillés (200, 404, timeout, etc.)
-- Messages d'erreur explicites
-- Traçabilité complète dans la chaîne d'erreurs
-
-Exemple d'utilisation
-=====================
-
-.. code-block:: python
-
-   from src.smart_watch.processing.url_processor import URLProcessor
-   from src.smart_watch.core.ConfigManager import ConfigManager
-
-   # Initialisation
-   config = ConfigManager()
-   processor = URLProcessor(config, logger)
-   
-   # Traitement des URLs en attente
-   stats = processor.process_urls(db_manager, execution_id)
-   
-   print(f"URLs traitées: {stats.urls_successful}/{stats.urls_processed}")

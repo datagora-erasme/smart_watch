@@ -12,6 +12,15 @@ sys.path.insert(0, os.path.abspath(".."))
 # sys.path.insert(0, os.path.abspath("../src"))
 
 
+def remove_module_docstring(app, what, name, obj, options, lines):
+    if what == "module" and name in ("base_config", "database_config"):
+        del lines[:]
+
+
+def setup(app):
+    app.connect("autodoc-process-docstring", remove_module_docstring)
+
+
 # -- Project information -----------------------------------------------------
 project = "SmartWatch"
 copyright = "2025, Béranger THOMAS, ERASME, Métropole de Lyon"
@@ -46,7 +55,6 @@ autodoc_default_options = {
 autosummary_generate = True
 autosummary_generate_overwrite = True
 
-
 # Configuration Napoleon pour les docstrings
 napoleon_google_docstring = True
 napoleon_numpy_docstring = True
@@ -56,7 +64,6 @@ napoleon_include_private_with_doc = False
 # Configuration de la page web
 html_title = "SmartWatch Documentation"
 html_short_title = "SmartWatch"
-# html_logo = "../src/smart_watch/assets/images/logo_carre.jpg"
 html_favicon = "../src/smart_watch/assets/images/favicon.jpg"
 
 # Configuration intersphinx
