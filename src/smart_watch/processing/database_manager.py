@@ -6,7 +6,6 @@ import json
 from datetime import datetime
 from typing import List, Tuple
 
-import requests
 from sqlalchemy import create_engine
 from sqlalchemy.dialects.sqlite import insert
 from sqlalchemy.orm import sessionmaker
@@ -18,31 +17,8 @@ from ..data_models.schema_bdd import (
     Lieux,
     ResultatsExtraction,
 )
+from ..utils.CSVToPolars import CSVToPolars
 from ..utils.OSMToCustomJson import OsmToJsonConverter
-
-
-def download_csv(url_or_path, separator=";", has_header=True):
-    """Fonction utilitaire pour télécharger un CSV depuis une URL ou charger un fichier local."""
-    import polars as pl
-
-    try:
-        # Vérifier si c'est une URL
-        if url_or_path.startswith(("http://", "https://")):
-            # Télécharger depuis l'URL
-            response = requests.get(url_or_path, timeout=30)
-            response.raise_for_status()
-
-            # Lire directement depuis le contenu téléchargé
-            from io import StringIO
-
-            csv_content = StringIO(response.text)
-            return pl.read_csv(csv_content, separator=separator, has_header=has_header)
-        else:
-            # Lire depuis un fichier local
-            return pl.read_csv(url_or_path, separator=separator, has_header=has_header)
-
-    except Exception as e:
-        raise RuntimeError(f"Erreur chargement CSV {url_or_path}: {e}")
 
 
 class DatabaseManager:
@@ -116,7 +92,12 @@ class DatabaseManager:
 
         for nom, url in self.config.database.csv_file_ref.items():
             try:
-                df_ref = download_csv(url)
+                csv_loader = CSVToPolars(
+                    source=url,
+                    separator="auto",
+                    has_header=True,
+                )
+                df_ref = csv_loader.load_csv()
                 count = 0
 
                 for row in df_ref.iter_rows(named=True):
