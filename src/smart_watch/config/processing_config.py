@@ -5,6 +5,7 @@ Configuration traitement centralisée.
 from dataclasses import dataclass
 from typing import Dict
 
+from ..core.ErrorHandler import ErrorCategory, ErrorSeverity, handle_errors
 from .base_config import BaseConfig
 
 
@@ -64,10 +65,40 @@ class ProcessingConfigManager(BaseConfig):
             char_replacements=char_replacements,
         )
 
+    @handle_errors(
+        category=ErrorCategory.CONFIGURATION,
+        severity=ErrorSeverity.MEDIUM,
+        user_message="Erreur lors de la validation de la configuration processing",
+        reraise=True,
+    )
     def validate(self) -> bool:
         """Valide la configuration traitement."""
+        validation_errors = []
+
         if self.config.nb_threads_url <= 0:
-            return False
+            validation_errors.append(
+                f"NB_THREADS_URL doit être positif (valeur actuelle: {self.config.nb_threads_url})"
+            )
+
         if self.config.delai_entre_appels < 0:
-            return False
+            validation_errors.append(
+                f"DELAI_ENTRE_APPELS doit être positif ou nul (valeur actuelle: {self.config.delai_entre_appels})"
+            )
+
+        if self.config.delai_en_cas_erreur < 0:
+            validation_errors.append(
+                f"DELAI_EN_CAS_ERREUR doit être positif ou nul (valeur actuelle: {self.config.delai_en_cas_erreur})"
+            )
+
+        # Validation des remplacements de caractères
+        if not self.config.char_replacements:
+            validation_errors.append("char_replacements ne peut pas être vide")
+
+        # Si des erreurs sont trouvées, lever une exception avec les détails
+        if validation_errors:
+            error_message = "Validation échouée:\n" + "\n".join(
+                f"  - {error}" for error in validation_errors
+            )
+            raise ValueError(error_message)
+
         return True

@@ -1,9 +1,9 @@
-"""
-Configuration de base commune à tous les modules.
-"""
+# Documentation
+# https://datagora-erasme.github.io/smart_watch/source/modules/config/base_config.html
 
 import os
 from pathlib import Path
+from typing import Optional
 
 from dotenv import dotenv_values, load_dotenv
 
@@ -20,17 +20,48 @@ logger = create_logger(
 )
 
 
-class BaseConfig:
-    """Configuration de base pour tous les modules."""
+def _is_containerized() -> bool:
+    """
+    Détecte si l'application s'exécute dans un conteneur (Docker/Kubernetes).
 
-    def __init__(self, env_file: Path = None):
+    Returns:
+        bool: True si dans un conteneur, sinon False.
+    """
+    # Vérifie les variables d'environnement classiques
+    if os.getenv("DOCKER_CONTAINER") or os.getenv("KUBERNETES_SERVICE_HOST"):
+        return True
+    # Vérifie le cgroup
+    cgroup_path = "/proc/1/cgroup"
+    if os.path.exists(cgroup_path):
+        try:
+            with open(cgroup_path, "rt") as f:
+                content = f.read()
+            return (
+                "docker" in content or "kubepods" in content or "containerd" in content
+            )
+        except Exception:
+            pass  # Ignorer les erreurs de lecture
+    return False
+
+
+class BaseConfig:
+    """
+    Gère la configuration de base de l'application.
+
+    d'environnement depuis un fichier .env, et fournit un accès sécurisé
+    à ces variables.
+    """
+
+    def __init__(self, env_file: Optional[Path] = None):
         """
-        Initialise la configuration de base.
+        Initialise une instance de BaseConfig.
 
         Args:
-            env_file: Chemin vers le fichier .env
+        Args:
+            env_file (Path, optional): Chemin vers le fichier .env.
+                Si non fourni, sera recherché à la racine du projet.
         """
-        # Correction : pointer sur la racine du projet (2 parents au-dessus de config)
+        # Définir la racine du projet et le fichier .env
         self.project_root = Path(__file__).resolve().parents[3]
         self.env_file = env_file or self.project_root / ".env"
 
@@ -43,8 +74,15 @@ class BaseConfig:
         self._load_environment()
 
     def _reset_environment(self):
-        """Remet à zéro seulement les variables du fichier .env pour éviter les conflits."""
-        # Ne supprimer que les variables du fichier .env, pas celles de l'environnement système/Docker
+        """
+        Réinitialise les variables d'environnement du fichier .env.
+
+        Supprime les variables chargées depuis le fichier .env pour éviter
+        les conflits avec les variables système ou conteneurisées.
+        Ne s'exécute pas dans un environnement conteneurisé.
+        """
+        # Ne supprimer que les variables provenant du fichier .env pour ne pas
+        # affecter l'environnement système ou conteneurisé.
         if self.env_file.exists():
             try:
                 dotenv_vars = dotenv_values(self.env_file)
@@ -57,11 +95,14 @@ class BaseConfig:
                 pass
 
     def _load_environment(self):
-        """Charge les variables d'environnement."""
-        # Ne pas reset si on est dans un environnement containerisé
-        if not os.getenv("DOCKER_CONTAINER") and not os.getenv(
-            "KUBERNETES_SERVICE_HOST"
-        ):
+        """
+        Charge les variables d'environnement depuis le fichier .env.
+
+        Réinitialise d'abord les variables (sauf en environnement conteneurisé)
+        puis charge celles du fichier .env. Si le fichier n'existe pas,
+        utilise les variables système existantes.
+        """
+        if not _is_containerized():
             self._reset_environment()
 
         # Charger depuis le fichier .env si présent, sinon utiliser les variables système
@@ -86,20 +127,22 @@ class BaseConfig:
         user_message="Erreur lors de la récupération d'une variable d'environnement",
         reraise=True,
     )
-    def get_env_var(self, key: str, default: str = None, required: bool = False):
+    def get_env_var(
+        self, key: str, default: Optional[str] = None, required: bool = False
+    ) -> Optional[str]:
         """
-        Récupère une variable d'environnement avec gestion d'erreurs.
+        Récupère une variable d'environnement de manière sécurisée.
 
         Args:
-            key: Nom de la variable
-            default: Valeur par défaut
-            required: Si True, lève une erreur si manquante
+            required (bool): Si True, lève une exception si manquante.
 
         Returns:
-            Valeur de la variable
+            Optional[str]: La valeur de la variable d'environnement, ou None.
 
         Raises:
-            ValueError: Si la variable est requise mais manquante
+            ValueError: Si la variable est requise mais non définie.
+        Raises:
+            ValueError: Si la variable est requise mais non définie.
         """
         value = os.getenv(key, default)
 
