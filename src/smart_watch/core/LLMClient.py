@@ -107,6 +107,7 @@ class BaseLLMClient(ABC):
             measure_power_secs=1,
             tracking_mode="machine",
             log_level="error",
+            save_to_file=False,
         )
         tracker.start()
 
@@ -152,7 +153,7 @@ class OpenAICompatibleClient(BaseLLMClient):
         timeout: int = 30,
         api_key: Optional[str] = None,
     ):
-        api_key = api_key or os.environ.get("API_KEY_LOCAL")
+        api_key = api_key or os.environ.get("LLM_API_KEY_OPENAI")
         super().__init__(model, temperature, timeout, api_key, base_url)
 
     @handle_errors(
@@ -187,11 +188,19 @@ class OpenAICompatibleClient(BaseLLMClient):
             measure_power_secs=1,
             tracking_mode="machine",
             log_level="error",
+            save_to_file=False,
         )
         tracker.start()
 
         try:
             response = self.session.post(url, json=payload, timeout=self.timeout)
+
+            # Log de la réponse en cas d'erreur avant de lever une exception
+            if response.status_code != 200:
+                logger.error(
+                    f"Erreur API compatible OpenAI ({response.status_code}): {response.text}"
+                )
+
             response.raise_for_status()
             response_data = response.json()
             result = response_data["choices"][0]["message"]["content"]
@@ -222,6 +231,10 @@ class OpenAICompatibleClient(BaseLLMClient):
             raise Exception("Format de réponse API invalide")
         except Exception as e:
             tracker.stop()
+            # Log de l'exception détaillée pour un meilleur débogage
+            logger.error(
+                f"Exception détaillée lors de l'appel OpenAI: {e}", exc_info=True
+            )
             raise e
 
 
@@ -236,9 +249,9 @@ class MistralAPIClient(BaseLLMClient):
         timeout: int = 30,
         api_key: Optional[str] = None,
     ):
-        api_key = api_key or os.environ.get("API_KEY_MISTRAL")
+        api_key = api_key or os.environ.get("LLM_API_KEY_MISTRAL")
         if not api_key:
-            raise ValueError("Clé API Mistral requise (API_KEY_MISTRAL)")
+            raise ValueError("Clé API Mistral requise (LLM_API_KEY_MISTRAL)")
 
         super().__init__(
             model, temperature, timeout, api_key, "https://api.mistral.ai/v1"
@@ -276,11 +289,19 @@ class MistralAPIClient(BaseLLMClient):
             measure_power_secs=1,
             tracking_mode="machine",
             log_level="error",
+            save_to_file=False,
         )
         tracker.start()
 
         try:
             response = self.session.post(url, json=payload, timeout=self.timeout)
+
+            # Log de la réponse en cas d'erreur avant de lever une exception
+            if response.status_code != 200:
+                logger.error(
+                    f"Erreur API Mistral ({response.status_code}): {response.text}"
+                )
+
             response.raise_for_status()
             response_data = response.json()
             choice = response_data["choices"][0]
@@ -300,8 +321,64 @@ class MistralAPIClient(BaseLLMClient):
 
         except (requests.exceptions.RequestException, KeyError, IndexError) as e:
             tracker.stop()
+            # Log de l'exception détaillée pour un meilleur débogage
+            logger.error(
+                f"Exception détaillée lors de l'appel Mistral: {e}", exc_info=True
+            )
             # Laisse le décorateur @handle_errors gérer l'exception
             raise e
+
+    @handle_errors(
+        category=ErrorCategory.LLM,
+        severity=ErrorSeverity.MEDIUM,
+        user_message="Erreur lors de l'appel aux embeddings Mistral",
+        default_return=LLMResponse(content="Erreur API Mistral", co2_emissions=0.0),
+    )
+    def call_embeddings(self, texts: List[str]) -> LLMResponse:
+        """
+        Appel d'embeddings via API Mistral avec mesure d'émissions.
+
+        Note: Utilise l'API embeddings de Mistral en transitionnant à travers le endpoint OpenAI compatible
+        car Mistral expose leurs embeddings via une API compatible OpenAI.
+        """
+        # Créer un tracker à la volée pour une mesure isolée
+        tracker = EmissionsTracker(
+            measure_power_secs=1,
+            tracking_mode="machine",
+            log_level="error",
+            save_to_file=False,
+        )
+        tracker.start()
+
+        try:
+            # URL de l'endpoint embeddings (compatible OpenAI)
+            url = f"{self.base_url}/embeddings"
+
+            # Préparer la requête
+            payload = {
+                "model": self.model,
+                "input": texts,
+            }
+
+            response = self.session.post(url, json=payload, timeout=self.timeout)
+            response.raise_for_status()
+
+            result = response.json()
+            embeddings = [data["embedding"] for data in result["data"]]
+
+            # Arrêter le tracking et récupérer les émissions
+            emissions = tracker.stop()
+            logger.debug(
+                f"Embeddings API Mistral: {len(embeddings)} vecteurs, {emissions:.6f} kg CO2"
+            )
+
+            return LLMResponse(content=embeddings, co2_emissions=emissions)
+
+        except Exception as e:
+            # S'assurer que le tracker est arrêté même en cas d'erreur
+            tracker.stop()
+            logger.error(f"Erreur calcul embeddings Mistral: {e}")
+            raise
 
 
 # Fonctions utilitaires pour les formats de réponse structurés
