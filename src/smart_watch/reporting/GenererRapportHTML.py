@@ -154,13 +154,11 @@ def generer_rapport_html(
     default_return=None,
 )
 def _extract_execution_data(db_file: str) -> Optional[dict]:
-    """Extrait les données de la dernière exécution."""
+    """Extrait les données agrégées de toutes les exécutions."""
     uri = f"sqlite:///{db_file}"
     query = """
-    SELECT llm_consommation_execution 
+    SELECT SUM(llm_consommation_execution) as llm_consommation_execution
     FROM executions 
-    ORDER BY date_execution DESC 
-    LIMIT 1
     """
     df = pl.read_database_uri(query=query, uri=uri, engine="connectorx")
     if not df.is_empty():

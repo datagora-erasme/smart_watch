@@ -12,7 +12,6 @@ from ..core.EnvoyerMail import EmailSender
 from ..core.ErrorHandler import ErrorCategory, ErrorSeverity, handle_errors
 from ..core.Logger import create_logger
 from ..reporting.GenererRapportHTML import generer_rapport_html
-from ..stats import PipelineStats
 
 # Initialize logger for this module
 logger = create_logger(
@@ -75,7 +74,7 @@ class ReportManager:
                 zip_path.unlink()  # Supprimer le zip vide
             return None
 
-    def generate_and_send_report(self, stats: PipelineStats):
+    def generate_and_send_report(self, execution_id: int):
         """Génère et envoie le rapport par email."""
         self.logger.section("GÉNÉRATION ET ENVOI RAPPORT")
 
@@ -99,7 +98,7 @@ class ReportManager:
             )
 
         # Envoi par email obligatoire
-        self._send_email_report(resume_html, fichier_html, stats)
+        self._send_email_report(resume_html, fichier_html, execution_id)
 
     @handle_errors(
         category=ErrorCategory.EMAIL,
@@ -108,7 +107,7 @@ class ReportManager:
         reraise=True,  # Ajouté pour faire remonter l'erreur car critique
     )
     def _send_email_report(
-        self, resume_html: str, fichier_html: str, stats: PipelineStats
+        self, resume_html: str, fichier_html: str, execution_id: int
     ):
         """Envoie le rapport par email."""
         self.logger.section("ENVOI EMAIL")

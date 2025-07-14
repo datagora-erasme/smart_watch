@@ -1,110 +1,380 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ titre_rapport }}</title>
     <style>
         /* Reset et base */
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:system-ui,sans-serif;line-height:1.6;color:#333;background:#f5f5f5}
-        .container{max-width:1400px;margin:0 auto;padding:20px;background:white;box-shadow:0 0 10px rgba(0,0,0,0.1)}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        body {
+            font-family: system-ui, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1)
+        }
 
         /* Header */
-        .header{text-align:center;margin-bottom:30px;padding:20px;background:linear-gradient(135deg,#667eea,#764ba2);color:white;border-radius:8px}
-        .header h1{font-size:2.2em;margin-bottom:10px}
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 8px
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px
+        }
 
         /* Onglets */
-        .tabs{border-bottom:2px solid #e0e0e0;margin-bottom:20px}
-        .tab-buttons{display:flex;flex-wrap:wrap}
-        .tab-button{background:#f8f9fa;border:none;padding:12px 20px;cursor:pointer;border-top:3px solid transparent;text-decoration:none;color:inherit;transition:all 0.3s}
-        .tab-button:hover{background:#e9ecef}
-        .tab-button.active{background:white;border-top-color:#667eea;font-weight:600}
-        .tab-content{display:none;animation:fadeIn 0.3s}
-        .tab-content.active{display:block}
-        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+        .tabs {
+            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 20px
+        }
+
+        .tab-buttons {
+            display: flex;
+            flex-wrap: wrap
+        }
+
+        .tab-button {
+            background: #f8f9fa;
+            border: none;
+            padding: 12px 20px;
+            cursor: pointer;
+            border-top: 3px solid transparent;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s
+        }
+
+        .tab-button:hover {
+            background: #e9ecef
+        }
+
+        .tab-button.active {
+            background: white;
+            border-top-color: #667eea;
+            font-weight: 600
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s
+        }
+
+        .tab-content.active {
+            display: block
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0
+            }
+
+            to {
+                opacity: 1
+            }
+        }
 
         /* Tableaux */
-        .table-container{overflow-x:auto;margin:20px 0;border-radius:8px;box-shadow:0 2px 4px rgba(0,0,0,0.1)}
-        table{width:100%;border-collapse:collapse;background:white;min-width:1200px}
-        th,td{padding:8px 12px;text-align:left;border-bottom:1px solid #e0e0e0;white-space:nowrap}
-        th{background:#f8f9fa;font-weight:600;position:sticky;top:0;font-size:13px}
-        tr:hover{background:#f9f9f9}
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            min-width: 1200px
+        }
+
+        th,
+        td {
+            padding: 8px 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+            white-space: nowrap
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            font-size: 13px
+        }
+
+        tr:hover {
+            background: #f9f9f9
+        }
 
         /* Badges et boutons unifiés */
-        .badge{padding:4px 8px;border-radius:12px;font-size:11px;font-weight:600;text-transform:uppercase}
-        .badge.success{background:#d4edda;color:#155724}
-        .badge.warning{background:#fff3cd;color:#856404}
-        .badge.error{background:#f8d7da;color:#721c24}
-        .btn{border:none;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:11px;margin:2px;background:#17a2b8;color:white}
-        .btn:hover{background:#138496}
+        .badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase
+        }
+
+        .badge.success {
+            background: #d4edda;
+            color: #155724
+        }
+
+        .badge.warning {
+            background: #fff3cd;
+            color: #856404
+        }
+
+        .badge.error {
+            background: #f8d7da;
+            color: #721c24
+        }
+
+        .btn {
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            margin: 2px;
+            background: #17a2b8;
+            color: white
+        }
+
+        .btn:hover {
+            background: #138496
+        }
 
         /* Aperçus unifiés */
-        .preview{border-radius:4px;padding:6px;font-family:monospace;font-size:11px;overflow:hidden;word-wrap:break-word;white-space:pre-wrap;width:180px}
-        .preview.gl{background:#e8f5e8;border:1px solid #c3e6c3}
-        .preview.llm{background:#e8f5e8;border:1px solid #c3e6c3}
-        .preview.comparison{background:#f0f8ff;border:1px solid #cce7ff;width:200px}
+        .preview {
+            border-radius: 4px;
+            padding: 6px;
+            font-family: monospace;
+            font-size: 11px;
+            overflow: hidden;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            width: 180px
+        }
+
+        .preview.gl {
+            background: #e8f5e8;
+            border: 1px solid #c3e6c3
+        }
+
+        .preview.llm {
+            background: #e8f5e8;
+            border: 1px solid #c3e6c3
+        }
+
+        .preview.comparison {
+            background: #f0f8ff;
+            border: 1px solid #cce7ff;
+            width: 200px
+        }
 
         /* Graphiques */
-        .chart-bar{display:flex;align-items:center;margin:8px 0;padding:8px;background:#f8f9fa;border-radius:4px}
-        .chart-label{min-width:100px;font-weight:500}
-        .chart-progress{flex:1;height:20px;background:#e9ecef;border-radius:10px;margin:0 15px;overflow:hidden}
-        .chart-fill{height:100%;border-radius:10px;transition:width 0.8s}
-        .chart-value{min-width:40px;text-align:right;font-weight:600}
+        .chart-bar {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 4px
+        }
+
+        .chart-label {
+            min-width: 100px;
+            font-weight: 500
+        }
+
+        .chart-progress {
+            flex: 1;
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            margin: 0 15px;
+            overflow: hidden
+        }
+
+        .chart-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.8s
+        }
+
+        .chart-value {
+            min-width: 40px;
+            text-align: right;
+            font-weight: 600
+        }
 
         /* Colonnes */
-        .col-type{width:100px!important}
-        .col-id{width:90px!important}
-        .col-name{width:180px!important;white-space:normal;word-wrap:break-word}
-        .col-http{width:80px!important}
-        .col-details{width:120px!important;white-space:normal;word-wrap:break-word}
-        .col-gl,.col-llm{width:180px!important;white-space:normal}
-        .col-comparison{width:200px!important;white-space:normal}
+        .col-type {
+            width: 100px !important
+        }
+
+        .col-id {
+            width: 90px !important
+        }
+
+        .col-name {
+            width: 180px !important;
+            white-space: normal;
+            word-wrap: break-word
+        }
+
+        .col-http {
+            width: 80px !important
+        }
+
+        .col-details {
+            width: 120px !important;
+            white-space: normal;
+            word-wrap: break-word
+        }
+
+        .col-gl,
+        .col-llm {
+            width: 180px !important;
+            white-space: normal
+        }
+
+        .col-comparison {
+            width: 200px !important;
+            white-space: normal
+        }
 
         /* Modal */
-        .modal{display:none;position:fixed;z-index:1000;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,0.5)}
-        .modal-content{background:white;margin:5% auto;padding:20px;border-radius:8px;width:80%;max-width:800px;max-height:80%;overflow-y:auto}
-        .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
-        .close{color:#aaa;font-size:28px;font-weight:bold;cursor:pointer}
-        .close:hover{color:black}
-        .content-display{background:#f8f9fa;border:1px solid #e9ecef;border-radius:4px;padding:15px;font-family:monospace;white-space:pre-wrap}
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5)
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 800px;
+            max-height: 80%;
+            overflow-y: auto
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer
+        }
+
+        .close:hover {
+            color: black
+        }
+
+        .content-display {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 15px;
+            font-family: monospace;
+            white-space: pre-wrap
+        }
 
         /* Responsive */
-        @media (max-width:768px){
-            .container{padding:10px}
-            .tab-button{padding:10px 15px;font-size:13px}
-            .header h1{font-size:1.8em}
-            table{min-width:800px}
+        @media (max-width:768px) {
+            .container {
+                padding: 10px
+            }
+
+            .tab-button {
+                padding: 10px 15px;
+                font-size: 13px
+            }
+
+            .header h1 {
+                font-size: 1.8em
+            }
+
+            table {
+                min-width: 800px
+            }
         }
 
         /* Table de résumé exception */
-        #resume .table-container{min-width:initial}
-        #resume table{min-width:initial}
+        #resume .table-container {
+            min-width: initial
+        }
+
+        #resume table {
+            min-width: initial
+        }
 
         /* Style des headers triables */
-        th[onclick] { 
-            cursor: pointer; 
-            user-select: none; 
+        th[onclick] {
+            cursor: pointer;
+            user-select: none;
             position: relative;
             padding-right: 20px;
         }
-        th[onclick]:hover { 
-            background: #dee2e6; 
+
+        th[onclick]:hover {
+            background: #dee2e6;
         }
-        th[onclick]:after { 
-            content: '↕️'; 
-            position: absolute; 
-            right: 5px; 
-            font-size: 0.8em; 
-            opacity: 0.5; 
+
+        th[onclick]:after {
+            content: '↕️';
+            position: absolute;
+            right: 5px;
+            font-size: 0.8em;
+            opacity: 0.5;
         }
-        th.asc:after { 
-            content: '↑'; 
-            opacity: 1; 
+
+        th.asc:after {
+            content: '↑';
+            opacity: 1;
         }
-        th.desc:after { 
-            content: '↓'; 
-            opacity: 1; 
+
+        th.desc:after {
+            content: '↓';
+            opacity: 1;
         }
 
         /* Style pour les liens URL */
@@ -113,16 +383,18 @@
             text-decoration: none;
             cursor: pointer;
         }
+
         .url-link:hover {
             text-decoration: underline;
         }
     </style>
 </head>
+
 <body>
     {% macro view_button(title, content, text='👁️ Voir') %}
-        {% if content %}
-            <button class="btn view-btn" data-title="{{ title }}" data-content="{{ content|e }}">{{ text }}</button>
-        {% endif %}
+    {% if content %}
+    <button class="btn view-btn" data-title="{{ title }}" data-content="{{ content|e }}">{{ text }}</button>
+    {% endif %}
     {% endmacro %}
 
     <div class="container">
@@ -137,14 +409,16 @@
             {% endif %}
             {% if execution_data and execution_data.llm_consommation_execution > 0 %}
             <p style="font-size:0.9em;opacity:0.8;">
-                Émissions CO2 totales dues aux appels LLM : <strong>{{ "%.3f"|format(execution_data.llm_consommation_execution * 1000) }} g</strong>
+                Émissions CO2 totales dues aux appels LLM : <strong>{{
+                    "%.3f"|format(execution_data.llm_consommation_execution * 1000) }} g</strong>
             </p>
             {% endif %}
         </div>
 
         <div class="tabs">
             <div class="tab-buttons">
-                <a href="#resume" class="tab-button active" data-target="resume">📊 Résumé ({{ stats_globales.total_urls }})</a>
+                <a href="#resume" class="tab-button active" data-target="resume">📊 Résumé ({{ stats_globales.total_urls
+                    }})</a>
                 {% for statut in statuts_disponibles %}
                 <a href="#{{ statut.code }}" class="tab-button" data-target="{{ statut.code }}">
                     {{ statut.emoji }} {{ statut.nom }} ({{ statut.count }})
@@ -157,7 +431,14 @@
             <h3>📋 Récapitulatif</h3>
             <div class="table-container">
                 <table>
-                    <thead><tr><th>Statut</th><th>Nombre</th><th>%</th><th>Description</th></tr></thead>
+                    <thead>
+                        <tr>
+                            <th>Statut</th>
+                            <th>Nombre</th>
+                            <th>%</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
                     <tbody>
                         {% for statut in statuts_disponibles %}
                         <tr>
@@ -170,14 +451,56 @@
                     </tbody>
                 </table>
             </div>
-            
+
+            <h3>📊 Statistiques de traitement</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Étape</th>
+                            <th>Traités</th>
+                            <th>Réussis</th>
+                            <th>Taux</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>🌐 Extraction URLs</td>
+                            <td>{{ stats_globales.get('urls_total', 0) }}</td>
+                            <td>{{ stats_globales.get('urls_successful', 0) }}</td>
+                            <td>{{ stats_globales.get('urls_success_rate', '0%') }}</td>
+                        </tr>
+                        <tr>
+                            <td>📝 Traitement Markdown</td>
+                            <td>{{ stats_globales.get('markdown_processed', 0) }}</td>
+                            <td>{{ stats_globales.get('markdown_filtered', 0) }}</td>
+                            <td>{{ stats_globales.get('markdown_success_rate', '0%') }}</td>
+                        </tr>
+                        <tr>
+                            <td>🤖 Extraction LLM</td>
+                            <td>{{ stats_globales.get('llm_attempted', 0) }}</td>
+                            <td>{{ stats_globales.get('llm_successful', 0) }}</td>
+                            <td>{{ stats_globales.get('llm_success_rate', '0%') }}</td>
+                        </tr>
+                        <tr>
+                            <td>⚖️ Comparaisons</td>
+                            <td>{{ stats_globales.get('comparisons_done', 0) }}</td>
+                            <td>{{ stats_globales.get('comparisons_identical', 0) }}</td>
+                            <td>{{ stats_globales.get('comparisons_accuracy', '0%') }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
             <h3>📍 Types de lieu</h3>
             <div class="chart-container">
                 {% for type_lieu in types_lieu_stats %}
                 <div class="chart-bar">
                     <div class="chart-label">{{ type_lieu.type }}</div>
                     <div class="chart-progress">
-                        <div class="chart-fill" data-width="{{ (type_lieu.count / stats_globales.total_urls * 100)|round(1) }}" style="background:#667eea"></div>
+                        <div class="chart-fill"
+                            data-width="{{ (type_lieu.count / stats_globales.total_urls * 100)|round(1) }}"
+                            style="background:#667eea"></div>
                     </div>
                     <div class="chart-value">{{ type_lieu.count }}</div>
                 </div>
@@ -189,7 +512,7 @@
         <div id="{{ statut.code }}" class="tab-content">
             <h2>{{ statut.emoji }} {{ statut.nom }} ({{ statut.count }})</h2>
             <p style="margin-bottom:20px;color:#666">{{ statut.description }}</p>
-            
+
             {% if statut.urls %}
             <div class="table-container">
                 <table>
@@ -214,7 +537,7 @@
                     </thead>
                     <tbody>
                         {% for url in statut.urls %}
-                        <tr {% if url.horaires_identiques == false %}class="horaires-differents"{% endif %}>
+                        <tr {% if url.horaires_identiques==false %}class="horaires-differents" {% endif %}>
                             <td class="col-type">{{ url.type_lieu or '-' }}</td>
                             <td class="col-id">{{ url.identifiant or '-' }}</td>
                             <td class="col-name">
@@ -225,42 +548,53 @@
                                 {% endif %}
                             </td>
                             <td class="col-http">
-                                <span class="badge {% if url.code_http >= 200 and url.code_http < 300 %}success{% else %}error{% endif %}">{{ url.code_http }}</span>
+                                <span
+                                    class="badge {% if url.code_http >= 200 and url.code_http < 300 %}success{% else %}error{% endif %}">{{
+                                    url.code_http }}</span>
                             </td>
-                            <td class="col-details"{% if statut.code == 'access_error' %} style="color: #dc3545; font-weight: 500;"{% endif %}>{{ url.message or '-' }}</td>
+                            <td class="col-details" {% if statut.code=='access_error' %}
+                                style="color: #dc3545; font-weight: 500;" {% endif %}>{{ url.message or '-' }}</td>
                             <td class="col-gl">
                                 {% if url.horaires_data_gl %}
-                                <div class="preview gl">{{ url.horaires_data_gl[:60] }}{% if url.horaires_data_gl|length > 60 %}...{% endif %}</div>
+                                <div class="preview gl">{{ url.horaires_data_gl[:60] }}{% if url.horaires_data_gl|length
+                                    > 60 %}...{% endif %}</div>
                                 {{ view_button('Horaires GL - ' ~ url.identifiant, url.horaires_data_gl) }}
                                 {% else %}-{% endif %}
                             </td>
                             <td class="col-llm">
                                 {% if url.llm_horaires_osm %}
-                                <div class="preview llm">{{ url.llm_horaires_osm[:60] }}{% if url.llm_horaires_osm|length > 60 %}...{% endif %}</div>
+                                <div class="preview llm">{{ url.llm_horaires_osm[:60] }}{% if
+                                    url.llm_horaires_osm|length > 60 %}...{% endif %}</div>
                                 {{ view_button('Horaires LLM OSM - ' ~ url.identifiant, url.llm_horaires_osm) }}
                                 {% else %}-{% endif %}
                             </td>
                             {% if statut.code != 'access_error' %}
                             <td class="col-comparison">
                                 {% if statut.code == 'success' %}
-                                    <span style="color: #28a745; font-weight: 500;">✓ Identiques</span>
+                                <span style="color: #28a745; font-weight: 500;">✓ Identiques</span>
                                 {% elif statut.code == 'schedule_diff' %}
-                                    {% if url.differences_horaires %}
-                                    <div class="preview comparison">{{ url.differences_horaires[:80] }}{% if url.differences_horaires|length > 80 %}...{% endif %}</div>
-                                    {{ view_button('Différences détaillées - ' ~ url.identifiant, url.differences_horaires) }}
-                                    {% else %}
-                                    <span style="color: #ffc107; font-weight: 500;">⚠️ Différences détectées</span>
-                                    {% endif %}
+                                {% if url.differences_horaires %}
+                                <div class="preview comparison">{{ url.differences_horaires[:80] }}{% if
+                                    url.differences_horaires|length > 80 %}...{% endif %}</div>
+                                {{ view_button('Différences détaillées - ' ~ url.identifiant, url.differences_horaires)
+                                }}
+                                {% else %}
+                                <span style="color: #ffc107; font-weight: 500;">⚠️ Différences détectées</span>
+                                {% endif %}
                                 {% elif statut.code == 'extraction_error' %}
-                                    {% if url.erreurs_resume %}
-                                    <div class="preview comparison" style="background:#fff3cd;border-color:#ffeaa7;">{{ url.erreurs_resume[:80] }}{% if url.erreurs_resume|length > 80 %}...{% endif %}</div>
-                                    {{ view_button('Chaîne d\'erreurs - ' ~ url.identifiant, url.erreurs_pipeline, '🔍 Erreurs') }}
-                                    {% else %}
-                                    <span style="color: #dc3545; font-weight: 500;">❌ Extraction échouée</span>
-                                    {% endif %}
-                                    {% if url.comparaison_horaires and url.comparaison_horaires != url.erreurs_resume %}
-                                    <br>{{ view_button('Détails comparaison - ' ~ url.identifiant, url.comparaison_horaires, '📋 Détails') }}
-                                    {% endif %}
+                                {% if url.erreurs_resume %}
+                                <div class="preview comparison" style="background:#fff3cd;border-color:#ffeaa7;">{{
+                                    url.erreurs_resume[:80] }}{% if url.erreurs_resume|length > 80 %}...{% endif %}
+                                </div>
+                                {{ view_button('Chaîne d\'erreurs - ' ~ url.identifiant, url.erreurs_pipeline, '🔍
+                                Erreurs') }}
+                                {% else %}
+                                <span style="color: #dc3545; font-weight: 500;">❌ Extraction échouée</span>
+                                {% endif %}
+                                {% if url.comparaison_horaires and url.comparaison_horaires != url.erreurs_resume %}
+                                <br>{{ view_button('Détails comparaison - ' ~ url.identifiant, url.comparaison_horaires,
+                                '📋 Détails') }}
+                                {% endif %}
                                 {% endif %}
                             </td>
                             <td>{{ "%.3f"|format((url.llm_consommation_requete or 0) * 1000) }}</td>
@@ -304,7 +638,7 @@
                 btn.addEventListener('click', e => {
                     e.preventDefault();
                     const target = btn.dataset.target;
-                    
+
                     // Mise à jour état
                     document.querySelectorAll('.tab-button, .tab-content').forEach(el => el.classList.remove('active'));
                     btn.classList.add('active');
@@ -323,7 +657,7 @@
             }, 100);
 
             // Gestionnaire d'événements unifié pour les clics
-            document.body.addEventListener('click', function(event) {
+            document.body.addEventListener('click', function (event) {
                 // Gère les boutons "Voir" pour les modaux
                 const viewBtn = event.target.closest('.view-btn');
                 if (viewBtn) {
@@ -349,15 +683,15 @@
             const table = header.closest('table');
             const rows = Array.from(table.querySelectorAll('tbody tr'));
             const isAsc = !header.classList.contains('asc');
-            
+
             // Reset tous les headers
             table.querySelectorAll('th').forEach(h => h.classList.remove('asc', 'desc'));
             header.classList.add(isAsc ? 'asc' : 'desc');
-            
+
             rows.sort((a, b) => {
                 const aVal = a.cells[colIndex].textContent.trim();
                 const bVal = b.cells[colIndex].textContent.trim();
-                
+
                 let comparison = 0;
                 if (dataType === 'number') {
                     const aNum = parseFloat(aVal) || 0;
@@ -366,10 +700,10 @@
                 } else {
                     comparison = aVal.localeCompare(bVal, 'fr', { numeric: true });
                 }
-                
+
                 return isAsc ? comparison : -comparison;
             });
-            
+
             const tbody = table.querySelector('tbody');
             rows.forEach(row => tbody.appendChild(row));
         }
@@ -392,10 +726,10 @@
                 const copyBtn = document.querySelector('.modal .btn');
                 const originalText = copyBtn.textContent;
                 const originalBg = copyBtn.style.background;
-                
+
                 copyBtn.textContent = '✅ Copié !';
                 copyBtn.style.background = '#28a745';
-                
+
                 setTimeout(() => {
                     copyBtn.textContent = originalText;
                     copyBtn.style.background = originalBg;
@@ -410,4 +744,5 @@
         window.onclick = e => e.target === modal && closeModal();
     </script>
 </body>
+
 </html>

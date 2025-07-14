@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,32 +14,50 @@
             line-height: 1.6;
             color: #333;
         }
+
         h2 {
             color: #333;
             border-bottom: 2px solid #007acc;
             padding-bottom: 10px;
         }
+
         h3 {
             color: #555;
             margin-top: 25px;
             margin-bottom: 15px;
         }
+
         ul {
             list-style-type: none;
             padding: 0;
         }
+
         li {
             margin: 8px 0;
             padding: 5px;
         }
+
         .status-item {
             border-left: 3px solid;
             padding-left: 10px;
         }
-        .status-success { border-left-color: #28a745; }
-        .status-warning { border-left-color: #ffc107; }
-        .status-error { border-left-color: #dc3545; }
-        .status-unknown { border-left-color: #6c757d; }
+
+        .status-success {
+            border-left-color: #28a745;
+        }
+
+        .status-warning {
+            border-left-color: #ffc107;
+        }
+
+        .status-error {
+            border-left-color: #dc3545;
+        }
+
+        .status-unknown {
+            border-left-color: #6c757d;
+        }
+
         .footer-note {
             margin-top: 20px;
             padding: 10px;
@@ -48,6 +67,7 @@
         }
     </style>
 </head>
+
 <body>
     <h2>{{ titre_rapport }}</h2>
     <p><strong>Rapport généré le :</strong> {{ date_generation }}</p>
@@ -60,25 +80,27 @@
     {% endif %}
     {% if execution_data and execution_data.llm_consommation_execution > 0 %}
     <p style="font-size: 0.9em; opacity: 0.8;">
-        <strong>Émissions CO2 totales dues aux appels LLM :</strong> {{ "%.3f"|format(execution_data.llm_consommation_execution * 1000) }} g
+        <strong>Émissions CO2 totales dues aux appels LLM :</strong> {{
+        "%.3f"|format(execution_data.llm_consommation_execution * 1000) }} g
     </p>
     {% endif %}
-    
+
     <h3>📊 Statistiques Globales</h3>
     <ul>
         <li><strong>Total d'URLs analysées :</strong> {{ stats_globales.total_urls }}</li>
     </ul>
-    
+
     <h3>🎯 Statut des pages visitées</h3>
     <ul>
         {% for statut in statuts_disponibles %}
         <li class="status-item status-{{ statut.type }}">
-            {{ statut.emoji }} <strong>{{ statut.nom }} :</strong> {{ statut.count }} URLs ({{ (statut.count / stats_globales.total_urls * 100)|round(1) }}%)
+            {{ statut.emoji }} <strong>{{ statut.nom }} :</strong> {{ statut.count }} URLs ({{ (statut.count /
+            stats_globales.total_urls * 100)|round(1) }}%)
             <br><small style="opacity: 0.8; font-size: 0.85em;">{{ statut.description }}</small>
         </li>
         {% endfor %}
     </ul>
-    
+
     {% if stats_globales.get('comparisons_done', 0) > 0 %}
     <h3>⚖️ Comparaisons d'horaires</h3>
     <ul>
@@ -94,17 +116,28 @@
     </ul>
     {% endif %}
 
+    <h3>📈 Statistiques détaillées</h3>
+    <ul>
+        <li><strong>Markdown traité :</strong> {{ stats_globales.get('markdown_processed', 0) }} documents</li>
+        <li><strong>Extractions LLM réussies :</strong> {{ stats_globales.get('llm_successful', 0) }} / {{
+            stats_globales.get('llm_attempted', 0) }}</li>
+        <li><strong>Taux de réussite global :</strong> {{ stats_globales.get('overall_success_rate', '0%') }}</li>
+    </ul>
+
     <h3>🏢 Répartition par Type de Lieu</h3>
     <ul>
         {% for type_lieu in types_lieu_stats %}
         <li>
-            <strong>{{ type_lieu.type }} :</strong> {{ type_lieu.count }} URLs ({{ (type_lieu.count / stats_globales.total_urls * 100)|round(1) }}%)
+            <strong>{{ type_lieu.type }} :</strong> {{ type_lieu.count }} URLs ({{ (type_lieu.count /
+            stats_globales.total_urls * 100)|round(1) }}%)
         </li>
         {% endfor %}
     </ul>
-    
+
     <p class="footer-note">
-        📄 Le rapport HTML complet contient les détails de chaque URL analysée, incluant les messages d'erreur et les horaires extraits.
+        📄 Le rapport HTML complet contient les détails de chaque URL analysée, incluant les messages d'erreur et les
+        horaires extraits.
     </p>
 </body>
+
 </html>

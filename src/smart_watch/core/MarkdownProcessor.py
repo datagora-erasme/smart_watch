@@ -10,7 +10,6 @@ import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 
 from ..data_models.schema_bdd import Lieux, ResultatsExtraction
-from ..stats import MarkdownProcessingStats
 from .ConfigManager import ConfigManager
 from .LLMClient import LLMResponse, MistralAPIClient, OpenAICompatibleClient
 
@@ -120,21 +119,17 @@ class MarkdownProcessor:
         finally:
             session.close()
 
-    def process_markdown_filtering(
-        self, db_manager, execution_id: int
-    ) -> MarkdownProcessingStats:
-        """Filtre le contenu markdown et retourne des statistiques unifiées."""
+    def process_markdown_filtering(self, db_manager, execution_id: int):
+        """Filtre le contenu markdown."""
         self.logger.section("FILTRAGE MARKDOWN POUR HORAIRES")
 
         # Reset des émissions pour cette exécution
         self.total_co2_emissions = 0.0
         self.reference_embeddings = None  # Réinitialiser pour chaque exécution
 
-        stats = MarkdownProcessingStats()
-
         if not self.embed_client:
             self.logger.warning("Client embeddings non disponible - filtrage ignoré")
-            return stats
+            return
 
         # Récupérer les enregistrements avec markdown à filtrer
         resultats_a_filtrer = self._get_pending_markdown_filtering(
@@ -143,25 +138,23 @@ class MarkdownProcessor:
 
         if not resultats_a_filtrer:
             self.logger.info("Aucun markdown à filtrer")
-            return stats
+            return
 
         self.logger.info(f"{len(resultats_a_filtrer)} contenus markdown à filtrer")
-        stats.processed = len(resultats_a_filtrer)
 
         # Pré-calculer les embeddings de référence une seule fois
         try:
             self.logger.info("Pré-calcul des embeddings de référence...")
             embed_themes, _ = self._get_embeddings(self.reference_phrases)
             self.reference_embeddings = np.array(embed_themes)
-            stats.embedding_calls += 1
-            # La consommation est déjà ajoutée dans _get_embeddings
             self.logger.info(
                 f"{len(self.reference_phrases)} embeddings de référence calculés."
             )
         except Exception as e:
             self.logger.error(f"Erreur calcul embeddings de référence: {e}. Arrêt.")
-            return stats
+            return
 
+        successful_count = 0
         for i, (resultat, lieu) in enumerate(resultats_a_filtrer, 1):
             self.logger.info(f"Filtrage {i}/{len(resultats_a_filtrer)}: {lieu.nom}")
 
@@ -178,22 +171,16 @@ class MarkdownProcessor:
                 )
 
                 if filtered_markdown and len(filtered_markdown.strip()) > 0:
-                    stats.successful += 1
-                    stats.sections_filtered += 1
+                    successful_count += 1
                     self.logger.debug(
                         f"Markdown filtré: {len(filtered_markdown)} caractères"
                     )
                 else:
-                    stats.errors += 1
                     self.logger.warning(
                         f"Aucun contenu pertinent trouvé pour {lieu.nom}"
                     )
 
-                # Compter les appels d'embedding
-                stats.embedding_calls += 1
-
             except Exception as e:
-                stats.errors += 1
                 self.logger.error(f"Erreur filtrage markdown {lieu.nom}: {e}")
                 # Ajouter l'erreur à la chaîne
                 db_manager.add_pipeline_error(
@@ -206,11 +193,8 @@ class MarkdownProcessor:
                     resultat.id_resultats_extraction, resultat.markdown_nettoye
                 )
 
-        # Ajouter les émissions CO2 aux statistiques
-        stats.co2_emissions = self.total_co2_emissions
-
         self.logger.info(
-            f"Markdown filtré: {stats.successful}/{stats.processed} réussies"
+            f"Markdown filtré: {successful_count}/{len(resultats_a_filtrer)} réussies"
         )
 
         # Mettre à jour les émissions totales d'embeddings dans la base
@@ -221,8 +205,6 @@ class MarkdownProcessor:
             self.logger.info(
                 f"Émissions CO2 embeddings totales: {self.total_co2_emissions:.6f} kg"
             )
-
-        return stats
 
     def _extract_context_around_phrase(
         self, phrases: List[str], phrase_index: int, context_window: int = 1
@@ -304,6 +286,24 @@ class MarkdownProcessor:
                 resultat.markdown_horaires = filtered_markdown
                 session.commit()
         finally:
+            session.close()
+            resultat = session.get(ResultatsExtraction, resultat_id)
+            if resultat:
+                resultat.markdown_horaires = filtered_markdown
+                session.commit()
+        """Met à jour le markdown filtré en base de données."""
+        session = db_manager.Session()
+        try:
+            resultat = session.get(ResultatsExtraction, resultat_id)
+            if resultat:
+                resultat.markdown_horaires = filtered_markdown
+                session.commit()
+        finally:
+            session.close()
+            resultat = session.get(ResultatsExtraction, resultat_id)
+            if resultat:
+                resultat.markdown_horaires = filtered_markdown
+                session.commit()
             session.close()
             resultat = session.get(ResultatsExtraction, resultat_id)
             if resultat:
