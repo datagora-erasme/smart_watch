@@ -18,7 +18,7 @@ jobs:
 
     - name: Installer les dépendances
       run: |
-        pip install sphinx sphinx-rtd-theme python-dotenv sqlalchemy
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
     - name: Créer un fichier .env factice pour la génération de docs
       run: |
@@ -51,7 +51,7 @@ jobs:
 
     - name: Générer la documentation
       run: |
-        PYTHONPATH=$(pwd)/src sphinx-build -b html docs/ docs/_build/html
+        PYTHONPATH=$(pwd)/src:$PYTHONPATH sphinx-build -b html docs/ docs/_build/html
 
     - name: Déployer sur GitHub Pages
       uses: peaceiris/actions-gh-pages@v3

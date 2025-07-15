@@ -8,8 +8,8 @@ import sys
 
 # Ajouter le chemin du projet pour que Sphinx puisse importer les modules
 # Depuis docs/, on remonte d'un niveau pour accéder à la racine du projet
-sys.path.insert(0, os.path.abspath(".."))
-# sys.path.insert(0, os.path.abspath("../src"))
+# sys.path.insert(0, os.path.abspath(".."))
+sys.path.insert(0, os.path.abspath("../src"))
 
 # -- Project information -----------------------------------------------------
 project = "SmartWatch"
