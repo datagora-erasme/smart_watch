@@ -1,29 +1,49 @@
-"""
-Gestionnaire d'erreurs centralisé pour le projet smart_watch.
-Standardise la gestion des erreurs, la journalisation et les notifications.
-"""
+# Documentation :
+# https://datagora-erasme.github.io/smart_watch/source/modules/core/error_handler.html
 
+import datetime
 import functools
 import traceback
 from dataclasses import dataclass
 from enum import Enum
-from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 
 from .Logger import LogLevel, create_logger
 
 
 class ErrorSeverity(Enum):
-    """Niveaux de gravité des erreurs."""
+    """
+    Enumération représentant le niveau de gravité d'une erreur.
 
-    LOW = "low"  # Erreur mineure, traitement continue
-    MEDIUM = "medium"  # Erreur modérée, traitement peut continuer avec dégradation
-    HIGH = "high"  # Erreur grave, arrêt du traitement recommandé
-    CRITICAL = "critical"  # Erreur critique, arrêt immédiat requis
+    Attributes:
+        LOW (str): Erreur mineure, le traitement peut continuer.
+        MEDIUM (str): Erreur modérée, le traitement peut continuer avec une dégradation des fonctionnalités.
+        HIGH (str): Erreur grave, il est recommandé d'arrêter le traitement.
+        CRITICAL (str): Erreur critique, le traitement ne peut pas continuer.
+    """
+
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+    CRITICAL = "critical"
 
 
 class ErrorCategory(Enum):
-    """Catégories d'erreurs pour classification."""
+    """
+    Enumération d'erreurs utilisées pour classifier les exceptions dans l'application.
+
+    Attributes:
+        CONFIGURATION (ErrorCategory): Erreur liée à la configuration de l'application.
+        DATABASE (ErrorCategory): Erreur en lien avec la base de données.
+        NETWORK (ErrorCategory): Erreur de connexion ou de communication réseau.
+        LLM (ErrorCategory): Erreur liée au modèle de langage (LLM).
+        FILE_IO (ErrorCategory): Erreur lors des opérations d'entrée/sortie sur les fichiers.
+        VALIDATION (ErrorCategory): Erreur de validation des données ou des paramètres.
+        CONVERSION (ErrorCategory): Erreur lors de la conversion de données ou de formats.
+        PARSING (ErrorCategory): Erreur lors de l'analyse ou du parsing de données.
+        EMAIL (ErrorCategory): Erreur lors de l'envoi ou de la réception d'emails.
+        UNKNOWN (ErrorCategory): Erreur non catégorisée.
+    """
 
     CONFIGURATION = "configuration"
     DATABASE = "database"
@@ -39,7 +59,16 @@ class ErrorCategory(Enum):
 
 @dataclass
 class ErrorContext:
-    """Contexte d'une erreur pour enrichir les informations."""
+    """
+    Classe représentant le contexte d'une erreur survenue dans l'application.
+
+    Attributes:
+        module (str): Nom du module où l'erreur s'est produite.
+        function (str): Nom de la fonction où l'erreur s'est produite.
+        operation (str): Description de l'opération en cours lors de l'erreur.
+        data (Optional[Dict[str, Any]]): Données supplémentaires liées à l'erreur (optionnel).
+        user_message (Optional[str]): Message destiné à l'utilisateur concernant l'erreur (optionnel).
+    """
 
     module: str
     function: str
@@ -50,7 +79,19 @@ class ErrorContext:
 
 @dataclass
 class HandledError:
-    """Représente une erreur traitée par le gestionnaire."""
+    """
+    Classe représentant une erreur gérée.
+
+    Attributes:
+        category (ErrorCategory): catégorie de l'erreur.
+        severity (ErrorSeverity): niveau de sévérité.
+        exception (Exception): exception associée à l'erreur.
+        context (ErrorContext): contexte dans lequel l'erreur s'est produite.
+        timestamp (str): date et heure de l'occurrence de l'erreur.
+        traceback (str): trace complète de l'erreur.
+        resolved (bool): Indique si l'erreur a été résolue.
+        solution_attempted (Optional[str]): Description de la solution tentée, si applicable.
+    """
 
     category: ErrorCategory
     severity: ErrorSeverity
@@ -65,12 +106,17 @@ class HandledError:
 class ErrorHandler:
     """Gestionnaire centralisé des erreurs."""
 
-    def __init__(self, log_file: Optional[Path] = None):
+    def __init__(self):
         """
         Initialise le gestionnaire d'erreurs.
 
-        Args:
-            log_file: Fichier de log (optionnel)
+        Ce constructeur configure le logger pour le module ErrorHandler, initialise le registre des erreurs traitées,
+        et prépare les gestionnaires spécialisés pour chaque catégorie d'erreur.
+
+        Attributes:
+            logger: Logger dédié au module ErrorHandler.
+            error_registry: Liste des erreurs traitées par le gestionnaire.
+            category_handlers: Dictionnaire associant chaque catégorie d'erreur à sa méthode de gestion spécialisée.
         """
         self.logger = create_logger(
             module_name="ErrorHandler",
@@ -101,10 +147,25 @@ class ErrorHandler:
         default_return: Any = None,
     ) -> Any:
         """
-        Traite une erreur de manière centralisée.
-        La catégorie et la gravité doivent être fournies explicitement.
+        Traite une exception de manière centralisée, en enregistrant l'erreur, en la journalisant,
+        et en appliquant un traitement spécialisé selon la catégorie et la gravité.
+
+        Peut relancer l'exception ou retourner une valeur par défaut.
+
+        Args:
+            exception (Exception): L'exception à traiter.
+            context (ErrorContext): Contexte additionnel lié à l'erreur.
+            severity (ErrorSeverity): Gravité de l'erreur.
+            category (ErrorCategory): Catégorie de l'erreur.
+            reraise (bool, optionnel): Si True, relance l'exception après traitement. Par défaut à False.
+            default_return (Any, optionnel): Valeur à retourner si aucun résultat n'est produit par le traitement spécialisé.
+
+        Returns:
+            Any: Résultat du traitement spécialisé, ou la valeur par défaut si aucun résultat n'est produit.
+
+        Raises:
+            Exception: Relance l'exception d'origine si `reraise` est True.
         """
-        import datetime
 
         # Création de l'erreur traitée
         handled_error = HandledError(
@@ -132,7 +193,20 @@ class ErrorHandler:
         return result if result is not None else default_return
 
     def _log_error(self, handled_error: HandledError):
-        """Journalise l'erreur selon sa gravité."""
+        """
+        Enregistre une erreur gérée dans le système de logs avec différents niveaux de gravité.
+
+        Cette méthode construit un message d'erreur détaillé incluant la catégorie, le contexte,
+        l'opération, l'exception, un message utilisateur optionnel et des données contextuelles.
+
+        Le niveau de log est déterminé en fonction de la gravité de l'erreur. Pour les erreurs
+        graves (HIGH ou CRITICAL), la trace complète est également enregistrée en debug.
+
+        Args:
+            handled_error (HandledError): L'objet représentant l'erreur gérée, contenant toutes
+                les informations nécessaires pour le logging (catégorie, contexte, exception,
+                gravité, message utilisateur, données, traceback).
+        """
 
         # Message de base
         base_message = (
@@ -168,7 +242,21 @@ class ErrorHandler:
             self.logger.debug(f"Traceback: {handled_error.traceback}")
 
     def _apply_specialized_handling(self, handled_error: HandledError) -> Any:
-        """Applique un traitement spécialisé selon la catégorie."""
+        """
+        Applique un traitement spécialisé à une erreur gérée selon sa catégorie.
+
+        Cette méthode tente de récupérer un gestionnaire spécialisé pour la catégorie
+        de l'erreur fournie. Si un gestionnaire est trouvé, il est exécuté avec l'erreur
+        en paramètre. En cas d'exception lors de l'exécution du gestionnaire, une erreur
+        est enregistrée dans le logger. Si aucun gestionnaire n'est disponible ou en cas
+        d'échec, la méthode retourne None.
+
+        Args:
+            handled_error (HandledError): L'erreur à traiter, encapsulée dans un objet HandledError.
+
+        Returns:
+            Any: Le résultat du gestionnaire spécialisé si disponible et sans erreur, sinon None.
+        """
 
         handler = self.category_handlers.get(handled_error.category)
         if handler:
@@ -180,7 +268,18 @@ class ErrorHandler:
         return None
 
     def _handle_configuration_error(self, error: HandledError) -> Any:
-        """Traite les erreurs de configuration."""
+        """
+        Gère les erreurs de configuration spécifiques et propose des solutions adaptées.
+
+        Cette méthode analyse l'exception contenue dans l'objet `HandledError` et, selon le type d'erreur (KeyError ou ValueError),
+        elle renseigne une tentative de solution et suggère des actions correctives via le logger.
+
+        Args:
+            error (HandledError): L'objet d'erreur contenant l'exception à traiter.
+
+        Returns:
+            Any: Toujours None, cette méthode est utilisée pour ses effets de bord (journalisation et modification de l'objet d'erreur).
+        """
 
         if isinstance(error.exception, KeyError):
             missing_key = str(error.exception).strip("'\"")
@@ -204,7 +303,22 @@ class ErrorHandler:
         return None
 
     def _handle_database_error(self, error: HandledError) -> Any:
-        """Traite les erreurs de base de données."""
+        """
+        Gère les erreurs spécifiques liées à la base de données et propose des solutions.
+
+        Cette méthode analyse le message d'exception pour détecter des erreurs courantes
+        telles que l'absence de table ou le verrouillage de la base de données. Elle
+        consigne une solution adaptée dans le logger et met à jour l'attribut
+        `solution_attempted` de l'objet d'erreur.
+
+        Args:
+            error (HandledError): L'objet représentant l'erreur interceptée, contenant
+                l'exception et les informations associées.
+
+        Returns:
+            Any: Toujours None, cette méthode est utilisée pour ses effets de bord
+            (journalisation et mise à jour de l'erreur).
+        """
 
         if "no such table" in str(error.exception).lower():
             error.solution_attempted = "Table manquante - initialisation requise"
@@ -219,7 +333,19 @@ class ErrorHandler:
         return None
 
     def _handle_network_error(self, error: HandledError) -> Any:
-        """Traite les erreurs réseau."""
+        """
+        Gère les erreurs liées au réseau en analysant le type d'exception et en proposant une solution.
+
+        Cette méthode vérifie si l'erreur est une erreur de connexion ou un timeout réseau,
+        puis met à jour la tentative de solution dans l'objet `HandledError` et enregistre
+        une suggestion dans le logger.
+
+        Args:
+            error (HandledError): L'objet contenant l'exception à traiter et les informations associées.
+
+        Returns:
+            Any: Toujours None, cette méthode ne retourne pas de valeur utile.
+        """
 
         if isinstance(error.exception, ConnectionError):
             error.solution_attempted = "Problème de connexion réseau"
@@ -232,7 +358,20 @@ class ErrorHandler:
         return None
 
     def _handle_llm_error(self, error: HandledError) -> Any:
-        """Traite les erreurs LLM."""
+        """
+        Traite les erreurs liées au LLM et propose des solutions ou messages adaptés.
+
+        Args:
+            error (HandledError): L'erreur interceptée contenant l'exception à analyser.
+
+        Returns:
+            Any: Retourne un message d'erreur spécifique si un timeout est détecté, sinon None.
+
+        Notes:
+            - Modifie l'attribut `solution_attempted` de l'objet error selon le type d'erreur détecté.
+            - Loggue une solution adaptée via le logger pour les erreurs de clé API ou de limite de taux.
+            - Retourne un message d'erreur pour les timeouts afin de permettre la poursuite du traitement.
+        """
 
         error_str = str(error.exception).lower()
 
@@ -251,7 +390,19 @@ class ErrorHandler:
         return None
 
     def _handle_file_io_error(self, error: HandledError) -> Any:
-        """Traite les erreurs de fichiers."""
+        """
+        Gère les erreurs liées aux opérations d'entrée/sortie de fichiers.
+
+        Cette méthode analyse l'exception contenue dans l'objet `HandledError` et adapte le message de solution proposée selon le type d'erreur rencontré :
+        - Si le fichier est introuvable (`FileNotFoundError`), elle précise le nom du fichier manquant.
+        - Si les permissions sont insuffisantes (`PermissionError`), elle indique ce problème.
+
+        Args:
+            error (HandledError): L'objet contenant l'exception à traiter.
+
+        Returns:
+            Any: Toujours `None`, cette méthode modifie l'objet d'erreur en place.
+        """
 
         if isinstance(error.exception, FileNotFoundError):
             missing_file = getattr(error.exception, "filename", "fichier inconnu")
@@ -263,7 +414,19 @@ class ErrorHandler:
         return None
 
     def _handle_parsing_error(self, error: HandledError) -> Any:
-        """Traite les erreurs de parsing."""
+        """
+        Gère les erreurs de parsing des données d'entrée.
+
+        Cette méthode modifie l'attribut `solution_attempted` de l'erreur pour indiquer qu'une erreur de parsing a eu lieu,
+        enregistre une information dans le logger pour suggérer de vérifier le format des données d'entrée, puis retourne
+        `None` afin que la valeur par défaut définie par le décorateur soit utilisée.
+
+        Args:
+            error (HandledError): L'objet représentant l'erreur de parsing rencontrée.
+
+        Returns:
+            Any: Toujours `None`, pour permettre l'utilisation d'une valeur par défaut.
+        """
         error.solution_attempted = "Erreur de parsing des données"
         self.logger.info(
             "Solution: Vérifiez le format des données d'entrée. L'opération a continué avec une valeur par défaut."
@@ -272,13 +435,37 @@ class ErrorHandler:
         return None
 
     def _handle_validation_error(self, error: HandledError) -> Any:
-        """Traite les erreurs de validation."""
+        """
+        Traite une erreur de validation et retourne une réponse structurée.
+
+        Cette méthode modifie l'attribut `solution_attempted` de l'objet `error` pour indiquer
+        qu'une tentative de solution a été effectuée, puis retourne un dictionnaire contenant
+        un message d'erreur et les détails de l'exception.
+
+        Args:
+            error (HandledError): L'objet représentant l'erreur de validation à traiter.
+
+        Returns:
+            Any: Un dictionnaire avec les clés 'error' et 'details' décrivant l'échec de la validation.
+        """
 
         error.solution_attempted = "Données invalides"
         return {"error": "Validation failed", "details": str(error.exception)}
 
     def _handle_email_error(self, error: HandledError) -> Any:
-        """Traite les erreurs d'email."""
+        """
+        Traite les erreurs liées à l'envoi d'emails et propose une solution adaptée.
+
+        Cette méthode analyse le message d'exception associé à une erreur d'email,
+        puis définit une tentative de solution en fonction du type d'erreur détectée
+        (authentification ou connexion SMTP).
+
+        Args:
+            error (HandledError): L'objet représentant l'erreur à traiter, contenant l'exception d'origine.
+
+        Returns:
+            Any: Toujours None. La solution proposée est enregistrée dans l'attribut `solution_attempted` de l'objet error.
+        """
 
         error_str = str(error.exception).lower()
 
@@ -298,7 +485,19 @@ class ErrorHandler:
         data: Optional[Dict[str, Any]] = None,
         user_message: Optional[str] = None,
     ) -> ErrorContext:
-        """Créé un contexte d'erreur."""
+        """
+        Crée un contexte d'erreur pour faciliter la gestion et le suivi des erreurs dans le module.
+
+        Args:
+            module (str): Nom du module où l'erreur s'est produite.
+            function (str): Nom de la fonction concernée par l'erreur.
+            operation (str): Description de l'opération en cours lors de l'erreur.
+            data (Optional[Dict[str, Any]]): Données supplémentaires liées à l'erreur (par défaut None).
+            user_message (Optional[str]): Message destiné à l'utilisateur pour expliquer l'erreur (par défaut None).
+
+        Returns:
+            ErrorContext: Objet contenant toutes les informations contextuelles sur l'erreur.
+        """
 
         return ErrorContext(
             module=module,
@@ -309,7 +508,25 @@ class ErrorHandler:
         )
 
     def get_error_summary(self) -> Dict[str, Any]:
-        """Retourne un résumé des erreurs traitées."""
+        """
+        Résume les erreurs enregistrées dans le registre d'erreurs.
+
+        Retourne un dictionnaire contenant le nombre total d'erreurs, la répartition par catégorie et par gravité,
+        ainsi que les cinq dernières erreurs enregistrées avec leurs détails.
+
+        Returns:
+            Dict[str, Any]:
+                Un dictionnaire avec les clés suivantes :
+                    - "total_errors" (int): Nombre total d'erreurs enregistrées.
+                    - "by_category" (dict): Répartition des erreurs par catégorie.
+                    - "by_severity" (dict): Répartition des erreurs par gravité.
+                    - "recent_errors" (list): Liste des cinq dernières erreurs, chacune sous forme de dictionnaire contenant :
+                        - "category" (str): Catégorie de l'erreur.
+                        - "severity" (str): Gravité de l'erreur.
+                        - "exception" (str): Description de l'exception.
+                        - "module" (str): Module où l'erreur s'est produite.
+                        - "timestamp" (Any): Date et heure de l'erreur.
+        """
 
         if not self.error_registry:
             return {"total_errors": 0, "by_category": {}, "by_severity": {}}
@@ -343,7 +560,15 @@ class ErrorHandler:
         }
 
     def clear_error_registry(self):
-        """Vide le registre des erreurs."""
+        """
+        Efface tous les enregistrements d'erreurs du registre interne.
+
+        Cette méthode vide le registre des erreurs, supprimant ainsi toutes les erreurs actuellement stockées.
+        Elle peut être utilisée pour réinitialiser l'état des erreurs avant une nouvelle opération ou après un traitement.
+
+        Raises:
+            AttributeError: Si le registre d'erreurs n'est pas initialisé correctement.
+        """
         self.error_registry.clear()
 
 
@@ -356,20 +581,34 @@ def handle_errors(
     user_message: Optional[str] = None,
 ):
     """
-    Décorateur pour la gestion centralisée des erreurs dans les fonctions.
-    Ce décorateur permet d'intercepter les exceptions levées lors de l'exécution d'une fonction,
-    de créer un contexte d'erreur enrichi, puis de déléguer le traitement de l'erreur à un gestionnaire
-    (ErrorHandler). Il offre la possibilité de relancer l'exception ou de retourner une valeur par défaut.
+    Décorateur pour gérer les erreurs lors de l'exécution d'une fonction, en utilisant un gestionnaire d'erreurs centralisé.
 
-    Paramètres :
-        category (ErrorCategory) : Catégorie de l'erreur à signaler.
-        severity (ErrorSeverity) : Niveau de sévérité de l'erreur.
-        reraise (bool, optionnel) : Si True, relance l'exception après traitement. Par défaut False.
-        default_return (Any, optionnel) : Valeur à retourner en cas d'erreur si reraise est False.
-        user_message (str, optionnel) : Message personnalisé destiné à l'utilisateur.
+    Ce décorateur intercepte les exceptions levées par la fonction décorée, crée un contexte d'erreur, et délègue le traitement
+    au gestionnaire d'erreurs approprié. Il permet de personnaliser la catégorie et la sévérité de l'erreur, d'afficher un message
+    utilisateur, et de choisir si l'exception doit être relancée ou non.
 
-    Renvoie :
-        Callable : La fonction décorée avec gestion des erreurs intégrée.
+    Il utilise la fonction functools.wraps pour conserver les métadonnées de la fonction d'origine. Cela permet par exemple
+    d'afficher la documentation de la fonction décorée avec Sphinx.
+
+    Args:
+        category (ErrorCategory): Catégorie de l'erreur à signaler.
+        severity (ErrorSeverity): Niveau de sévérité de l'erreur.
+        reraise (bool, optionnel): Si True, relance l'exception après traitement. Sinon, retourne `default_return`. Par défaut à False.
+        default_return (Any, optionnel): Valeur à retourner en cas d'erreur si `reraise` est False. Par défaut à None.
+        user_message (str, optionnel): Message personnalisé à afficher à l'utilisateur. Par défaut à None.
+
+    Returns:
+        Callable: Le décorateur appliqué à la fonction cible.
+
+    Exemple d'utilisation:
+        @handle_errors(
+            category=ErrorCategory.CONFIGURATION,
+            severity=ErrorSeverity.HIGH,
+            user_message="Erreur lors de l'exécution du pipeline",
+        )
+
+        def run(self):
+        ...
     """
 
     def decorator(func: Callable) -> Callable:
@@ -413,7 +652,17 @@ _global_error_handler: Optional[ErrorHandler] = None
 
 
 def _get_global_error_handler() -> ErrorHandler:
-    """Récupère ou créé l'instance globale du gestionnaire d'erreurs."""
+    """
+    Retourne l'instance globale du gestionnaire d'erreurs.
+
+    Cette fonction vérifie si une instance globale de `ErrorHandler` existe déjà.
+    Si ce n'est pas le cas, elle en crée une nouvelle et la retourne. Cela permet
+    de garantir qu'une seule instance du gestionnaire d'erreurs est utilisée
+    dans toute l'application.
+
+    Returns:
+        ErrorHandler: L'instance globale du gestionnaire d'erreurs.
+    """
     global _global_error_handler
     if _global_error_handler is None:
         _global_error_handler = ErrorHandler()
@@ -421,5 +670,13 @@ def _get_global_error_handler() -> ErrorHandler:
 
 
 def get_error_handler() -> ErrorHandler:
-    """Récupère l'instance globale du gestionnaire d'erreurs."""
+    """
+    Récupère l'instance globale du gestionnaire d'erreurs.
+
+    Cette fonction permet d'obtenir le gestionnaire d'erreurs utilisé globalement dans l'application.
+    Elle est utile pour centraliser la gestion des exceptions et des erreurs.
+
+    Returns:
+        ErrorHandler: L'instance globale du gestionnaire d'erreurs.
+    """
     return _get_global_error_handler()

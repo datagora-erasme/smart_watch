@@ -66,9 +66,7 @@ class BaseConfig:
         self.env_file = env_file or self.project_root / ".env"
 
         # Initialiser le gestionnaire d'erreurs
-        self.error_handler = ErrorHandler(
-            log_file=self.project_root / "logs" / "errors.log"
-        )
+        self.error_handler = ErrorHandler()
 
         # Charger les variables d'environnement
         self._load_environment()
