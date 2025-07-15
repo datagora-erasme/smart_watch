@@ -19,7 +19,7 @@ from ..core.LLMClient import (
 )
 from ..utils.CustomJsonToOSM import JsonToOsmConverter
 from ..utils.JoursFeries import get_jours_feries
-from .database_manager import DatabaseManager
+from .database_processor import DatabaseProcessor
 
 
 class LLMProcessor:
@@ -317,7 +317,7 @@ class LLMProcessor:
             self.logger.error(f"Erreur critique traitement LLM {lieu.identifiant}: {e}")
             return None
 
-    def process_llm_extractions(self, db_manager: DatabaseManager, execution_id: int):
+    def process_llm_extractions(self, db_manager: DatabaseProcessor, execution_id: int):
         """Traite les extractions LLM."""
         self.logger.section("EXTRACTION HORAIRES LLM")
 

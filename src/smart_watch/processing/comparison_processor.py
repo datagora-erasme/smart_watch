@@ -8,7 +8,7 @@ from typing import Dict, List, Tuple
 from ..core.ComparateurHoraires import HorairesComparator
 from ..core.ConfigManager import ConfigManager
 from ..data_models.schema_bdd import Lieux, ResultatsExtraction
-from .database_manager import DatabaseManager
+from .database_processor import DatabaseProcessor
 
 
 class ComparisonProcessor:
@@ -18,7 +18,7 @@ class ComparisonProcessor:
         self.config = config
         self.logger = logger
 
-    def _get_pending_comparisons(self, db_manager: DatabaseManager) -> List[Tuple]:
+    def _get_pending_comparisons(self, db_manager: DatabaseProcessor) -> List[Tuple]:
         """Récupère les enregistrements en attente de comparaison."""
         session = db_manager.Session()
         try:
@@ -111,7 +111,7 @@ class ComparisonProcessor:
             }
 
     def _update_comparison_result(
-        self, db_manager: DatabaseManager, resultat_id: int, result_data: Dict
+        self, db_manager: DatabaseProcessor, resultat_id: int, result_data: Dict
     ):
         """Met à jour le résultat d'une comparaison."""
         session = db_manager.Session()
@@ -133,7 +133,7 @@ class ComparisonProcessor:
         finally:
             session.close()
 
-    def process_comparisons(self, db_manager: DatabaseManager):
+    def process_comparisons(self, db_manager: DatabaseProcessor):
         """Traite les comparaisons avec data.grandlyon.com."""
         self.logger.section("COMPARAISON HORAIRES")
 

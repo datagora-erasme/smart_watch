@@ -7,7 +7,7 @@ from typing import Dict
 
 from ..core.ConfigManager import ConfigManager
 from ..core.URLRetriever import retrieve_url
-from .database_manager import DatabaseManager
+from .database_processor import DatabaseProcessor
 
 
 class URLProcessor:
@@ -17,7 +17,7 @@ class URLProcessor:
         self.config = config
         self.logger = logger
 
-    def process_urls(self, db_manager: DatabaseManager, execution_id: int):
+    def process_urls(self, db_manager: DatabaseProcessor, execution_id: int):
         """Traite les URLs en parallèle."""
         self.logger.section("EXTRACTION CONTENU URLs")
 

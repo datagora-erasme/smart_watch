@@ -4,8 +4,15 @@ Contient les processeurs modulaires pour chaque étape du pipeline.
 """
 
 from .comparison_processor import ComparisonProcessor
-from .database_manager import DatabaseManager
+from .database_processor import DatabaseProcessor
 from .llm_processor import LLMProcessor
+from .setup_processor import SetupProcessor
 from .url_processor import URLProcessor
 
-__all__ = ["DatabaseManager", "URLProcessor", "LLMProcessor", "ComparisonProcessor"]
+__all__ = [
+    "SetupProcessor",
+    "DatabaseProcessor",
+    "URLProcessor",
+    "LLMProcessor",
+    "ComparisonProcessor",
+]
