@@ -3,6 +3,7 @@ Gestionnaire d'erreurs centralisé pour le projet smart_watch.
 Standardise la gestion des erreurs, la journalisation et les notifications.
 """
 
+import functools
 import traceback
 from dataclasses import dataclass
 from enum import Enum
@@ -372,6 +373,7 @@ def handle_errors(
     """
 
     def decorator(func: Callable) -> Callable:
+        @functools.wraps(func)
         def wrapper(*args, **kwargs):
             try:
                 return func(*args, **kwargs)
