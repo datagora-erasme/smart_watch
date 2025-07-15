@@ -45,6 +45,10 @@ jobs:
         mkdir -p src/smart_watch/data_models
         touch src/smart_watch/data_models/opening_hours_schema.json
 
+    - name: Export PYTHONPATH
+      run: |
+        export PYTHONPATH=$PYTHONPATH:$(pwd)/src
+
     - name: Générer la documentation
       run: |
         sphinx-build -b html docs/ docs/_build/html
