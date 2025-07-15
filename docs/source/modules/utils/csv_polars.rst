@@ -4,40 +4,41 @@ CSV to Polars
 Fonctionnalités
 ---------------
 
-Le module CSVToPolars fournit un chargeur de fichiers CSV robuste avec support des sources locales et distantes. Il utilise Polars pour des performances optimales et inclut la détection automatique de séparateurs.
+Le module CSVToPolars permet de charger dans un dataframe Polars des fichiers CSV locaux ou distants. Il inclut une détection automatique des séparateurs.
 
 **Chargement multi-source :**
 
-- Support des URLs HTTP/HTTPS avec téléchargement automatique
-- Fichiers locaux avec validation d'existence
-- Téléchargement vers fichiers temporaires avec nettoyage automatique
+- Support des URLs HTTP/HTTPS et des fichiers locaux
+- Téléchargement des URLS vers fichiers temporaires avec nettoyage automatique
 - Gestion des timeouts et erreurs réseau
 
 **Détection automatique :**
 
-- Détection intelligente du séparateur CSV via csv.Sniffer
-- Échantillonnage des premières lignes pour analyse
+- Détection du séparateur via csv.Sniffer
+- si en-tête détecté, détection du séparateur sur cette ligne,
+- sinon échantillonnage des premières lignes (50 max) pour analyse
 - Fallback vers point-virgule si détection échoue
-- Support des en-têtes configurables
 
 **Optimisations Polars :**
 
-- Lecture efficace avec Polars pour grandes données
-- Troncature des lignes malformées (truncate_ragged_lines)
+- Troncature silencieuse des lignes malformées (truncate_ragged_lines)
 - Filtrage automatique des lignes entièrement vides
-- Gestion robuste des encodages UTF-8
 
 **Gestion d'erreurs :**
 
 - Validation des fichiers locaux avant lecture
 - Gestion des erreurs de téléchargement avec messages explicites
 - Nettoyage automatique des fichiers temporaires
-- Logging détaillé des opérations et statistiques
+- Logging détaillé des opérations
 
-Classes principales
--------------------
+
+Classe principale
+-----------------
 
 .. automodule:: src.smart_watch.utils.CSVToPolars
    :members:
    :undoc-members:
+   :private-members:
+   :special-members: __init__, __call__
+   :inherited-members:
    :show-inheritance:

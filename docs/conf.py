@@ -11,16 +11,6 @@ import sys
 sys.path.insert(0, os.path.abspath(".."))
 # sys.path.insert(0, os.path.abspath("../src"))
 
-
-def remove_module_docstring(app, what, name, obj, options, lines):
-    if what == "module" and name in ("base_config", "database_config"):
-        del lines[:]
-
-
-def setup(app):
-    app.connect("autodoc-process-docstring", remove_module_docstring)
-
-
 # -- Project information -----------------------------------------------------
 project = "SmartWatch"
 copyright = "2025, Béranger THOMAS, ERASME, Métropole de Lyon"
@@ -43,11 +33,12 @@ extensions = [
 # Configuration autodoc
 autodoc_default_options = {
     "members": True,
+    "undoc-members": True,
+    "private-members": True,
+    "inherited-members": True,
+    "special-members": "__init__,__call__",
     "member-order": "bysource",
-    "special-members": "__init__",
-    "undoc-members": False,  # Masquer les membres non documentés
-    "exclude-members": "__weakref__,__dict__,__module__",
-    "show-inheritance": False,  # Masquer l'héritage pour réduire le bruit
+    "show-inheritance": True,
 }
 
 
