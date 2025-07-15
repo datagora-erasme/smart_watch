@@ -32,7 +32,7 @@ Diagramme de flux
       │
       └─> 3. Exécute séquentiellement le pipeline :
             │
-            ├─> [1] SETUP : [ utils.CSVToPolars ] -> [ processing.DatabaseManager ]
+            ├─> [1] SETUP : [ utils.CSVToPolars ] -> [ processing.SetupProcessor ]
             │     (Charge les URLs depuis le CSV et prépare une nouvelle exécution)
             │
             ├─> [2] FETCH : [ processing.URLProcessor ]

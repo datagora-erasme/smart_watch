@@ -1,11 +1,6 @@
 Report Manager
 ==============
 
-.. automodule:: src.smart_watch.reporting.report_manager
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Fonctionnalités
 ---------------
 
@@ -35,10 +30,13 @@ Le ReportManager orchestre la génération et l'envoi de rapports HTML avec cré
 - Préservation des logs permanents
 - Optimisation de l'espace disque
 
-Classes principales
--------------------
+Modules
+-------
 
-.. autoclass:: src.smart_watch.reporting.report_manager.ReportManager
+.. automodule:: src.smart_watch.reporting.report_manager
    :members:
    :undoc-members:
+   :private-members:
+   :special-members: __init__, __call__
+   :inherited-members:
    :show-inheritance:

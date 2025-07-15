@@ -1,11 +1,6 @@
 Configuration Manager
 =====================
 
-.. automodule:: src.smart_watch.core.ConfigManager
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Fonctionnalités
 ---------------
 
@@ -26,10 +21,13 @@ Le ConfigManager fournit un point d'entrée centralisé pour toutes les configur
 - Messages d'erreur consolidés de tous les modules
 - Validation en cascade avec arrêt sur première erreur critique
 
-Classes principales
--------------------
+Modules
+-------
 
-.. autoclass:: src.smart_watch.core.ConfigManager.ConfigManager
+.. automodule:: src.smart_watch.core.ConfigManager
    :members:
    :undoc-members:
+   :private-members:
+   :special-members: __init__, __call__
+   :inherited-members:
    :show-inheritance:

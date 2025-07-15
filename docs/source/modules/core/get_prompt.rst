@@ -1,11 +1,6 @@
 Get Prompt
 ==========
 
-.. automodule:: src.smart_watch.core.GetPrompt
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Fonctionnalités
 ---------------
 
@@ -38,4 +33,10 @@ Le module GetPrompt génère des prompts optimisés pour l'extraction d'horaires
 Fonctions principales
 ---------------------
 
-.. autofunction:: src.smart_watch.core.GetPrompt.get_prompt
+.. automodule:: src.smart_watch.core.GetPrompt
+   :members:
+   :undoc-members:
+   :private-members:
+   :special-members: __init__, __call__
+   :inherited-members:
+   :show-inheritance:

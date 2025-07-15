@@ -1,7 +1,5 @@
-"""
-Gestionnaire de configuration centralisé pour le projet smart_watch.
-Point d'entrée simplifié qui agrège les configurations modulaires.
-"""
+# Gestionnaire de configuration centralisé simplifié
+# https://datagora-erasme.github.io/smart_watch/source/modules/core/config_manager.html
 
 from pathlib import Path
 from typing import Optional
@@ -26,10 +24,19 @@ class ConfigManager:
 
     def __init__(self, env_file: Optional[Path] = None):
         """
-        Initialise le gestionnaire de configuration.
+        Initialise le gestionnaire de configuration centralisée.
+
+        Cette méthode configure le chemin du projet, charge le fichier d'environnement (.env),
+        initialise la configuration de base et les gestionnaires de configuration satellites.
+        Elle gère également les erreurs critiques lors de l'initialisation.
 
         Args:
-            env_file: Chemin vers le fichier .env (optionnel)
+            env_file (Optional[Path]): Chemin personnalisé vers le fichier d'environnement (.env).
+                Si non spécifié, le fichier .env à la racine du projet sera utilisé.
+
+        Raises:
+            Exception: Toute erreur survenant lors de l'initialisation des gestionnaires de configuration
+                est capturée, traitée par le gestionnaire d'erreurs, puis relancée avec une sévérité critique.
         """
         self.project_root = Path(__file__).resolve().parents[3]
         self.env_file = env_file or self.project_root / ".env"
@@ -60,7 +67,25 @@ class ConfigManager:
             )
 
     def _init_config_managers(self):
-        """Initialise tous les gestionnaires de configuration."""
+        """
+        Initialise les gestionnaires de configuration modulaires et expose leurs configurations.
+
+        Cette méthode crée et initialise les gestionnaires de configuration pour différents modules
+        (LLM, base de données, email, traitement, filtrage Markdown) en utilisant le fichier d'environnement
+        fourni. Les configurations de chaque gestionnaire sont exposées comme attributs de l'instance.
+        Les références aux gestionnaires sont conservées pour permettre la validation ultérieure.
+
+        Args:
+            Aucun argument.
+
+        Attributes:
+            llm (dict): Configuration du gestionnaire LLM.
+            database (dict): Configuration du gestionnaire de base de données.
+            email (dict): Configuration du gestionnaire d'email.
+            processing (dict): Configuration du gestionnaire de traitement.
+            markdown_filtering (dict): Configuration du gestionnaire de filtrage Markdown.
+            _managers (dict): Références aux gestionnaires de configuration pour la validation.
+        """
         # Initialiser les gestionnaires modulaires
         llm_manager = LLMConfigManager(self.env_file)
         database_manager = DatabaseConfigManager(self.env_file)
@@ -85,7 +110,20 @@ class ConfigManager:
         }
 
     def validate(self) -> bool:
-        """Valide la configuration complète."""
+        """
+        Valide les configurations de tous les gestionnaires modulaires.
+
+        Parcourt chaque gestionnaire de configuration enregistré et appelle sa méthode `validate`.
+        Si une configuration est invalide ou si une exception est levée lors de la validation,
+        un message d'erreur est enregistré. Si toutes les configurations sont valides, un message
+        d'information est enregistré.
+
+        Cela permet de s'assurer que toutes les configurations nécessaires sont correctement
+        définies avant de démarrer l'application.
+
+        Returns:
+            bool: True si toutes les configurations sont valides, False sinon.
+        """
         errors = []
 
         # Valider chaque configuration modulaire
@@ -105,7 +143,17 @@ class ConfigManager:
         return True
 
     def display_summary(self):
-        """Affiche un résumé de la configuration."""
+        """
+        Affiche un résumé détaillé de la configuration actuelle du système dans les logs.
+
+        Cette méthode envoie au logger les informations principales concernant la configuration du LLM,
+        des embeddings, de la base de données, du fichier CSV, de l'email et du traitement
+        des threads. Les informations sont adaptées selon le fournisseur d'embeddings utilisé
+        (OPENAI ou MISTRAL) et selon la présence ou non de la configuration email.
+
+        Returns:
+            None
+        """
         logger.info("=== RÉSUMÉ CONFIGURATION ===")
         logger.info(f"LLM: {self.llm.fournisseur} - {self.llm.modele}")
         if self.llm.base_url:

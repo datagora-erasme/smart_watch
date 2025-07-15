@@ -1,11 +1,6 @@
 Vacances Scolaires
 ==================
 
-.. automodule:: src.smart_watch.utils.VacancesScolaires
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Fonctionnalités
 ---------------
 
@@ -93,3 +88,14 @@ Gestion des erreurs
 - **Logging** : Traçabilité complète des opérations
 
 Le module utilise le logger SmartWatch pour tracer toutes les opérations et erreurs.
+
+Module
+-------
+
+.. automodule:: src.smart_watch.utils.VacancesScolaires
+   :members:
+   :undoc-members:
+   :private-members:
+   :special-members: __init__, __call__
+   :inherited-members:
+   :show-inheritance:

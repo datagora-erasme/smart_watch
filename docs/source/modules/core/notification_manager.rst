@@ -1,11 +1,6 @@
 Notification Manager
 ====================
 
-.. automodule:: src.smart_watch.core.NotificationManager
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Fonctionnalités
 ---------------
 
@@ -35,10 +30,13 @@ Le NotificationManager orchestre la génération de rapports et leur envoi par e
 - Logging détaillé des opérations
 - Gestion des erreurs avec continuation du processus
 
-Classes principales
--------------------
+Modules
+-------
 
-.. autoclass:: src.smart_watch.core.NotificationManager.NotificationManager
+.. automodule:: src.smart_watch.core.NotificationManager
    :members:
    :undoc-members:
+   :private-members:
+   :special-members: __init__, __call__
+   :inherited-members:
    :show-inheritance:

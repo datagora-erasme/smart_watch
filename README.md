@@ -59,7 +59,7 @@
      │
      └─> 3. Exécute le pipeline séquentiel :
          │
-         ├─> [1] SETUP : [ utils.CSVToPolars ] -> [ processing.DatabaseManager ]
+         ├─> [1] SETUP : [ utils.CSVToPolars ] -> [ processing.SetupProcessor ]
          │     (Charge les URLs depuis le CSV et prépare une nouvelle exécution en base)
          │
          ├─> [2] FETCH : [ processing.URLProcessor ]
@@ -92,7 +92,7 @@ Modules Transversaux :
 -----------------------------------------------------------------------------------------
   - [ core.Logger ] : utilisé par tous les modules pour la journalisation.
   - [ core.ErrorHandler ] : utilisé pour une gestion centralisée des erreurs.
-  - [ processing.DatabaseManager ] : utilisé par toutes les étapes du pipeline pour lire et écrire les résultats dans la base de données SQLite.
+  - [ core.DatabaseManager ] : utilisé par toutes les étapes du pipeline pour lire et écrire les résultats dans la base de données SQLite.
   - [ codecarbon ] : mesure les émissions de CO2 des appels aux LLM.
 
 -----------------------------------------------------------------------------------------

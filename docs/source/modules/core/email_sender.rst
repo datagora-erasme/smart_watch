@@ -1,11 +1,6 @@
 Email Sender
 ============
 
-.. automodule:: src.smart_watch.core.EnvoyerMail
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Fonctionnalités
 ---------------
 
@@ -39,14 +34,6 @@ Le module EmailSender gère l'envoi d'emails via SMTP avec support des pièces j
 - Messages d'erreur explicites pour debugging
 - Intégration avec le système de configuration
 
-Classes principales
--------------------
-
-.. autoclass:: src.smart_watch.core.EnvoyerMail.EmailSender
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Configuration SMTP
 ------------------
 
@@ -66,3 +53,14 @@ Variables d'environnement requises dans `.env` :
 - **SMTP_PORT** : 25 (non-sécurisé), 587 (STARTTLS), 465 (SSL)
 - **Authentification** : Login/password ou anonyme
 - **Sécurité** : Détection automatique SSL/TLS selon le port
+
+Modules
+-------
+
+.. automodule:: src.smart_watch.core.EnvoyerMail
+   :members:
+   :undoc-members:
+   :private-members:
+   :special-members: __init__, __call__
+   :inherited-members:
+   :show-inheritance:

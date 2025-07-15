@@ -80,7 +80,7 @@ Core (``core/``)
 Processing (``processing/``)
 ---------------------------
 
-**DatabaseManager**
+**DatabaseProcessor**
     Gestionnaire de base de données SQLite avec ORM SQLAlchemy. Gère la création des tables, l'insertion des données et les requêtes.
 
 **URLProcessor**

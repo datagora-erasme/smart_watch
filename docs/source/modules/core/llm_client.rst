@@ -35,46 +35,13 @@ Le module LLMClient fournit une abstraction unifiée pour interagir avec différ
 - Décorateurs de gestion d'erreurs avec fallback
 - Logging détaillé pour debugging
 
-Classes principales
--------------------
+Modules
+-------
 
-.. autoclass:: src.smart_watch.core.LLMClient.BaseLLMClient
+.. automodule:: src.smart_watch.core.LLMClient
    :members:
    :undoc-members:
+   :private-members:
+   :special-members: __init__, __call__
+   :inherited-members:
    :show-inheritance:
-
-.. autoclass:: src.smart_watch.core.LLMClient.OpenAICompatibleClient
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-.. autoclass:: src.smart_watch.core.LLMClient.MistralAPIClient
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-.. autoclass:: src.smart_watch.core.LLMClient.LLMResponse
-   :members:
-   :undoc-members:
-
-.. autoclass:: src.smart_watch.core.LLMClient.LLMMessage
-   :members:
-   :undoc-members:
-
-Fonctions utilitaires
----------------------
-
-.. autofunction:: src.smart_watch.core.LLMClient.get_structured_response_format
-
-.. autofunction:: src.smart_watch.core.LLMClient.get_mistral_tool_format
-   response - openai_client.chat_completion(
-       messages-[{"role": "user", "content": "Extraire les horaires..."}],
-       response_format-{"type": "json_object"},
-       schema-json_schema
-   )
-   
-   # Calcul d'embeddings
-   embeddings - openai_client.get_embeddings(
-       texts-["phrase 1", "phrase 2"],
-       model-"nomic-embed-text"
-   )

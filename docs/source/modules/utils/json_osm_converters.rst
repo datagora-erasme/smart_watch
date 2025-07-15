@@ -32,6 +32,9 @@ JSON vers OSM
 .. automodule:: src.smart_watch.utils.CustomJsonToOSM
    :members:
    :undoc-members:
+   :private-members:
+   :special-members: __init__, __call__
+   :inherited-members:
    :show-inheritance:
 
 OSM vers JSON
@@ -40,6 +43,9 @@ OSM vers JSON
 .. automodule:: src.smart_watch.utils.OSMToCustomJson
    :members:
    :undoc-members:
+   :private-members:
+   :special-members: __init__, __call__
+   :inherited-members:
    :show-inheritance:
 
 Classes de données

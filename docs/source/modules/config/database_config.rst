@@ -25,4 +25,7 @@ Modules
 .. automodule:: src.smart_watch.config.database_config
    :members:
    :undoc-members:
+   :private-members:
+   :special-members: __init__, __call__
+   :inherited-members:
    :show-inheritance:

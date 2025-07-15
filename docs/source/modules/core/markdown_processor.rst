@@ -1,11 +1,6 @@
 Markdown Processor
 ==================
 
-.. automodule:: src.smart_watch.core.MarkdownProcessor
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Fonctionnalités
 ---------------
 
@@ -35,27 +30,13 @@ Le MarkdownProcessor utilise des embeddings sémantiques pour filtrer intelligem
 - Logging détaillé des opérations et statistiques
 - Mise à jour des émissions CO2 en base de données
 
-Classes principales
--------------------
+Modules
+-------
 
-.. autoclass:: src.smart_watch.core.MarkdownProcessor.MarkdownProcessor
+.. automodule:: src.smart_watch.core.MarkdownProcessor
    :members:
    :undoc-members:
+   :private-members:
+   :special-members: __init__, __call__
+   :inherited-members:
    :show-inheritance:
-
-.. autoclass:: src.smart_watch.core.MarkdownProcessor.ProcessingStats
-   :members:
-   :undoc-members:
-   # Initialisation
-   config - ConfigManager()
-   processor - MarkdownProcessor(config, logger)
-   
-   # Traitement par lot
-   stats - processor.process_markdown_filtering(db_manager, execution_id)
-   
-   # Traitement d'un contenu spécifique
-   markdown_filtre - processor._filter_single_markdown(
-       markdown_content-"Contenu à filtrer...",
-       nom-"Piscine Municipale",
-       type_lieu-"piscine"
-   )

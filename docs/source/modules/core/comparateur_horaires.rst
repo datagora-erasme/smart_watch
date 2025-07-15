@@ -1,11 +1,6 @@
 Comparateur d'Horaires
 ======================
 
-.. automodule:: src.smart_watch.core.ComparateurHoraires
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Fonctionnalités
 ---------------
 
@@ -35,19 +30,13 @@ Le ComparateurHoraires effectue une comparaison intelligente et robuste entre de
 - Détails structurés pour analyse programmatique
 - Gestion des cas d'erreur avec messages explicites
 
-Classes principales
--------------------
+Modules
+-------
 
-.. autoclass:: src.smart_watch.core.ComparateurHoraires.HorairesComparator
+.. automodule:: src.smart_watch.core.ComparateurHoraires
    :members:
    :undoc-members:
+   :private-members:
+   :special-members: __init__, __call__
+   :inherited-members:
    :show-inheritance:
-
-.. autoclass:: src.smart_watch.core.ComparateurHoraires.ScheduleNormalizer
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-.. autoclass:: src.smart_watch.core.ComparateurHoraires.ComparisonResult
-   :members:
-   :undoc-members:

@@ -1,11 +1,6 @@
 Markdown Filtering Configuration
 ================================
 
-.. automodule:: src.smart_watch.config.markdown_filtering_config
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Fonctionnalités
 ---------------
 
@@ -28,14 +23,13 @@ Le module MarkdownFilteringConfig configure le filtrage sémantique du contenu m
 - Fallback vers OpenAI si seule cette clé est configurée
 - Validation des paramètres et URL de base requises
 
-Classes principales
--------------------
+Modules
+-------
 
-.. autoclass:: src.smart_watch.config.markdown_filtering_config.MarkdownFilteringConfig
+.. automodule:: src.smart_watch.config.markdown_filtering_config
    :members:
    :undoc-members:
-
-.. autoclass:: src.smart_watch.config.markdown_filtering_config.MarkdownFilteringConfigManager
-   :members:
-   :undoc-members:
+   :private-members:
+   :special-members: __init__, __call__
+   :inherited-members:
    :show-inheritance:

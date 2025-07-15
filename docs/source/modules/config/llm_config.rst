@@ -1,11 +1,6 @@
 LLM Configuration
 =================
 
-.. automodule:: src.smart_watch.config.llm_config
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Fonctionnalités
 ---------------
 
@@ -35,20 +30,19 @@ Le module LLMConfig gère la configuration des modèles de langage avec détecti
 - Modèle spécifique par fournisseur
 - URL de base pour déploiements locaux
 
-Classes principales
--------------------
-
-.. autoclass:: src.smart_watch.config.llm_config.LLMConfig
-   :members:
-   :undoc-members:
-
-.. autoclass:: src.smart_watch.config.llm_config.LLMConfigManager
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Fournisseurs supportés
 ----------------------
 
 - **OpenAI** et compatibles (LM Studio, Ollama, LiteLLM)
 - **Mistral** via API officielle
+
+Modules
+-------
+
+.. automodule:: src.smart_watch.config.llm_config
+   :members:
+   :undoc-members:
+   :private-members:
+   :special-members: __init__, __call__
+   :inherited-members:
+   :show-inheritance:

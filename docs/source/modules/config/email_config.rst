@@ -1,11 +1,6 @@
 Email Configuration
 ===================
 
-.. automodule:: src.smart_watch.config.email_config
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Fonctionnalités
 ---------------
 
@@ -29,14 +24,13 @@ Le module EmailConfig gère la configuration SMTP pour l'envoi de rapports par e
 - Validation des paramètres obligatoires
 - Gestion des erreurs d'authentification
 
-Classes principales
--------------------
+Modules
+-------
 
-.. autoclass:: src.smart_watch.config.email_config.EmailConfig
+.. automodule:: src.smart_watch.config.email_config
    :members:
    :undoc-members:
-
-.. autoclass:: src.smart_watch.config.email_config.EmailConfigManager
-   :members:
-   :undoc-members:
+   :private-members:
+   :special-members: __init__, __call__
+   :inherited-members:
    :show-inheritance:

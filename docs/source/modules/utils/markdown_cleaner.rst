@@ -1,11 +1,6 @@
 Markdown Cleaner
 ================
 
-.. automodule:: src.smart_watch.utils.MarkdownCleaner
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Fonctionnalités
 ---------------
 
@@ -38,11 +33,10 @@ Le MarkdownCleaner nettoie et normalise le contenu markdown brut pour optimiser 
 Classes principales
 -------------------
 
-.. autoclass:: src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner
+.. automodule:: src.smart_watch.utils.MarkdownCleaner
    :members:
    :undoc-members:
+   :private-members:
+   :special-members: __init__, __call__
+   :inherited-members:
    :show-inheritance:
-
-.. autoclass:: src.smart_watch.utils.MarkdownCleaner.CleaningStats
-   :members:
-   :undoc-members:

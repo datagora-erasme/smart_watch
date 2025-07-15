@@ -1,11 +1,6 @@
 URL Retriever
 =============
 
-.. automodule:: src.smart_watch.core.URLRetriever
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Fonctionnalités
 ---------------
 
@@ -38,4 +33,10 @@ Le URLRetriever gère la récupération robuste de contenu web avec gestion avan
 Fonctions principales
 ---------------------
 
-.. autofunction:: src.smart_watch.core.URLRetriever.retrieve_url
+.. automodule:: src.smart_watch.core.URLRetriever
+   :members:
+   :undoc-members:
+   :private-members:
+   :special-members: __init__, __call__
+   :inherited-members:
+   :show-inheritance:

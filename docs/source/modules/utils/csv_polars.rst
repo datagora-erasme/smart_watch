@@ -32,8 +32,8 @@ Le module CSVToPolars permet de charger dans un dataframe Polars des fichiers CS
 - Logging détaillé des opérations
 
 
-Classe principale
------------------
+Module
+------
 
 .. automodule:: src.smart_watch.utils.CSVToPolars
    :members:

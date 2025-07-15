@@ -36,14 +36,6 @@ Le générateur HTML crée des rapports interactifs sophistiqués avec classific
 - Gestion des templates manquants avec erreurs explicites
 - Export et impression des données avec JavaScript intégré
 
-Fonctions principales
----------------------
-
-.. autofunction:: src.smart_watch.reporting.GenererRapportHTML.generer_rapport_html
-
-.. autofunction:: src.smart_watch.reporting.GenererRapportHTML.to_json
-
-
 Structure des données du rapport
 --------------------------------
 
@@ -79,3 +71,14 @@ Gestion des erreurs et edge cases
 - **Caractères UTF-8** : Préservation complète via encodage base64
 
 Le module utilise des décorateurs de gestion d'erreurs pour la traçabilité complète.
+
+Modules
+-------
+
+.. automodule:: src.smart_watch.reporting.GenererRapportHTML
+   :members:
+   :undoc-members:
+   :private-members:
+   :special-members: __init__, __call__
+   :inherited-members:
+   :show-inheritance:

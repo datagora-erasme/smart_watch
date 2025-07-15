@@ -1,11 +1,6 @@
 Processing Configuration
 ========================
 
-.. automodule:: src.smart_watch.config.processing_config
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Fonctionnalités
 ---------------
 
@@ -22,17 +17,17 @@ Le module ProcessingConfig configure les paramètres de traitement des URLs et d
 - Patterns de suppression des éléments indésirables
 - Règles de normalisation du contenu textuel
 
-Classes principales
--------------------
+Modules
+-------
 
-.. autoclass:: src.smart_watch.config.processing_config.ProcessingConfig
+.. automodule:: src.smart_watch.config.processing_config
    :members:
    :undoc-members:
-
-.. autoclass:: src.smart_watch.config.processing_config.ProcessingConfigManager
-   :members:
-   :undoc-members:
+   :private-members:
+   :special-members: __init__, __call__
+   :inherited-members:
    :show-inheritance:
+
    proc_config - ProcessingConfigManager()
    
    print(f"Threads: {proc_config.config.nb_threads_url}")

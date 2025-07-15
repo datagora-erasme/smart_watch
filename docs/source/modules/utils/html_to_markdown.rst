@@ -29,7 +29,13 @@ Le module HtmlToMarkdown convertit le contenu HTML en format Markdown avec une a
 - Traitement des contenus vides avec validation
 - Optimisé pour le pipeline URLRetriever
 
-Fonction principale
--------------------
+Module
+-------
 
-.. autofunction:: src.smart_watch.utils.HtmlToMarkdown.convert_html_to_markdown
+.. automodule:: src.smart_watch.utils.HtmlToMarkdown
+   :members:
+   :undoc-members:
+   :private-members:
+   :special-members: __init__, __call__
+   :inherited-members:
+   :show-inheritance:

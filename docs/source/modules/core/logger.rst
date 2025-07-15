@@ -1,11 +1,6 @@
 Logger
 ======
 
-.. automodule:: src.smart_watch.core.Logger
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Fonctionnalités
 ---------------
 
@@ -32,20 +27,10 @@ Le module Logger fournit un système de logging unifié pour SmartWatch avec sup
 Classes principales
 -------------------
 
-.. autoclass:: src.smart_watch.core.Logger.SmartWatchLogger
+.. automodule:: src.smart_watch.core.Logger
    :members:
    :undoc-members:
+   :private-members:
+   :special-members: __init__, __call__
+   :inherited-members:
    :show-inheritance:
-
-.. autoclass:: src.smart_watch.core.Logger.LogLevel
-   :members:
-   :undoc-members:
-
-.. autoclass:: src.smart_watch.core.Logger.LogOutput
-   :members:
-   :undoc-members:
-
-Fonctions utilitaires
----------------------
-
-.. autofunction:: src.smart_watch.core.Logger.create_logger

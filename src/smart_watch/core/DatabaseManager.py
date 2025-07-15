@@ -1,7 +1,5 @@
-"""
-Module de gestion de base de données SQLite.
-Classe générique réutilisable pour différents projets.
-"""
+# Module de gestion de base de données SQLite.
+# https://datagora-erasme.github.io/smart_watch/source/modules/core/databasemanager.html
 
 import sqlite3
 from pathlib import Path

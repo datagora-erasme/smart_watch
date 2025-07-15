@@ -1,11 +1,6 @@
 Jours Fériés
 ============
 
-.. automodule:: src.smart_watch.utils.JoursFeries
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Fonctionnalités
 ---------------
 
@@ -38,6 +33,10 @@ Le module JoursFeries récupère les jours fériés français officiels depuis l
 Fonctions principales
 ---------------------
 
-.. autofunction:: src.smart_watch.utils.JoursFeries.get_jours_feries
-
-.. autofunction:: src.smart_watch.utils.JoursFeries.get_day_name
+.. automodule:: src.smart_watch.utils.JoursFeries
+   :members:
+   :undoc-members:
+   :private-members:
+   :special-members: __init__, __call__
+   :inherited-members:
+   :show-inheritance:
