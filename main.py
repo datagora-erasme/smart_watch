@@ -1,26 +1,11 @@
-"""
-SmartWatch est un programme permettant l'extraction d'horaires d'ouverture
-par LLM depuis des sites web, et leur comparaison avec des données de référence.
+# SmartWatch est un programme permettant l'extraction d'horaires d'ouverture par LLM depuis des sites web,
+# et leur comparaison avec des données de référence issues de data.grandlyon.com.
+#
+# Chaque module de ce projet est commenté dans la documentation officielle,
+# accessible par un lien indiqué au début de chaque fichier :
+#
+# https://datagora-erasme.github.io/smart_watch/index.html
 
-Les données de référence sont issues de data.grandlyon.com.
-
-Les variables d'environnement sont chargées depuis un fichier .env.
-
-Les modules principaux sont :
-    - ConfigManager : Gestion de la configuration et des variables d'environnement
-    - ErrorHandler : Gestion des erreurs et des logs
-    - Logger : Gestion des logs
-    - MarkdownProcessor : Traitement des fichiers Markdown
-    - URLProcessor : Traitement des URLs et extraction de données
-    - LLMProcessor : Interaction avec les modèles de langage pour l'extraction d'horaires
-    - ComparisonProcessor : Comparaison des horaires extraits avec des données de référence
-    - DatabaseManager : Gestion de la base de données SQLite
-    - ReportManager : Génération et envoi de rapports
-    - StatsManager : Gestion des statistiques basées sur des requêtes SQL
-    - HoraireExtractor : Classe principale orchestrant l'extraction et le traitement des horaires
-"""
-
-# Modules du projet
 import time
 
 from src.smart_watch.core.ConfigManager import ConfigManager
@@ -33,13 +18,13 @@ from src.smart_watch.core.Logger import create_logger
 from src.smart_watch.core.MarkdownProcessor import MarkdownProcessor
 from src.smart_watch.processing import (
     ComparisonProcessor,
-    DatabaseManager,
+    DatabaseProcessor,
     LLMProcessor,
     URLProcessor,
 )
+from src.smart_watch.processing.setup_processor import SetupProcessor
 from src.smart_watch.reporting import ReportManager
 from src.smart_watch.stats import StatsManager
-from src.smart_watch.utils.CSVToPolars import CSVToPolars
 from src.smart_watch.utils.MarkdownCleaner import MarkdownCleaner
 
 
@@ -60,7 +45,7 @@ class HoraireExtractor:
         self.config.display_summary()
 
         # Initialisation des composants modulaires
-        self.db_manager = DatabaseManager(self.config, self.logger)
+        self.setup_processor = SetupProcessor(self.config, self.logger)
         self.url_processor = URLProcessor(self.config, self.logger)
         self.markdown_cleaner = MarkdownCleaner(self.config, self.logger)
         self.markdown_processor = MarkdownProcessor(self.config, self.logger)
@@ -68,6 +53,7 @@ class HoraireExtractor:
         self.comparison_processor = ComparisonProcessor(self.config, self.logger)
         self.report_manager = ReportManager(self.config, self.logger)
         self.stats_manager = StatsManager(self.config, self.logger)
+        self.db_manager = DatabaseProcessor(self.config, self.logger)
 
         self.logger.info("HoraireExtractor initialisé")
 
@@ -79,12 +65,10 @@ class HoraireExtractor:
     def run(self):
         """Exécute le pipeline d'extraction complet"""
         self.logger.section("DÉBUT PIPELINE EXTRACTION HORAIRES")
-
         start_time = time.time()
-
         try:
             # 1. Configuration et chargement des données
-            execution_id = self._setup_execution()
+            execution_id = self.setup_processor.setup_execution()
 
             # 2. Pipeline de traitement séquentiel
             # a. Extraction des URLs
@@ -106,10 +90,10 @@ class HoraireExtractor:
             # e. Comparaison des horaires extraits
             self.comparison_processor.process_comparisons(self.db_manager)
 
-            # 3. Génération et envoi du rapport
+            # 4. Génération et envoi du rapport
             self.report_manager.generate_and_send_report(execution_id)
 
-            # 4. Affichage des statistiques finales
+            # 5. Affichage des statistiques finales
             self.stats_manager.display_stats()
 
             # 5. Résumé final
@@ -122,23 +106,6 @@ class HoraireExtractor:
             processing_time = time.time() - start_time
             self.logger.error(f"Pipeline échoué après {processing_time:.2f}s: {e}")
             raise
-
-    def _setup_execution(self) -> int:
-        """Configure l'exécution et retourne l'ID."""
-        self.logger.section("CONFIGURATION PIPELINE")
-
-        # Chargement du CSV depuis l'URL
-        csv_loader = CSVToPolars(
-            source=self.config.database.csv_url,
-            separator="auto",
-            has_header=True,
-        )
-        df_csv = csv_loader.load_csv()
-
-        if isinstance(df_csv, str):
-            raise ValueError(f"Erreur chargement CSV: {df_csv}")
-
-        return self.db_manager.setup_execution(df_csv)
 
 
 @handle_errors(
