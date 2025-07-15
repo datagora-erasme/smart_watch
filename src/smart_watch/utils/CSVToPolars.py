@@ -1,9 +1,5 @@
-"""Utilitaire pour charger des fichiers CSV dans des DataFrames Polars.
-
-Ce module fournit la classe `CSVToPolars` pour charger des données CSV
-depuis une URL ou un chemin de fichier local dans un DataFrame Polars,
-avec détection automatique du séparateur.
-"""
+# Documentation :
+# https://datagora-erasme.github.io/smart_watch/source/modules/utils/csv_polars.html
 
 import csv
 from pathlib import Path
@@ -22,49 +18,57 @@ logger = create_logger(
 
 
 class CSVToPolars:
-    """Charge des données CSV depuis une source dans un DataFrame Polars."""
-
     def __init__(
         self,
-        source: str = None,
+        source: str,
         separator: str = "auto",
         has_header: bool = True,
     ):
-        """Initialise la classe CSVToPolars.
+        """
+        Initialise une instance de la classe pour charger et traiter un fichier CSV avec Polars.
 
-        :param source: URL ou chemin du fichier CSV à charger.
-        :type source: str, optional
-        :param separator: Séparateur du CSV. "auto" pour une détection automatique.
-                          Par défaut, "auto".
-        :type separator: str, optional
-        :param has_header: Indique si le CSV a une ligne d'en-tête. Par défaut, True.
-        :type has_header: bool, optional
+        Args:
+            source (str, obligatoire): Chemin vers le fichier CSV à charger.
+            separator (str, optionnel): Séparateur utilisé dans le fichier CSV. Par défaut "auto" pour une détection automatique.
+            has_header (bool, optionnel): Indique si le fichier CSV contient une ligne d'en-tête. True par défaut.
+
+        Attributes:
+            source (str): Chemin du fichier source CSV.
+            separator (str): Séparateur utilisé pour lire le CSV.
+            df (pl.DataFrame | None): DataFrame Polars résultant du chargement du CSV.
+            has_header (bool): Indique la présence d'une ligne d'en-tête dans le CSV.
         """
         self.source = source
         self.separator = separator
-        self.df: pl.DataFrame | None = None
+        self.df: pl.DataFrame | None = (
+            None  # indique que l’attribut df peut être soit un objet pl.DataFrame, soit None. "= None" initialise self.df à None au départ.
+        )
         self.has_header = has_header
 
     def _is_url(self, source: str) -> bool:
-        """Vérifie si la chaîne de caractères source est une URL.
+        """
+        Vérifie si la source fournie est une URL.
 
-        :param source: La chaîne de caractères à vérifier.
-        :type source: str
-        :return: ``True`` si la source est une URL, sinon ``False``.
-        :rtype: bool
+        Args:
+            source (str): La chaîne de caractères à vérifier.
+
+        Returns:
+            bool: True si la source commence par 'http://' ou 'https://', sinon False.
         """
         return source.startswith(("http://", "https://"))
 
     def _detect_separator(self, sample: str) -> str:
-        """Détecte le séparateur d'un échantillon de données CSV.
+        """
+        Détecte le séparateur de colonnes dans un échantillon de texte CSV.
 
-        Utilise `csv.Sniffer` pour deviner le délimiteur. Si la détection échoue,
-        retourne un point-virgule (';') par défaut.
+        Utilise la classe `csv.Sniffer` pour analyser l'échantillon et déterminer le séparateur utilisé.
+        Si la détection échoue, le séparateur par défaut ';' est utilisé.
 
-        :param sample: Un échantillon de lignes du fichier CSV.
-        :type sample: str
-        :return: Le séparateur détecté.
-        :rtype: str
+        Args:
+            sample (str): Un échantillon de texte représentant le contenu d'un fichier CSV.
+
+        Returns:
+            str: Le séparateur détecté ou ';' si la détection échoue.
         """
         try:
             sniffer = csv.Sniffer()
@@ -76,13 +80,21 @@ class CSVToPolars:
             return ";"
 
     def _download_to_temp_file(self, url: str) -> Path:
-        """Télécharge le contenu d'une URL dans un fichier temporaire.
+        """
+        Télécharge un fichier CSV depuis une URL et le sauvegarde dans un fichier temporaire.
 
-        :param url: L'URL du fichier CSV à télécharger.
-        :type url: str
-        :raises requests.exceptions.RequestException: En cas d'erreur de téléchargement.
-        :return: Le chemin vers le fichier temporaire créé.
-        :rtype: pathlib.Path
+        Cette méthode effectue une requête HTTP GET vers l'URL spécifiée, vérifie le succès de la réponse,
+        puis écrit le contenu du fichier CSV dans un fichier temporaire sur le disque. Le chemin vers ce
+        fichier temporaire est ensuite retourné.
+
+        Args:
+            url (str): L'URL du fichier CSV à télécharger.
+
+        Returns:
+            Path: Le chemin vers le fichier temporaire contenant le CSV téléchargé.
+
+        Raises:
+            Exception: Si une erreur survient lors du téléchargement ou de la sauvegarde du fichier.
         """
         try:
             logger.info(f"Téléchargement CSV depuis: {url}")
@@ -107,27 +119,36 @@ class CSVToPolars:
     def _process_local_file(
         self, file_path: Path, cleanup_temp: bool = False
     ) -> pl.DataFrame:
-        """Traite un fichier CSV local et le charge dans un DataFrame Polars.
+        """
+        Traite un fichier CSV local et le convertit en DataFrame Polars. Est appelé par _load_from_url et _load_from_path.
 
-        :param file_path: Le chemin du fichier CSV local.
-        :type file_path: pathlib.Path
-        :param cleanup_temp: Si ``True``, supprime le fichier après traitement.
-        :type cleanup_temp: bool
-        :return: Un DataFrame Polars contenant les données du CSV.
-        :rtype: polars.DataFrame
+        Cette méthode détecte automatiquement le séparateur si nécessaire, lit le fichier CSV en utilisant Polars,
+        et effectue si nécessaire un nettoyage du fichier temporaire après traitement.
+
+        Args:
+            file_path (Path): Chemin vers le fichier CSV à traiter.
+            cleanup_temp (bool, optionnel): Indique si le fichier temporaire doit être supprimé après traitement.
+                Défaut à False.
+
+        Returns:
+            pl.DataFrame: DataFrame Polars contenant les données du fichier CSV.
+
+        Note:
+            - Le séparateur est détecté automatiquement si `self.separator` vaut "auto".
+            - Les lignes entièrement vides sont filtrées du DataFrame résultant.
         """
         try:
             # Détection automatique du séparateur si nécessaire
             if self.separator == "auto":
                 with file_path.open("r", encoding="utf-8") as f:
                     if self.has_header:
-                        # Détecter sur l'en-tête uniquement
+                        # Si en-tête, on détecte sur elle uniquement
                         try:
                             sample = next(f)
                         except StopIteration:
                             sample = ""
                     else:
-                        # Détecter sur un échantillon de 50 lignes max
+                        # Si pas d'en-tête, on détecte sur un échantillon de 50 lignes max
                         sample_lines = []
                         for _ in range(50):
                             try:
@@ -152,7 +173,7 @@ class CSVToPolars:
                 has_header=self.has_header,
                 separator=self.separator,
                 truncate_ragged_lines=True,
-            ).filter(~pl.all_horizontal(pl.all().is_null()))
+            ).filter(~pl.all_horizontal(pl.all().is_null()))  # Virer les lignes vides
 
             return df
 
@@ -163,22 +184,32 @@ class CSVToPolars:
                 logger.debug(f"Fichier temporaire supprimé: {file_path}")
 
     def _load_from_url(self) -> pl.DataFrame:
-        """Charge et traite un fichier CSV depuis une URL.
+        """
+        Charge un fichier CSV depuis une URL et le convertit en DataFrame Polars.
 
-        Télécharge le fichier dans un emplacement temporaire, puis le traite.
+        Cette méthode télécharge le fichier CSV depuis l'URL spécifiée dans `self.source`,
+        le sauvegarde dans un fichier temporaire, puis le traite pour le convertir en un DataFrame Polars.
+        Le fichier temporaire est supprimé après le traitement.
 
-        :return: Un DataFrame Polars contenant les données du CSV.
-        :rtype: polars.DataFrame
+        Returns:
+            pl.DataFrame: Le DataFrame Polars résultant du fichier CSV téléchargé.
         """
         temp_file_path = self._download_to_temp_file(self.source)
         return self._process_local_file(temp_file_path, cleanup_temp=True)
 
     def _load_from_path(self) -> pl.DataFrame:
-        """Charge et traite un fichier CSV depuis un chemin local.
+        """
+        Charge un fichier CSV local et le convertit en DataFrame Polars.
 
-        :raises FileNotFoundError: Si le fichier local n'est pas trouvé.
-        :return: Un DataFrame Polars contenant les données du CSV.
-        :rtype: polars.DataFrame
+        Cette méthode vérifie l'existence du fichier CSV à partir du chemin spécifié dans `self.source`.
+        Si le fichier existe, il est traité et converti en DataFrame Polars via la méthode `_process_local_file`.
+        Si le fichier n'est pas trouvé, une exception `FileNotFoundError` est levée.
+
+        Returns:
+            pl.DataFrame: Le contenu du fichier CSV sous forme de DataFrame Polars.
+
+        Raises:
+            FileNotFoundError: Si le fichier CSV local n'est pas trouvé au chemin spécifié.
         """
         file_path = Path(self.source)
         if not file_path.exists():
@@ -192,17 +223,18 @@ class CSVToPolars:
         reraise=True,
     )
     def load_csv(self) -> pl.DataFrame:
-        """Charge un fichier CSV depuis une URL ou un chemin local dans un DataFrame.
+        """
+        Charge un fichier CSV en tant que DataFrame Polars.
 
-        Cette méthode est le point d'entrée principal pour charger les données.
-        Elle détermine si la source est une URL ou un chemin de fichier et appelle
-        la méthode de chargement appropriée.
+        Cette méthode vérifie si la source du fichier CSV est une URL ou un chemin local,
+        puis charge le fichier en conséquence. Elle lève une exception si aucune source n'est spécifiée.
+        Un message d'information est enregistré après le chargement du fichier.
 
-        :raises ValueError: Si aucune source n'est spécifiée.
-        :raises FileNotFoundError: Si le fichier local n'est pas trouvé.
-        :raises requests.exceptions.RequestException: Pour les erreurs de téléchargement.
-        :return: Le DataFrame Polars résultant.
-        :rtype: polars.DataFrame
+        Returns:
+            pl.DataFrame: Le DataFrame Polars contenant les données du fichier CSV.
+
+        Raises:
+            ValueError: Si aucune source de fichier CSV n'a été spécifiée.
         """
         if not self.source:
             raise ValueError("Aucune source de fichier CSV n'a été spécifiée.")
