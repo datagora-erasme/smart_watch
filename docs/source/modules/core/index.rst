@@ -2,7 +2,7 @@ Vue d'ensemble
 ==============
 
 - **ConfigManager** : Configuration centralisée modulaire agrégant toutes les configurations
-- **Logger** : Système de logs unifié avec support fichier/console et rotation
+- **Logger** : Système de logs unifié avec support fichier/console et rotation des fichiers
 - **ErrorHandler** : Gestion centralisée des erreurs avec traçabilité et catégorisation
 - **MarkdownProcessor** : Filtrage sémantique par embeddings pour extraire les sections horaires
 - **ComparateurHoraires** : Comparaison intelligente d'horaires JSON avec normalisation

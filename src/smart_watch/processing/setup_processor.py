@@ -11,6 +11,18 @@ class SetupProcessor:
     """Gestionnaire de l'initialisation (chargement CSV et DB)."""
 
     def __init__(self, config, logger):
+        """
+        Initialise le processeur avec la configuration et le logger spécifiés.
+
+        Args:
+            config (Config): Objet de configuration contenant les paramètres nécessaires, y compris la base de données.
+            logger (Logger): Instance du logger pour la journalisation des événements.
+
+        Attributes:
+            config (Config): Stocke la configuration passée en paramètre.
+            logger (Logger): Stocke le logger passé en paramètre.
+            db_manager (DatabaseManager): Gère les opérations sur la base de données 'resultats_extraction' selon la configuration.
+        """
         self.config = config
         self.logger = logger
         # Instancie DatabaseManager à partir de la config
@@ -25,12 +37,18 @@ class SetupProcessor:
         user_message="Erreur lors de la configuration du pipeline",
         reraise=True,
     )
-    def setup_execution(self) -> int:
+    def setup_execution(self):
         """
-        Charge le CSV depuis la config et initialise la base de données.
+        Initialise la pipeline de configuration en chargeant le CSV depuis la configuration
+        et en initialisant la base de données avec les données chargées.
 
-        Returns:
-            int: Code de retour de l'initialisation de la base de données.
+        Étapes :
+            - Charge le fichier CSV spécifié dans la configuration.
+            - Vérifie le succès du chargement du CSV.
+            - Initialise la base de données avec le DataFrame obtenu.
+
+        Raises:
+            ValueError: Si le chargement du CSV échoue.
         """
         self.logger.section("CONFIGURATION PIPELINE")
         csv_loader = CSVToPolars(

@@ -49,6 +49,7 @@ Modules
 .. toctree::
    :maxdepth: 1
 
+   setup_processor
    database_processor
    url_processor
    llm_processor
