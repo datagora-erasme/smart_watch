@@ -11,9 +11,9 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, Optional, Tuple
 
-import polars as pl
 from jinja2 import Environment, FileSystemLoader
 
+from ..core.DatabaseManager import DatabaseManager
 from ..core.ErrorHandler import ErrorCategory, ErrorSeverity, handle_errors
 from ..core.Logger import create_logger
 
@@ -64,25 +64,26 @@ def to_json(value) -> Optional[str]:
     user_message="Erreur lors de la génération du rapport HTML",
 )
 def generer_rapport_html(
-    db_file: str, table_name: str, titre_rapport: str, model_info: Optional[Dict] = None
+    db_file: str,
+    titre_rapport: str,
+    model_info: Optional[Dict] = None,
 ) -> Tuple[str, str]:
     """
     Génère un rapport HTML complet à partir des données de la base SQLite.
 
     Args:
-        db_file: Chemin vers le fichier de base de données SQLite
-        table_name: Nom de la table à analyser
-        titre_rapport: Titre du rapport
-        model_info: Informations sur le modèle utilisé
+        db_file: Chemin vers le fichier de base de données SQLite.
+        titre_rapport: Titre du rapport.
+        model_info: Informations sur le modèle utilisé.
 
     Returns:
         Tuple contenant (résumé_html, chemin_fichier_html)
 
     Raises:
-        FileNotFoundError: Si le fichier de base de données n'existe pas
-        RuntimeError: Si les templates ne sont pas trouvés
+        FileNotFoundError: Si le fichier de base de données n'existe pas.
+        RuntimeError: Si les templates ne sont pas trouvés.
     """
-    logger.info(f"Génération rapport HTML depuis: {Path(db_file).name}")
+    logger.info(f"Génération rapport HTML depuis: {db_file}")
 
     # Vérification de l'existence de la base de données
     db_path = Path(db_file)
@@ -105,11 +106,12 @@ def generer_rapport_html(
         raise RuntimeError(f"Erreur chargement templates: {e}")
 
     # Extraction des données depuis la base de données
-    donnees_urls = _extract_data_from_database(db_file)
-    logger.info(f"Données extraites: {len(donnees_urls)} enregistrements")
+    db_manager = DatabaseManager(db_file=db_file)
+    donnees_urls = _extract_data_from_database(db_manager)
+    logger.info(f"Données extraites : {len(donnees_urls)} enregistrements")
 
     # Extraire les données de l'exécution
-    execution_data = _extract_execution_data(db_file)
+    execution_data = _extract_execution_data(db_manager)
 
     # Traitement des données
     _process_data(donnees_urls)
@@ -153,16 +155,18 @@ def generer_rapport_html(
     user_message="Erreur lors de l'extraction des données d'exécution.",
     default_return=None,
 )
-def _extract_execution_data(db_file: str) -> Optional[dict]:
+def _extract_execution_data(db_manager: DatabaseManager) -> Optional[dict]:
     """Extrait les données agrégées de toutes les exécutions."""
-    uri = f"sqlite:///{db_file}"
     query = """
     SELECT SUM(llm_consommation_execution) as llm_consommation_execution
     FROM executions 
     """
-    df = pl.read_database_uri(query=query, uri=uri, engine="connectorx")
-    if not df.is_empty():
-        return df.to_dicts()[0]
+    logger.debug(f"Exécution de la requête : {query}")
+    results = db_manager.execute_query(query)
+    logger.debug(f"Données extraites : {len(results)} enregistrements")
+    if results and len(results) > 0:
+        # results est une liste de tuples, on convertit en dict
+        return {"llm_consommation_execution": results[0][0]}
     return None
 
 
@@ -172,9 +176,8 @@ def _extract_execution_data(db_file: str) -> Optional[dict]:
     user_message="Erreur lors de l'extraction des données depuis la base.",
     default_return=[],
 )
-def _extract_data_from_database(db_file: str) -> list:
+def _extract_data_from_database(db_manager: DatabaseManager) -> list:
     """Extrait les données depuis la base de données."""
-    uri = f"sqlite:///{db_file}"
     query = """
     SELECT 
         l.type_lieu, 
@@ -198,9 +201,30 @@ def _extract_data_from_database(db_file: str) -> list:
     JOIN lieux AS l ON r.lieu_id = l.identifiant 
     ORDER BY l.identifiant
     """
-
-    df = pl.read_database_uri(query=query, uri=uri, engine="connectorx")
-    return df.to_dicts()
+    logger.debug(f"Exécution de la requête : {query}")
+    results = db_manager.execute_query(query)
+    logger.debug(f"Données extraites : {len(results)} enregistrements")
+    # Conversion en liste de dicts (en supposant que les colonnes sont fixes)
+    columns = [
+        "type_lieu",
+        "identifiant",
+        "nom",
+        "url",
+        "horaires_data_gl",
+        "statut",
+        "message",
+        "markdown_brut",
+        "markdown_nettoye",
+        "markdown_filtre",
+        "llm_horaires_json",
+        "llm_horaires_osm",
+        "code_http",
+        "horaires_identiques",
+        "differences_horaires",
+        "erreurs_pipeline",
+        "llm_consommation_requete",
+    ]
+    return [dict(zip(columns, row)) for row in results]
 
 
 def _process_data(donnees_urls: list) -> None:
@@ -346,6 +370,12 @@ def _group_by_status(donnees_urls: list) -> list:
             "type": "warning",
             "description": "URLs accessibles avec horaires extraits mais différences détectées lors de la comparaison",
         },
+        "compare_error": {
+            "nom": "Erreurs de comparaison",
+            "emoji": "❓",
+            "type": "error",
+            "description": "Comparaison impossible ou non effectuée",
+        },
         "access_error": {
             "nom": "Erreurs d'accès",
             "emoji": "🔒",
@@ -367,7 +397,7 @@ def _group_by_status(donnees_urls: list) -> list:
             200, 300
         )
 
-        # Critère 2: Vérifier la présence d'horaires OSM extraits
+        # Critère 2: Vérifier la présence d'horaires LLM OSM extraits
         has_osm_hours = (
             url.get("llm_horaires_osm")
             and url["llm_horaires_osm"].strip()
@@ -384,19 +414,25 @@ def _group_by_status(donnees_urls: list) -> list:
         elif not has_osm_hours:
             # URL accessible mais échec extraction/conversion
             url["statut"] = "extraction_error"
-        elif comparison_result is True:
+        elif comparison_result == 1:
             # URL accessible, extraction réussie, horaires identiques
             url["statut"] = "success"
-        elif comparison_result is False:
+        elif comparison_result == 0:
             # URL accessible, extraction réussie, mais horaires différents
             url["statut"] = "schedule_diff"
         else:
             # URL accessible, extraction réussie, mais comparaison impossible/non effectuée
-            url["statut"] = "extraction_error"
+            url["statut"] = "compare_error"
 
     # Regrouper par statut dans l'ordre de priorité
     statuts_disponibles = []
-    ordre_statuts = ["success", "schedule_diff", "extraction_error", "access_error"]
+    ordre_statuts = [
+        "success",
+        "schedule_diff",
+        "compare_error",
+        "extraction_error",
+        "access_error",
+    ]
 
     for statut_code in ordre_statuts:
         config = statuts_config[statut_code]
