@@ -11,8 +11,8 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 from ..core.ErrorHandler import ErrorCategory, ErrorSeverity, handle_errors
 from ..data_models.schema_bdd import Lieux, ResultatsExtraction
-from .ConfigManager import ConfigManager
-from .LLMClient import LLMResponse, MistralAPIClient, OpenAICompatibleClient
+from ..core.ConfigManager import ConfigManager
+from ..core.LLMClient import LLMResponse, MistralAPIClient, OpenAICompatibleClient
 
 
 class MarkdownProcessor:
