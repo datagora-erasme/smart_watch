@@ -136,7 +136,9 @@ class LLMProcessor:
                 date_ferie: nom_ferie
                 for date_ferie, nom_ferie in jours_feries_courants.items()
                 if datetime.strptime(date_ferie, "%Y-%m-%d").date()
-                >= datetime.now().date()
+                >= datetime.strptime(
+                    "2025-07-01", "%Y-%m-%d"
+                ).date()  # ou datetime.now().date() pour la date du jour
             }
 
             # Combiner les jours fériés des deux années
