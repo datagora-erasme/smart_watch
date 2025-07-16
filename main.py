@@ -33,8 +33,10 @@ class HoraireExtractor:
 
     def __init__(self):
         """Initialise l'extracteur"""
+        # A. Chargement de la configuration
         self.config = ConfigManager()
 
+        # Vérification de la configuration
         if not self.config.validate():
             raise ValueError("Configuration invalide")
 
@@ -44,7 +46,7 @@ class HoraireExtractor:
         # Affichage de la configuration
         self.config.display_summary()
 
-        # Initialisation des composants modulaires
+        # B. Initialisation des composants modulaires
         self.db_manager = DatabaseProcessor(self.config, self.logger)
         self.setup_processor = SetupProcessor(self.config, self.logger)
         self.url_processor = URLProcessor(self.config, self.logger)
@@ -120,6 +122,8 @@ class HoraireExtractor:
 def main():
     """Point d'entrée principal."""
     extractor = HoraireExtractor()
+
+    # C. Exécution du pipeline
     extractor.run()
 
 
