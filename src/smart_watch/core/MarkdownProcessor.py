@@ -9,6 +9,7 @@ from typing import List, Tuple
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 
+from ..core.ErrorHandler import ErrorCategory, ErrorSeverity, handle_errors
 from ..data_models.schema_bdd import Lieux, ResultatsExtraction
 from .ConfigManager import ConfigManager
 from .LLMClient import LLMResponse, MistralAPIClient, OpenAICompatibleClient
@@ -62,6 +63,13 @@ class MarkdownProcessor:
                 f"Client embeddings OpenAI initialisé avec modèle {embed_config.embed_modele_openai}"
             )
 
+    @handle_errors(
+        category=ErrorCategory.EMBEDDINGS,
+        severity=ErrorSeverity.HIGH,
+        user_message="Erreur lors du calcul des embeddings.",
+        reraise=False,
+        default_return=(None, 0.0),
+    )
     def _get_embeddings(self, texts: List[str]) -> Tuple[np.ndarray, float]:
         """Obtient les embeddings pour une liste de textes."""
         if not self.embed_client:

@@ -42,6 +42,7 @@ class ErrorCategory(Enum):
         CONVERSION (ErrorCategory): Erreur lors de la conversion de données ou de formats.
         PARSING (ErrorCategory): Erreur lors de l'analyse ou du parsing de données.
         EMAIL (ErrorCategory): Erreur lors de l'envoi ou de la réception d'emails.
+        EMBEDDINGS (ErrorCategory): Erreur lors de l'utilisation des embeddings.
         UNKNOWN (ErrorCategory): Erreur non catégorisée.
     """
 
@@ -54,6 +55,7 @@ class ErrorCategory(Enum):
     CONVERSION = "conversion"
     PARSING = "parsing"
     EMAIL = "email"
+    EMBEDDINGS = "embeddings"
     UNKNOWN = "unknown"
 
 
@@ -135,6 +137,7 @@ class ErrorHandler:
             ErrorCategory.VALIDATION: self._handle_validation_error,
             ErrorCategory.PARSING: self._handle_parsing_error,
             ErrorCategory.EMAIL: self._handle_email_error,
+            ErrorCategory.EMBEDDINGS: self._handle_embeddings_error,
         }
 
     def handle_error(
@@ -475,6 +478,43 @@ class ErrorHandler:
         elif "connection" in error_str:
             error.solution_attempted = "Erreur de connexion SMTP"
 
+        return None
+
+    def _handle_embeddings_error(self, error: HandledError) -> Any:
+        """
+        Gère les erreurs spécifiques aux embeddings.
+
+        Args:
+            error (HandledError): L'objet d'erreur contenant l'exception à traiter.
+
+        Returns:
+            Any: Toujours None, cette méthode est utilisée pour ses effets de bord.
+        """
+        error_str = str(error.exception).lower()
+
+        if "api key" in error_str:
+            error.solution_attempted = "Clé API invalide pour les embeddings"
+            self.logger.info("Solution: Vérifiez votre clé API pour les embeddings")
+        elif "rate limit" in error_str:
+            error.solution_attempted = "Limite de taux atteinte pour les embeddings"
+            self.logger.info(
+                "Solution: Attendez avant de réessayer avec les embeddings"
+            )
+        elif "timeout" in error_str:
+            error.solution_attempted = "Timeout lors de la génération des embeddings"
+            self.logger.info("Solution: Augmentez le timeout ou réessayez plus tard")
+        elif "mistral" in error_str:
+            error.solution_attempted = "Erreur spécifique au modèle Mistral. Mistral n'accepte pas plus de 16384 tokens pour les embeddings."
+            self.logger.info(
+                "Solution: Vérifiez la configuration du modèle Mistral et le nombre de tokens de votre texte"
+            )
+        else:
+            error.solution_attempted = (
+                "Erreur inconnue lors de la génération des embeddings"
+            )
+            self.logger.info(
+                "Solution: Vérifiez la configuration des embeddings / du modèle utilisé"
+            )
         return None
 
     def create_error_context(
