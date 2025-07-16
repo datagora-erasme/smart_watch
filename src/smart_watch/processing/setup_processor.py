@@ -1,4 +1,3 @@
-from src.smart_watch.core.DatabaseManager import DatabaseManager
 from src.smart_watch.core.ErrorHandler import (
     ErrorCategory,
     ErrorSeverity,
@@ -17,19 +16,9 @@ class SetupProcessor:
         Args:
             config (Config): Objet de configuration contenant les paramètres nécessaires, y compris la base de données.
             logger (Logger): Instance du logger pour la journalisation des événements.
-
-        Attributes:
-            config (Config): Stocke la configuration passée en paramètre.
-            logger (Logger): Stocke le logger passé en paramètre.
-            db_manager (DatabaseManager): Gère les opérations sur la base de données 'resultats_extraction' selon la configuration.
         """
         self.config = config
         self.logger = logger
-        # Instancie DatabaseManager à partir de la config
-        self.db_manager = DatabaseManager(
-            db_file=self.config.database.db_file,
-            table_name="resultats_extraction",
-        )
 
     @handle_errors(
         category=ErrorCategory.CONFIGURATION,
@@ -37,7 +26,7 @@ class SetupProcessor:
         user_message="Erreur lors de la configuration du pipeline",
         reraise=True,
     )
-    def setup_execution(self):
+    def setup_execution(self, db_manager):
         """
         Initialise la pipeline de configuration en chargeant le CSV depuis la configuration
         et en initialisant la base de données avec les données chargées.
@@ -63,4 +52,4 @@ class SetupProcessor:
             raise ValueError(f"Erreur chargement CSV: {df_csv}")
 
         # Initialise la base avec DatabaseManager et le DataFrame chargé
-        self.db_manager.initialize(df_csv, if_exists="replace")
+        return db_manager.setup_execution(df_csv)

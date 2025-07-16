@@ -43,7 +43,13 @@ class DatabaseProcessor:
         self.engine = create_engine(f"sqlite:///{config.database.db_file}")
         self.Session = sessionmaker(bind=self.engine)
 
-        # Créer les tables si nécessaire
+    def create_database(self):
+        """
+        Crée les tables de la base de données si elles n'existent pas.
+        """
+        self.logger.info(
+            f"Initialisation de la base de données {self.config.database.db_file}..."
+        )
         Base.metadata.create_all(self.engine)
 
     def execute_query(self, query: str, params: tuple = None) -> List[Tuple]:

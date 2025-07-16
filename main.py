@@ -45,6 +45,7 @@ class HoraireExtractor:
         self.config.display_summary()
 
         # Initialisation des composants modulaires
+        self.db_manager = DatabaseProcessor(self.config, self.logger)
         self.setup_processor = SetupProcessor(self.config, self.logger)
         self.url_processor = URLProcessor(self.config, self.logger)
         self.markdown_cleaner = MarkdownCleaner(self.config, self.logger)
@@ -53,7 +54,6 @@ class HoraireExtractor:
         self.comparison_processor = ComparisonProcessor(self.config, self.logger)
         self.report_manager = ReportManager(self.config, self.logger)
         self.stats_manager = StatsManager(self.config, self.logger)
-        self.db_manager = DatabaseProcessor(self.config, self.logger)
 
         self.logger.info("HoraireExtractor initialisé")
 
@@ -67,10 +67,13 @@ class HoraireExtractor:
         self.logger.section("DÉBUT PIPELINE EXTRACTION HORAIRES")
         start_time = time.time()
         try:
-            # 1. Configuration et chargement des données
-            execution_id = self.setup_processor.setup_execution()
+            # 1. Création de la base de données
+            self.db_manager.create_database()
 
-            # 2. Pipeline de traitement séquentiel
+            # 2. Configuration et chargement des données
+            execution_id = self.setup_processor.setup_execution(self.db_manager)
+
+            # 3. Pipeline de traitement séquentiel
             # a. Extraction des URLs
             self.url_processor.process_urls(self.db_manager, execution_id)
 
@@ -90,13 +93,13 @@ class HoraireExtractor:
             # e. Comparaison des horaires extraits
             self.comparison_processor.process_comparisons(self.db_manager)
 
-            # 4. Génération et envoi du rapport
+            # 5. Génération et envoi du rapport
             self.report_manager.generate_and_send_report(execution_id)
 
-            # 5. Affichage des statistiques finales
+            # 6. Affichage des statistiques finales
             self.stats_manager.display_stats()
 
-            # 5. Résumé final
+            # 7. Résumé final
             processing_time = time.time() - start_time
             self.logger.info(f"Pipeline terminé en {processing_time:.2f}s")
 
