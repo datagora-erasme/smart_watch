@@ -6,9 +6,9 @@ Refactorisation avec libellés et unités pour un affichage flexible.
 from datetime import datetime
 from typing import Any, Dict
 
-from ..core.ConfigManager import ConfigManager
-from ..core.DatabaseManager import DatabaseManager
-from ..core.Logger import create_logger
+from .ConfigManager import ConfigManager
+from .DatabaseManager import DatabaseManager
+from .Logger import create_logger
 
 logger = create_logger("StatsManager")
 
