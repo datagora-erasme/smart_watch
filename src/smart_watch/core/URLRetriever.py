@@ -2,7 +2,7 @@ import ssl
 
 import urllib3
 
-from ..utils.HtmlToMarkdown import convert_html_to_markdown
+from ..utils import convert_html_to_markdown
 from .ErrorHandler import ErrorCategory, ErrorHandler, ErrorSeverity, handle_errors
 from .Logger import create_logger
 

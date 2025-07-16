@@ -1,13 +1,14 @@
 # SmartWatch est un programme permettant l'extraction d'horaires d'ouverture par LLM depuis des sites web,
 # et leur comparaison avec des données de référence issues de data.grandlyon.com.
 #
-# Chaque module de ce projet est commenté dans la documentation officielle,
-# accessible par un lien indiqué au début de chaque fichier :
+# Chaque module de ce projet est documenté sur sa page,
+# accessible par un lien indiqué au début de chaque fichier source :
 #
 # https://datagora-erasme.github.io/smart_watch/index.html
 
 import time
 
+from src.smart_watch.core import StatsManager
 from src.smart_watch.core.ConfigManager import ConfigManager
 from src.smart_watch.core.ErrorHandler import (
     ErrorCategory,
@@ -15,17 +16,16 @@ from src.smart_watch.core.ErrorHandler import (
     handle_errors,
 )
 from src.smart_watch.core.Logger import create_logger
-from src.smart_watch.core.MarkdownProcessor import MarkdownProcessor
 from src.smart_watch.processing import (
     ComparisonProcessor,
     DatabaseProcessor,
     LLMProcessor,
+    MarkdownProcessor,
+    SetupProcessor,
     URLProcessor,
 )
-from src.smart_watch.processing.setup_processor import SetupProcessor
 from src.smart_watch.reporting import ReportManager
-from src.smart_watch.stats import StatsManager
-from src.smart_watch.utils.MarkdownCleaner import MarkdownCleaner
+from src.smart_watch.utils import MarkdownCleaner
 
 
 class HoraireExtractor:
