@@ -7,7 +7,7 @@ Voici un aperçu des technologies employées.
 Langage du projet
 =================
 
-**Python**
+`Python <https://www.python.org/>`__
     Langage unique du projet.
 
 Framework et bibliothèques principales
@@ -16,100 +16,102 @@ Framework et bibliothèques principales
 Traitement de données
 ---------------------
 
-**Polars**
+`Polars <https://www.pola.rs/>`__
     Pour le chargement et la manipulation de données tabulaires.
 
-**SQLAlchemy**
+`SQLAlchemy <https://www.sqlalchemy.org/>`__
     Pour la gestion de la base de données SQLite.
 
-**SQLite**
+`SQLite <https://www.sqlite.org/>`__
     Pour stocker les résultats d'extraction et les métadonnées.
 
 Web scraping et traitement HTML
 -------------------------------
 
-**BeautifulSoup4**
+`BeautifulSoup4 <https://www.crummy.com/software/BeautifulSoup/>`__
     Parseur HTML/XML pour extraire le contenu des pages web de manière robuste.
 
-**Requests**
+`Requests <https://requests.readthedocs.io/>`__
     Bibliothèque HTTP pour récupérer le contenu des pages web.
 
-**html2text**
+`html2text <https://github.com/Alir3z4/html2text>`__
     Conversion du HTML en Markdown pour faciliter le traitement par les modèles de langage.
 
 Intelligence artificielle
 -------------------------
 
-**OpenAI API**
+`OpenAI API <https://platform.openai.com/docs/api-reference>`__
     Interface standardisée pour communiquer avec les modèles de langage.
 
-**Mistral AI**
+`Mistral AI <https://docs.mistral.ai/>`__
     Proposé en tant qu'alternative aux interfaces compatibles OpenAI. Utilise la librairie `mistralai` native.
 
-**Embeddings**
+`Embeddings <https://platform.openai.com/docs/guides/embeddings>`__
     Utilisés pour filtrer le contenu Markdown. Fonctionne avec un modèle accessible via la même API compatible OpenAI que le LLM.
 
 Configuration et environnement
 ------------------------------
 
-**python-dotenv**
+`python-dotenv <https://pypi.org/project/python-dotenv/>`__
     Gestion des variables d'environnement via fichiers ``.env`` pour une configuration flexible.
 
-**Pydantic / Dataclasses**
+`Pydantic <https://docs.pydantic.dev/>`__
+`Dataclasses <https://docs.python.org/3/library/dataclasses.html>`__
     Validation et typage des données.
 
 Parallélisme et performance
 --------------------------
 
-**ThreadPoolExecutor**
+`ThreadPoolExecutor <https://docs.python.org/3/library/concurrent.futures.html>`__
     Traitement parallèle des URLs pour accélérer la récupération du contenu web.
 
 Logging et monitoring
 --------------------
 
-**Logging standard Python**
+`Logging standard Python <https://docs.python.org/3/library/logging.html>`__
     Système de journalisation centralisé avec rotation automatique des fichiers.
 
-**Gestion d'erreurs centralisée**
+Gestion d'erreurs centralisée
     Capture et traitement uniforme des exceptions avec contexte détaillé.
 
-**CodeCarbon**
+`CodeCarbon <https://mlco2.github.io/codecarbon/>`__
     Mesure les émissions de CO2 des appels aux modèles de langage pour un suivi de l'impact environnemental.
 
 Communication
 ------------
 
-**SMTP (smtplib)**
+`SMTP (smtplib) <https://docs.python.org/3/library/smtplib.html>`__
     Envoi automatique des rapports par email avec support SSL/TLS.
 
-**Jinja2**
+`Jinja2 <https://jinja.palletsprojects.com/>`__
     Moteur de templates pour la génération de rapports HTML personnalisés.
 
 Déploiement
 ===========
 
-**Docker**
+`Docker <https://www.docker.com/>`__
     Conteneurisation pour un déploiement simplifié et reproductible.
 
-**GitHub Actions**
+`GitHub Actions <https://github.com/features/actions>`__
     CI/CD pour le déploiement Docker et de la documentation.
 
-**Sphinx + Read the Docs Theme**
+`Sphinx <https://www.sphinx-doc.org/>`__
+`Read the Docs Theme <https://sphinx-rtd-theme.readthedocs.io/>`__
     Génération automatique de documentation technique à partir du code.
 
 Formats de données
 ==================
 
-**CSV**
+`CSV <https://fr.wikipedia.org/wiki/Comma-separated_values>`__
     Format d'entrée pour les listes d'établissements et données de référence.
 
-**JSON**
+`JSON <https://www.json.org/json-fr.html>`__
     Format intermédiaire pour les horaires extraits par les LLMs.
 
-**OSM (OpenStreetMap)**
+`OSM (OpenStreetMap) <https://wiki.openstreetmap.org/wiki/Key:opening_hours>`__
     Format de sortie standardisé pour les horaires d'ouverture.
 
-**HTML**
+`HTML <https://developer.mozilla.org/fr/docs/Web/HTML>`__
     Format de rapport final avec visualisations interactives.
 
 
@@ -118,8 +120,8 @@ Performance et parallélisme
 
 Le système est optimisé pour traiter efficacement de grandes quantités d'URLs :
 
-- **Traitement parallèle** : ThreadPoolExecutor pour les requêtes HTTP
-- **Gestion mémoire** : Utilisation de Polars pour les gros datasets
-- **Cache intelligent** : Évite le retraitement des données inchangées
-- **Rotation des logs** : Prévient l'accumulation excessive de fichiers
-- **Timeouts configurables** : Évite les blocages sur les ressources lentes
+- Traitement parallèle : ThreadPoolExecutor pour les requêtes HTTP
+- Gestion mémoire : Utilisation de Polars pour les gros datasets
+- Cache intelligent : Évite le retraitement des données inchangées
+- Rotation des logs : Prévient l'accumulation excessive de fichiers
+- Timeouts configurables : Évite les blocages sur les ressources lentes

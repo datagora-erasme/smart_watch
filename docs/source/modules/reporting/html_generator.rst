@@ -12,18 +12,21 @@ Fonctionnalités
 Le générateur HTML crée des rapports interactifs sophistiqués avec classification intelligente des résultats et visualisation des données. Il utilise des templates Jinja2 pour générer deux types de rapports.
 
 **Templates et rapports :**
+
 - ReportTemplate.html : rapport complet avec onglets, tri et modals JavaScript
 - SimpleReportTemplate.html : résumé concis pour les emails
 - Support des données JSON/OSM avec visualisation dans modals
 - Fonctionnalités interactives (tri, filtrage, recherche)
 
 **Classification intelligente :**
+
 - Succès (✅) : URLs accessibles, horaires extraits et identiques
 - Différences horaires (⚠️) : horaires extraits mais différents de la référence
 - Erreurs d'accès (🔒) : URLs inaccessibles, codes HTTP non-200
 - Erreurs d'extraction (❌) : URLs accessibles mais échec LLM/parsing
 
 **Extraction et traitement des données :**
+
 - Extraction depuis base SQLite avec jointures optimisées
 - Traçabilité complète : markdown_brut → markdown_nettoye → markdown_filtre
 - Chaîne d'erreurs avec timestamps et types détaillés
@@ -31,6 +34,7 @@ Le générateur HTML crée des rapports interactifs sophistiqués avec classific
 - Suivi des émissions de CO2 par requête et pour l'exécution totale
 
 **Fonctionnalités avancées :**
+
 - Gestion des caractères UTF-8 avec encodage base64
 - Conversion automatique des données JSON invalides
 - Gestion des templates manquants avec erreurs explicites

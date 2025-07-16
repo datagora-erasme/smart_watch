@@ -7,24 +7,28 @@ Fonctionnalités
 Les modules de configuration fournissent une architecture modulaire et flexible pour gérer tous les paramètres du système SmartWatch. Chaque module spécialisé hérite de BaseConfig et gère un aspect spécifique de la configuration.
 
 **Architecture modulaire :**
+
 - Configuration de base commune avec chargement des variables d'environnement
 - Modules spécialisés pour chaque composant système
 - Validation centralisée avec gestion d'erreurs intégrée
 - Support des environnements Docker et containerisés
 
 **Gestion des variables d'environnement :**
+
 - Chargement automatique depuis fichiers .env et variables système
 - Validation des variables requises vs optionnelles
 - Gestion robuste des erreurs de configuration
 - Support des valeurs par défaut intelligentes
 
 **Configuration adaptative :**
+
 - Détection automatique des fournisseurs selon les clés API disponibles
 - Fallback gracieux en cas de configuration incomplète
 - Validation croisée des paramètres interdépendants
 - Messages d'erreur explicites pour faciliter le debugging
 
 **Intégration système :**
+
 - Point d'entrée unique via ConfigManager
 - Accès unifié aux configurations spécialisées
 - Validation globale avec consolidation des erreurs

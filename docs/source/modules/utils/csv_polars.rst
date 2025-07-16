@@ -6,6 +6,9 @@ Fonctionnalités
 
 Le module CSVToPolars permet de charger dans un dataframe Polars des fichiers CSV locaux ou distants. Il inclut une détection automatique des séparateurs.
 
+.. note::
+   La classe ``CSVToPolars`` est utilisée dans :doc:`database_processor <../processing/database_processor>` et :doc:`setup_processor <../processing/setup_processor>`
+
 **Chargement multi-source :**
 
 - Support des URLs HTTP/HTTPS et des fichiers locaux
@@ -32,8 +35,8 @@ Le module CSVToPolars permet de charger dans un dataframe Polars des fichiers CS
 - Logging détaillé des opérations
 
 
-Module
-------
+Modules
+-------
 
 .. automodule:: src.smart_watch.utils.CSVToPolars
    :members:

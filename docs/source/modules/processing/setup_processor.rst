@@ -22,8 +22,8 @@ puis initialise la base de données SQLite avec ces données.
 - Gestion des exceptions lors de l'initialisation de la base
 - Logging détaillé des opérations et erreurs
 
-Classe principale
------------------
+Modules
+-------
 
 .. automodule:: src.smart_watch.processing.setup_processor
    :members:

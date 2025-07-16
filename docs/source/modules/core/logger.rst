@@ -26,8 +26,8 @@ Il propose une classe principale `SmartWatchLogger` et une fonction utilitaire `
 - Répertoire de logs configurable avec création automatique
 - Formatage des messages avec module, niveau et timestamp
 
-Module
-------
+Modules
+-------
 
 .. automodule:: src.smart_watch.core.Logger
    :members:

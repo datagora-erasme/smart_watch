@@ -7,24 +7,28 @@ Fonctionnalités
 Les modules Reporting orchestrent la génération de rapports HTML interactifs et sophistiqués avec envoi automatique par email. Ils transforment les données de la base SQLite en visualisations riches et exploitables.
 
 **Génération de rapports :**
+
 - Templates Jinja2 pour rapports HTML complets et résumés email
 - Classification intelligente des résultats en 4 statuts (succès, différences, erreurs d'accès, erreurs d'extraction)
 - Extraction optimisée depuis base SQLite avec jointures et agrégations
 - Intégration des métadonnées d'exécution (modèle LLM, émissions CO2, statistiques)
 
 **Interactivité avancée :**
+
 - Tri et filtrage dynamique par JavaScript intégré
 - Modals pour visualisation des données JSON/OSM complètes
 - Recherche dans les URLs et noms d'établissements
 - Onglets multiples avec vue d'ensemble et détails par statut
 
 **Archivage et diffusion :**
+
 - Compression automatique des logs en archives ZIP horodatées
 - Envoi par email avec pièces jointes multiples
 - Gestion des fichiers temporaires avec nettoyage automatique
 - Coordination avec EmailSender pour protocoles SMTP multiples
 
 **Traçabilité complète :**
+
 - Chaîne de traitement markdown_brut → markdown_nettoye → markdown_filtre
 - Métriques de performance et émissions CO2 par requête
 - Statistiques consolidées par type de lieu et code HTTP

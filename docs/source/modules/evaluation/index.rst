@@ -103,21 +103,26 @@ Métriques et comparaisons
 =========================
 
 **Score de similarité :**
+
 Mesure la proximité entre horaires extraits et vérité terrain (0 = complètement différent, 1 = identique).
 
 **Exactitude binaire :**
+
 Détermine si les horaires sont strictement identiques selon le comparateur.
 
 **Métriques temporelles :**
+
 - Temps de réponse LLM
 - Durée totale d'exécution
 - Temps de traitement markdown
 
 **Impact environnemental :**
+
 - Émissions CO2 par modèle
 - Consommation énergétique relative
 
 **Métriques détaillées :**
+
 - Longueur du prompt généré
 - Longueur du markdown traité
 - Détails de comparaison par période

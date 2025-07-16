@@ -7,12 +7,14 @@ Fonctionnalités
 Le module VacancesScolaires récupère les périodes de vacances scolaires officielles depuis l'API du gouvernement français. Il fournit des fonctions de filtrage par localisation, zone scolaire et période avec retour de DataFrame Polars optimisé.
 
 **Source de données :**
+
 - API data.education.gouv.fr officielle de l'Éducation Nationale
 - Données certifiées et mises à jour automatiquement
 - Support des zones A, B, C et localisations spécifiques
 - Années scolaires avec format standardisé YYYY-YYYY
 
 **Paramètres de filtrage avancés :**
+
 - Localisation par ville avec recherche intelligente (LIKE)
 - Zone scolaire (A, B, C) avec validation
 - Période personnalisable avec dates début/fin
@@ -20,12 +22,14 @@ Le module VacancesScolaires récupère les périodes de vacances scolaires offic
 - Année scolaire complète ou plages de dates spécifiques
 
 **Optimisations Polars :**
+
 - Conversion automatique des dates en format datetime
 - Tri optimisé par date de début et fin
 - Gestion efficace des DataFrame vides
 - Performance optimale pour grandes datasets
 
 **Gestion robuste :**
+
 - Requêtes réseau avec timeout et validation HTTP
 - Construction dynamique des clauses WHERE SQL-like
 - Logging détaillé des opérations et résultats
@@ -89,7 +93,7 @@ Gestion des erreurs
 
 Le module utilise le logger SmartWatch pour tracer toutes les opérations et erreurs.
 
-Module
+Modules
 -------
 
 .. automodule:: src.smart_watch.utils.VacancesScolaires

@@ -42,6 +42,7 @@ Vue d'ensemble
 - **URLProcessor** : Extraction et conversion HTML → markdown brut avec gestion parallèle
 - **LLMProcessor** : Extraction d'horaires via LLM avec structured outputs JSON + conversion OSM
 - **ComparisonProcessor** : Comparaison intelligente des horaires extraits vs données de référence
+- **MarkdownProcessor** : Filtrage sémantique par embeddings pour extraire les sections horaires
 
 Modules
 ========
@@ -54,3 +55,4 @@ Modules
    url_processor
    llm_processor
    comparison_processor
+   markdown_processor
