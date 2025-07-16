@@ -8,7 +8,6 @@
 
 import time
 
-from src.smart_watch.core import StatsManager
 from src.smart_watch.core.ConfigManager import ConfigManager
 from src.smart_watch.core.ErrorHandler import (
     ErrorCategory,
@@ -16,6 +15,7 @@ from src.smart_watch.core.ErrorHandler import (
     handle_errors,
 )
 from src.smart_watch.core.Logger import create_logger
+from src.smart_watch.core.StatsManager import StatsManager
 from src.smart_watch.processing import (
     ComparisonProcessor,
     DatabaseProcessor,
