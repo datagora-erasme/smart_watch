@@ -54,7 +54,7 @@ class StatsManager:
         self.config = config
         self.logger = logger
         self.db_manager = DatabaseManager(
-            db_file=config.database.db_file, table_name="resultats_extraction"
+            db_file=config.database.db_file
         )
 
     def get_pipeline_stats(self) -> Dict[str, StatsSection]:

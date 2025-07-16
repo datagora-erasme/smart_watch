@@ -18,67 +18,105 @@ logger = create_logger(
 class DatabaseManager:
     """Gestionnaire générique de base de données SQLite."""
 
-    def __init__(self, db_file: Union[str, Path], table_name: str):
+    def __init__(self, db_file: Union[str, Path]):
         """
         Initialise le gestionnaire de base de données.
 
         Args:
             db_file: Chemin vers le fichier de base de données SQLite
-            table_name: Nom de la table principale
         """
         self.db_file = Path(db_file)
-        self.table_name = table_name
-        logger.debug(f"DatabaseManager initialisé: {self.db_file.name} / {table_name}")
+        logger.debug(f"DatabaseManager initialisé avec {self.db_file}")
 
-    def exists(self) -> bool:
+    def table_exists(self, table_name: str) -> bool:
         """
-        Vérifie si la base de données existe.
-
-        Returns:
-            True si la base existe, False sinon
-        """
-        exists = self.db_file.exists()
-        logger.debug(f"Base existe: {exists}")
-        return exists
-
-    def initialize(self, df_initial: pl.DataFrame, if_exists: str = "fail") -> None:
-        """
-        Initialise la base de données SQLite avec les données de base.
+        Vérifie si une table existe dans la base de données.
 
         Args:
+            table_name: Nom de la table à vérifier
+
+        Returns:
+            True si la table existe, False sinon
+        """
+        try:
+            conn = sqlite3.connect(self.db_file)
+            cursor = conn.cursor()
+            cursor.execute(
+                "SELECT name FROM sqlite_master WHERE type='table' AND name=?",
+                (table_name,),
+            )
+            result = cursor.fetchone()
+            conn.close()
+
+            table_exists = result is not None
+            logger.debug(f"Table '{table_name}' existe: {table_exists}")
+            return table_exists
+        except Exception as err:
+            logger.error(f"Erreur vérification table: {err}")
+            return False
+
+    def initialize(
+        self, table_name: str, df_initial: pl.DataFrame, if_exists: str = "fail"
+    ) -> None:
+        """
+        Initialise une table dans la base de données SQLite avec les données de base.
+
+        Args:
+            table_name: Nom de la table à initialiser
             df_initial: DataFrame initial
-            if_exists: Comportement si la base existe ("fail", "replace", "skip")
+            if_exists: Comportement si la table existe ("fail", "replace", "skip")
 
         Raises:
             Exception: En cas d'erreur lors de l'initialisation
         """
         try:
-            if not self.exists() or if_exists == "replace":
-                action = "Création" if not self.exists() else "Remplacement"
-                logger.info(f"{action} base de données: {self.db_file.name}")
+            table_exists = self.table_exists(table_name)
 
+            if not table_exists:
+                # Table n'existe pas, la créer
+                logger.info(f"Création de la table: {table_name}")
                 df_initial.write_database(
-                    table_name=self.table_name,
+                    table_name=table_name,
                     connection=f"sqlite:///{self.db_file}",
                     if_table_exists="replace",
                 )
-                logger.info(f"Base initialisée: {len(df_initial)} enregistrements")
-            elif if_exists == "skip":
-                logger.info(f"Base existante ignorée: {self.db_file.name}")
-            else:
-                logger.error(f"Base existe déjà: {self.db_file.name}")
-                raise FileExistsError(
-                    f"La base de données '{self.db_file}' existe déjà"
+                logger.info(
+                    f"Table '{table_name}' créée: {len(df_initial)} enregistrements"
                 )
+
+            elif if_exists == "replace":
+                # Table existe, la remplacer
+                logger.info(f"Remplacement de la table: {table_name}")
+                df_initial.write_database(
+                    table_name=table_name,
+                    connection=f"sqlite:///{self.db_file}",
+                    if_table_exists="replace",
+                )
+                logger.info(
+                    f"Table '{table_name}' remplacée: {len(df_initial)} enregistrements"
+                )
+
+            elif if_exists == "skip":
+                # Table existe, l'ignorer
+                logger.info(f"Table existante ignorée: {table_name}")
+
+            else:  # if_exists == "fail"
+                # Table existe, lever une erreur
+                logger.error(f"Table existe déjà: {table_name}")
+                raise FileExistsError(
+                    f"La table '{table_name}' existe déjà dans la base '{self.db_file}'"
+                )
+
         except Exception as err:
-            logger.error(f"Erreur initialisation base: {err}")
+            logger.error(f"Erreur initialisation table '{table_name}': {err}")
             raise
 
-    def load_data(self, query: Optional[str] = None) -> pl.DataFrame:
+    def load_data(self, table_name: str, query: Optional[str] = None) -> pl.DataFrame:
         """
-        Charge les données depuis la base SQLite.
+        Charge les données depuis une table de la base SQLite.
 
         Args:
+            table_name: Nom de la table à charger
             query: Requête SQL personnalisée (optionnel)
 
         Returns:
@@ -89,25 +127,31 @@ class DatabaseManager:
         """
         try:
             if query is None:
-                query = f"SELECT * FROM {self.table_name}"
+                query = f"SELECT * FROM {table_name}"
 
             df = pl.read_database_uri(
                 query=query,
                 uri=f"sqlite:///{self.db_file}",
             )
-            logger.info(f"Données chargées: {len(df)} enregistrements")
+            logger.info(
+                f"Données chargées de '{table_name}': {len(df)} enregistrements"
+            )
             return df
         except Exception as err:
-            logger.error(f"Erreur chargement données: {err}")
+            logger.error(f"Erreur chargement données de '{table_name}': {err}")
             raise
 
     def update_record(
-        self, where_conditions: Dict[str, Any], update_values: Dict[str, Any]
+        self,
+        table_name: str,
+        where_conditions: Dict[str, Any],
+        update_values: Dict[str, Any],
     ) -> int:
         """
-        Met à jour des enregistrements dans la base SQLite.
+        Met à jour des enregistrements dans une table de la base SQLite.
 
         Args:
+            table_name: Nom de la table à mettre à jour
             where_conditions: Conditions WHERE (colonne: valeur)
             update_values: Valeurs à mettre à jour (colonne: valeur)
 
@@ -124,7 +168,7 @@ class DatabaseManager:
                 [f"{col} = ?" for col in where_conditions.keys()]
             )
 
-            query = f"UPDATE {self.table_name} SET {set_clause} WHERE {where_clause}"
+            query = f"UPDATE {table_name} SET {set_clause} WHERE {where_clause}"
             params = list(update_values.values()) + list(where_conditions.values())
 
             conn = sqlite3.connect(self.db_file)
@@ -135,11 +179,13 @@ class DatabaseManager:
             conn.commit()
             conn.close()
 
-            logger.debug(f"Enregistrements mis à jour: {rows_affected}")
+            logger.debug(
+                f"Enregistrements mis à jour dans '{table_name}': {rows_affected}"
+            )
             return rows_affected
 
         except Exception as err:
-            logger.error(f"Erreur mise à jour: {err}")
+            logger.error(f"Erreur mise à jour dans '{table_name}': {err}")
             raise
 
     def execute_query(self, query: str, params: tuple = None) -> List[tuple]:
