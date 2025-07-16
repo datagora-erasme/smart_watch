@@ -114,7 +114,7 @@ class SmartWatchLogger:
             handler_map = {
                 LogOutput.FILE: RotatingFileHandler(
                     self.log_file,
-                    maxBytes=10 * 1024 * 1024,  # 10 MB par fichier
+                    maxBytes=50 * 1024 * 1024,  # 50 MB par fichier
                     backupCount=5,  # Garder 5 fichiers de sauvegarde
                     encoding="utf-8",
                 ),
