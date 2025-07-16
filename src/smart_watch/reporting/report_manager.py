@@ -86,7 +86,6 @@ class ReportManager:
 
         resume_html, fichier_html = generer_rapport_html(
             db_file=str(self.config.database.db_file),
-            table_name="resultats_extraction",
             titre_rapport="Rapport de vérification des URLs",
             model_info=model_info,
         )
