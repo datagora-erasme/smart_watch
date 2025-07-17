@@ -50,42 +50,45 @@
 
 ## Diagramme de fonctionnement
 ```
-[ main.py ] (Orchestrateur du pipeline)
-     │
-     ├─> 1. Initialise [ core.ConfigManager ] (Charge la configuration depuis .env)
-     │         └─> Agrège [ config.* ] (LLMConfig, DatabaseConfig, etc.)
-     │
-     ├─> 2. Initialise les processeurs principaux avec la configuration
-     │
-     └─> 3. Exécute le pipeline séquentiel :
-         │
-         ├─> [1] SETUP : [ utils.CSVToPolars ] -> [ processing.SetupProcessor ]
-         │     (Charge les URLs depuis le CSV et prépare une nouvelle exécution en base)
-         │
-         ├─> [2] FETCH : [ processing.URLProcessor ]
-         │     (Récupère le contenu des URLs)
-         │     └─> Utilise [ utils.HtmlToMarkdown ] pour la conversion
-         │
-         ├─> [3] CLEAN : [ utils.MarkdownCleaner ]
-         │     (Nettoie le Markdown brut)
-         │
-         ├─> [4] FILTER : [ core.MarkdownProcessor ]
-         │     (Filtre sémantiquement le Markdown pour ne garder que les sections pertinentes)
-         │     └─> Utilise [ core.LLMClient ] pour les embeddings
-         │
-         ├─> [5] EXTRACT : [ processing.LLMProcessor ]
-         │     (Extrait les horaires du Markdown filtré au format JSON)
-         │     ├─> Utilise [ core.LLMClient ] pour l'appel au LLM
-         │     └─> Utilise [ utils.CustomJsonToOSM ] pour convertir le JSON en format OSM
-         │
-         ├─> [6] COMPARE : [ processing.ComparisonProcessor ]
-         │     (Compare les horaires extraits (OSM) avec les données de référence)
-         │     └─> Utilise [ core.ComparateurHoraires ] pour la logique de comparaison
-         │
-         └─> [7] REPORT : [ reporting.ReportManager ]
-               (Génère et envoie le rapport final)
-               ├─> Utilise [ reporting.GenererRapportHTML ] pour créer le fichier HTML
-               └─> Utilise [ core.EmailSender ] pour envoyer l'email avec pièces jointes
+[ main.py ] (Orchestrateur)
+  │
+  ├─> A. Initialise [ core.ConfigManager ] (Charge la configuration depuis .env)
+  │         └─> Agrège [ config.* ] (LLMConfig, DatabaseConfig, etc.)
+  │
+  ├─> B. Instancie les processeurs principaux avec la configuration
+  │
+  └─> C. Exécute séquentiellement le pipeline :
+        │
+        ├─> [1] Création : [ processing.DatabaseProcessor ]
+        │     (Créé la base de données et les tables nécessaires)
+        |
+        ├─> [2] Initialisation : [ utils.CSVToPolars ] -> [ processing.SetupProcessor ]
+        │     (Charge les URLs depuis le CSV et prépare une nouvelle exécution)
+        │
+        ├─> [3] Extraction URL : [ processing.URLProcessor ]
+        │     (Récupère le contenu des URLs)
+        │     └─> Utilise [ utils.HtmlToMarkdown ] pour la conversion
+        │
+        ├─> [4] Nettoyage : [ utils.MarkdownCleaner ]
+        │     (Nettoie le Markdown brut)
+        │
+        ├─> [5] Filtrage : [ core.MarkdownProcessor ]
+        │     (Filtre sémantiquement le Markdown pour ne garder que les sections pertinentes)
+        │     └─> Utilise [ core.LLMClient ] pour les embeddings
+        │
+        ├─> [6] Extraction LLM : [ processing.LLMProcessor ]
+        │     (Extrait les horaires du Markdown filtré au format JSON)
+        │     ├─> Utilise [ core.LLMClient ] pour l'appel au LLM
+        │     └─> Utilise [ utils.CustomJsonToOSM ] pour convertir le JSON en format OSM
+        │
+        ├─> [7] Comparaison : [ processing.ComparisonProcessor ]
+        │     (Compare les horaires extraits (OSM) avec les données de référence)
+        │     └─> Utilise [ core.ComparateurHoraires ] pour la logique de comparaison
+        │
+        └─> [8] Rapport : [ reporting.ReportManager ]
+              (Génère et envoie le rapport final)
+              ├─> Utilise [ reporting.GenererRapportHTML ] pour créer le fichier HTML
+              └─> Utilise [ core.EmailSender ] pour envoyer l'email avec pièces jointes
 
 -----------------------------------------------------------------------------------------
 Modules Transversaux :
@@ -107,7 +110,7 @@ Modèles de rapports et des structures de données
 
 ## Fiabilité des informations
 
-L'extraction des horaires d'ouverture depuis les pages web (via un Markdown nettoyé et filtré) est soumise au fonctionnement du LLM choisi. L'utilisation d'un modèle destiné au développement (comme `devstral`) est préférable à un modèle généraliste ou plus "littéraire" (tel que `gemma3`).
+L'extraction des horaires d'ouverture depuis les pages web (via un Markdown nettoyé et filtré) est soumise au fonctionnement du LLM choisi.
 
 Le modèle JSON sera automatiquement passé en argument du prompt et assure normalement une sortie structurée et reproductible. Ce modèle est passé en argument au LLM, en tant que `response_format` pour les modèles compatibles OpenAI, et en tant que `tool_params` pour les modèles Mistral via API (cf `processing.llm_processor.py`).
 
@@ -168,6 +171,37 @@ Vous pouvez également lancer l'application dans un conteneur Docker.
     docker run --env-file .env -v $(pwd)/data:/app/data -v $(pwd)/logs:/app/logs smartwatch
     ```
     Les rapports et la base de données seront générés dans les dossiers `data` et `logs` de votre machine hôte.
+
+## 🤝 Contribuer
+
+Si vous souhaitez améliorer ce projet, veuillez suivre les étapes ci-dessous :
+
+1.  **Forkez le projet** : Cliquez sur le bouton "Fork" en haut à droite de cette page pour créer une copie du projet dans votre propre compte GitHub.
+
+2.  **Créez une branche** : Créez une branche pour votre nouvelle fonctionnalité ou votre correctif.
+    ```sh
+    git checkout -b feature/ma-nouvelle-feature
+    ```
+
+3.  **Faites vos modifications** : Apportez les modifications souhaitées au code.
+
+4.  **Formatez votre code** : Avant de commiter, assurez-vous que votre code est correctement formaté en utilisant `ruff`. Les règles de formatage sont définies dans le fichier `pyproject.toml` :
+    *   `line-length = 88`
+    *   `indent-width = 4`
+    *   `quote-style = "double"`
+    *   `preview = false`
+
+5.  **Commitez vos changements** :
+    ```sh
+    git commit -m "Ajout de ma nouvelle fonctionnalité"
+    ```
+
+6.  **Poussez vers votre branche** :
+    ```sh
+    git push origin feature/ma-nouvelle-feature
+    ```
+
+7.  **Ouvrez une Pull Request** : Rendez-vous sur la page du dépôt original et ouvrez une "Pull Request" pour que vos modifications soient examinées et intégrées.
 
 ## 📄 Licence
 
