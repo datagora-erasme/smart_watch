@@ -17,19 +17,21 @@ logger = create_logger(
     user_message="Impossible de récupérer les jours fériés depuis l'API.",
     reraise=True,
 )
-def get_jours_feries(zone="metropole", annee=None):
+def get_jours_feries(
+    zone: str = "metropole", annee: int | None = None
+) -> dict[str, str]:
     """
-    Récupère les jours fériés pour une zone et une année données.
+    Récupère les jours fériés pour une zone et une année données depuis l'API du gouvernement français.
 
-    Arguments :
-        zone (str): Zone géographique (par défaut: "metropole")
-        annee (int): Année (par défaut: année en cours)
+    Args:
+        zone (str, optional): La zone géographique ('metropole', 'alsace-moselle', etc.).
+                              Par défaut, 'metropole'.
+        annee (int, optional): L'année pour laquelle récupérer les jours fériés.
+                               Par défaut, l'année en cours.
 
-    Retourne :
-        dict: Dictionnaire des jours fériés.
-
-    Lève:
-        requests.exceptions.RequestException: Si une erreur réseau survient.
+    Returns:
+        dict[str, str]: Un dictionnaire avec les dates des jours fériés en clés (YYYY-MM-DD)
+                        et les noms des jours fériés en valeurs.
     """
     if annee is None:
         annee = datetime.now().year
@@ -42,18 +44,3 @@ def get_jours_feries(zone="metropole", annee=None):
     result = response.json()
     logger.info(f"Jours fériés récupérés: {len(result)} dates")
     return result
-
-
-def get_day_name(date_str: str) -> str:
-    """
-    Retourne le nom du jour de la semaine en français pour une date donnée.
-
-    Argument :
-        date_str (str): Date au format YYYY-MM-DD
-
-    retourne :
-        str: Nom du jour de la semaine
-    """
-    jours = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", "dimanche"]
-    date_obj = datetime.strptime(date_str, "%Y-%m-%d")
-    return jours[date_obj.weekday()]

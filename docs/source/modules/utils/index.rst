@@ -50,12 +50,13 @@ Modules
 .. toctree::
    :maxdepth: 1
 
-   markdown_cleaner
-   html_to_markdown
-   json_osm_converters
-   csv_polars
-   jours_feries
-   vacances_scolaires
+   CSVToPolars
+   HtmlToMarkdown
+   JoursFeries
+   CustomJsonToOSM
+   MarkdownCleaner
+   OSMToCustomJson
+   VacancesScolaires
 
 Utilitaires de données temporelles
 ----------------------------------

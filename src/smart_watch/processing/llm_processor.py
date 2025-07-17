@@ -111,7 +111,7 @@ class LLMProcessor:
         return osm_horaires
 
     def _enrich_with_jours_feries(self, llm_result: str, lieu) -> str:
-        """Enrichit le JSON LLM avec les jours fériés pour les mairies."""
+        """Enrichit le JSON LLM avec les jours fériés pour les mairies et bibliothèques."""
         try:
             # Définir les types de lieux pour l'enrichissement des jours fériés
             types_de_lieux_concernes = ["mairie", "bibliothèque"]
@@ -230,7 +230,7 @@ class LLMProcessor:
             }
 
             try:
-                # Appel LLM avec mesure d'émissions selon le fournisseur
+                # Appel LLM
                 if self.config.llm.fournisseur == "OPENAI":
                     llm_response = self.llm_client.call_llm(
                         messages, response_format=self.structured_format
@@ -277,7 +277,7 @@ class LLMProcessor:
                 if llm_response.content and not str(llm_response.content).startswith(
                     "Erreur"
                 ):
-                    # Enrichissement avec les jours fériés pour les mairies
+                    # Enrichissement avec les jours fériés
                     enriched_result = self._enrich_with_jours_feries(
                         llm_response.content, lieu
                     )

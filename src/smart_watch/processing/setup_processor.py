@@ -29,10 +29,10 @@ class SetupProcessor:
     def setup_execution(self, db_manager):
         """
         Initialise la pipeline de configuration en chargeant le CSV depuis la configuration
-        et en initialisant la base de données avec les données chargées.
+        (variable CSV_URL_HORAIRES) et en initialisant la base de données avec les données chargées.
 
         Étapes :
-            - Charge le fichier CSV spécifié dans la configuration.
+            - Charge le fichier CSV : CSV_URL_HORAIRES.
             - Vérifie le succès du chargement du CSV.
             - Initialise la base de données avec le DataFrame obtenu.
 
