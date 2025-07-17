@@ -1,12 +1,11 @@
-"""
-Module pour le nettoyage et la normalisation de contenu Markdown.
-Ce module nettoie le markdown issu du téléchargement d'URLs.
-"""
+# Module pour le nettoyage et la normalisation de contenu Markdown
+# https://datagora-erasme.github.io/smart_watch/source/modules/utils/MarkdownCleaner.html
 
 import re
 from dataclasses import dataclass
-from typing import Dict, List, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
+from ..core.DatabaseManager import DatabaseManager
 from ..core.ErrorHandler import ErrorCategory, ErrorSeverity, handle_errors
 from ..core.Logger import create_logger
 from ..data_models.schema_bdd import Lieux, ResultatsExtraction
@@ -19,13 +18,24 @@ logger = create_logger(
 
 @dataclass
 class CleaningStats:
-    """Statistiques de nettoyage pour chaque étape."""
+    """Dataclass pour stocker les statistiques de nettoyage à chaque étape.
+
+    Attributs :
+        texts_processed (int) : Nombre total de textes traités.
+        texts_successful (int) : Nombre de textes nettoyés avec succès.
+        chars_replaced (int) : Nombre total de caractères remplacés lors du nettoyage.
+    """
 
     texts_processed: int = 0
     texts_successful: int = 0
     chars_replaced: int = 0
 
     def get_summary(self) -> Dict[str, int]:
+        """Retourne un résumé des statistiques de nettoyage.
+
+        Returns:
+            Dict[str, int] : Un dictionnaire contenant les statistiques.
+        """
         return {
             "texts_processed": self.texts_processed,
             "texts_successful": self.texts_successful,
@@ -34,7 +44,17 @@ class CleaningStats:
 
 
 class MarkdownCleaner:
-    """Classe pour le nettoyage et la normalisation de contenu Markdown."""
+    """Une classe pour nettoyer et normaliser le contenu Markdown.
+
+    Cette classe fournit un pipeline pour nettoyer du texte Markdown brut,
+    le rendant plus adapté au traitement par des modèles de langage.
+
+    Args:
+        config (Any): L'objet de configuration, qui doit avoir un attribut `processing`
+                      avec `char_replacements`.
+        logger (Any): L'instance du logger pour l'enregistrement des messages.
+        char_replacements (Dict[str, str]): Un dictionnaire des caractères à remplacer.
+    """
 
     # Regex pour supprimer les liens markdown (avec ou sans titre)
     # [texte](url) ou [texte](url "titre")
@@ -58,14 +78,33 @@ class MarkdownCleaner:
     # Regex pour les lignes composées uniquement de caractères de formatage
     _RE_FORMATTING_LINES = re.compile(r"^[\s#\-\"=_\(\[\]\)\.]+$", re.MULTILINE)
 
-    def __init__(self, config, logger):
-        self.config = config
-        self.logger = logger
-        # Utiliser la configuration des caractères de remplacement
-        self.char_replacements = self.config.processing.char_replacements
+    def __init__(self, config: Any, logger: Any):
+        """Initializes the MarkdownCleaner.
 
-    def _get_pending_cleaning(self, db_manager, execution_id: int) -> List[Tuple]:
-        """Récupère les enregistrements nécessitant un nettoyage de markdown."""
+        Args:
+            config (Any): The application's configuration object.
+            logger (Any): The logger for this instance.
+        """
+        self.config: Any = config
+        self.logger: Any = logger
+        # Utiliser la configuration des caractères de remplacement
+        self.char_replacements: Dict[str, str] = (
+            self.config.processing.char_replacements
+        )
+
+    def _get_pending_cleaning(
+        self, db_manager: DatabaseManager, execution_id: int
+    ) -> List[Tuple[ResultatsExtraction, Lieux]]:
+        """Récupère les enregistrements de la base de données nécessitant un nettoyage du markdown.
+
+        Args:
+            db_manager (DatabaseManager): L'instance du gestionnaire de base de données.
+            execution_id (int): L'identifiant de l'exécution en cours.
+
+        Returns:
+            List[Tuple[ResultatsExtraction, Lieux]]: Une liste de tuples, chacun
+            contenant un objet `ResultatsExtraction` et un objet `Lieux`.
+        """
         session = db_manager.Session()
         try:
             return (
@@ -75,7 +114,7 @@ class MarkdownCleaner:
                     ResultatsExtraction.id_execution == execution_id,
                     ResultatsExtraction.statut_url == "ok",
                     ResultatsExtraction.markdown_brut != "",
-                    ResultatsExtraction.markdown_brut != None,
+                    ResultatsExtraction.markdown_brut.isnot(None),
                     ResultatsExtraction.markdown_nettoye == "",  # Pas encore nettoyé
                 )
                 .all()
@@ -83,8 +122,18 @@ class MarkdownCleaner:
         finally:
             session.close()
 
-    def process_markdown_cleaning(self, db_manager, execution_id) -> None:
-        """Nettoie le contenu markdown."""
+    def process_markdown_cleaning(
+        self, db_manager: DatabaseManager, execution_id: int
+    ) -> None:
+        """Orchestre le processus de nettoyage du markdown pour une exécution donnée.
+
+        Il récupère les enregistrements en attente, nettoie leur contenu markdown,
+        et met à jour la base de données avec le texte nettoyé.
+
+        Args:
+            db_manager (DatabaseManager): L'instance du gestionnaire de base de données.
+            execution_id (int): L'identifiant de l'exécution en cours.
+        """
         self.logger.section("NETTOYAGE MARKDOWN")
 
         resultats_a_nettoyer = self._get_pending_cleaning(db_manager, execution_id)
@@ -129,14 +178,13 @@ class MarkdownCleaner:
         reraise=True,
     )
     def clean_markdown_content(self, text: str) -> str:
-        """
-        Nettoie un contenu markdown en appliquant les remplacements de caractères et suppression des liens.
+        """Nettoie le contenu markdown en appliquant des remplacements et en supprimant les liens.
 
         Args:
-            text: Contenu markdown à nettoyer
+            text (str): Le contenu markdown à nettoyer.
 
         Returns:
-            str: Contenu markdown nettoyé
+            str: Le contenu markdown nettoyé.
         """
         if not text:
             return ""
@@ -159,24 +207,22 @@ class MarkdownCleaner:
         return text.strip()
 
     @handle_errors(
-        category=ErrorCategory.CONVERSION,
-        severity=ErrorSeverity.LOW,
-        reraise=True,
+        category=ErrorCategory.CONVERSION, severity=ErrorSeverity.LOW, reraise=True
     )
     def _remove_markdown_links(self, text: str) -> str:
-        """
-        Supprime les liens markdown en gardant seulement le texte d'affichage.
-        Gère les formats:
+        """Supprime les liens markdown, en conservant uniquement le texte.
+
+        Gère les formats :
         - [texte](url)
         - [texte](url "titre")
         - [![alt](img)](url "titre") - liens avec images
-        - ![alt](img) - images standalone
+        - ![alt](img) - images seules
 
         Args:
-            text: Texte contenant des liens markdown
+            text (str): Le texte contenant des liens markdown.
 
         Returns:
-            str: Texte sans les liens markdown
+            str: Le texte sans liens markdown.
         """
         if not text:
             return ""
@@ -196,12 +242,17 @@ class MarkdownCleaner:
         return text
 
     @handle_errors(
-        category=ErrorCategory.CONVERSION,
-        severity=ErrorSeverity.LOW,
-        reraise=True,
+        category=ErrorCategory.CONVERSION, severity=ErrorSeverity.LOW, reraise=True
     )
     def _apply_char_replacements(self, text: str) -> str:
-        """Applique les remplacements de caractères depuis la configuration."""
+        """Applique les remplacements de caractères indiqués la configuration.
+
+        Args:
+            text (str): Le texte auquel appliquer les remplacements.
+
+        Returns:
+            str: Le texte avec les caractères remplacés.
+        """
         if not self.char_replacements or not text:
             return text
         # Appliquer plusieurs fois pour gérer les cas récursifs (espaces multiples)
@@ -211,36 +262,51 @@ class MarkdownCleaner:
         return text
 
     @handle_errors(
-        category=ErrorCategory.CONVERSION,
-        severity=ErrorSeverity.LOW,
-        reraise=True,
+        category=ErrorCategory.CONVERSION, severity=ErrorSeverity.LOW, reraise=True
     )
     def _clean_multiple_newlines(self, text: str) -> str:
-        """Remplace 3 sauts de ligne ou plus par exactement 2."""
+        """Remplace 3 sauts de ligne ou plus par exactement 2.
+
+        Args:
+            text (str): Le texte à nettoyer.
+
+        Returns:
+            str: Le texte avec des sauts de ligne normalisés.
+        """
         return self._RE_MULTI_NEWLINES.sub("\n\n", text) if text else ""
 
     @handle_errors(
-        category=ErrorCategory.CONVERSION,
-        severity=ErrorSeverity.LOW,
-        reraise=True,
+        category=ErrorCategory.CONVERSION, severity=ErrorSeverity.LOW, reraise=True
     )
     def _remove_formatting_lines(self, text: str) -> str:
-        """Supprime les lignes composées uniquement de caractères de formatage."""
+        """Supprime les lignes composées uniquement de caractères de formatage.
+
+        Args:
+            text (str): Le texte à nettoyer.
+
+        Returns:
+            str: Le texte sans les lignes de formatage.
+        """
         return self._RE_FORMATTING_LINES.sub("", text) if text else ""
 
     @handle_errors(
-        category=ErrorCategory.CONVERSION,
-        severity=ErrorSeverity.LOW,
-        reraise=True,
+        category=ErrorCategory.CONVERSION, severity=ErrorSeverity.LOW, reraise=True
     )
     def _remove_consecutive_duplicate_lines(self, text: str) -> str:
-        """Supprime les lignes en double, même si elles sont séparées par des retours chariot."""
+        """Supprime les lignes consécutives dupliquées, même si elles sont séparées par des sauts de ligne.
+
+        Args:
+            text (str): Le texte à nettoyer.
+
+        Returns:
+            str: Le texte avec les lignes dupliquées supprimées.
+        """
         if not text:
             return ""
 
-        lines = text.split("\n")
-        cleaned_lines = []
-        last_non_empty_line = None
+        lines: List[str] = text.split("\n")
+        cleaned_lines: List[str] = []
+        last_non_empty_line: Optional[str] = None
 
         for line in lines:
             stripped_line = line.strip()
