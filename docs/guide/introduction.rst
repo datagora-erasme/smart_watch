@@ -4,7 +4,7 @@ Présentation du projet
 
 Le projet SmartWatch a été créé dans le but de fiabiliser et d'automatiser l'intégration des horaires d'ouverture de lieux publics dans le site data.grandlyon.com.
 
-Les modifications régulières ainsi que le grand nombre de sites concernés (~200) rende cette opération fastidieuse et chronophage si elle est effectuée manuellement.
+Les modifications régulières ainsi que le grand nombre de sites concernés (~200) rendent cette opération fastidieuse et chronophage si elle est effectuée manuellement.
 
 L'idée de recourir à l'intelligence artificielle a donc germé, donnant naissance au projet SmartWatch.
 
