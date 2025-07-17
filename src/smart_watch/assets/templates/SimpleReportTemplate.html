@@ -111,100 +111,36 @@
     </p>
     {% endif %}
 
-    <h3>📊 Statistiques Globales</h3>
-    <ul>
-        <li><strong>Total d'URLs à traiter :</strong> {{ stats_globales.total_urls }}</li>
-    </ul>
+    <h3>📊 Résumé du traitement</h3>
+    <p><strong>Total d'URLs traitées :</strong> {{ stats_globales.total_urls }}</p>
 
     <table class="stats-table">
         <thead>
             <tr>
-                <th>Catégorie</th>
-                <th>Indicateur</th>
-                <th>Valeur</th>
-                <th>% Base</th>
+                <th>Statut</th>
+                <th>Nombre</th>
+                <th>% du total</th>
             </tr>
         </thead>
         <tbody>
-            <!-- NIVEAU 1: Accès aux URLs -->
-            {% set url_succes = 0 %}
-            {% set url_echecs = 0 %}
             {% for statut in statuts_disponibles %}
-            {% if statut.nom == 'OK' %}
-            {% set url_succes = statut.count %}
+            <tr>
+                <td>
+                    <span title="{{ statut.description }}">{{ statut.emoji }} {{ statut.nom }}</span>
+                </td>
+                <td>{{ statut.count }}</td>
+                <td>{{ (statut.count / stats_globales.total_urls * 100)|round(1) }}%</td>
+            </tr>
             {% else %}
-            {% set url_echecs = url_echecs + statut.count %}
-            {% endif %}
+            <tr>
+                <td colspan="3">Aucune donnée à afficher.</td>
+            </tr>
             {% endfor %}
-
-            <tr>
-                <td rowspan="2" class="category-cell">🌐 Accès URLs</td>
-                <td>✅ Pages accessibles</td>
-                <td>{{ url_succes }}</td>
-                <td>{{ (url_succes / stats_globales.total_urls * 100)|round(1) }}% <small>(du total)</small></td>
-            </tr>
-            <tr>
-                <td>❌ Pages inaccessibles</td>
-                <td>{{ url_echecs }}</td>
-                <td>{{ (url_echecs / stats_globales.total_urls * 100)|round(1) }}% <small>(du total)</small></td>
-            </tr>
-
-            <!-- NIVEAU 2: Analyse des pages accessibles -->
-            {% if url_succes > 0 %}
             <tr class="level-separator">
-                <td rowspan="4" class="category-cell">🔍 Analyse des Succès</td>
-                <td class="subcategory-cell">Extraction LLM réussie</td>
-                <td>{{ stats_globales.get('llm_extractions_success', 0) }}</td>
-                <td>{{ (stats_globales.get('llm_extractions_success', 0) / url_succes * 100)|round(1) }}% <small>(des
-                        succès)</small></td>
+                <td><strong>Total</strong></td>
+                <td><strong>{{ stats_globales.total_urls }}</strong></td>
+                <td><strong>100%</strong></td>
             </tr>
-            <tr>
-                <td class="subcategory-cell">Comparaisons identiques</td>
-                <td>{{ stats_globales.get('comparisons_identical', 0) }}</td>
-                <td>
-                    {% set total_comparisons = stats_globales.get('comparisons_identical', 0) +
-                    stats_globales.get('comparisons_different', 0) %}
-                    {% if total_comparisons > 0 %}
-                    {{ (stats_globales.get('comparisons_identical', 0) / total_comparisons * 100)|round(1) }}%
-                    <small>(des comparés)</small>
-                    {% else %}
-                    N/A
-                    {% endif %}
-                </td>
-            </tr>
-            <tr>
-                <td class="subcategory-cell">Comparaisons différentes</td>
-                <td>{{ stats_globales.get('comparisons_different', 0) }}</td>
-                <td>
-                    {% if total_comparisons > 0 %}
-                    {{ (stats_globales.get('comparisons_different', 0) / total_comparisons * 100)|round(1) }}%
-                    <small>(des comparés)</small>
-                    {% else %}
-                    N/A
-                    {% endif %}
-                </td>
-            </tr>
-            <tr>
-                <td class="subcategory-cell">Non comparés</td>
-                <td>{{ url_succes - total_comparisons }}</td>
-                <td>{{ ((url_succes - total_comparisons) / url_succes * 100)|round(1) }}% <small>(des succès)</small>
-                </td>
-            </tr>
-            {% endif %}
-
-            <!-- NIVEAU 3: Répartition par type (information contextuelle) -->
-            {% if types_lieu_stats %}
-            {% for type_lieu in types_lieu_stats %}
-            <tr {% if loop.first %}class="level-separator" {% endif %}>
-                {% if loop.first %}
-                <td rowspan="{{ types_lieu_stats|length }}" class="category-cell">📍 Types de lieux</td>
-                {% endif %}
-                <td>{{ type_lieu.type }}</td>
-                <td>{{ type_lieu.count }}</td>
-                <td>{{ (type_lieu.count / stats_globales.total_urls * 100)|round(1) }}% <small>(du total)</small></td>
-            </tr>
-            {% endfor %}
-            {% endif %}
         </tbody>
     </table>
 
