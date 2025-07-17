@@ -1,38 +1,19 @@
 Markdown Cleaner
 ================
 
+Le module ``MarkdownCleaner`` nettoie et normalise le contenu Markdown obtenu après la conversion de pages web HTML. Il prépare ainsi le texte pour une analyse efficace par les modèles de langage.
+
 Fonctionnalités
 ---------------
 
-Le MarkdownCleaner nettoie et normalise le contenu markdown brut pour optimiser l'extraction d'horaires. Il utilise des expressions régulières avancées et applique des règles de nettoyage configurables.
+- Élimine tous les types de liens Markdown et les images autonomes, ne conservant que le texte pertinent.
+- Supprime les lignes qui ne contiennent que des caractères de mise en forme (comme `---`, `###`, `* * *`).
+- Applique un ensemble de remplacements de caractères définis dans la configuration pour corriger les erreurs de formatage courantes (espaces multiples, etc.).
+- Élimine les lignes vides consécutives et les lignes de contenu identiques qui se suivent.
 
-**Suppression des éléments indésirables :**
+.. admonition:: Usage
 
-- Liens markdown sous toutes formes [texte](url), [texte](url "titre")
-- Images standalone ![alt](img) et liens avec images [![alt](img)](url)
-- Liens automatiques <http://example.com>
-- Lignes de formatage (caractères décoratifs, séparateurs)
-
-**Normalisation du contenu :**
-
-- Remplacement de caractères selon dictionnaire configurable
-- Suppression des sauts de ligne multiples (3+ → 2)
-- Élimination des lignes en double consécutives
-- Nettoyage des espaces et caractères de formatage
-
-**Traitement par lot :**
-
-- Pipeline intégré avec DatabaseManager
-- Traitement des markdown_brut → markdown_nettoye
-- Statistiques détaillées des opérations de nettoyage
-- Gestion d'erreurs avec continuation du traitement
-
-**Optimisation pour LLM :**
-
-- Réduction significative de la taille des prompts
-- Préservation du contenu pertinent aux horaires
-- Suppression du bruit visuel et navigationnel
-- Amélioration de la précision d'extraction
+   La classe ``MarkdownCleaner`` est utilisé dans le :doc:`pipeline principal <../../../architecture/diagramme>` de ``main.py``. La fonction ``process_markdown_cleaning`` récupère les textes bruts depuis la colonne ``markdown_brut`` de la table ``resultats_extraction`` (cf :doc:`bdd <../../../architecture/bdd>`), les nettoie, et enregistre la version nettoyée dans la colonne ``markdown_nettoye`` de la même table.
 
 Modules
 -------
@@ -41,6 +22,6 @@ Modules
    :members:
    :undoc-members:
    :private-members:
-   :special-members: __init__, __call__
+   :special-members: __init__
    :inherited-members:
    :show-inheritance:

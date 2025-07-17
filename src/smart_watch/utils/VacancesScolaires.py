@@ -1,3 +1,6 @@
+# Utilitaire de récupération des plages de vacances scolaires depuis l'API du gouvernement français
+# https://datagora-erasme.github.io/smart_watch/source/modules/utils/VacancesScolaires.html
+
 from datetime import datetime
 from typing import Optional
 
@@ -31,18 +34,19 @@ def get_vacances_scolaires(
     annee_scolaire: Optional[str] = None,
 ) -> Optional[pl.DataFrame]:
     """
-    Récupère les vacances scolaires pour une localisation et une période données.
+    Récupère les périodes de vacances scolaires selon les critères spécifiés.
 
-    Argument :
-        localisation (str, optional): Localisation (par défaut: "Lyon")
-        zone (str, optional): Zone scolaire (A, B, C). Si None, toutes les zones
-        date_debut (str, optional): Date de début au format YYYY-MM-DD (par défaut: début année courante)
-        date_fin (str, optional): Date de fin au format YYYY-MM-DD (par défaut: fin année courante + 2)
-        population (str, optional): Population concernée ("Élèves", "Enseignants"). Si None, toutes
-        annee_scolaire (str, optional): Année scolaire au format YYYY-YYYY (ex: "2024-2025")
+    Args:
+        localisation (Optional[str], optional): Localisation géographique (ville, département, etc.).
+        zone (Optional[str], optional): Zone scolaire (A, B, C).
+        date_debut (Optional[str], optional): Date de début au format 'YYYY-MM-DD'. Par défaut, début de l'année courante.
+        date_fin (Optional[str], optional): Date de fin au format 'YYYY-MM-DD'. Par défaut, fin de l'année courante + 2 ans.
+        population (Optional[str], optional): Population concernée (élèves, enseignants, etc.).
+        annee_scolaire (Optional[str], optional): Année scolaire (ex: '2023-2024').
 
-    Retourne :
-        pl.DataFrame: DataFrame Polars des périodes de vacances ou None en cas d'erreur
+    Returns:
+        Optional[pl.DataFrame]: Un DataFrame Polars contenant les périodes de vacances scolaires triées par date de début et de fin,
+        ou None si aucune période n'est trouvée.
     """
     if date_debut is None:
         date_debut = f"{datetime.now().year}-01-01"
@@ -91,23 +95,3 @@ def get_vacances_scolaires(
 
     # On retourne le dataframe Polars trié par date de début et de fin
     return df.sort(["start_date", "end_date"])
-
-
-def format_date_vacances(date_str: str) -> str:
-    """
-    Formate une date de vacances au format lisible.
-
-    Argument :
-        date_str (str): Date au format ISO avec timezone
-
-    Retourne :
-        str: Date formatée (YYYY-MM-DD)
-    """
-    try:
-        # Parse la date ISO avec timezone
-        date_obj = datetime.fromisoformat(date_str.replace("Z", "+00:00"))
-        # Retourne la date au format YYYY-MM-DD
-        return date_obj.strftime("%Y-%m-%d")
-    except Exception as e:
-        logger.warning(f"Erreur formatage date {date_str}: {e}")
-        return date_str

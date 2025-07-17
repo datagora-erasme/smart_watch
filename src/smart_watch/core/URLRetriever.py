@@ -24,7 +24,6 @@ HEADERS = {
 
 
 def _create_ssl_context(strategy: str = "default") -> ssl.SSLContext:
-    """Crée un contexte SSL selon la stratégie spécifiée."""
     ctx = ssl.create_default_context()
 
     if strategy == "no_verify":
@@ -41,7 +40,6 @@ def _create_ssl_context(strategy: str = "default") -> ssl.SSLContext:
 
 
 def _make_request(url: str, strategy: str = "default") -> urllib3.HTTPResponse:
-    """Effectue une requête HTTP avec la stratégie SSL spécifiée."""
     if strategy == "default":
         http = urllib3.PoolManager(timeout=30.0)
     else:
@@ -76,10 +74,6 @@ def retrieve_url(
     encoding_errors: str = "ignore",
     config=None,
 ) -> dict:
-    """
-    Récupère le contenu HTML d'une URL avec gestion d'erreurs centralisée.
-    Note: Le nettoyage avancé du markdown est maintenant géré par MarkdownCleaner.
-    """
     row_dict = dict(row)
     url = row.get("url", "")
     identifiant = row.get("identifiant", "N/A")

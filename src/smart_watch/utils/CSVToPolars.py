@@ -1,5 +1,5 @@
 # Documentation :
-# https://datagora-erasme.github.io/smart_watch/source/modules/utils/csv_polars.html
+# https://datagora-erasme.github.io/smart_watch/source/modules/utils/CSVToPolars.html
 
 import csv
 from pathlib import Path

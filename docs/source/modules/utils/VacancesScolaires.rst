@@ -1,97 +1,52 @@
 Vacances Scolaires
 ==================
 
+Le module VacancesScolaires récupère les périodes de vacances scolaires officielles depuis l'API du gouvernement français. Il fournit des fonctions de filtrage par localisation, zone scolaire et période avec retour de DataFrame Polars.
+
 Fonctionnalités
 ---------------
 
-Le module VacancesScolaires récupère les périodes de vacances scolaires officielles depuis l'API du gouvernement français. Il fournit des fonctions de filtrage par localisation, zone scolaire et période avec retour de DataFrame Polars optimisé.
+- Récupération des vacances scolaires via l'API officielle du gouvernement
+- Filtrage par zone (A, B, C), localisation, période, population et année scolaire
+- Conversion automatique des dates, tri optimisé, gestion des DataFrame vides
 
-**Source de données :**
+.. admonition:: Usage
 
-- API data.education.gouv.fr officielle de l'Éducation Nationale
-- Données certifiées et mises à jour automatiquement
-- Support des zones A, B, C et localisations spécifiques
-- Années scolaires avec format standardisé YYYY-YYYY
+   La fonction ``get_vacances_scolaires`` n'est pour l'instant pas exploité dans le projet SmartWatch.
 
-**Paramètres de filtrage avancés :**
-
-- Localisation par ville avec recherche intelligente (LIKE)
-- Zone scolaire (A, B, C) avec validation
-- Période personnalisable avec dates début/fin
-- Population ciblée (Élèves, Enseignants) avec filtrage
-- Année scolaire complète ou plages de dates spécifiques
-
-**Optimisations Polars :**
-
-- Conversion automatique des dates en format datetime
-- Tri optimisé par date de début et fin
-- Gestion efficace des DataFrame vides
-- Performance optimale pour grandes datasets
-
-**Gestion robuste :**
-
-- Requêtes réseau avec timeout et validation HTTP
-- Construction dynamique des clauses WHERE SQL-like
-- Logging détaillé des opérations et résultats
-- Fallback gracieux en cas d'indisponibilité API
-
-Fonctions principales
----------------------
-
-.. autofunction:: src.smart_watch.utils.VacancesScolaires.get_vacances_scolaires
-
-.. autofunction:: src.smart_watch.utils.VacancesScolaires.format_date_vacances
-   # Vacances pour Lyon en 2025
-   vacances_lyon - get_vacances_scolaires(
-       localisation-"Lyon",
-       date_debut-"2025-01-01",
-       date_fin-"2025-12-31"
-   )
-   
-   if vacances_lyon and not vacances_lyon.is_empty():
-       for row in vacances_lyon.iter_rows(named-True):
-           print(f"{row['description']}: {row['start_date']} - {row['end_date']}")
-   
-   # Vacances zone C pour une période spécifique
-   vacances_zone_c - get_vacances_scolaires(
-       zone-"C",
-       date_debut-"2025-03-01", 
-       date_fin-"2025-06-30"
-   )
-   
-   # Vacances de l'année scolaire en cours
-   vacances_annee - get_vacances_scolaires(
-       localisation-"Lyon",
-       annee_scolaire-"2024-2025"
-   )
 
 API et format des données
 -------------------------
 
-**URL de base :** ``https://data.education.gouv.fr/api/explore/v2.1/catalog/datasets/fr-en-calendrier-scolaire/records``
+Le module interroge l'API `data.education.gouv.fr` pour récupérer les données sur le calendrier scolaire.
 
-**Paramètres de requête :**
-- ``where`` : Conditions de filtrage SQL-like
-- ``limit`` : Nombre maximum d'enregistrements (défaut: 100)
+**Endpoint**
 
-**Colonnes principales du DataFrame retourné :**
-- ``start_date`` : Date de début (datetime)
-- ``end_date`` : Date de fin (datetime)
-- ``description`` : Description de la période (ex: "Vacances de printemps")
-- ``zones`` : Zone(s) concernée(s) (ex: "Zone A")
-- ``population`` : Population concernée ("Élèves", "Enseignants", "-")
-- ``annee_scolaire`` : Année scolaire (ex: "2024-2025")
-- ``location`` : Localisation géographique
+- **URL :** ``https://data.education.gouv.fr/api/explore/v2.1/catalog/datasets/fr-en-calendrier-scolaire/records``
+- **Méthode :** ``GET``
 
-Gestion des erreurs
--------------------
+**Paramètres de la fonction `get_vacances_scolaires`**
 
-- **Requêtes réseau** : Gestion des timeouts et erreurs HTTP
-- **Données vides** : Retour de DataFrame vide si aucune période trouvée
-- **Formats de date** : Validation et conversion automatique
-- **Logging** : Traçabilité complète des opérations
+Tous les paramètres sont optionnels et permettent de construire une clause ``where`` pour filtrer les résultats de l'API.
 
-Le module utilise le logger SmartWatch pour tracer toutes les opérations et erreurs.
+- ``localisation`` (str, optionnel): Filtre par localisation géographique (ex: "Lyon", "Académie de Lyon").
+- ``zone`` (str, optionnel): Filtre par zone scolaire (ex: "A", "B", "C").
+- ``date_debut`` (str, optionnel): Date de début au format 'YYYY-MM-DD'. Par défaut, le 1er janvier de l'année en cours.
+- ``date_fin`` (str, optionnel): Date de fin au format 'YYYY-MM-DD'. Par défaut, le 31 décembre de l'année en cours + 2 ans.
+- ``population`` (str, optionnel): Filtre par type de population (ex: "Élèves", "Enseignants").
+- ``annee_scolaire`` (str, optionnel): Filtre par année scolaire (ex: "2023-2024").
+
+**Format des données en sortie**
+
+La fonction retourne un **DataFrame Polars** contenant les enregistrements qui correspondent aux filtres. Les colonnes principales sont :
+
+- ``description`` (str): Nom de la période de vacances (ex: "Vacances de la Toussaint").
+- ``start_date`` (datetime): Date et heure de début de la période.
+- ``end_date`` (datetime): Date et heure de fin de la période.
+- ``zones`` (str): La ou les zones concernées (ex: "Zone A").
+- ``location`` (str): La ou les localisations concernées (ex: "Besançon", "Bordeaux", "Clermont-Ferrand"...).
+- ``annee_scolaire`` (str): L'année scolaire de la période.
+- ``population`` (str): La population concernée.
 
 Modules
 -------

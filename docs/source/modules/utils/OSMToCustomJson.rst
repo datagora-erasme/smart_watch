@@ -16,7 +16,7 @@ Fonctionnalités
 
    La classe ``OsmToJsonConverter`` est utilisée dans :
 
-   - le module :doc:`database_processor <../processing/database_processor>`, pour convertir les horaires au format OSM provenant de data.grandlyon.com en JSON.
+   - le module :doc:`database_processor <../processing/database_processor>`, pour convertir les horaires au format OSM provenant de data.grandlyon.com en JSON (horaires rcéupérés depuis les fichiers csv désignés par les variables ``CSV_URL_PISCINES``, ``CSV_URL_MAIRIES`` et ``CSV_URL_MEDIATHEQUES``).
 
 Module
 -------

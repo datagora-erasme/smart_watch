@@ -1,10 +1,5 @@
-"""
-Convertisseur d'horaires d'ouverture depuis le format OpenStreetMap
-vers le format JSON personnalisé (../assets/opening_hours_schema.json).
-
-Ce module fournit des fonctionnalités complètes pour convertir une spécification
-opening_hours d'OSM en format JSON personnalisé.
-"""
+# Convertisseur de données horaires d'ouverture OSM vers JSON personnalisé
+# https://datagora-erasme.github.io/smart_watch/source/modules/utils/OSMToCustomJson.html
 
 import re
 from dataclasses import dataclass, field

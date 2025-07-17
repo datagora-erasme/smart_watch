@@ -28,7 +28,7 @@ SmartWatch : extracteur d'horaires intelligent
    :maxdepth: 1
    :caption: Architecture technique
 
-   architecture/flux
+   architecture/diagramme
    architecture/bdd
    architecture/modules
    architecture/stack
@@ -37,37 +37,37 @@ Modules
 =======
    
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Modules Configuration
    
    source/modules/config/index
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Modules Core
    
    source/modules/core/index
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Modules Processing
    
    source/modules/processing/index
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Modules Utils
    
    source/modules/utils/index
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Reporting
    
    source/modules/reporting/index
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Modèles de données
 
    schemas/database

@@ -6,11 +6,10 @@ Ce module convertit les horaires d'ouverture du format JSON personnalisé de Sma
 Fonctionnalités
 ---------------
 
-- Conversion des horaires hebdomadaires avec compression des plages de jours (ex: Mo-Fr).
-- Gestion des périodes spéciales : vacances scolaires, jours fériés (PH) et autres dates spécifiques.
-- Analyse des descriptions de dates en français pour les convertir au format OSM.
-- Traitement des créneaux horaires multiples pour une même journée.
-- Gestion des occurrences pour les jours (ex: le 1er et 3ème mardi du mois).
+- Conversion des horaires hebdomadaires compressés (ex: Mo-Fr).
+- Prise en charge des périodes spéciales : vacances, jours fériés, dates spécifiques.
+- Analyse des dates en français et anglais.
+- Gestion des créneaux multiples et occurrences (ex: 1er mardi du mois).
 - Détection des fermetures définitives.
 
 .. admonition:: Usage

@@ -1,3 +1,6 @@
+# Convertisseur HTML vers Markdown
+# https://datagora-erasme.github.io/smart_watch/source/modules/utils/HtmlToMarkdown.html
+
 import bs4
 from html_to_markdown import convert_to_markdown
 

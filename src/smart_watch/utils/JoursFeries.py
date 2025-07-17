@@ -1,3 +1,6 @@
+# Utilitaire de récupération de jours fériés depuis l'API du gouvernement français
+# https://datagora-erasme.github.io/smart_watch/source/modules/utils/JoursFeries.html
+
 from datetime import datetime
 
 import requests
