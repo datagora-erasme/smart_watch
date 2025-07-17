@@ -51,7 +51,7 @@ jobs:
 
     - name: Générer la documentation
       run: |
-        PYTHONPATH=$(pwd)/src:$PYTHONPATH sphinx-build -b html docs/ docs/_build/html
+        PYTHONPATH=$(pwd)/src:$PYTHONPATH sphinx-build -b -E html docs/ docs/_build/html
 
     - name: Déployer sur GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
