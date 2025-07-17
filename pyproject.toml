@@ -23,3 +23,11 @@ dependencies = [
     "sqlalchemy>=2.0.41",
     "urllib3>=2.5.0",
 ]
+
+[tool.ruff]
+line-length = 88
+indent-width = 4
+
+[tool.ruff.format]
+quote-style = "double"
+preview = false
