@@ -1,0 +1,336 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modules &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.jpg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d2e4462e"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=e6b791cb"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Recherche" href="../search.html" />
+    <link rel="next" title="Base de données" href="bdd.html" />
+    <link rel="prev" title="Pipeline de traitement" href="diagramme.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guide/introduction.html">Présentation du projet</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/utilisation_docker.html">Utilisation avec Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/configuration.html">Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture technique</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../source/main.html">Orchestrateur <code class="docutils literal notranslate"><span class="pre">main.py</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="diagramme.html">Pipeline de traitement</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#structure-du-projet">Structure du projet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#code-source-src-smart-watch">Code source (<code class="docutils literal notranslate"><span class="pre">src/smart_watch/</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#repertoires-de-donnees-et-logs">Répertoires de données et logs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#documentation-docs">Documentation (<code class="docutils literal notranslate"><span class="pre">docs/</span></code>)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="bdd.html">Base de données</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stack.html">Stack technique</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/config/index.html">Modules Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/config/index.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/config/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/config/index.html#architecture-de-configuration">Architecture de configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/config/index.html#hierarchie-de-configuration">Hiérarchie de configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/core/index.html">Vue d’ensemble</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/processing/index.html">Modules Processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/processing/index.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/processing/index.html#vue-d-ensemble">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/processing/index.html#modules">Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/utils/index.html">Modules Utils</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reporting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/reporting/index.html">Modules Reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/reporting/index.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/reporting/index.html#vue-d-ensemble">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/reporting/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/reporting/index.html#pipeline-de-reporting">Pipeline de reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/reporting/index.html#fonctionnalites-des-rapports">Fonctionnalités des rapports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/reporting/index.html#classes-de-donnees-utilisees">Classes de données utilisées</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Modules</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/architecture/modules.rst.txt" rel="nofollow"> Afficher la source de la page</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="modules">
+<h1>Modules<a class="headerlink" href="#modules" title="Lien vers cette rubrique"></a></h1>
+<p>SmartWatch est organisé en modules spécialisés qui collaborent pour former un pipeline de traitement complet.</p>
+<section id="structure-du-projet">
+<h2>Structure du projet<a class="headerlink" href="#structure-du-projet" title="Lien vers cette rubrique"></a></h2>
+<p>Le projet SmartWatch suit une architecture en couches organisée dans les répertoires suivants :</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>smart_watch/
+├── src/smart_watch/          # Code source principal
+│   ├── config/               # Modules de configuration
+│   ├── core/                 # Modules centraux
+│   ├── processing/           # Pipeline de traitement
+│   ├── utils/                # Utilitaires
+│   ├── reporting/            # Génération de rapports
+│   ├── data_models/          # Modèles de données
+│   ├── assets/               # Ressources (templates, images)
+│   └── evaluation/           # Système d&#39;évaluation
+├── data/                     # Données de production
+├── logs/                     # Fichiers de logs
+├── docs/                     # Documentation Sphinx
+└── tests/                    # Tests unitaires
+</pre></div>
+</div>
+</section>
+<section id="code-source-src-smart-watch">
+<h2>Code source (<code class="docutils literal notranslate"><span class="pre">src/smart_watch/</span></code>)<a class="headerlink" href="#code-source-src-smart-watch" title="Lien vers cette rubrique"></a></h2>
+<p>Chaque module enregistre ses résultats dans une base de données SQLite. Les tabes utilisées sont décrites dans la page suivante, <a class="reference internal" href="bdd.html"><span class="doc">Base de données</span></a>.
+Les librairies tierces utilisées sont listées dans le fichier <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> et documentées dans la section <a class="reference internal" href="stack.html"><span class="doc">Stack technique</span></a>.</p>
+<section id="assets-assets">
+<h3>Assets (<code class="docutils literal notranslate"><span class="pre">assets/</span></code>)<a class="headerlink" href="#assets-assets" title="Lien vers cette rubrique"></a></h3>
+<dl class="simple">
+<dt><strong>templates/ReportTemplate.html</strong></dt><dd><p>Template HTML principal pour les rapports détaillés avec graphiques et tableaux interactifs.</p>
+</dd>
+<dt><strong>templates/SimpleReportTemplate.html</strong></dt><dd><p>Template HTML simplifié pour le corps des emails avec résumé exécutif.</p>
+</dd>
+<dt><strong>images/</strong></dt><dd><p>Logos et captures d’écran de l’application utilisés dans la documentation et les rapports.</p>
+</dd>
+</dl>
+</section>
+<section id="configuration-config">
+<h3>Configuration (<code class="docutils literal notranslate"><span class="pre">config/</span></code>)<a class="headerlink" href="#configuration-config" title="Lien vers cette rubrique"></a></h3>
+<dl class="simple">
+<dt><strong>BaseConfig</strong></dt><dd><p>Gère la configuration de base de l’application, y compris le chargement des variables d’environnement à partir d’un fichier <code class="docutils literal notranslate"><span class="pre">.env</span></code>.</p>
+</dd>
+<dt><strong>DatabaseConfig</strong></dt><dd><p>Gère la configuration des sources de données et de la base de données SQLite, y compris les chemins de fichiers et les URL des sources CSV.</p>
+</dd>
+<dt><strong>EmailConfig</strong></dt><dd><p>Gère la configuration pour l’envoi d’e-mails, y compris les détails du serveur SMTP et les informations sur l’expéditeur/le destinataire.</p>
+</dd>
+<dt><strong>LLMConfig</strong></dt><dd><p>Gère la configuration des grands modèles linguistiques (LLM), avec détection automatique pour les fournisseurs comme OpenAI et Mistral.</p>
+</dd>
+<dt><strong>MarkdownFilteringConfig</strong></dt><dd><p>Gère la configuration pour le filtrage du contenu Markdown à l’aide d’embeddings sémantiques afin d’identifier les sections pertinentes.</p>
+</dd>
+<dt><strong>ProcessingConfig</strong></dt><dd><p>Gère les paramètres de traitement tels que le nombre de threads, les délais et les remplacements de caractères pour optimiser les performances.</p>
+</dd>
+</dl>
+</section>
+<section id="core-core">
+<h3>Core (<code class="docutils literal notranslate"><span class="pre">core/</span></code>)<a class="headerlink" href="#core-core" title="Lien vers cette rubrique"></a></h3>
+<dl class="simple">
+<dt><strong>ComparateurHoraires</strong></dt><dd><p>Moteur de comparaison des horaires extraits avec les données de référence OpenStreetMap.</p>
+</dd>
+<dt><strong>ConfigManager</strong></dt><dd><p>Orchestrateur principal de la configuration qui initialise et valide tous les modules de configuration.</p>
+</dd>
+<dt><strong>DatabaseManager</strong></dt><dd><p>Gestionnaire de la base de données qui s’occupe des connexions et des sessions.</p>
+</dd>
+<dt><strong>EnvoyerMail</strong></dt><dd><p>Service d’envoi d’emails avec support des pièces jointes pour la distribution automatique des rapports.</p>
+</dd>
+<dt><strong>ErrorHandler</strong></dt><dd><p>Gestionnaire d’erreurs centralisé avec catégorisation, niveaux de sévérité, et accumulation des erreurs pour rapport final.</p>
+</dd>
+<dt><strong>GetPrompt</strong></dt><dd><p>Module pour la gestion et la création des prompts envoyés au LLM.</p>
+</dd>
+<dt><strong>LLMClient</strong></dt><dd><p>Client unifié pour les interactions avec les modèles de langage. Abstrait les différences entre fournisseurs (OpenAI, Mistral) et intègre le suivi des émissions CO2 avec CodeCarbon.</p>
+</dd>
+<dt><strong>Logger</strong></dt><dd><p>Système de journalisation flexible avec support fichier et/ou console, rotation automatique des logs, et niveaux configurables.</p>
+</dd>
+<dt><strong>NotificationManager</strong></dt><dd><p>Gestionnaire des notifications pour informer les utilisateurs des événements importants.</p>
+</dd>
+<dt><strong>StatsManager</strong></dt><dd><p>Module pour la gestion et le suivi des statistiques de l’application.</p>
+</dd>
+<dt><strong>URLRetriever</strong></dt><dd><p>Utilitaire pour récupérer le contenu des URLs de manière efficace.</p>
+</dd>
+</dl>
+</section>
+<section id="data-models-data-models">
+<h3>Data Models (<code class="docutils literal notranslate"><span class="pre">data_models/</span></code>)<a class="headerlink" href="#data-models-data-models" title="Lien vers cette rubrique"></a></h3>
+<dl class="simple">
+<dt><strong>opening_hours_schema.json</strong></dt><dd><p>Schéma JSON décrivant le format standardisé des horaires d’ouverture pour validation des données extraites.</p>
+</dd>
+<dt><strong>schema_bdd</strong></dt><dd><p>Schémas SQLAlchemy définissant la structure de la base de données pour les lieux et résultats d’extraction.</p>
+</dd>
+</dl>
+</section>
+<section id="evaluation-evaluation">
+<h3>Evaluation (<code class="docutils literal notranslate"><span class="pre">evaluation/</span></code>)<a class="headerlink" href="#evaluation-evaluation" title="Lien vers cette rubrique"></a></h3>
+<p>En cours de développement.</p>
+</section>
+<section id="processing-processing">
+<h3>Processing (<code class="docutils literal notranslate"><span class="pre">processing/</span></code>)<a class="headerlink" href="#processing-processing" title="Lien vers cette rubrique"></a></h3>
+<dl class="simple">
+<dt><strong>ComparisonProcessor</strong></dt><dd><p>Processeur de comparaison qui analyse les différences entre horaires extraits et données de référence.</p>
+</dd>
+<dt><strong>DatabaseProcessor</strong></dt><dd><p>Gestionnaire de base de données SQLite avec ORM SQLAlchemy. Gère la création des tables, l’insertion des données et les requêtes.</p>
+</dd>
+<dt><strong>LLMProcessor</strong></dt><dd><p>Processeur d’extraction d’horaires utilisant les modèles de langage pour interpréter le contenu Markdown filtré et enregistrer la consommation carbone.</p>
+</dd>
+<dt><strong>MarkdownProcessor</strong></dt><dd><p>Processeur de filtrage sémantique du Markdown utilisant des embeddings pour extraire les sections pertinentes aux horaires, tout en mesurant la consommation carbone de l’opération.</p>
+</dd>
+<dt><strong>SetupProcessor</strong></dt><dd><p>Initialise et prépare une nouvelle exécution du pipeline. Crée un enregistrement d’exécution en base de données pour suivre le traitement.</p>
+</dd>
+<dt><strong>URLProcessor</strong></dt><dd><p>Processeur parallèle pour récupérer le contenu des URLs avec gestion des erreurs HTTP et conversion HTML vers Markdown.</p>
+</dd>
+</dl>
+</section>
+<section id="reporting-reporting">
+<h3>Reporting (<code class="docutils literal notranslate"><span class="pre">reporting/</span></code>)<a class="headerlink" href="#reporting-reporting" title="Lien vers cette rubrique"></a></h3>
+<dl class="simple">
+<dt><strong>GenererRapportHTML</strong></dt><dd><p>Générateur de rapports HTML utilisant Jinja2 avec templates personnalisables et données interactives, incluant la consommation carbone.</p>
+</dd>
+<dt><strong>ReportManager</strong></dt><dd><p>Orchestrateur de génération de rapports avec statistiques globales, y compris les émissions de CO2, et envoi automatique par email.</p>
+</dd>
+</dl>
+</section>
+<section id="utils-utils">
+<h3>Utils (<code class="docutils literal notranslate"><span class="pre">utils/</span></code>)<a class="headerlink" href="#utils-utils" title="Lien vers cette rubrique"></a></h3>
+<dl class="simple">
+<dt><strong>CSVToPolars</strong></dt><dd><p>Utilitaire de chargement de fichiers CSV avec détection automatique du séparateur et validation des données.</p>
+</dd>
+<dt><strong>JsonConverter</strong> (<code class="docutils literal notranslate"><span class="pre">CustomJsonToOSM</span></code>)</dt><dd><p>Convertisseur de format JSON vers format OpenStreetMap pour les horaires d’ouverture standardisés.</p>
+</dd>
+<dt><strong>HtmlToMarkdown</strong></dt><dd><p>Convertisseur HTML vers Markdown optimisé pour préserver les informations d’horaires tout en supprimant le bruit.</p>
+</dd>
+<dt><strong>JoursFeries</strong></dt><dd><p>Récupère les jours fériés pour une zone et une année données depuis l’API du gouvernement français.</p>
+</dd>
+<dt><strong>MarkdownCleaner</strong></dt><dd><p>Nettoyeur de contenu Markdown avec remplacement intelligent des caractères et normalisation du texte.</p>
+</dd>
+<dt><strong>OSMConverter</strong> (<code class="docutils literal notranslate"><span class="pre">OSMToCustomJson</span></code>)</dt><dd><p>Convertisseur de format OpenStreetMap vers format JSON personnalisé pour les horaires d’ouverture.</p>
+</dd>
+<dt><strong>VacancesScolaires</strong></dt><dd><p>Récupération des données de vacances scolaires via l’API gouvernementale française.</p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="repertoires-de-donnees-et-logs">
+<h2>Répertoires de données et logs<a class="headerlink" href="#repertoires-de-donnees-et-logs" title="Lien vers cette rubrique"></a></h2>
+<section id="data-data">
+<h3>Data (<code class="docutils literal notranslate"><span class="pre">data/</span></code>)<a class="headerlink" href="#data-data" title="Lien vers cette rubrique"></a></h3>
+<dl class="simple">
+<dt><strong>SmartWatch.db</strong></dt><dd><p>Base de données SQLite principale contenant les lieux, exécutions et résultats d’extraction.</p>
+</dd>
+<dt><strong>evaluation.db</strong></dt><dd><p>Base de données SQLite dédiée aux évaluations et tests de performance.</p>
+</dd>
+</dl>
+</section>
+<section id="logs-logs">
+<h3>Logs (<code class="docutils literal notranslate"><span class="pre">logs/</span></code>)<a class="headerlink" href="#logs-logs" title="Lien vers cette rubrique"></a></h3>
+<dl class="simple">
+<dt><strong>SmartWatch.log</strong></dt><dd><p>Fichier de log principal avec rotation automatique, contenant toutes les traces d’exécution.</p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="documentation-docs">
+<h2>Documentation (<code class="docutils literal notranslate"><span class="pre">docs/</span></code>)<a class="headerlink" href="#documentation-docs" title="Lien vers cette rubrique"></a></h2>
+<dl class="simple">
+<dt><strong>Architecture</strong></dt><dd><p>Documentation de l’architecture technique, des flux de données et des modules.</p>
+</dd>
+<dt><strong>Guides utilisateur</strong></dt><dd><p>Guides d’installation, de configuration et d’utilisation.</p>
+</dd>
+<dt><strong>Source</strong></dt><dd><p>Documentation technique générée automatiquement à partir du code source.</p>
+</dd>
+</dl>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pied de page">
+        <a href="diagramme.html" class="btn btn-neutral float-left" title="Pipeline de traitement" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Précédent</a>
+        <a href="bdd.html" class="btn btn-neutral float-right" title="Base de données" accesskey="n" rel="next">Suivant <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

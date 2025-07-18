@@ -1,0 +1,475 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Database Processor &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.jpg"/>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=d2e4462e"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/translations.js?v=e6b791cb"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../search.html" />
+    <link rel="next" title="URL Processor" href="url_processor.html" />
+    <link rel="prev" title="Setup Processor" href="setup_processor.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/introduction.html">Présentation du projet</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/utilisation_docker.html">Utilisation avec Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/configuration.html">Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture technique</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../main.html">Orchestrateur <code class="docutils literal notranslate"><span class="pre">main.py</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/diagramme.html">Pipeline de traitement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/bdd.html">Base de données</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/stack.html">Stack technique</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html">Modules Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html#architecture-de-configuration">Architecture de configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html#hierarchie-de-configuration">Hiérarchie de configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../core/index.html">Vue d’ensemble</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Modules Processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#vue-d-ensemble">Vue d’ensemble</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html#modules">Modules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="setup_processor.html">Setup Processor</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Database Processor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="url_processor.html">URL Processor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm_processor.html">LLM Processor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comparison_processor.html">Comparison Processor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markdown_processor.html">Markdown Processor</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../utils/index.html">Modules Utils</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reporting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html">Modules Reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html#vue-d-ensemble">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html#pipeline-de-reporting">Pipeline de reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html#fonctionnalites-des-rapports">Fonctionnalités des rapports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html#classes-de-donnees-utilisees">Classes de données utilisées</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Modules Processing</a></li>
+      <li class="breadcrumb-item active">Database Processor</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/source/modules/processing/database_processor.rst.txt" rel="nofollow"> Afficher la source de la page</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="database-processor">
+<h1>Database Processor<a class="headerlink" href="#database-processor" title="Lien vers cette rubrique"></a></h1>
+<section id="fonctionnalites">
+<h2>Fonctionnalités<a class="headerlink" href="#fonctionnalites" title="Lien vers cette rubrique"></a></h2>
+<p>Le DatabaseProcessor gère la base de données SQLite avec un schéma relationnel à 3 tables. Il fournit une interface complète pour les opérations CRUD, la gestion des exécutions et la traçabilité des erreurs.</p>
+<p><strong>Schéma relationnel :</strong></p>
+<ul class="simple">
+<li><p>Table <cite>lieux</cite> : référentiel des établissements avec horaires de référence</p></li>
+<li><p>Table <cite>executions</cite> : historique des exécutions avec métadonnées LLM</p></li>
+<li><p>Table <cite>resultats_extraction</cite> : résultats détaillés par lieu et exécution</p></li>
+<li><p>Relations avec contraintes d’intégrité référentielle</p></li>
+</ul>
+<p><strong>Gestion des exécutions :</strong></p>
+<ul class="simple">
+<li><p>Setup automatique des exécutions avec détection de reprises</p></li>
+<li><p>Classification des résultats selon l’état du pipeline</p></li>
+<li><p>Traçabilité complète des étapes (URL, nettoyage, LLM, comparaison)</p></li>
+<li><p>Accumulation des émissions CO2 par exécution</p></li>
+</ul>
+<p><strong>Traçabilité des erreurs :</strong></p>
+<ul class="simple">
+<li><p>Chaîne d’erreurs avec timestamps : <cite>[HH:MM:SS] TYPE: message</cite></p></li>
+<li><p>Types d’erreur : URL, NETTOYAGE, FILTRAGE, LLM, OSM, COMPARAISON</p></li>
+<li><p>Accumulation des erreurs par étape avec préservation historique</p></li>
+<li><p>Méthodes spécialisées pour ajouter des erreurs par type</p></li>
+</ul>
+<p><strong>Optimisations :</strong></p>
+<ul class="simple">
+<li><p>Mises à jour par batch pour l’insertion des lieux</p></li>
+<li><p>Requêtes optimisées avec jointures pour la récupération</p></li>
+<li><p>Gestion des transactions pour assurer la cohérence</p></li>
+<li><p>Indexation sur les clés étrangères pour les performances</p></li>
+</ul>
+</section>
+<section id="module-src.smart_watch.processing.database_processor">
+<span id="modules"></span><h2>Modules<a class="headerlink" href="#module-src.smart_watch.processing.database_processor" title="Lien vers cette rubrique"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.smart_watch.processing.database_processor.DatabaseProcessor">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.smart_watch.processing.database_processor.</span></span><span class="sig-name descname"><span class="pre">DatabaseProcessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../core/ConfigManager.html#src.smart_watch.core.ConfigManager.ConfigManager" title="src.smart_watch.core.ConfigManager.ConfigManager"><span class="pre">ConfigManager</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/processing/database_processor.html#DatabaseProcessor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.processing.database_processor.DatabaseProcessor" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(disponible dans Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.processing.database_processor.DatabaseProcessor.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../core/ConfigManager.html#src.smart_watch.core.ConfigManager.ConfigManager" title="src.smart_watch.core.ConfigManager.ConfigManager"><span class="pre">ConfigManager</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/processing/database_processor.html#DatabaseProcessor.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.processing.database_processor.DatabaseProcessor.__init__" title="Lien vers cette définition"></a></dt>
+<dd><p>Initialise le processeur de base de données avec la configuration et le logger fournis.</p>
+<p>Cette méthode configure la connexion à la base de données SQLite, initialise la session SQLAlchemy,
+et crée les tables nécessaires si elles n’existent pas encore.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<a class="reference internal" href="../core/ConfigManager.html#src.smart_watch.core.ConfigManager.ConfigManager" title="src.smart_watch.core.ConfigManager.ConfigManager"><em>ConfigManager</em></a>) – Instance de gestion de la configuration contenant les paramètres de la base de données.</p></li>
+<li><p><strong>logger</strong> – Instance du logger pour la journalisation des événements.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.processing.database_processor.DatabaseProcessor.config">
+<span class="sig-name descname"><span class="pre">config</span></span><a class="headerlink" href="#src.smart_watch.processing.database_processor.DatabaseProcessor.config" title="Lien vers cette définition"></a></dt>
+<dd><p>Stocke la configuration de la base de données.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../core/ConfigManager.html#src.smart_watch.core.ConfigManager.ConfigManager" title="src.smart_watch.core.ConfigManager.ConfigManager">ConfigManager</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.processing.database_processor.DatabaseProcessor.logger">
+<span class="sig-name descname"><span class="pre">logger</span></span><a class="headerlink" href="#src.smart_watch.processing.database_processor.DatabaseProcessor.logger" title="Lien vers cette définition"></a></dt>
+<dd><p>Stocke l’instance du logger.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.processing.database_processor.DatabaseProcessor.engine">
+<span class="sig-name descname"><span class="pre">engine</span></span><a class="headerlink" href="#src.smart_watch.processing.database_processor.DatabaseProcessor.engine" title="Lien vers cette définition"></a></dt>
+<dd><p>Moteur SQLAlchemy pour la connexion à la base de données.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.sqlalchemy.org/en/20/core/connections.html#sqlalchemy.engine.Engine" title="(disponible dans SQLAlchemy v2.0)">sqlalchemy.engine.Engine</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.processing.database_processor.DatabaseProcessor.Session">
+<span class="sig-name descname"><span class="pre">Session</span></span><a class="headerlink" href="#src.smart_watch.processing.database_processor.DatabaseProcessor.Session" title="Lien vers cette définition"></a></dt>
+<dd><p>Fabrique de sessions SQLAlchemy pour les transactions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.sqlalchemy.org/en/20/orm/session_api.html#sqlalchemy.orm.sessionmaker" title="(disponible dans SQLAlchemy v2.0)">sqlalchemy.orm.session.sessionmaker</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.processing.database_processor.DatabaseProcessor.create_database">
+<span class="sig-name descname"><span class="pre">create_database</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/processing/database_processor.html#DatabaseProcessor.create_database"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.processing.database_processor.DatabaseProcessor.create_database" title="Lien vers cette définition"></a></dt>
+<dd><p>Crée les tables de la base de données si elles n’existent pas.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.processing.database_processor.DatabaseProcessor.execute_query">
+<span class="sig-name descname"><span class="pre">execute_query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(disponible dans Python v3.13)"><span class="pre">tuple</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(disponible dans Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(disponible dans Python v3.13)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/processing/database_processor.html#DatabaseProcessor.execute_query"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.processing.database_processor.DatabaseProcessor.execute_query" title="Lien vers cette définition"></a></dt>
+<dd><p>Exécute une requête SQL sur la base de données et retourne les résultats.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>query</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><em>str</em></a>) – La requête SQL à exécuter.</p></li>
+<li><p><strong>params</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(disponible dans Python v3.13)"><em>tuple</em></a><em>, </em><em>optionnel</em>) – Les paramètres à utiliser dans la requête SQL. Par défaut à None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>Une liste de tuples représentant les lignes retournées par la requête.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[Tuple]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.processing.database_processor.DatabaseProcessor.setup_execution">
+<span class="sig-name descname"><span class="pre">setup_execution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_csv</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/processing/database_processor.html#DatabaseProcessor.setup_execution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.processing.database_processor.DatabaseProcessor.setup_execution" title="Lien vers cette définition"></a></dt>
+<dd><p>Configure et initialise une nouvelle exécution à partir d’un DataFrame issu
+du fichier CSV pris sur l’URL indiqué dans CSV_URL_HORAIRES du fichier .env.</p>
+<p>Etapes :
+1. Met à jour les lieux dans la base de données à partir des données du DataFrame CSV.
+2. Met à jour les horaires des lieux en se basant sur les références GL.
+3. Crée une nouvelle entrée d’exécution dans la base de données.
+4. Configure les résultats d’extraction associés à cette exécution en utilisant les données du DataFrame CSV.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>df_csv</strong> (<em>pd.DataFrame</em>) – DataFrame contenant les données extraites du CSV.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>Identifiant unique de l’exécution créée.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.processing.database_processor.DatabaseProcessor._update_lieux_batch">
+<span class="sig-name descname"><span class="pre">_update_lieux_batch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">session</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_csv</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/processing/database_processor.html#DatabaseProcessor._update_lieux_batch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.processing.database_processor.DatabaseProcessor._update_lieux_batch" title="Lien vers cette définition"></a></dt>
+<dd><p>Met à jour en batch les enregistrements de lieux dans la base de données à partir du df issu de CSV_URL_HORAIRES.</p>
+<p>Pour chaque ligne du DataFrame, extrait les informations du lieu (identifiant, nom, type_lieu, url, horaires_data_gl)
+et prépare les données pour une insertion ou mise à jour efficace dans la table “Lieux”.</p>
+<p>Utilise une opération “merge” (insert avec gestion des conflits) pour insérer les nouveaux lieux ou mettre à jour
+ceux existants selon l’identifiant.</p>
+<p>Log le nombre d’enregistrements mis à jour.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<em>Session</em>) – Session SQLAlchemy active pour effectuer les opérations sur la base de données.</p></li>
+<li><p><strong>df_csv</strong> (<em>DataFrame</em>) – DataFrame contenant les données des lieux à insérer ou mettre à jour.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.processing.database_processor.DatabaseProcessor._update_horaires_lieux_depuis_gl">
+<span class="sig-name descname"><span class="pre">_update_horaires_lieux_depuis_gl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">session</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/processing/database_processor.html#DatabaseProcessor._update_horaires_lieux_depuis_gl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.processing.database_processor.DatabaseProcessor._update_horaires_lieux_depuis_gl" title="Lien vers cette définition"></a></dt>
+<dd><p>Met à jour les horaires des lieux à partir des fichiers de référence CSV issus de data.grandlyon.com :
+CSV_URL_PISCINES, CSV_URL_MAIRIES, CSV_URL_MEDIATHEQUES.</p>
+<dl class="simple">
+<dt>Pour chaque fichier de référence :</dt><dd><ul class="simple">
+<li><p>Charge les données CSV en utilisant CSVToPolars.</p></li>
+<li><p>Parcourt chaque ligne pour trouver le lieu correspondant dans la base de données via son identifiant.</p></li>
+<li><dl class="simple">
+<dt>Si le lieu existe et que des horaires sont présents :</dt><dd><ul>
+<li><p>Met à jour le champ “horaires_data_gl” du lieu.</p></li>
+<li><p>Si le convertisseur OSM est disponible, tente de convertir les horaires au format JSON enrichi et met à jour le champ “horaires_data_gl_json”.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>Enregistre les modifications dans la base de données.</p></li>
+<li><p>Journalise le nombre de lieux mis à jour ou les erreurs rencontrées.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>session</strong> (<em>Session</em>) – Session SQLAlchemy utilisée pour accéder et modifier les objets de la base de données.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Exceptions:</dt><dd><ul class="simple">
+<li><p>Journalise les erreurs lors du chargement des fichiers CSV ou de la conversion des horaires.</p></li>
+<li><p>Si le convertisseur OSM n’est pas disponible, journalise une erreur et ignore la conversion JSON.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.processing.database_processor.DatabaseProcessor._create_execution">
+<span class="sig-name descname"><span class="pre">_create_execution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">session</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/processing/database_processor.html#DatabaseProcessor._create_execution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.processing.database_processor.DatabaseProcessor._create_execution" title="Lien vers cette définition"></a></dt>
+<dd><p>Crée une nouvelle « execution » (session de travail) dans la base de données.</p>
+<p>Utilise les informations de configuration LLM pour renseigner le modèle, le fournisseur et l’URL.
+Enregistre la date d’exécution à l’instant courant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>session</strong> (<em>Session</em>) – Session SQLAlchemy active.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>Identifiant unique de l’exécution créée.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.processing.database_processor.DatabaseProcessor._setup_resultats_extraction">
+<span class="sig-name descname"><span class="pre">_setup_resultats_extraction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">session</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_csv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">execution_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/processing/database_processor.html#DatabaseProcessor._setup_resultats_extraction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.processing.database_processor.DatabaseProcessor._setup_resultats_extraction" title="Lien vers cette définition"></a></dt>
+<dd><p>Prépare et gère les enregistrements de résultats d’extraction pour une nouvelle exécution.</p>
+<p>Cette méthode effectue les opérations suivantes :
+- Vérifie la présence d’enregistrements incomplets (statut URL, extraction LLM, conversion OSM) issus d’exécutions précédentes,</p>
+<blockquote>
+<div><p>et les assigne à l’exécution courante pour reprise.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>Classe les enregistrements incomplets selon le type de données manquantes (URL, LLM, OSM)
+et journalise le nombre d’actions à effectuer pour chaque catégorie.</p></li>
+<li><p>Crée de nouveaux enregistrements de résultats d’extraction pour les lieux présents dans le fichier CSV_URL_HORAIRES,
+mais absents de la base de données, en initialisant les champs nécessaires.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> (<em>Session</em>) – Session SQLAlchemy active pour les opérations sur la base de données.</p></li>
+<li><p><strong>df_csv</strong> (<em>DataFrame</em>) – Fichier CSV des lieux à traiter.</p></li>
+<li><p><strong>execution_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><em>int</em></a>) – Identifiant unique de l’exécution en cours.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.processing.database_processor.DatabaseProcessor.get_pending_urls">
+<span class="sig-name descname"><span class="pre">get_pending_urls</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">execution_id</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(disponible dans Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(disponible dans Python v3.13)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/processing/database_processor.html#DatabaseProcessor.get_pending_urls"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.processing.database_processor.DatabaseProcessor.get_pending_urls" title="Lien vers cette définition"></a></dt>
+<dd><p>Récupère les URLs en attente de traitement.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.processing.database_processor.DatabaseProcessor.get_pending_llm">
+<span class="sig-name descname"><span class="pre">get_pending_llm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">execution_id</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(disponible dans Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(disponible dans Python v3.13)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/processing/database_processor.html#DatabaseProcessor.get_pending_llm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.processing.database_processor.DatabaseProcessor.get_pending_llm" title="Lien vers cette définition"></a></dt>
+<dd><p>Récupère les enregistrements en attente d’extraction LLM.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.processing.database_processor.DatabaseProcessor.update_url_result">
+<span class="sig-name descname"><span class="pre">update_url_result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resultat_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(disponible dans Python v3.13)"><span class="pre">dict</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/processing/database_processor.html#DatabaseProcessor.update_url_result"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.processing.database_processor.DatabaseProcessor.update_url_result" title="Lien vers cette définition"></a></dt>
+<dd><p>Met à jour le résultat d’une extraction URL.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.processing.database_processor.DatabaseProcessor.update_cleaned_markdown">
+<span class="sig-name descname"><span class="pre">update_cleaned_markdown</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resultat_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cleaned_markdown</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/processing/database_processor.html#DatabaseProcessor.update_cleaned_markdown"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.processing.database_processor.DatabaseProcessor.update_cleaned_markdown" title="Lien vers cette définition"></a></dt>
+<dd><p>Met à jour le markdown nettoyé.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.processing.database_processor.DatabaseProcessor.update_filtered_markdown">
+<span class="sig-name descname"><span class="pre">update_filtered_markdown</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resultat_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">filtered_markdown</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">co2_emissions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(disponible dans Python v3.13)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/processing/database_processor.html#DatabaseProcessor.update_filtered_markdown"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.processing.database_processor.DatabaseProcessor.update_filtered_markdown" title="Lien vers cette définition"></a></dt>
+<dd><p>Met à jour le markdown filtré et ajoute les émissions CO2.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.processing.database_processor.DatabaseProcessor.update_llm_result">
+<span class="sig-name descname"><span class="pre">update_llm_result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resultat_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">llm_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(disponible dans Python v3.13)"><span class="pre">dict</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/processing/database_processor.html#DatabaseProcessor.update_llm_result"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.processing.database_processor.DatabaseProcessor.update_llm_result" title="Lien vers cette définition"></a></dt>
+<dd><p>Met à jour le résultat d’une extraction LLM.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.processing.database_processor.DatabaseProcessor.update_execution_emissions">
+<span class="sig-name descname"><span class="pre">update_execution_emissions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">execution_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_emissions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(disponible dans Python v3.13)"><span class="pre">float</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/processing/database_processor.html#DatabaseProcessor.update_execution_emissions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.processing.database_processor.DatabaseProcessor.update_execution_emissions" title="Lien vers cette définition"></a></dt>
+<dd><p>Met à jour les émissions CO2 totales d’une exécution en les ajoutant au total existant.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.processing.database_processor.DatabaseProcessor.update_execution_embeddings">
+<span class="sig-name descname"><span class="pre">update_execution_embeddings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">execution_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">embeddings_emissions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(disponible dans Python v3.13)"><span class="pre">float</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/processing/database_processor.html#DatabaseProcessor.update_execution_embeddings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.processing.database_processor.DatabaseProcessor.update_execution_embeddings" title="Lien vers cette définition"></a></dt>
+<dd><p>Met à jour les émissions CO2 des embeddings d’une exécution.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.processing.database_processor.DatabaseProcessor.add_pipeline_error">
+<span class="sig-name descname"><span class="pre">add_pipeline_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resultat_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/processing/database_processor.html#DatabaseProcessor.add_pipeline_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.processing.database_processor.DatabaseProcessor.add_pipeline_error" title="Lien vers cette définition"></a></dt>
+<dd><p>Ajoute une erreur à la chaîne d’erreurs du pipeline.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.processing.database_processor.DatabaseProcessor._add_error_to_result">
+<span class="sig-name descname"><span class="pre">_add_error_to_result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resultat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/processing/database_processor.html#DatabaseProcessor._add_error_to_result"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.processing.database_processor.DatabaseProcessor._add_error_to_result" title="Lien vers cette définition"></a></dt>
+<dd><p>Ajoute une erreur à la chaîne d’erreurs (méthode interne).</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pied de page">
+        <a href="setup_processor.html" class="btn btn-neutral float-left" title="Setup Processor" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Précédent</a>
+        <a href="url_processor.html" class="btn btn-neutral float-right" title="URL Processor" accesskey="n" rel="next">Suivant <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

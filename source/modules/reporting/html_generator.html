@@ -1,0 +1,458 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HTML Generator &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.jpg"/>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=d2e4462e"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/translations.js?v=e6b791cb"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../search.html" />
+    <link rel="prev" title="Report Manager" href="report_manager.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/introduction.html">Présentation du projet</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/utilisation_docker.html">Utilisation avec Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/configuration.html">Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture technique</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../main.html">Orchestrateur <code class="docutils literal notranslate"><span class="pre">main.py</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/diagramme.html">Pipeline de traitement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/bdd.html">Base de données</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/stack.html">Stack technique</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html">Modules Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html#architecture-de-configuration">Architecture de configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html#hierarchie-de-configuration">Hiérarchie de configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../core/index.html">Vue d’ensemble</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../processing/index.html">Modules Processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../processing/index.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../processing/index.html#vue-d-ensemble">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../processing/index.html#modules">Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../utils/index.html">Modules Utils</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reporting</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Modules Reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#vue-d-ensemble">Vue d’ensemble</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html#modules">Modules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="report_manager.html">Report Manager</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">HTML Generator</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#pipeline-de-reporting">Pipeline de reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#fonctionnalites-des-rapports">Fonctionnalités des rapports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#classes-de-donnees-utilisees">Classes de données utilisées</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Modules Reporting</a></li>
+      <li class="breadcrumb-item active">HTML Generator</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/source/modules/reporting/html_generator.rst.txt" rel="nofollow"> Afficher la source de la page</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-src.smart_watch.reporting.GenererRapportHTML">
+<span id="html-generator"></span><h1>HTML Generator<a class="headerlink" href="#module-src.smart_watch.reporting.GenererRapportHTML" title="Lien vers cette rubrique"></a></h1>
+<p>Générateur de rapport HTML pour l’analyse des extractions d’horaires.</p>
+<p>Ce module génère des rapports HTML détaillés à partir des données stockées
+en base de données, avec support des comparaisons d’horaires.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.smart_watch.reporting.GenererRapportHTML.to_json">
+<span class="sig-prename descclassname"><span class="pre">src.smart_watch.reporting.GenererRapportHTML.</span></span><span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/reporting/GenererRapportHTML.html#to_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.reporting.GenererRapportHTML.to_json" title="Lien vers cette définition"></a></dt>
+<dd><p>Convertit une valeur en chaîne JSON encodée en base64.</p>
+<p>Cette fonction prend une valeur de n’importe quel type et la transforme en chaîne JSON,
+puis l’encode en base64 pour éviter les problèmes d’échappement dans les templates HTML.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> – La valeur à convertir et encoder</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>Chaîne JSON encodée en base64, ou None si la valeur d’entrée est None</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.smart_watch.reporting.GenererRapportHTML.generer_rapport_html">
+<span class="sig-prename descclassname"><span class="pre">src.smart_watch.reporting.GenererRapportHTML.</span></span><span class="sig-name descname"><span class="pre">generer_rapport_html</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">titre_rapport</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(disponible dans Python v3.13)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/reporting/GenererRapportHTML.html#generer_rapport_html"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.reporting.GenererRapportHTML.generer_rapport_html" title="Lien vers cette définition"></a></dt>
+<dd><p>Génère un rapport HTML complet à partir des données de la base SQLite.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>db_file</strong> – Chemin vers le fichier de base de données SQLite.</p></li>
+<li><p><strong>titre_rapport</strong> – Titre du rapport.</p></li>
+<li><p><strong>model_info</strong> – Informations sur le modèle utilisé.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple contenant (résumé_html, chemin_fichier_html)</p>
+</dd>
+<dt class="field-odd">Lève<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#FileNotFoundError" title="(disponible dans Python v3.13)"><strong>FileNotFoundError</strong></a> – Si le fichier de base de données n’existe pas.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(disponible dans Python v3.13)"><strong>RuntimeError</strong></a> – Si les templates ne sont pas trouvés.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.smart_watch.reporting.GenererRapportHTML._extract_execution_data">
+<span class="sig-prename descclassname"><span class="pre">src.smart_watch.reporting.GenererRapportHTML.</span></span><span class="sig-name descname"><span class="pre">_extract_execution_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_manager</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DatabaseManager</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(disponible dans Python v3.13)"><span class="pre">dict</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/reporting/GenererRapportHTML.html#_extract_execution_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.reporting.GenererRapportHTML._extract_execution_data" title="Lien vers cette définition"></a></dt>
+<dd><p>Extrait les données agrégées de toutes les exécutions.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.smart_watch.reporting.GenererRapportHTML._extract_data_from_database">
+<span class="sig-prename descclassname"><span class="pre">src.smart_watch.reporting.GenererRapportHTML.</span></span><span class="sig-name descname"><span class="pre">_extract_data_from_database</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_manager</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DatabaseManager</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(disponible dans Python v3.13)"><span class="pre">list</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/reporting/GenererRapportHTML.html#_extract_data_from_database"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.reporting.GenererRapportHTML._extract_data_from_database" title="Lien vers cette définition"></a></dt>
+<dd><p>Extrait les données depuis la base de données.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.smart_watch.reporting.GenererRapportHTML._process_data">
+<span class="sig-prename descclassname"><span class="pre">src.smart_watch.reporting.GenererRapportHTML.</span></span><span class="sig-name descname"><span class="pre">_process_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">donnees_urls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(disponible dans Python v3.13)"><span class="pre">list</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/reporting/GenererRapportHTML.html#_process_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.reporting.GenererRapportHTML._process_data" title="Lien vers cette définition"></a></dt>
+<dd><p>Traite et normalise les données extraites.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.smart_watch.reporting.GenererRapportHTML._process_error_chain">
+<span class="sig-prename descclassname"><span class="pre">src.smart_watch.reporting.GenererRapportHTML.</span></span><span class="sig-name descname"><span class="pre">_process_error_chain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(disponible dans Python v3.13)"><span class="pre">dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/reporting/GenererRapportHTML.html#_process_error_chain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.reporting.GenererRapportHTML._process_error_chain" title="Lien vers cette définition"></a></dt>
+<dd><p>Traite la chaîne d’erreurs pour l’affichage dans le rapport.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.smart_watch.reporting.GenererRapportHTML._create_comparison_field">
+<span class="sig-prename descclassname"><span class="pre">src.smart_watch.reporting.GenererRapportHTML.</span></span><span class="sig-name descname"><span class="pre">_create_comparison_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(disponible dans Python v3.13)"><span class="pre">dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/reporting/GenererRapportHTML.html#_create_comparison_field"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.reporting.GenererRapportHTML._create_comparison_field" title="Lien vers cette définition"></a></dt>
+<dd><p>Crée le champ de comparaison pour le template.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.smart_watch.reporting.GenererRapportHTML._set_default_fields">
+<span class="sig-prename descclassname"><span class="pre">src.smart_watch.reporting.GenererRapportHTML.</span></span><span class="sig-name descname"><span class="pre">_set_default_fields</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(disponible dans Python v3.13)"><span class="pre">dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/reporting/GenererRapportHTML.html#_set_default_fields"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.reporting.GenererRapportHTML._set_default_fields" title="Lien vers cette définition"></a></dt>
+<dd><p>Définit les valeurs par défaut pour les champs requis.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.smart_watch.reporting.GenererRapportHTML._calculate_global_stats">
+<span class="sig-prename descclassname"><span class="pre">src.smart_watch.reporting.GenererRapportHTML.</span></span><span class="sig-name descname"><span class="pre">_calculate_global_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">donnees_urls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(disponible dans Python v3.13)"><span class="pre">list</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(disponible dans Python v3.13)"><span class="pre">dict</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/reporting/GenererRapportHTML.html#_calculate_global_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.reporting.GenererRapportHTML._calculate_global_stats" title="Lien vers cette définition"></a></dt>
+<dd><p>Calcule les statistiques globales.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.smart_watch.reporting.GenererRapportHTML._group_by_status">
+<span class="sig-prename descclassname"><span class="pre">src.smart_watch.reporting.GenererRapportHTML.</span></span><span class="sig-name descname"><span class="pre">_group_by_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">donnees_urls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(disponible dans Python v3.13)"><span class="pre">list</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(disponible dans Python v3.13)"><span class="pre">list</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/reporting/GenererRapportHTML.html#_group_by_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.reporting.GenererRapportHTML._group_by_status" title="Lien vers cette définition"></a></dt>
+<dd><p>Groupe les URLs par statut avec 4 catégories distinctes.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.smart_watch.reporting.GenererRapportHTML._calculate_type_stats">
+<span class="sig-prename descclassname"><span class="pre">src.smart_watch.reporting.GenererRapportHTML.</span></span><span class="sig-name descname"><span class="pre">_calculate_type_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">donnees_urls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(disponible dans Python v3.13)"><span class="pre">list</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(disponible dans Python v3.13)"><span class="pre">list</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/reporting/GenererRapportHTML.html#_calculate_type_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.reporting.GenererRapportHTML._calculate_type_stats" title="Lien vers cette définition"></a></dt>
+<dd><p>Calcule les statistiques par type de lieu.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.smart_watch.reporting.GenererRapportHTML._calculate_http_stats">
+<span class="sig-prename descclassname"><span class="pre">src.smart_watch.reporting.GenererRapportHTML.</span></span><span class="sig-name descname"><span class="pre">_calculate_http_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">donnees_urls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(disponible dans Python v3.13)"><span class="pre">list</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(disponible dans Python v3.13)"><span class="pre">list</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/reporting/GenererRapportHTML.html#_calculate_http_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.reporting.GenererRapportHTML._calculate_http_stats" title="Lien vers cette définition"></a></dt>
+<dd><p>Calcule les statistiques par code HTTP.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.smart_watch.reporting.GenererRapportHTML._save_report">
+<span class="sig-prename descclassname"><span class="pre">src.smart_watch.reporting.GenererRapportHTML.</span></span><span class="sig-name descname"><span class="pre">_save_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">html_content</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/reporting/GenererRapportHTML.html#_save_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.reporting.GenererRapportHTML._save_report" title="Lien vers cette définition"></a></dt>
+<dd><p>Sauvegarde le rapport HTML et retourne le nom du fichier.</p>
+</dd></dl>
+
+<section id="fonctionnalites">
+<h2>Fonctionnalités<a class="headerlink" href="#fonctionnalites" title="Lien vers cette rubrique"></a></h2>
+<p>Le générateur HTML crée des rapports interactifs sophistiqués avec classification intelligente des résultats et visualisation des données. Il utilise des templates Jinja2 pour générer deux types de rapports.</p>
+<p><strong>Templates et rapports :</strong></p>
+<ul class="simple">
+<li><p>ReportTemplate.html : rapport complet avec onglets, tri et modals JavaScript</p></li>
+<li><p>SimpleReportTemplate.html : résumé concis pour les emails</p></li>
+<li><p>Support des données JSON/OSM avec visualisation dans modals</p></li>
+<li><p>Fonctionnalités interactives (tri, filtrage, recherche)</p></li>
+</ul>
+<p><strong>Classification intelligente :</strong></p>
+<ul class="simple">
+<li><p>Succès (✅) : URLs accessibles, horaires extraits et identiques</p></li>
+<li><p>Différences horaires (⚠️) : horaires extraits mais différents de la référence</p></li>
+<li><p>Erreurs d’accès (🔒) : URLs inaccessibles, codes HTTP non-200</p></li>
+<li><p>Erreurs d’extraction (❌) : URLs accessibles mais échec LLM/parsing</p></li>
+</ul>
+<p><strong>Extraction et traitement des données :</strong></p>
+<ul class="simple">
+<li><p>Extraction depuis base SQLite avec jointures optimisées</p></li>
+<li><p>Traçabilité complète : markdown_brut → markdown_nettoye → markdown_filtre</p></li>
+<li><p>Chaîne d’erreurs avec timestamps et types détaillés</p></li>
+<li><p>Statistiques par type de lieu et codes HTTP</p></li>
+<li><p>Suivi des émissions de CO2 par requête et pour l’exécution totale</p></li>
+</ul>
+<p><strong>Fonctionnalités avancées :</strong></p>
+<ul class="simple">
+<li><p>Gestion des caractères UTF-8 avec encodage base64</p></li>
+<li><p>Conversion automatique des données JSON invalides</p></li>
+<li><p>Gestion des templates manquants avec erreurs explicites</p></li>
+<li><p>Export et impression des données avec JavaScript intégré</p></li>
+</ul>
+</section>
+<section id="structure-des-donnees-du-rapport">
+<h2>Structure des données du rapport<a class="headerlink" href="#structure-des-donnees-du-rapport" title="Lien vers cette rubrique"></a></h2>
+<p><strong>Données d’entrée (base SQLite) :</strong></p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span>
+<span class="w">    </span><span class="n">l</span><span class="p">.</span><span class="n">type_lieu</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">identifiant</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">nom</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">url</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">horaires_data_gl</span><span class="p">,</span>
+<span class="w">    </span><span class="n">r</span><span class="p">.</span><span class="n">statut_url</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">message_url</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">code_http</span><span class="p">,</span>
+<span class="w">    </span><span class="n">r</span><span class="p">.</span><span class="n">markdown_brut</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">markdown_nettoye</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">markdown_filtre</span><span class="p">,</span>
+<span class="w">    </span><span class="n">r</span><span class="p">.</span><span class="n">llm_horaires_json</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">llm_horaires_osm</span><span class="p">,</span>
+<span class="w">    </span><span class="n">r</span><span class="p">.</span><span class="n">horaires_identiques</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">differences_horaires</span><span class="p">,</span>
+<span class="w">    </span><span class="n">r</span><span class="p">.</span><span class="n">erreurs_pipeline</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">llm_consommation_requete</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">resultats_extraction</span><span class="w"> </span><span class="n">r</span>
+<span class="k">JOIN</span><span class="w"> </span><span class="n">lieux</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">lieu_id</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">identifiant</span>
+</pre></div>
+</div>
+<p><strong>Données de sortie (template) :</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">stats_globales</span></code> : Compteurs totaux et pourcentages</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">statuts_disponibles</span></code> : Groupement par statut avec URLs détaillées</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">types_lieu_stats</span></code> : Répartition par type d’établissement</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">codes_http_stats</span></code> : Distribution des codes de réponse HTTP</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">execution_data</span></code> : Données de l’exécution, comme la consommation CO2 totale</p></li>
+</ul>
+</section>
+<section id="gestion-des-erreurs-et-edge-cases">
+<h2>Gestion des erreurs et edge cases<a class="headerlink" href="#gestion-des-erreurs-et-edge-cases" title="Lien vers cette rubrique"></a></h2>
+<ul class="simple">
+<li><p><strong>JSON invalide</strong> : Conversion automatique en chaîne et encodage base64</p></li>
+<li><p><strong>Templates manquants</strong> : Vérification d’existence et erreurs explicites</p></li>
+<li><p><strong>Base corrompue</strong> : Gestion des erreurs SQL avec messages utilisateur</p></li>
+<li><p><strong>Données manquantes</strong> : Valeurs par défaut pour tous les champs requis</p></li>
+<li><p><strong>Caractères UTF-8</strong> : Préservation complète via encodage base64</p></li>
+</ul>
+<p>Le module utilise des décorateurs de gestion d’erreurs pour la traçabilité complète.</p>
+</section>
+<section id="module-0">
+<span id="modules"></span><h2>Modules<a class="headerlink" href="#module-0" title="Lien vers cette rubrique"></a></h2>
+<p>Générateur de rapport HTML pour l’analyse des extractions d’horaires.</p>
+<p>Ce module génère des rapports HTML détaillés à partir des données stockées
+en base de données, avec support des comparaisons d’horaires.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-prename descclassname"><span class="pre">src.smart_watch.reporting.GenererRapportHTML.</span></span><span class="sig-name descname"><span class="pre">to_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/reporting/GenererRapportHTML.html#to_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Lien vers cette définition"></a></dt>
+<dd><p>Convertit une valeur en chaîne JSON encodée en base64.</p>
+<p>Cette fonction prend une valeur de n’importe quel type et la transforme en chaîne JSON,
+puis l’encode en base64 pour éviter les problèmes d’échappement dans les templates HTML.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> – La valeur à convertir et encoder</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>Chaîne JSON encodée en base64, ou None si la valeur d’entrée est None</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-prename descclassname"><span class="pre">src.smart_watch.reporting.GenererRapportHTML.</span></span><span class="sig-name descname"><span class="pre">generer_rapport_html</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">titre_rapport</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(disponible dans Python v3.13)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/reporting/GenererRapportHTML.html#generer_rapport_html"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id1" title="Lien vers cette définition"></a></dt>
+<dd><p>Génère un rapport HTML complet à partir des données de la base SQLite.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>db_file</strong> – Chemin vers le fichier de base de données SQLite.</p></li>
+<li><p><strong>titre_rapport</strong> – Titre du rapport.</p></li>
+<li><p><strong>model_info</strong> – Informations sur le modèle utilisé.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple contenant (résumé_html, chemin_fichier_html)</p>
+</dd>
+<dt class="field-odd">Lève<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#FileNotFoundError" title="(disponible dans Python v3.13)"><strong>FileNotFoundError</strong></a> – Si le fichier de base de données n’existe pas.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(disponible dans Python v3.13)"><strong>RuntimeError</strong></a> – Si les templates ne sont pas trouvés.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-prename descclassname"><span class="pre">src.smart_watch.reporting.GenererRapportHTML.</span></span><span class="sig-name descname"><span class="pre">_extract_execution_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_manager</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DatabaseManager</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(disponible dans Python v3.13)"><span class="pre">dict</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/reporting/GenererRapportHTML.html#_extract_execution_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id2" title="Lien vers cette définition"></a></dt>
+<dd><p>Extrait les données agrégées de toutes les exécutions.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-prename descclassname"><span class="pre">src.smart_watch.reporting.GenererRapportHTML.</span></span><span class="sig-name descname"><span class="pre">_extract_data_from_database</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_manager</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DatabaseManager</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(disponible dans Python v3.13)"><span class="pre">list</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/reporting/GenererRapportHTML.html#_extract_data_from_database"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id3" title="Lien vers cette définition"></a></dt>
+<dd><p>Extrait les données depuis la base de données.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="id4">
+<span class="sig-prename descclassname"><span class="pre">src.smart_watch.reporting.GenererRapportHTML.</span></span><span class="sig-name descname"><span class="pre">_process_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">donnees_urls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(disponible dans Python v3.13)"><span class="pre">list</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/reporting/GenererRapportHTML.html#_process_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id4" title="Lien vers cette définition"></a></dt>
+<dd><p>Traite et normalise les données extraites.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="id5">
+<span class="sig-prename descclassname"><span class="pre">src.smart_watch.reporting.GenererRapportHTML.</span></span><span class="sig-name descname"><span class="pre">_process_error_chain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(disponible dans Python v3.13)"><span class="pre">dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/reporting/GenererRapportHTML.html#_process_error_chain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id5" title="Lien vers cette définition"></a></dt>
+<dd><p>Traite la chaîne d’erreurs pour l’affichage dans le rapport.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="id6">
+<span class="sig-prename descclassname"><span class="pre">src.smart_watch.reporting.GenererRapportHTML.</span></span><span class="sig-name descname"><span class="pre">_create_comparison_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(disponible dans Python v3.13)"><span class="pre">dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/reporting/GenererRapportHTML.html#_create_comparison_field"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id6" title="Lien vers cette définition"></a></dt>
+<dd><p>Crée le champ de comparaison pour le template.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="id7">
+<span class="sig-prename descclassname"><span class="pre">src.smart_watch.reporting.GenererRapportHTML.</span></span><span class="sig-name descname"><span class="pre">_set_default_fields</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(disponible dans Python v3.13)"><span class="pre">dict</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/reporting/GenererRapportHTML.html#_set_default_fields"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id7" title="Lien vers cette définition"></a></dt>
+<dd><p>Définit les valeurs par défaut pour les champs requis.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="id8">
+<span class="sig-prename descclassname"><span class="pre">src.smart_watch.reporting.GenererRapportHTML.</span></span><span class="sig-name descname"><span class="pre">_calculate_global_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">donnees_urls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(disponible dans Python v3.13)"><span class="pre">list</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(disponible dans Python v3.13)"><span class="pre">dict</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/reporting/GenererRapportHTML.html#_calculate_global_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id8" title="Lien vers cette définition"></a></dt>
+<dd><p>Calcule les statistiques globales.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="id9">
+<span class="sig-prename descclassname"><span class="pre">src.smart_watch.reporting.GenererRapportHTML.</span></span><span class="sig-name descname"><span class="pre">_group_by_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">donnees_urls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(disponible dans Python v3.13)"><span class="pre">list</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(disponible dans Python v3.13)"><span class="pre">list</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/reporting/GenererRapportHTML.html#_group_by_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id9" title="Lien vers cette définition"></a></dt>
+<dd><p>Groupe les URLs par statut avec 4 catégories distinctes.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="id10">
+<span class="sig-prename descclassname"><span class="pre">src.smart_watch.reporting.GenererRapportHTML.</span></span><span class="sig-name descname"><span class="pre">_calculate_type_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">donnees_urls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(disponible dans Python v3.13)"><span class="pre">list</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(disponible dans Python v3.13)"><span class="pre">list</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/reporting/GenererRapportHTML.html#_calculate_type_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id10" title="Lien vers cette définition"></a></dt>
+<dd><p>Calcule les statistiques par type de lieu.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="id11">
+<span class="sig-prename descclassname"><span class="pre">src.smart_watch.reporting.GenererRapportHTML.</span></span><span class="sig-name descname"><span class="pre">_calculate_http_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">donnees_urls</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(disponible dans Python v3.13)"><span class="pre">list</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(disponible dans Python v3.13)"><span class="pre">list</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/reporting/GenererRapportHTML.html#_calculate_http_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id11" title="Lien vers cette définition"></a></dt>
+<dd><p>Calcule les statistiques par code HTTP.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="id12">
+<span class="sig-prename descclassname"><span class="pre">src.smart_watch.reporting.GenererRapportHTML.</span></span><span class="sig-name descname"><span class="pre">_save_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">html_content</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/reporting/GenererRapportHTML.html#_save_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id12" title="Lien vers cette définition"></a></dt>
+<dd><p>Sauvegarde le rapport HTML et retourne le nom du fichier.</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pied de page">
+        <a href="report_manager.html" class="btn btn-neutral float-left" title="Report Manager" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Précédent</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
