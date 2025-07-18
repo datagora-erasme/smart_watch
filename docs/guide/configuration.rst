@@ -60,9 +60,6 @@ Configurez ici le modèle à utiliser pour le filtrage sémantique du contenu. V
 *   ``EMBED_API_KEY_MISTRAL``: Votre clé d'API Mistral pour les embeddings.
 *   ``EMBED_MODELE_MISTRAL``: Le nom du modèle (ex: ``nomic-embed-text``).
 
-.. note::
-   Si vous définissez des clés API pour les deux fournisseurs, Mistral sera prioritaire pour les embeddings.
-
 Configuration du LLM
 ~~~~~~~~~~~~~~~~~~~~
 

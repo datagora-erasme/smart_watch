@@ -33,7 +33,7 @@ class HoraireExtractor:
 
     def __init__(self):
         """Initialise l'extracteur"""
-        # A. Chargement de la configuration
+        # A. Charger de la configuration
         self.config = ConfigManager()
 
         # Vérification de la configuration
@@ -46,7 +46,7 @@ class HoraireExtractor:
         # Affichage de la configuration
         self.config.display_summary()
 
-        # B. Initialisation des composants modulaires
+        # B. Instancier les processeurs principaux avec la configuration
         self.db_manager = DatabaseProcessor(self.config, self.logger)
         self.setup_processor = SetupProcessor(self.config, self.logger)
         self.url_processor = URLProcessor(self.config, self.logger)
@@ -59,6 +59,7 @@ class HoraireExtractor:
 
         self.logger.info("HoraireExtractor initialisé")
 
+    # C. Exécuter le pipeline
     @handle_errors(
         category=ErrorCategory.CONFIGURATION,
         severity=ErrorSeverity.HIGH,
@@ -72,36 +73,36 @@ class HoraireExtractor:
             # 1. Création de la base de données
             self.db_manager.create_database()
 
-            # 2. Configuration et chargement des données
+            # 2. Chargement des données, préparation de l'exécution
             execution_id = self.setup_processor.setup_execution(self.db_manager)
 
-            # 3. Pipeline de traitement séquentiel
-            # a. Extraction des URLs
+            # Traitement
+            # 3. Extraction des URLs
             self.url_processor.process_urls(self.db_manager, execution_id)
 
-            # b. Nettoyage du contenu Markdown
+            # 4. Nettoyage du contenu Markdown brut
             self.markdown_cleaner.process_markdown_cleaning(
                 self.db_manager, execution_id
             )
 
-            # c. Filtrage sémantique du Markdown
+            # 5. Filtrage sémantique du Markdown (par embeddings)
             self.markdown_processor.process_markdown_filtering(
                 self.db_manager, execution_id
             )
 
-            # d. Extraction des horaires via LLM
+            # 6. Extraction des horaires via LLM
             self.llm_processor.process_llm_extractions(self.db_manager, execution_id)
 
-            # e. Comparaison des horaires extraits
+            # 7. Comparaison des horaires extraits
             self.comparison_processor.process_comparisons(self.db_manager)
 
-            # 5. Génération et envoi du rapport
+            # 8. Génération et envoi du rapport
             self.report_manager.generate_and_send_report(execution_id)
 
-            # 6. Affichage des statistiques finales
+            # Log interne au programme : Affichage des statistiques finales
             self.stats_manager.display_stats()
 
-            # 7. Résumé final
+            # Log interne au programme : Résumé final
             processing_time = time.time() - start_time
             self.logger.info(f"Pipeline terminé en {processing_time:.2f}s")
 
@@ -123,7 +124,7 @@ def main():
     """Point d'entrée principal."""
     extractor = HoraireExtractor()
 
-    # C. Exécution du pipeline
+    # C. Exécuter le pipeline
     extractor.run()
 
 

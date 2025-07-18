@@ -2,7 +2,7 @@
 Pipeline de traitement
 ======================
 
-Le pipeline de traitement des données est organisé en plusieurs étapes séquentielles :
+Les données sont traitées séquentiellement par un pipeline, orchestré par le fichier `main.py` :
 
 1. **Création** : Initialisation de la base de données
 2. **Initialisation** : Chargement des URLs et préparation de l'exécution
@@ -20,7 +20,7 @@ Diagramme de flux
 
    [ main.py ] (Orchestrateur)
       │
-      ├─> A. Initialise [ core.ConfigManager ] (Charge la configuration depuis .env)
+      ├─> A. Charge la configuration [ core.ConfigManager ] (depuis .env)
       │         └─> Agrège [ config.* ] (LLMConfig, DatabaseConfig, etc.)
       │
       ├─> B. Instancie les processeurs principaux avec la configuration
@@ -41,19 +41,21 @@ Diagramme de flux
             │     (Nettoie le Markdown brut)
             │
             ├─> [5] Filtrage : [ core.MarkdownProcessor ]
-            │     (Filtre sémantiquement le Markdown pour ne garder que les sections pertinentes)
+            │     (Filtre le Markdown sémantiquement par embeddings, pour ne garder que les sections pertinentes)
             │     └─> Utilise [ core.LLMClient ] pour les embeddings
             │
             ├─> [6] Extraction LLM : [ processing.LLMProcessor ]
-            │     (Extrait les horaires du Markdown filtré au format JSON)
+            │     (Extrait par LLM et au format JSON les horaires du Markdown filtré)
             │     ├─> Utilise [ core.LLMClient ] pour l'appel au LLM
             │     └─> Utilise [ utils.CustomJsonToOSM ] pour convertir le JSON en format OSM
             │
             ├─> [7] Comparaison : [ processing.ComparisonProcessor ]
-            │     (Compare les horaires extraits (OSM) avec les données de référence)
+            │     (Compare les horaires extraits (OSM) avec les données de référence issues de data.grandlyon.com)
             │     └─> Utilise [ core.ComparateurHoraires ] pour la logique de comparaison
             │
             └─> [8] Rapport : [ reporting.ReportManager ]
                   (Génère et envoie le rapport final)
                   ├─> Utilise [ reporting.GenererRapportHTML ] pour créer le fichier HTML
                   └─> Utilise [ core.EmailSender ] pour envoyer l'email avec pièces jointes
+
+Les différents modules exploités par le pipeline sont décrits dans la section :doc:`modules`.

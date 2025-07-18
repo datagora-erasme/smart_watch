@@ -21,53 +21,54 @@ SmartWatch : extracteur d'horaires intelligent
    :caption: Démarrage
 
    guide/installation
-   guide/configuration
    guide/utilisation_docker
+   guide/configuration
 
 .. toctree::
    :maxdepth: 1
    :caption: Architecture technique
 
+   source/main
    architecture/diagramme
-   architecture/bdd
    architecture/modules
+   architecture/bdd
    architecture/stack
    
 Modules
 =======
    
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 1
    :caption: Modules Configuration
    
    source/modules/config/index
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 1
    :caption: Modules Core
    
    source/modules/core/index
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 1
    :caption: Modules Processing
    
    source/modules/processing/index
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 1
    :caption: Modules Utils
    
    source/modules/utils/index
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 1
    :caption: Reporting
    
    source/modules/reporting/index
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 1
    :caption: Modèles de données
 
    schemas/database
@@ -82,4 +83,4 @@ Indices et tables
 * :ref:`search`
 
 .. note::
-   **Version actuelle :** 2025-06 | **Licence :** GNU GPL v3.0
+   **Version actuelle :** 2025-07 | **Licence :** GNU GPL v3.0

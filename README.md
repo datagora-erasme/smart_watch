@@ -25,7 +25,7 @@
 
 **SmartWatch** est un pipeline d'extraction de données conçu pour extraire, analyser, et comparer les horaires d'ouverture de divers établissements publics de la Métropole de Lyon (mairies, piscines, médiathèques), à partir de leurs sites web. Il utilise des modèles de langage pour interpréter le contenu et comparer les horaires d'ouverture extraits à des données de référence (issues de data.grandlyon.com), puis génère et envoie par mail des rapports HTML interactifs pour visualiser les résultats.
 
-## ✨ Fonctionnalités
+## Fonctionnalités
 
 *   **Collecte de données** : charge les URLs des établissements à analyser depuis un fichier CSV.
 *   **Conversion des données** : converti les pages web en Markdown et nettoie ce dernier pour ne garder que l'essentiel
@@ -48,11 +48,12 @@
   <img src="src/smart_watch/assets/images/capture_modale_rapport.png" alt="Modale de visualisation des différences d'horaires d'ouverture" />
 </div>
 
-## Diagramme de fonctionnement
+## Architecture
+### Diagramme de fonctionnement
 ```
 [ main.py ] (Orchestrateur)
   │
-  ├─> A. Initialise [ core.ConfigManager ] (Charge la configuration depuis .env)
+  ├─> A. Charge la configuration [ core.ConfigManager ] (depuis .env)
   │         └─> Agrège [ config.* ] (LLMConfig, DatabaseConfig, etc.)
   │
   ├─> B. Instancie les processeurs principaux avec la configuration
@@ -73,40 +74,37 @@
         │     (Nettoie le Markdown brut)
         │
         ├─> [5] Filtrage : [ core.MarkdownProcessor ]
-        │     (Filtre sémantiquement le Markdown pour ne garder que les sections pertinentes)
+        │     (Filtre le Markdown sémantiquement par embeddings, pour ne garder que les sections pertinentes)
         │     └─> Utilise [ core.LLMClient ] pour les embeddings
         │
         ├─> [6] Extraction LLM : [ processing.LLMProcessor ]
-        │     (Extrait les horaires du Markdown filtré au format JSON)
+        │     (Extrait par LLM et au format JSON les horaires du Markdown filtré)
         │     ├─> Utilise [ core.LLMClient ] pour l'appel au LLM
         │     └─> Utilise [ utils.CustomJsonToOSM ] pour convertir le JSON en format OSM
         │
         ├─> [7] Comparaison : [ processing.ComparisonProcessor ]
-        │     (Compare les horaires extraits (OSM) avec les données de référence)
+        │     (Compare les horaires extraits (OSM) avec les données de référence issues de data.grandlyon.com)
         │     └─> Utilise [ core.ComparateurHoraires ] pour la logique de comparaison
         │
         └─> [8] Rapport : [ reporting.ReportManager ]
               (Génère et envoie le rapport final)
               ├─> Utilise [ reporting.GenererRapportHTML ] pour créer le fichier HTML
               └─> Utilise [ core.EmailSender ] pour envoyer l'email avec pièces jointes
-
------------------------------------------------------------------------------------------
-Modules Transversaux :
------------------------------------------------------------------------------------------
-  - [ core.Logger ] : utilisé par tous les modules pour la journalisation.
-  - [ core.ErrorHandler ] : utilisé pour une gestion centralisée des erreurs.
-  - [ core.DatabaseManager ] : utilisé par toutes les étapes du pipeline pour lire et écrire les résultats dans la base de données SQLite.
-  - [ codecarbon ] : mesure les émissions de CO2 des appels aux LLM.
-
------------------------------------------------------------------------------------------
-Modèles de rapports et des structures de données
------------------------------------------------------------------------------------------
-  - [ data_models.schema_bdd ] : définit la structure de la base de données pour SQLAlchemy.
-  - [ data_models.opening_hours_schema.json ] : modèle JSON décrivant des horaires d'ouverture
-  - [ assets.templates.ReportTemplate.html ] : modèle html pour le rapport envoyé en pièce jointe du mail
-  - [ assets.templates.SimpleReportTemplate.html ] : modèle html pour le corps du mail
-
-  ```
+```
+### Modules Transversaux
+```
+- [ core.Logger ] : utilisé par tous les modules pour la journalisation.
+- [ core.ErrorHandler ] : utilisé pour une gestion centralisée des erreurs.
+- [ core.DatabaseManager ] : utilisé pour lire et écrire les résultats dans la base de données SQLite.
+- [ codecarbon ] : mesure les émissions de CO2 des appels aux LLM (embeddings et query).
+```
+### Modèles de rapports et des structures de données
+```
+- [ data_models.schema_bdd ] : définit la structure de la base de données pour SQLAlchemy.
+- [ data_models.opening_hours_schema.json ] : modèle JSON spécifique décrivant des horaires d'ouverture.
+- [ assets.templates.ReportTemplate.html ] : modèle html pour le rapport envoyé en pièce jointe du mail.
+- [ assets.templates.SimpleReportTemplate.html ] : modèle html pour le corps du mail.
+```
 
 ## Fiabilité des informations
 
@@ -114,7 +112,7 @@ L'extraction des horaires d'ouverture depuis les pages web (via un Markdown nett
 
 Le modèle JSON sera automatiquement passé en argument du prompt et assure normalement une sortie structurée et reproductible. Ce modèle est passé en argument au LLM, en tant que `response_format` pour les modèles compatibles OpenAI, et en tant que `tool_params` pour les modèles Mistral via API (cf `processing.llm_processor.py`).
 
-## 🚀 Installation
+## Installation
 
 1.  **Clonez le dépôt :**
     ```sh
@@ -133,7 +131,7 @@ Le modèle JSON sera automatiquement passé en argument du prompt et assure norm
     pip install -r requirements.txt
     ```
 
-## ⚙️ Configuration
+## Configuration
 
 1.  Créez un fichier `.env` à la racine du projet en vous basant sur le modèle [`env.model`](.env.model).
 2.  Configurez les variables d'environnement requises :
@@ -141,7 +139,7 @@ Le modèle JSON sera automatiquement passé en argument du prompt et assure norm
     *   **Configuration LLM** : renseignez les URL, clés API et le modèle pour le fournisseur de votre choix (OpenAI, Mistral, etc.).
     *   **Configuration Email** : paramétrez les emails et informations SMTP pour l'envoi des rapports.
 
-## ▶️ Utilisation
+## Utilisation
 
 Pour lancer le pipeline complet, exécutez le script principal :
 
@@ -156,7 +154,7 @@ Le programme effectuera les actions suivantes :
 4.  enverra un rapport et les logs par mail.
 5.  écrira les logs dans `logs/SmartWatch.log`.
 
-## 🐳 Utilisation avec Docker
+## Utilisation avec Docker
 
 Vous pouvez également lancer l'application dans un conteneur Docker.
 
@@ -172,7 +170,7 @@ Vous pouvez également lancer l'application dans un conteneur Docker.
     ```
     Les rapports et la base de données seront générés dans les dossiers `data` et `logs` de votre machine hôte.
 
-## 🤝 Contribuer
+## Contribuer
 
 Si vous souhaitez améliorer ce projet, veuillez suivre les étapes ci-dessous :
 
@@ -203,6 +201,6 @@ Si vous souhaitez améliorer ce projet, veuillez suivre les étapes ci-dessous :
 
 7.  **Ouvrez une Pull Request** : Rendez-vous sur la page du dépôt original et ouvrez une "Pull Request" pour que vos modifications soient examinées et intégrées.
 
-## 📄 Licence
+## Licence
 
 Ce projet est sous licence GNU General Public License v3.0. Voir le fichier [LICENCE](LICENCE)
