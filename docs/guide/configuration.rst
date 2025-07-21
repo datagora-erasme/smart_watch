@@ -87,7 +87,7 @@ Envoi de rapport par email
 Pour permettre l'envoi du rapport par email, complétez ces variables.
 
 *   ``MAIL_EMETTEUR``: Adresse email de l'expéditeur.
-*   ``MAIL_RECEPTEUR``: Adresse email du destinataire.
+*   ``MAIL_RECEPTEUR``: Adresse(s) email du ou des destinataires (séparées par une virgule le cas échéant).
 *   ``SMTP_SERVER``: Adresse du serveur SMTP.
 *   ``SMTP_PORT``: Port du serveur SMTP (ex: 465 pour SSL, 587 pour TLS).
 *   ``SMTP_LOGIN``: Votre nom d'utilisateur SMTP.
