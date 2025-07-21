@@ -222,16 +222,50 @@ class HorairesComparator:
                     details={"schedule2_permanently_closed": True},
                 )
 
-            # Compare les périodes normalement
+            # Compare les périodes
             periods1 = horaires1.get("periodes", {})
             periods2 = horaires2.get("periodes", {})
 
-            all_periods = set(periods1.keys()) | set(periods2.keys())
-            details["periods_compared"] = list(all_periods)
+            # Fusionne et compare les jours spéciaux et fériés
+            special_schedules1 = {}
+            special_schedules1.update(
+                periods1.get("jours_feries", {}).get("horaires_specifiques", {})
+            )
+            special_schedules1.update(
+                periods1.get("jours_speciaux", {}).get("horaires_specifiques", {})
+            )
 
-            for period in sorted(all_periods):
-                period_diff = self._compare_period(
-                    periods1.get(period, {}), periods2.get(period, {}), period
+            special_schedules2 = {}
+            special_schedules2.update(
+                periods2.get("jours_feries", {}).get("horaires_specifiques", {})
+            )
+            special_schedules2.update(
+                periods2.get("jours_speciaux", {}).get("horaires_specifiques", {})
+            )
+
+            if special_schedules1 or special_schedules2:
+                norm_spec1 = self.normalizer.normalize_special_schedules(
+                    special_schedules1
+                )
+                norm_spec2 = self.normalizer.normalize_special_schedules(
+                    special_schedules2
+                )
+                special_diff = self._compare_special_schedules(norm_spec1, norm_spec2)
+                if special_diff:
+                    diff_key = "JOURS SPÉCIAUX ET FÉRIÉS"
+                    differences.append(f"{diff_key}: {special_diff}")
+                    details["schedule_differences"][diff_key] = special_diff
+
+            # Compare les autres périodes (hebdomadaires)
+            all_periods = set(periods1.keys()) | set(periods2.keys())
+            weekly_periods = all_periods - {"jours_feries", "jours_speciaux"}
+            details["periods_compared"] = sorted(list(weekly_periods))
+            if special_schedules1 or special_schedules2:
+                details["periods_compared"].append("jours_speciaux_et_feries")
+
+            for period in sorted(weekly_periods):
+                period_diff = self._compare_weekly_period(
+                    periods1.get(period, {}), periods2.get(period, {})
                 )
                 if period_diff:
                     differences.append(f"{period.upper()}: {period_diff}")
@@ -457,6 +491,42 @@ class HorairesComparator:
                 base += f"[{occur}]"
         return base
 
+    def _compare_special_schedules(self, schedules1: Dict, schedules2: Dict) -> str:
+        """
+        Compare deux dictionnaires d'horaires spécifiques et retourne une description des différences.
+
+        Args:
+            schedules1 (Dict): Premier dictionnaire d'horaires spécifiques (normalisé).
+            schedules2 (Dict): Second dictionnaire d'horaires spécifiques (normalisé).
+
+        Returns:
+            str: Description textuelle des différences, séparées par " | ".
+        """
+        differences = []
+        all_dates = set(schedules1.keys()) | set(schedules2.keys())
+
+        for date in sorted(all_dates):
+            sched1 = schedules1.get(date)
+            sched2 = schedules2.get(date)
+
+            if sched1 != sched2:
+                if sched1 is None:
+                    day_diff = self._compare_day_schedule({}, sched2, date)
+                    differences.append(f"{date}: ajouté ({day_diff})")
+                elif sched2 is None:
+                    day_diff = self._compare_day_schedule(sched1, {}, date)
+                    differences.append(f"{date}: supprimé ({day_diff})")
+                else:
+                    # Compare les détails
+                    if isinstance(sched1, str) and isinstance(sched2, str):
+                        differences.append(f"{date}: {sched1} → {sched2}")
+                    else:
+                        day_diff = self._compare_day_schedule(sched1, sched2, date)
+                        if day_diff:
+                            differences.append(f"{date}: {day_diff}")
+
+        return " | ".join(differences)
+
     def _compare_special_period(self, period1: Dict, period2: Dict) -> str:
         """
         Compare les horaires spécifiques entre deux périodes et retourne une description des différences.
@@ -479,28 +549,7 @@ class HorairesComparator:
             period2.get("horaires_specifiques", {})
         )
 
-        differences = []
-        all_dates = set(schedules1.keys()) | set(schedules2.keys())
-
-        for date in sorted(all_dates):
-            sched1 = schedules1.get(date)
-            sched2 = schedules2.get(date)
-
-            if sched1 != sched2:
-                if sched1 is None:
-                    differences.append(f"{date}: ajouté")
-                elif sched2 is None:
-                    differences.append(f"{date}: supprimé")
-                else:
-                    # Compare les détails
-                    if isinstance(sched1, str) and isinstance(sched2, str):
-                        differences.append(f"{date}: {sched1} → {sched2}")
-                    else:
-                        day_diff = self._compare_day_schedule(sched1, sched2, date)
-                        if day_diff:
-                            differences.append(f"{date}: {day_diff}")
-
-        return " | ".join(differences)
+        return self._compare_special_schedules(schedules1, schedules2)
 
     def compare_files(
         self, file1: Union[str, Path], file2: Union[str, Path]
