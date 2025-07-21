@@ -61,4 +61,6 @@ Avant de commencer, assurez-vous d'avoir :
 
        pip install -r requirements.txt
 
+Si vous préférez l'option conteneurisée, vous pouvez suivre les instructions de la page :doc:`docker` pour exécuter l'application dans un conteneur Docker.
+
 Une fois ces étapes terminées, votre environnement est prêt. Vous pouvez passer à la section :doc:`configuration` pour configurer l'application.

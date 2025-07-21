@@ -99,7 +99,7 @@ class HoraireExtractor:
             # 8. Génération et envoi du rapport
             self.report_manager.generate_and_send_report(execution_id)
 
-            # Log interne au programme : Affichage des statistiques finales
+            # Log interne au programme : Affichage des statistiques
             self.stats_manager.display_stats()
 
             # Log interne au programme : Résumé final

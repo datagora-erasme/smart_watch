@@ -29,4 +29,4 @@ Prérequis
 
        docker run --rm --env-file .env smartwatch
 
-L'application s'exécutera alors dans le conteneur, en utilisant votre configuration locale.
+L'application s'exécutera alors dans le conteneur, en utilisant votre configuration locale, décrite dans la page :doc:`configuration`.

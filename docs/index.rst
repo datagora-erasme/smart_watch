@@ -21,7 +21,7 @@ SmartWatch : extracteur d'horaires intelligent
    :caption: Démarrage
 
    guide/installation
-   guide/utilisation_docker
+   guide/docker
    guide/configuration
 
 .. toctree::
@@ -80,7 +80,6 @@ Indices et tables
 
 * :ref:`genindex`
 * :ref:`modindex`
-* :ref:`search`
 
 .. note::
    **Version actuelle :** 2025-07 | **Licence :** GNU GPL v3.0
