@@ -79,7 +79,7 @@ Configurez ici le modèle de langage qui extraira les horaires.
 *   ``LLM_MODELE_MISTRAL``: Le nom du modèle (ex: ``mistral-large-latest``).
 
 .. note::
-   Vous devez définir la clé API pour **un seul** fournisseur. Si les deux sont définies, la configuration OpenAI sera prioritaire.
+   Vous devez définir la clé API pour **un seul** fournisseur. Si les deux sont définies, la configuration OpenAI sera prioritaire (cf. :py:meth:`smart_watch.processing.markdown_processor.MarkdownProcessor._init_embedding_client`)
 
 Envoi de rapport par email
 ~~~~~~~~~~~~~~~~~~~~~~~~~~

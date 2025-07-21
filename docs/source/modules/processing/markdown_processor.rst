@@ -37,7 +37,7 @@ Le MarkdownProcessor utilise des embeddings sémantiques pour filtrer intelligem
 Modules
 -------
 
-.. automodule:: src.smart_watch.core.MarkdownProcessor
+.. automodule:: smart_watch.processing.markdown_processor
    :members:
    :undoc-members:
    :private-members:
