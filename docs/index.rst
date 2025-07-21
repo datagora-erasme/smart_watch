@@ -71,9 +71,8 @@ Modules
    :maxdepth: 1
    :caption: Modèles de données
 
-   schemas/database
-   schemas/json_formats
-   schemas/osm_formats
+   architecture/bdd
+   architecture/diagramme
 
 Indices et tables
 ==================

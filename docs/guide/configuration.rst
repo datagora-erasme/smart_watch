@@ -45,7 +45,7 @@ Ces paramètres contrôlent la manière dont le contenu HTML (converti en Markdo
 *   ``REFERENCE_PHRASES``: Phrases de référence (séparées par ``;;``) utilisées pour trouver les sections d'horaires. (Défaut: "horaires d'ouverture et de fermeture")
 
 Configuration des embeddings
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Configurez ici le modèle à utiliser pour le filtrage sémantique du contenu. Vous pouvez utiliser soit une API compatible OpenAI, soit l'API Mistral, indépendamment du LLM principal.
 

@@ -75,6 +75,7 @@ exclude_patterns = [
 language = "fr"
 
 # -- Options for HTML output -------------------------------------------------
+# html_theme = "pydata_sphinx_theme"
 html_theme = "sphinx_rtd_theme"
 
 # Configuration sphinx_rtd_theme

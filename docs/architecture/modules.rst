@@ -13,14 +13,14 @@ Le projet SmartWatch suit une architecture en couches organisée dans les réper
 
    smart_watch/
    ├── src/smart_watch/          # Code source principal
+   │   ├── assets/               # Ressources (templates, images)
    │   ├── config/               # Modules de configuration
    │   ├── core/                 # Modules centraux
-   │   ├── processing/           # Pipeline de traitement
-   │   ├── utils/                # Utilitaires
-   │   ├── reporting/            # Génération de rapports
    │   ├── data_models/          # Modèles de données
-   │   ├── assets/               # Ressources (templates, images)
-   │   └── evaluation/           # Système d'évaluation
+   │   ├── evaluation/           # Système d'évaluation
+   │   ├── processing/           # Pipeline de traitement
+   │   ├── reporting/            # Génération de rapports
+   │   └── utils/                # Utilitaires
    ├── data/                     # Données de production
    ├── logs/                     # Fichiers de logs
    ├── docs/                     # Documentation Sphinx
@@ -33,168 +33,133 @@ Chaque module enregistre ses résultats dans une base de données SQLite. Les ta
 Les librairies tierces utilisées sont listées dans le fichier ``requirements.txt`` et documentées dans la section :doc:`stack`.
 
 Assets (``assets/``)
--------------------
+--------------------
+Ce module contient les ressources statiques telles que les modèles de rapport et les images.
 
-**templates/ReportTemplate.html**
-    Template HTML principal pour les rapports détaillés avec graphiques et tableaux interactifs.
+**templates/ReportTemplate.html** : template HTML pour rapports détaillés.
 
-**templates/SimpleReportTemplate.html**
-    Template HTML simplifié pour le corps des emails avec résumé exécutif.
+**templates/SimpleReportTemplate.html** : template HTML pour corps d'emails.
 
-**images/**
-    Logos et captures d'écran de l'application utilisés dans la documentation et les rapports.
+**images/** : logos et captures d'écran.
 
 Configuration (``config/``)
 ---------------------------
+Ce module gère tous les aspects de la configuration de l'application.
 
-**BaseConfig**
-    Gère la configuration de base de l'application, y compris le chargement des variables d'environnement à partir d'un fichier ``.env``.
+:doc:`../source/modules/config/base_config` gère la configuration de base.
 
-**DatabaseConfig**
-    Gère la configuration des sources de données et de la base de données SQLite, y compris les chemins de fichiers et les URL des sources CSV.
+:doc:`../source/modules/config/database_config` configure les sources de données.
 
-**EmailConfig**
-    Gère la configuration pour l'envoi d'e-mails, y compris les détails du serveur SMTP et les informations sur l'expéditeur/le destinataire.
+:doc:`../source/modules/config/email_config` configure l'envoi d'e-mails.
 
-**LLMConfig**
-    Gère la configuration des grands modèles linguistiques (LLM), avec détection automatique pour les fournisseurs comme OpenAI et Mistral.
+:doc:`../source/modules/config/llm_config` configure les grands modèles linguistiques.
 
-**MarkdownFilteringConfig**
-    Gère la configuration pour le filtrage du contenu Markdown à l'aide d'embeddings sémantiques afin d'identifier les sections pertinentes.
+:doc:`../source/modules/config/markdown_filtering_config` configure le filtrage de contenu Markdown.
 
-**ProcessingConfig**
-    Gère les paramètres de traitement tels que le nombre de threads, les délais et les remplacements de caractères pour optimiser les performances.
+:doc:`../source/modules/config/processing_config` gère les paramètres de traitement.
 
 Core (``core/``)
----------------
+----------------
+Ce module contient les composants fondamentaux et la logique métier de l'application.
 
-**ComparateurHoraires**
-    Moteur de comparaison des horaires extraits avec les données de référence OpenStreetMap.
+:doc:`../source/modules/core/ComparateurHoraires` compare les horaires extraits/référence.
 
-**ConfigManager**
-    Orchestrateur principal de la configuration qui initialise et valide tous les modules de configuration.
+:doc:`../source/modules/core/ConfigManager` orchestre la configuration globale.
 
-**DatabaseManager**
-    Gestionnaire de la base de données qui s'occupe des connexions et des sessions.
+:doc:`../source/modules/core/DatabaseManager` gère les connexions à la BDD.
 
-**EnvoyerMail**
-    Service d'envoi d'emails avec support des pièces jointes pour la distribution automatique des rapports.
+:doc:`../source/modules/core/EnvoyerMail` envoie des emails avec pièces jointes.
 
-**ErrorHandler**
-    Gestionnaire d'erreurs centralisé avec catégorisation, niveaux de sévérité, et accumulation des erreurs pour rapport final.
+:doc:`../source/modules/core/ErrorHandler` centralise la gestion des erreurs.
 
-**GetPrompt**
-    Module pour la gestion et la création des prompts envoyés au LLM.
+:doc:`../source/modules/core/GetPrompt` gère et crée les prompts.
 
-**LLMClient**
-    Client unifié pour les interactions avec les modèles de langage. Abstrait les différences entre fournisseurs (OpenAI, Mistral) et intègre le suivi des émissions CO2 avec CodeCarbon.
+:doc:`../source/modules/core/LLMClient` : client unifié pour les LLMs.
 
-**Logger**
-    Système de journalisation flexible avec support fichier et/ou console, rotation automatique des logs, et niveaux configurables.
+:doc:`../source/modules/core/Logger` : système de journalisation flexible.
 
-**NotificationManager**
-    Gestionnaire des notifications pour informer les utilisateurs des événements importants.
+:doc:`../source/modules/core/NotificationManager` gère les notifications utilisateurs.
 
-**StatsManager**
-    Module pour la gestion et le suivi des statistiques de l'application.
+:doc:`../source/modules/core/StatsManager` suit les statistiques d'application.
 
-**URLRetriever**
-    Utilitaire pour récupérer le contenu des URLs de manière efficace.
+:doc:`../source/modules/core/URLRetriever` récupère le contenu des URLs.
 
 Data Models (``data_models/``)
------------------------------
+------------------------------
+Ce module définit la structure des données utilisées dans l'application.
 
-**opening_hours_schema.json**
-    Schéma JSON décrivant le format standardisé des horaires d'ouverture pour validation des données extraites.
+**opening_hours_schema.json** : schéma JSON pour horaires d'ouverture.
 
-**schema_bdd**
-    Schémas SQLAlchemy définissant la structure de la base de données pour les lieux et résultats d'extraction.
+**schema_bdd** : schémas SQLAlchemy pour la BDD.
 
 Evaluation (``evaluation/``)
----------------------------
+----------------------------
+Ce module est dédié à l'évaluation des performances du système.
 
 En cours de développement.
 
 Processing (``processing/``)
----------------------------
+----------------------------
+Ce module correspond au pipeline de traitement des données, de la récupération à l'analyse.
 
-**ComparisonProcessor**
-    Processeur de comparaison qui analyse les différences entre horaires extraits et données de référence.
+:doc:`../source/modules/processing/comparison_processor` analyse les différences d'horaires.
 
-**DatabaseProcessor**
-    Gestionnaire de base de données SQLite avec ORM SQLAlchemy. Gère la création des tables, l'insertion des données et les requêtes.
+:doc:`../source/modules/processing/database_processor` gère la base de données.
 
-**LLMProcessor**
-    Processeur d'extraction d'horaires utilisant les modèles de langage pour interpréter le contenu Markdown filtré et enregistrer la consommation carbone.
+:doc:`../source/modules/processing/llm_processor` extrait les horaires via LLM.
 
-**MarkdownProcessor**
-    Processeur de filtrage sémantique du Markdown utilisant des embeddings pour extraire les sections pertinentes aux horaires, tout en mesurant la consommation carbone de l'opération.
+:doc:`../source/modules/processing/markdown_processor` filtre le Markdown par sémantique.
 
-**SetupProcessor**
-    Initialise et prépare une nouvelle exécution du pipeline. Crée un enregistrement d'exécution en base de données pour suivre le traitement.
+:doc:`../source/modules/processing/setup_processor` initialise les exécutions du pipeline.
 
-**URLProcessor**
-    Processeur parallèle pour récupérer le contenu des URLs avec gestion des erreurs HTTP et conversion HTML vers Markdown.
+:doc:`../source/modules/processing/url_processor` récupère le contenu des URLs.
 
 Reporting (``reporting/``)
--------------------------
+--------------------------
+Ce module est responsable de la génération et de la distribution des rapports.
 
-**GenererRapportHTML**
-    Générateur de rapports HTML utilisant Jinja2 avec templates personnalisables et données interactives, incluant la consommation carbone.
+:doc:`../source/modules/reporting/html_generator` génère des rapports HTML interactifs.
 
-**ReportManager**
-    Orchestrateur de génération de rapports avec statistiques globales, y compris les émissions de CO2, et envoi automatique par email.
+:doc:`../source/modules/reporting/report_manager` orchestre la génération des rapports.
 
 Utils (``utils/``)
------------------
+------------------
+Ce module fournit des fonctions et des classes utilitaires réutilisables.
 
-**CSVToPolars**
-    Utilitaire de chargement de fichiers CSV avec détection automatique du séparateur et validation des données.
+:doc:`../source/modules/utils/CSVToPolars` charge les fichiers CSV.
 
-**JsonConverter** (``CustomJsonToOSM``)
-    Convertisseur de format JSON vers format OpenStreetMap pour les horaires d'ouverture standardisés.
+:doc:`../source/modules/utils/CustomJsonToOSM` convertit JSON vers format OSM.
 
-**HtmlToMarkdown**
-    Convertisseur HTML vers Markdown optimisé pour préserver les informations d'horaires tout en supprimant le bruit.
+:doc:`../source/modules/utils/HtmlToMarkdown` convertit du HTML en Markdown.
 
-**JoursFeries**
-    Récupère les jours fériés pour une zone et une année données depuis l'API du gouvernement français.
+:doc:`../source/modules/utils/JoursFeries` récupère les jours fériés.
 
-**MarkdownCleaner**
-    Nettoyeur de contenu Markdown avec remplacement intelligent des caractères et normalisation du texte.
+:doc:`../source/modules/utils/MarkdownCleaner` nettoie le contenu Markdown.
 
-**OSMConverter** (``OSMToCustomJson``)
-    Convertisseur de format OpenStreetMap vers format JSON personnalisé pour les horaires d'ouverture.
+:doc:`../source/modules/utils/OSMToCustomJson` convertit OSM vers format JSON.
 
-**VacancesScolaires**
-    Récupération des données de vacances scolaires via l'API gouvernementale française.
-
-Répertoires de données et logs
-==============================
+:doc:`../source/modules/utils/VacancesScolaires` récupère les vacances scolaires.
 
 Data (``data/``)
----------------
+----------------
+Ce répertoire contient les bases de données utilisées par l'application pour stocker les données de production et d'évaluation.
 
-**SmartWatch.db**
-    Base de données SQLite principale contenant les lieux, exécutions et résultats d'extraction.
+**SmartWatch.db** : base de données principale (lieux, exécutions et résultats d'extraction).
 
-**evaluation.db**
-    Base de données SQLite dédiée aux évaluations et tests de performance.
+**evaluation.db** : base de données pour l'évaluation des performances.
 
 Logs (``logs/``)
----------------
+----------------
+Ce répertoire archive les journaux d'événements générés par l'application.
 
-**SmartWatch.log**
-    Fichier de log principal avec rotation automatique, contenant toutes les traces d'exécution.
+**SmartWatch.log** : journal principal des traces d'exécution.
 
 Documentation (``docs/``)
-========================
+-------------------------
+Ce répertoire rassemble toute la documentation du projet, y compris les guides et les spécifications techniques.
 
-**Architecture**
-    Documentation de l'architecture technique, des flux de données et des modules.
+**Architecture** : description de l'architecture et des modules.
 
-**Guides utilisateur**
-    Guides d'installation, de configuration et d'utilisation.
+**Guides utilisateur** : guides d'installation et d'utilisation.
 
-**Source**
-    Documentation technique générée automatiquement à partir du code source.
+**Source** : documentation technique générée depuis le code.

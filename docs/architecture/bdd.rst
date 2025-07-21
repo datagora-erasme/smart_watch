@@ -101,7 +101,7 @@ Table `executions`
      - Estimation totale des émissions de CO2 (en kg) pour l'ensemble des appels LLM de cette exécution.
 
 Table `resultats_extraction`
----------------------------
+----------------------------
 
 .. list-table::
    :widths: 25 15 60

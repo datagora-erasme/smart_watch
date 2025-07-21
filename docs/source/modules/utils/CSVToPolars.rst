@@ -1,7 +1,7 @@
 CSV to Polars
 =============
 
-Le module CSVToPolars permet de charger dans un dataframe Polars des fichiers CSV locaux ou distants. Il inclut une détection automatique des séparateurs.
+Le module CSVToPolars convertit des fichiers CSV (locaux ou depuis une URL) en DataFrames Polars, en détectant automatiquement le séparateur.
 
 Fonctionnalités
 ---------------

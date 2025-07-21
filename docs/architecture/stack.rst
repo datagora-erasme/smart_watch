@@ -60,13 +60,13 @@ Configuration et environnement
     Validation et typage des données.
 
 Parallélisme et performance
---------------------------
+---------------------------
 
 `ThreadPoolExecutor <https://docs.python.org/3/library/concurrent.futures.html>`__
     Traitement parallèle des URLs pour accélérer la récupération du contenu web.
 
 Logging et monitoring
---------------------
+---------------------
 
 `Logging standard Python <https://docs.python.org/3/library/logging.html>`__
     Système de journalisation centralisé avec rotation automatique des fichiers.
@@ -78,7 +78,7 @@ Gestion d'erreurs centralisée
     Mesure les émissions de CO2 des appels aux modèles de langage pour un suivi de l'impact environnemental.
 
 Communication
-------------
+-------------
 
 `SMTP (smtplib) <https://docs.python.org/3/library/smtplib.html>`__
     Envoi automatique des rapports par email avec support SSL/TLS.

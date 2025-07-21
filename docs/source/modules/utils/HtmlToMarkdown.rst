@@ -1,7 +1,7 @@
 HTML to Markdown
 ================
 
-Le module HtmlToMarkdown convertit du contenu HTML au format Markdown.
+Le module HtmlToMarkdown convertit du contenu HTML au format Markdown, en ne renvoyant que le texte.
 
 Fonctionnalités
 ---------------

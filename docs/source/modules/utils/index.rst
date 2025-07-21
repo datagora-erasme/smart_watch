@@ -1,48 +1,8 @@
 Modules Utils
 =============
 
-Fonctionnalités
----------------
-
-Les modules Utils fournissent les utilitaires essentiels pour la conversion de données, le nettoyage et la manipulation de formats. Ils constituent la couche de transformation entre les sources externes et le pipeline de traitement SmartWatch.
-
-**Conversion et transformation :**
-
-- Convertisseurs bidirectionnels JSON ↔ OpenStreetMap opening_hours
-- Conversion HTML → Markdown avec parsing robuste BeautifulSoup
-- Chargement CSV optimisé avec Polars et détection automatique
-- Nettoyage avancé de contenu Markdown avec expressions régulières
-
-**Données temporelles officielles :**
-
-- Récupération des jours fériés français via API gouvernementale
-- Périodes de vacances scolaires avec filtrage par zone et localisation
-- Formatage et normalisation des dates
-- Support des zones métropole et outre-mer
-
-**Optimisations système :**
-
-- Gestion robuste des erreurs réseau et parsing
-- Logging détaillé de toutes les opérations
-- Performance optimisée avec Polars pour grandes données
-- Intégration avec le système ErrorHandler centralisé
-
-**Pipeline d'intégration :**
-
-- Modules conçus pour s'intégrer dans le pipeline principal
-- Interfaces standardisées avec classes de résultats
-- Gestion des fichiers temporaires avec nettoyage automatique
-- Support des sources locales et distantes
-
-Vue d'ensemble
----------------
-
-- **MarkdownCleaner** : Nettoyage du markdown (liens, formatage, caractères spéciaux)
-- **HtmlToMarkdown** : Conversion HTML → Markdown avec BeautifulSoup + lxml
-- **JSON/OSM Converters** : Conversion bidirectionnelle JSON ↔ OSM opening_hours
-- **CSVToPolars** : Chargement efficace des fichiers CSV avec Polars
-- **JoursFeries** : Récupération des jours fériés français via API gouvernementale
-- **VacancesScolaires** : Périodes de vacances scolaires avec filtrage avancé
+Les modules Utils constituent une boîte à outils pour **analyser**, **convertir** et **nettoyer** des données de sources variées afin de les normaliser et de les préparer pour le reste de l'application.
+Ils gèrent des formats standards (CSV, HTML, JSON, API externes) et spécifiques (JSON personnalisé et OSM pour les horaires d'ouverture), ainsi que des données contextuelles françaises (jours fériés, vacances scolaires).
 
 Modules
 -------
@@ -51,19 +11,9 @@ Modules
    :maxdepth: 1
 
    CSVToPolars
+   CustomJsonToOSM
    HtmlToMarkdown
    JoursFeries
-   CustomJsonToOSM
    MarkdownCleaner
    OSMToCustomJson
    VacancesScolaires
-
-Utilitaires de données temporelles
-----------------------------------
-
-Les modules `JoursFeries` et `VacancesScolaires` accèdent aux APIs officielles françaises :
-
-- **JoursFeries** : API calendrier.api.gouv.fr pour les jours fériés français
-- **VacancesScolaires** : API data.education.gouv.fr pour les périodes de vacances scolaires
-
-Ces modules fournissent des données certifiées et mises à jour automatiquement pour l'enrichissement des horaires d'ouverture.
