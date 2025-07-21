@@ -29,9 +29,12 @@ Ton objectif est d'analyser le contenu markdown fourni et d'extraire les horaire
 - Si aucun horaire ou jour de fermeture n'est trouvé, retourne un JSON avec "ouvert" à false et des listes de créneaux vides.
 - les occurences spécifiques (1er lundi du mois, 1er et 3eme mardi du mois, dernier samedi du mois, etc.) doivent être récupérées dans le champ "occurences" du JSON.
 - le format des dates doit être "YYYY-MM-DD" pour les dates spécifiques et "YYYY-MM" pour les mois.
+- le format des horaires doit être "HH:MM".
 - L'année de référence pour les dates sans année est {datetime.now().year}.
 - les jours spéciaux (Noël, Jour de l'An, etc.) doivent être récupérés dans le champ "jours_speciaux" du JSON et leur date précise doit être indiquée.
+- Analyse tout le texte reçu, ne t'arrête pas lorsque tu passes sur un premier jeu d'horaires.
 - s'il y a plusieurs jeux de créneaux horaires pour différents lieux ou services, prends uniquement celui qui correspond au lieu indiqué dans le markdown, et qui est le plus généraliste. Ne fais aucun mélange avec les autres jeux d'horaires.
+- s'il y a des contradictions dans les horaires d'un même lieu, prends le jeu le plus complet.
 - Réponds UNIQUEMENT avec le JSON, sans aucun texte ou formatage supplémentaire.
 """
 
@@ -64,7 +67,5 @@ Réponds en utilisant exclusivement le format JSON suivant. Respecte scrupuleuse
         {"role": "user", "content": user_prompt_content},
     ]
 
-    logger.debug(f"Prompt construit: {len(messages)} messages")
-    return messages
     logger.debug(f"Prompt construit: {len(messages)} messages")
     return messages
