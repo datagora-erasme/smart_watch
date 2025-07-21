@@ -1,6 +1,12 @@
-import ssl
-
-import urllib3
+from playwright.sync_api import (
+    Error as PlaywrightError,
+)
+from playwright.sync_api import (
+    TimeoutError as PlaywrightTimeoutError,
+)
+from playwright.sync_api import (
+    sync_playwright,
+)
 
 from ..utils import convert_html_to_markdown
 from .ErrorHandler import ErrorCategory, ErrorHandler, ErrorSeverity, handle_errors
@@ -17,50 +23,8 @@ error_handler = ErrorHandler()
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36",
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
-    "Accept-Encoding": "gzip, deflate",
     "Accept-Language": "fr-FR,fr;q=0.7",
-    "Connection": "keep-alive",
 }
-
-
-def _create_ssl_context(strategy: str = "default") -> ssl.SSLContext:
-    ctx = ssl.create_default_context()
-
-    if strategy == "no_verify":
-        ctx.check_hostname = False
-        ctx.verify_mode = ssl.CERT_NONE
-    elif strategy == "low_security":
-        ctx.set_ciphers("DEFAULT@SECLEVEL=1")
-    elif strategy == "full_mitigation":
-        ctx.check_hostname = False
-        ctx.verify_mode = ssl.CERT_NONE
-        ctx.set_ciphers("DEFAULT@SECLEVEL=1")
-
-    return ctx
-
-
-def _make_request(url: str, strategy: str = "default") -> urllib3.HTTPResponse:
-    if strategy == "default":
-        http = urllib3.PoolManager(timeout=30.0)
-    else:
-        ssl_context = _create_ssl_context(strategy)
-        cert_reqs = (
-            ssl.CERT_NONE
-            if strategy in ["no_verify", "full_mitigation"]
-            else ssl.CERT_REQUIRED
-        )
-        http = urllib3.PoolManager(
-            cert_reqs=cert_reqs, ssl_context=ssl_context, timeout=30.0
-        )
-
-    return http.request(
-        "GET",
-        url,
-        headers=HEADERS,
-        redirect=True,
-        retries=10,
-        timeout=30.0,
-    )
 
 
 @handle_errors(
@@ -73,13 +37,14 @@ def retrieve_url(
     sortie: str = "html",
     encoding_errors: str = "ignore",
     config=None,
+    index: int = 0,
+    total: int = 0,
 ) -> dict:
     row_dict = dict(row)
     url = row.get("url", "")
     identifiant = row.get("identifiant", "N/A")
 
     if not url:
-        # Créer un contexte d'erreur spécifique
         context = error_handler.create_error_context(
             module="URLRetriever",
             function="retrieve_url",
@@ -87,141 +52,122 @@ def retrieve_url(
             data={"row_keys": list(row.keys()), "identifiant": identifiant},
             user_message="Aucune URL fournie pour la récupération",
         )
-
         error_handler.handle_error(
             exception=ValueError("URL manquante"),
             context=context,
             category=ErrorCategory.VALIDATION,
             severity=ErrorSeverity.HIGH,
         )
-
         row_dict["statut"] = "critical"
         row_dict["message"] = "Aucune URL n'a été fournie"
         row_dict["code_http"] = 0
         return row_dict
 
     try:
-        logger.debug(f"[{identifiant}] Récupération URL: {url}")
-
-        # Stratégies SSL progressives
-        ssl_strategies = ["default", "no_verify", "low_security", "full_mitigation"]
-        response = None
-
-        for strategy in ssl_strategies:
-            try:
-                response = _make_request(url, strategy)
-                if strategy != "default":
-                    logger.debug(
-                        f"[{identifiant}] Succès avec stratégie SSL: {strategy}"
-                    )
-                break
-            except urllib3.exceptions.MaxRetryError as max_retry_err:
-                error_str = str(max_retry_err)
-
-                # Gestion spéciale pour les redirections
-                if "too many redirects" in error_str:
-                    row_dict["statut"] = "warning"
-                    row_dict["message"] = "too many redirects"
-                    row_dict["code_http"] = 310
-                    logger.warning(f"[{identifiant}] Trop de redirections: {url}")
-                    return row_dict
-
-                # Si ce n'est pas un problème SSL ou si c'est la dernière stratégie, on relance
-                if (
-                    not any(
-                        ssl_error in error_str
-                        for ssl_error in [
-                            "CERTIFICATE_VERIFY_FAILED",
-                            "DH_KEY_TOO_SMALL",
-                        ]
-                    )
-                    or strategy == ssl_strategies[-1]
-                ):
-                    raise
-
-        if response.status != 200:
-            row_dict["statut"] = "warning"
-            row_dict["code_http"] = response.status
-            row_dict["message"] = f"HTTP error {response.status}"
-            logger.warning(f"[{identifiant}] Erreur HTTP {response.status}: {url}")
+        if total > 0:
+            logger.info(f"URL {index}/{total} en cours : {url}")
         else:
-            # Decode content
-            content_type = response.headers.get("Content-Type", "")
-            encoding = "utf-8"
-            if "charset=" in content_type:
-                encoding = content_type.split("charset=")[-1].strip()
+            logger.debug(f"[{identifiant}] Récupération URL avec Playwright: {url}")
 
-            html_content = response.data.decode(encoding, errors=encoding_errors)
-            logger.debug(
-                f"[{identifiant}] Contenu décodé ({encoding}): {len(html_content)} caractères"
+        # Stratégies SSL/TLS progressives avec Playwright
+        # 'low_security' et 'full_mitigation' sont gérés par 'ignore_https_errors=True'
+        ssl_strategies = ["default", "no_verify"]
+        response = None
+        html_content = ""
+
+        with sync_playwright() as p:
+            for strategy in ssl_strategies:
+                browser = None
+                try:
+                    browser = p.chromium.launch()
+                    ignore_https = strategy == "no_verify"
+                    context = browser.new_context(ignore_https_errors=ignore_https)
+                    page = context.new_page()
+                    page.set_extra_http_headers(HEADERS)
+
+                    # Utilisation de 'networkidle' pour attendre la fin des requêtes réseau,
+                    # ce qui est plus fiable pour les pages avec chargement dynamique.
+                    response = page.goto(url, timeout=30000, wait_until="networkidle")
+
+                    if response:
+                        html_content = page.content()
+                        if strategy != "default":
+                            logger.debug(
+                                f"[{identifiant}] Succès avec la stratégie Playwright : {strategy}"
+                            )
+                        break  # Success, exit the loop
+
+                except PlaywrightError as e:
+                    error_str = str(e).lower()
+                    if "ssl" in error_str or "certificate" in error_str:
+                        logger.warning(
+                            f"[{identifiant}] Échec avec la stratégie '{strategy}': {e}"
+                        )
+                        if strategy == ssl_strategies[-1]:
+                            raise  # Re-raise if it's the last strategy
+                    elif "net::err_too_many_redirects" in error_str:
+                        row_dict.update(
+                            statut="warning",
+                            message="too many redirects",
+                            code_http=310,
+                        )
+                        logger.warning(f"[{identifiant}] Trop de redirections : {url}")
+                        return row_dict
+                    else:
+                        raise  # Re-raise other Playwright errors
+                finally:
+                    if browser:
+                        browser.close()
+
+        if not response:
+            raise ValueError(
+                "La réponse de Playwright est nulle après toutes les tentatives."
             )
 
-            # Stockage du contenu selon le format demandé
-            if sortie == "html":
-                row_dict["html"] = html_content
-            elif sortie == "markdown":
-                markdown_content = convert_html_to_markdown(html=html_content)
-                # Si la conversion échoue, elle renvoie une chaîne vide.
-                # On utilise le HTML comme fallback, préservant l'ancien comportement.
-                if not markdown_content and html_content:
-                    logger.warning(
-                        f"[{identifiant}] La conversion Markdown a échoué (voir logs précédents). Utilisation du HTML brut comme fallback."
-                    )
-                    row_dict["markdown"] = html_content
-                else:
-                    row_dict["markdown"] = markdown_content
+        if response.status != 200:
+            row_dict.update(
+                statut="warning",
+                code_http=response.status,
+                message=f"HTTP error {response.status}",
+            )
+            logger.warning(f"[{identifiant}] Erreur HTTP {response.status} pour {url}")
+        else:
+            logger.debug(
+                f"[{identifiant}] Contenu récupéré : {len(html_content)} caractères"
+            )
+            row_dict["html"] = html_content
+            if sortie == "markdown":
+                row_dict["markdown"] = convert_html_to_markdown(html=html_content)
 
-            # Conversion automatique vers Markdown si HTML disponible
-            if (
-                row_dict.get("html")
-                and row_dict["html"].strip()
-                and "markdown" not in row_dict
-            ):
-                row_dict["markdown"] = convert_html_to_markdown(html=row_dict["html"])
+            row_dict.update(statut="ok", code_http=response.status, message="")
+            logger.info(f"[{identifiant}] Récupération réussie : {url}")
 
-            row_dict["statut"] = "ok"
-            row_dict["code_http"] = response.status
-            row_dict["message"] = ""
-            logger.info(f"[{identifiant}] Récupération réussie: {url}")
-
-    except urllib3.exceptions.TimeoutError as e:
-        context = error_handler.create_error_context(
-            module="URLRetriever",
-            function="retrieve_url",
-            operation=f"Récupération URL {url}",
-            data={"url": url, "timeout": 30, "identifiant": identifiant},
-            user_message=f"Timeout lors de l'accès à {url}",
-        )
-
+    except PlaywrightTimeoutError as e:
         error_handler.handle_error(
             exception=e,
-            context=context,
+            context=error_handler.create_error_context(
+                module="URLRetriever",
+                function="retrieve_url",
+                operation=f"Timeout pour {url}",
+                data={"url": url, "timeout": 30000, "identifiant": identifiant},
+            ),
             category=ErrorCategory.NETWORK,
             severity=ErrorSeverity.MEDIUM,
         )
+        row_dict.update(statut="warning", message="Timeout", code_http=0)
 
-        row_dict["statut"] = "warning"
-        row_dict["code_http"] = 0
-        row_dict["message"] = "Timeout"
-
-    except Exception as e:
-        context = error_handler.create_error_context(
-            module="URLRetriever",
-            function="retrieve_url",
-            operation=f"Récupération URL {url}",
-            data={"url": url, "identifiant": identifiant},
-            user_message=f"Erreur lors de l'accès à {url}",
-        )
-
+    except PlaywrightError as e:
         error_handler.handle_error(
             exception=e,
-            context=context,
+            context=error_handler.create_error_context(
+                module="URLRetriever",
+                function="retrieve_url",
+                operation=f"Erreur Playwright pour {url}",
+                data={"url": url, "identifiant": identifiant},
+            ),
             category=ErrorCategory.NETWORK,
-            severity=ErrorSeverity.MEDIUM,
+            severity=ErrorSeverity.HIGH,
         )
-
-        row_dict["statut"] = "critical"
-        row_dict["code_http"] = 0
-        row_dict["message"] = str(e)
+        row_dict.update(statut="critical", message=str(e), code_http=0)
 
     return row_dict

@@ -14,6 +14,7 @@ dependencies = [
     "lxml>=6.0.0",
     "matplotlib>=3.10.3",
     "pandas>=2.3.1",
+    "playwright>=1.53.0",
     "polars>=1.31.0",
     "pyarrow>=20.0.0",
     "pytest>=8.4.1",
@@ -22,7 +23,6 @@ dependencies = [
     "sphinx>=8.2.3",
     "sphinx-rtd-theme>=3.0.2",
     "sqlalchemy>=2.0.41",
-    "urllib3>=2.5.0",
 ]
 
 [tool.ruff]

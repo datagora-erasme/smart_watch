@@ -6,6 +6,7 @@ jinja2
 lxml
 matplotlib
 pandas
+playwright
 polars
 pyarrow
 pytest
@@ -14,4 +15,3 @@ scikit-learn
 sphinx
 sphinx_rtd_theme
 sqlalchemy
-urllib3

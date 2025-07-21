@@ -2,7 +2,6 @@
 Processeur pour les extractions d'URLs.
 """
 
-import concurrent.futures
 from typing import Dict
 
 from ..core.ConfigManager import ConfigManager
@@ -29,53 +28,53 @@ class URLProcessor:
 
         self.logger.info(f"{len(resultats_a_traiter)} URLs à traiter")
 
-        # Traitement parallèle optimisé
-        with concurrent.futures.ThreadPoolExecutor(
-            max_workers=self.config.processing.nb_threads_url
-        ) as executor:
-            future_to_data = {}
+        # Le traitement parallèle avec ThreadPoolExecutor n'est pas compatible
+        # avec l'API sync de Playwright. Passage en traitement séquentiel.
+        # Pour réactiver le parallélisme, il faudrait une refonte en asyncio.
+        self.logger.warning(
+            "Le traitement des URLs est en mode séquentiel en raison de l'utilisation de Playwright."
+        )
 
-            for resultat, lieu in resultats_a_traiter:
+        successful_count = 0
+        total_urls = len(resultats_a_traiter)
+        for index, (resultat, lieu) in enumerate(resultats_a_traiter, 1):
+            try:
                 row_data = {
                     "identifiant": lieu.identifiant,
                     "nom": lieu.nom,
                     "url": lieu.url,
                     "type_lieu": lieu.type_lieu,
                 }
-
-                future = executor.submit(
-                    self._process_single_url, row_data, resultat.id_resultats_extraction
+                result_data = self._process_single_url(
+                    row_data, resultat.id_resultats_extraction, index, total_urls
                 )
-                future_to_data[future] = (resultat.id_resultats_extraction, lieu.nom)
+                db_manager.update_url_result(
+                    resultat.id_resultats_extraction, result_data
+                )
 
-            # Traitement des résultats avec batch updates
-            successful_count = 0
-            for future in concurrent.futures.as_completed(future_to_data):
-                resultat_id, nom = future_to_data[future]
-                try:
-                    result_data = future.result()
-                    db_manager.update_url_result(resultat_id, result_data)
-
-                    if result_data.get("statut") == "ok":
-                        successful_count += 1
-                        self.logger.debug(f"URL OK: {nom}")
-                    else:
-                        self.logger.warning(
-                            f"URL échec: {nom} - {result_data.get('message')}"
-                        )
-
-                except Exception as e:
-                    self.logger.error(f"Erreur traitement URL {nom}: {e}")
+                if result_data.get("statut") == "ok":
+                    successful_count += 1
+                    self.logger.debug(f"URL OK: {lieu.nom}")
+                else:
+                    self.logger.warning(
+                        f"URL échec: {lieu.nom} - {result_data.get('message')}"
+                    )
+            except Exception as e:
+                self.logger.error(f"Erreur traitement URL {lieu.nom}: {e}")
 
         self.logger.info(
             f"URLs traitées: {successful_count}/{len(resultats_a_traiter)} réussies"
         )
 
-    def _process_single_url(self, row_data: Dict, resultat_id: int) -> Dict:
+    def _process_single_url(
+        self, row_data: Dict, resultat_id: int, index: int, total: int
+    ) -> Dict:
         """Traite une URL individuelle."""
         return retrieve_url(
             row_data,
             sortie="markdown",
             encoding_errors="ignore",
             config=self.config,
+            index=index,
+            total=total,
         )

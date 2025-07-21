@@ -159,7 +159,7 @@ class OpenAICompatibleClient(BaseLLMClient):
     @handle_errors(
         category=ErrorCategory.LLM,
         severity=ErrorSeverity.MEDIUM,
-        user_message="Erreur lors de l'appel au LLM (type OpenAI)",
+        user_message="Erreur lors de l'appel au LLM (compatible OpenAI)",
         default_return=LLMResponse(
             content="Erreur Timeout ou API indisponible", co2_emissions=0.0
         ),
@@ -171,7 +171,9 @@ class OpenAICompatibleClient(BaseLLMClient):
     ) -> LLMResponse:
         """Effectue un appel au LLM."""
         formatted_messages = self._normalize_messages(messages)
-        logger.debug(f"Appel OpenAI {self.model}: {len(formatted_messages)} messages")
+        logger.debug(
+            f"Appel LLM compatible OpenAI {self.model}: {len(formatted_messages)} messages"
+        )
 
         payload = {
             "model": self.model,
@@ -233,7 +235,8 @@ class OpenAICompatibleClient(BaseLLMClient):
             tracker.stop()
             # Log de l'exception détaillée pour un meilleur débogage
             logger.error(
-                f"Exception détaillée lors de l'appel OpenAI: {e}", exc_info=True
+                f"Exception détaillée lors de l'appel au LLM compatible OpenAI: {e}",
+                exc_info=True,
             )
             raise e
 
