@@ -331,52 +331,47 @@ class JsonToOsmConverter:
 
         return "; ".join(osm_parts)
 
-    def _process_special_days(self, special_data: Dict) -> str:
-        """Traite les jours spéciaux (jours fériés, exceptions)."""
+    def _process_special_days(self, special_data: Dict, period_key: str) -> str:
+        """Traite les jours spéciaux (jours fériés, exceptions) en distinguant leur type."""
         if not special_data.get("source_found", False):
             return ""
 
         specific_schedules = special_data.get("horaires_specifiques", {})
 
         if not specific_schedules:
-            # Utilise le mode par défaut
             mode = special_data.get("mode", "ferme")
-            condition = special_data.get("condition", "PH")
+            # Pour les jours fériés, la condition par défaut est PH.
+            # Pour les jours spéciaux, il n'y a pas de condition générale par défaut.
+            condition = special_data.get("condition")
+            if not condition and period_key == "jours_feries":
+                condition = "PH"
+
+            if not condition:
+                return ""
 
             if mode == "ferme":
                 return f"{condition} off"
             elif mode == "ouvert":
                 return f"{condition} open"
-            else:
-                return ""
+            return ""
 
         # Traite les dates spécifiques
         osm_parts = []
-
         for date_desc, schedule_data in specific_schedules.items():
             try:
-                # Analyse la date - essaie d'abord le format ISO basique
-                osm_date = None
-
-                # Vérifie si c'est un format YYYY-MM-DD ou YYYY-DD-MM
-                if (
-                    isinstance(date_desc, str)
-                    and len(date_desc) == 10
-                    and date_desc.count("-") == 2
-                ):
-                    try:
-                        # Essaie YYYY-MM-DD
-                        year, month, day = date_desc.split("-")
-                        dt = datetime(int(year), int(month), int(day))
-                        osm_date = dt.strftime("%Y %b %d")
-                    except ValueError:
-                        pass
-
-                # Fallback sur l'analyseur de date existant
-                if not osm_date:
+                date_part = ""
+                if period_key == "jours_feries":
                     osm_date = DateParser.parse_date_to_osm(date_desc)
+                    date_part = osm_date if osm_date else "PH"
+                elif period_key == "jours_speciaux":
+                    # La description est la condition elle-même
+                    date_part = date_desc
+
+                if not date_part:
+                    continue
 
                 # Traite l'horaire avec priorité aux créneaux
+                schedule_str = ""
                 if isinstance(schedule_data, dict):
                     if not schedule_data.get("source_found", True):
                         continue
@@ -391,26 +386,25 @@ class JsonToOsmConverter:
                             schedule_str = ",".join(
                                 slot.to_osm_format() for slot in processed_slots
                             )
-                            date_part = osm_date if osm_date else "PH"
-                            osm_parts.append(f"{date_part} {schedule_str}")
                     elif is_open:
                         # Ouvert mais sans créneaux spécifiques
-                        date_part = osm_date if osm_date else "PH"
-                        osm_parts.append(f"{date_part} open")
+                        schedule_str = "open"
                     else:
                         # Fermé et sans créneaux
-                        date_part = osm_date if osm_date else "PH"
-                        osm_parts.append(f"{date_part} off")
+                        schedule_str = "off"
 
                 elif isinstance(schedule_data, str):
                     if schedule_data.lower() in ["fermé", "ferme", "closed"]:
-                        date_part = osm_date if osm_date else "PH"
-                        osm_parts.append(f"{date_part} off")
+                        schedule_str = "off"
                     else:
-                        date_part = osm_date if osm_date else "PH"
-                        osm_parts.append(f"{date_part} {schedule_data}")
+                        # Conserve la chaîne telle quelle (ex: "sur rdv")
+                        schedule_str = schedule_data
 
-            except Exception:
+                if schedule_str:
+                    osm_parts.append(f"{date_part} {schedule_str}")
+
+            except Exception as e:
+                logger.warning(f"Erreur traitement jour spécial {date_desc}: {e}")
                 continue
 
         return "; ".join(osm_parts)
@@ -543,7 +537,7 @@ class JsonToOsmConverter:
 
                 elif period_key in ["jours_feries", "jours_speciaux"]:
                     # Jours spéciaux
-                    osm_str = self._process_special_days(period_data)
+                    osm_str = self._process_special_days(period_data, period_key)
                     if osm_str:
                         periods_result[period_key] = osm_str
 
