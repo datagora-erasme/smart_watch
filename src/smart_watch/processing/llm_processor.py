@@ -111,7 +111,9 @@ class LLMProcessor:
         return osm_horaires
 
     def _enrich_with_jours_feries(self, llm_result: str, lieu) -> str:
-        """Enrichit le JSON LLM avec les jours fériés pour les mairies et bibliothèques."""
+        """
+        Enrichit le JSON LLM avec les jours fériés et nettoie les dates passées.
+        """
         try:
             # Définir les types de lieux pour l'enrichissement des jours fériés
             types_de_lieux_concernes = ["mairie", "bibliothèque"]
@@ -120,36 +122,58 @@ class LLMProcessor:
             if lieu.type_lieu.lower() not in types_de_lieux_concernes:
                 return llm_result
 
-            self.logger.debug(f"Enrichissement jours fériés pour mairie: {lieu.nom}")
+            self.logger.debug(
+                f"Début du traitement des jours spéciaux pour: {lieu.nom}"
+            )
 
             # Parser le JSON LLM
             llm_data = json.loads(llm_result)
+            today = datetime.now().date()
 
-            # Récupérer les jours fériés pour année courante et suivante
-            annee_courante = datetime.now().year
+            # 1. Nettoyer les horaires spécifiques (jours spéciaux) passés ou présents
+            # récupérés par le LLM dans toutes les périodes.
+            periodes = llm_data.get("horaires_ouverture", {}).get("periodes", {})
+            for periode_key, periode_data in periodes.items():
+                if "horaires_specifiques" in periode_data and isinstance(
+                    periode_data["horaires_specifiques"], dict
+                ):
+                    horaires_originaux = periode_data["horaires_specifiques"]
+                    horaires_filtres = {}
+                    for date_str, value in horaires_originaux.items():
+                        try:
+                            if datetime.strptime(date_str, "%Y-%m-%d").date() > today:
+                                horaires_filtres[date_str] = value
+                        except ValueError:
+                            self.logger.warning(
+                                f"Format de date invalide '{date_str}' dans les horaires spécifiques pour {lieu.identifiant}, ignoré."
+                            )
+                    if len(horaires_filtres) < len(horaires_originaux):
+                        self.logger.debug(
+                            f"Nettoyage de {len(horaires_originaux) - len(horaires_filtres)} jour(s) spécial(aux) passé(s) pour la période '{periode_key}'"
+                        )
+                    periode_data["horaires_specifiques"] = horaires_filtres
+
+            # 2. Récupérer et ajouter les jours fériés futurs
+            annee_courante = today.year
             jours_feries_courants = get_jours_feries(annee=annee_courante) or {}
             jours_feries_suivants = get_jours_feries(annee=annee_courante + 1) or {}
 
-            # Filtrer les jours fériés pour ne garder que ceux qui dépassent
-            # la date actuelle (pour éviter les jours fériés passés)
+            # Filtrer pour ne garder que les jours fériés strictement futurs
             jours_feries_courants = {
                 date_ferie: nom_ferie
                 for date_ferie, nom_ferie in jours_feries_courants.items()
-                if datetime.strptime(date_ferie, "%Y-%m-%d").date()
-                >= datetime.now().date()  # ou datetime.strptime("2025-07-01", "%Y-%m-%d").date() pour une date fixe
+                if datetime.strptime(date_ferie, "%Y-%m-%d").date() > today
             }
 
-            # Combiner les jours fériés des deux années
             tous_jours_feries = {}
             tous_jours_feries.update(jours_feries_courants)
             tous_jours_feries.update(jours_feries_suivants)
 
             if not tous_jours_feries:
-                self.logger.debug(f"Aucun jour férié futur à ajouter pour {lieu.nom}")
-                return llm_result
-
-            # Accéder à la structure des périodes
-            periodes = llm_data.get("horaires_ouverture", {}).get("periodes", {})
+                self.logger.debug(
+                    f"Aucun jour férié futur à ajouter pour {lieu.nom}. Le nettoyage a peut-être eu lieu."
+                )
+                return json.dumps(llm_data, ensure_ascii=False)
 
             # Ajouter ou mettre à jour la section jours_feries
             if "jours_feries" not in periodes:
@@ -162,34 +186,22 @@ class LLMProcessor:
                     "description": "Jours fériés français - mairie généralement fermée",
                 }
 
-            # Récupérer les horaires spécifiques existants
             horaires_specifiques = periodes["jours_feries"].get(
                 "horaires_specifiques", {}
             )
-
-            # IMPORTANT: Ne pas écraser les jours fériés déjà présents
-            # Compter seulement les nouveaux jours fériés ajoutés
             nouveaux_jours_feries = 0
-
             for date_ferie, nom_ferie in tous_jours_feries.items():
-                # N'ajouter que si la date n'existe pas déjà
                 if date_ferie not in horaires_specifiques:
                     horaires_specifiques[date_ferie] = "ferme"
                     nouveaux_jours_feries += 1
                     self.logger.debug(f"Ajout jour férié: {date_ferie} - {nom_ferie}")
-                else:
-                    self.logger.debug(f"Jour férié déjà présent: {date_ferie}")
 
-            # Mettre à jour la structure seulement si on a ajouté des jours fériés
-            if nouveaux_jours_feries > 0 or len(horaires_specifiques) > 0:
+            if nouveaux_jours_feries > 0:
                 periodes["jours_feries"]["horaires_specifiques"] = horaires_specifiques
                 periodes["jours_feries"]["source_found"] = True
-
                 self.logger.info(
-                    f"Enrichissement jours fériés pour {lieu.nom}: {nouveaux_jours_feries} nouveaux, {len(horaires_specifiques)} total"
+                    f"Enrichissement pour {lieu.nom}: {nouveaux_jours_feries} nouveaux jours fériés ajoutés."
                 )
-            else:
-                self.logger.debug(f"Aucun nouveau jour férié ajouté pour {lieu.nom}")
 
             return json.dumps(llm_data, ensure_ascii=False)
 
@@ -197,7 +209,7 @@ class LLMProcessor:
             self.logger.warning(
                 f"Impossible de récupérer les jours fériés pour {lieu.identifiant} (erreur réseau): {e}"
             )
-            return llm_result  # On continue sans enrichissement
+            return llm_result
         except Exception as e:
             self.logger.error(
                 f"Erreur enrichissement jours fériés pour {lieu.identifiant}: {e}"
