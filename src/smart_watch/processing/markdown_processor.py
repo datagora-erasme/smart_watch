@@ -168,9 +168,22 @@ class MarkdownProcessor:
             )
 
             try:
+                len_avant = len(resultat.markdown_nettoye)
                 filtered_markdown, co2_emissions = self._filter_single_markdown(
                     resultat.markdown_nettoye
                 )
+                len_apres = len(filtered_markdown)
+
+                if len_avant > 0:
+                    reduction = ((len_avant - len_apres) / len_avant) * 100
+                    self.logger.info(
+                        f"*{lieu.identifiant}* Taille avant/après filtrage: {len_avant} -> {len_apres} "
+                        f"caractères (réduction de {reduction:.2f}%)."
+                    )
+                else:
+                    self.logger.info(
+                        f"*{lieu.identifiant}* Pas de contenu à filtrer (0 caractère)."
+                    )
 
                 # Mise à jour en base
                 db_manager.update_filtered_markdown(
@@ -241,6 +254,7 @@ class MarkdownProcessor:
 
             # Filtrer les lignes vides pour l'analyse sémantique, mais les conserver pour la reconstruction
             non_empty_lines = [line for line in lines if line.strip()]
+            print(f"Nombre de lignes non vides: {len(non_empty_lines)}")
 
             if not non_empty_lines:
                 return markdown_content, co2_for_this_document

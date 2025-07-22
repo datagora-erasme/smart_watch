@@ -37,7 +37,21 @@ def convert_html_to_markdown(html: str, identifiant: str = None) -> str:
     if not html:
         return ""
     logger.debug(f"{log_prefix}Conversion HTML vers Markdown avec BeautifulSoup + lxml")
+    len_avant = len(html)
+
     # Utiliser BeautifulSoup pour parser et nettoyer le HTML
     soup = bs4.BeautifulSoup(html, "lxml").get_text()  # n'extraire que le texte
+    cleaned_text = str(soup)
+    len_apres = len(cleaned_text)
+
+    if len_avant > 0:
+        reduction = ((len_avant - len_apres) / len_avant) * 100
+        logger.info(
+            f"{log_prefix}Taille avant/après filtrage texte HTML : {len_avant} -> {len_apres} "
+            f"caractères (réduction de {reduction:.2f}%)."
+        )
+    else:
+        logger.info(f"{log_prefix}Pas de contenu HTML à nettoyer (0 caractère).")
+
     # Convertir l'objet Soup en Markdown
-    return convert_to_markdown(str(soup))
+    return convert_to_markdown(cleaned_text)

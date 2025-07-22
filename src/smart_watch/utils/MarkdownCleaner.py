@@ -156,8 +156,21 @@ class MarkdownCleaner:
             if not original_markdown.strip():
                 continue
 
+            len_avant = len(original_markdown)
             # Nettoyer le markdown (la gestion d'erreur est dans la méthode)
             cleaned_markdown = self.clean_markdown_content(original_markdown)
+            len_apres = len(cleaned_markdown)
+
+            if len_avant > 0:
+                reduction = ((len_avant - len_apres) / len_avant) * 100
+                self.logger.info(
+                    f"*{lieu.identifiant}* Taille avant/après nettoyage: {len_avant} -> {len_apres} "
+                    f"caractères (réduction de {reduction:.2f}%)."
+                )
+            else:
+                self.logger.info(
+                    f"*{lieu.identifiant}* Pas de contenu à nettoyer (0 caractère)."
+                )
 
             # Compter les modifications
             if cleaned_markdown != original_markdown:
