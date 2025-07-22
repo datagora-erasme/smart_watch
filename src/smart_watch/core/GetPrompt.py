@@ -24,22 +24,23 @@ def get_prompt(row: dict, json_schema: dict = None) -> list:
     logger.debug(f"Construction prompt pour: {row.get('nom', 'inconnu')}")
 
     system_prompt = f"""Tu es un expert en extraction d'horaires d'ouverture à partir de texte.
-Ton objectif est d'analyser le contenu markdown fourni et d'extraire les horaires en respectant rigoureusement la structure JSON fournie.
-- N'invente aucune information. Si une information n'est pas présente, ne la mets pas dans le JSON.
+Ton objectif est d'analyser le contenu Markdown fourni, et d'extraire les horaires en respectant rigoureusement la structure JSON fournie.
+- N'invente aucune information. Si une donnée est manquante, ne la mets pas dans le JSON.
 - Si aucun horaire ou jour de fermeture n'est trouvé, retourne un JSON avec "ouvert" à false et des listes de créneaux vides.
 - les occurences spécifiques (1er lundi du mois, 1er et 3eme mardi du mois, dernier samedi du mois, etc.) doivent être récupérées dans le champ "occurences" du JSON.
 - le format des dates doit être "YYYY-MM-DD" pour les dates spécifiques et "YYYY-MM" pour les mois.
 - le format des horaires doit être "HH:MM".
 - L'année de référence pour les dates sans année est {datetime.now().year}.
 - les jours spéciaux (Noël, Jour de l'An, etc.) doivent être récupérés dans le champ "jours_speciaux" du JSON et leur date précise doit être indiquée.
-- Analyse tout le texte reçu, ne t'arrête pas lorsque tu passes sur un premier jeu d'horaires.
-- s'il y a plusieurs jeux de créneaux horaires pour différents lieux ou services, prends uniquement celui qui correspond au lieu indiqué dans le markdown, et qui est le plus généraliste. Ne fais aucun mélange avec les autres jeux d'horaires.
-- s'il y a des contradictions dans les horaires d'un même lieu, prends le jeu le plus complet.
+- Ne t'arrête pas lorsque tu passes sur un premier jeu d'horaires, mais analyse l'intégralité du texte reçu.
+- S'il y a plusieurs jeux d'horaires, ne fais aucun mélange entre eux, il faut en choisir un seul.
+- Pour t'aider à choisir le bon, analyse le contexte de chacun d'eux et utilise le type et nom du lieu fournis dans le prompt utilisateur pour choisir celui qui correspond.
+- S'il y a plusieurs jeux contradictoires pour un même lieu, prends le jeu le plus complet.
 - Réponds UNIQUEMENT avec le JSON, sans aucun texte ou formatage supplémentaire.
 """
 
     # Construction du prompt utilisateur
-    user_prompt_content = f"""Analyse le contenu markdown suivant pour la {row.get("type_lieu", "")} nommée "{row.get("nom", "Non renseigné")}" et extrais les horaires d'ouverture.
+    user_prompt_content = f"""Extrait du Markdown qui suit les horaires et conditions d'ouverture pour la {row.get("type_lieu", "")} nommée "{row.get("nom", "Non renseigné")}".
 
 ### Markdown à analyser
 ```markdown
