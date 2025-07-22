@@ -164,7 +164,7 @@ class MarkdownProcessor:
         successful_count = 0
         for i, (resultat, lieu) in enumerate(resultats_a_filtrer, 1):
             self.logger.info(
-                f"[{lieu.identifiant}] Filtrage {i}/{len(resultats_a_filtrer)} - '{lieu.nom}'"
+                f"*{lieu.identifiant}* Filtrage {i}/{len(resultats_a_filtrer)} - '{lieu.nom}'"
             )
 
             try:
@@ -182,16 +182,16 @@ class MarkdownProcessor:
                 if filtered_markdown and len(filtered_markdown.strip()) > 0:
                     successful_count += 1
                     self.logger.debug(
-                        f"[{lieu.identifiant}] Markdown filtré pour '{lieu.nom}': {len(filtered_markdown)} caractères"
+                        f"*{lieu.identifiant}* Markdown filtré pour '{lieu.nom}': {len(filtered_markdown)} caractères"
                     )
                 else:
                     self.logger.warning(
-                        f"[{lieu.identifiant}] Aucun contenu pertinent trouvé pour '{lieu.nom}'"
+                        f"*{lieu.identifiant}* Aucun contenu pertinent trouvé pour '{lieu.nom}'"
                     )
 
             except Exception as e:
                 self.logger.error(
-                    f"[{lieu.identifiant}] Erreur filtrage markdown pour '{lieu.nom}': {e}"
+                    f"*{lieu.identifiant}* Erreur filtrage markdown pour '{lieu.nom}': {e}"
                 )
                 # Ajouter l'erreur à la chaîne
                 db_manager.add_pipeline_error(

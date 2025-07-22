@@ -240,7 +240,7 @@ def _process_data(donnees_urls: list) -> None:
                         url["llm_horaires_json"] = json.loads(url["llm_horaires_json"])
                     except json.JSONDecodeError:
                         logger.warning(
-                            f"JSON invalide pour {url.get('identifiant', 'inconnu')}"
+                            f"*{url.get('identifiant', 'inconnu')}* JSON invalide pour '{url.get('nom', 'inconnu')}'"
                         )
 
             # Créer le champ comparaison_horaires pour compatibilité avec le template
@@ -254,7 +254,7 @@ def _process_data(donnees_urls: list) -> None:
 
         except Exception as e:
             logger.warning(
-                f"Erreur traitement données pour {url.get('identifiant', 'inconnu')}: {e}"
+                f"*{url.get('identifiant', 'inconnu')}* Erreur traitement données pour '{url.get('nom', 'inconnu')}' : {e}"
             )
 
 

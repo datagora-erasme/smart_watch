@@ -21,7 +21,10 @@ def get_prompt(row: dict, json_schema: dict = None) -> list:
     Returns:
         list: Liste des messages pour le LLM.
     """
-    logger.debug(f"Construction prompt pour: {row.get('nom', 'inconnu')}")
+    identifiant = row.get("identifiant", "N/A")
+    logger.debug(
+        f"*{identifiant}* Construction prompt pour '{row.get('nom', 'inconnu')}'"
+    )
 
     system_prompt = f"""Tu es un expert en extraction d'horaires d'ouverture à partir de texte.
 Ton objectif est d'analyser le contenu Markdown fourni, et d'extraire les horaires en respectant rigoureusement la structure JSON fournie.
@@ -58,15 +61,21 @@ Réponds en utilisant exclusivement le format JSON suivant. Respecte scrupuleuse
 {schema_str}
 ```
 """
-        logger.debug("Schéma JSON ajouté au prompt")
+        logger.debug(
+            f"*{identifiant}* Schéma JSON ajouté au prompt pour '{row.get('nom', 'inconnu')}'"
+        )
     else:
         user_prompt_content += "\nRéponds uniquement avec la structure JSON demandée."
-        logger.warning("Aucun schéma JSON fourni")
+        logger.warning(
+            f"*{identifiant}* Aucun schéma JSON fourni pour '{row.get('nom', 'inconnu')}'"
+        )
 
     messages = [
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": user_prompt_content},
     ]
 
-    logger.debug(f"Prompt construit: {len(messages)} messages")
+    logger.debug(
+        f"*{identifiant}* Prompt construit pour '{row.get('nom', 'inconnu')}' : {len(messages)} messages"
+    )
     return messages

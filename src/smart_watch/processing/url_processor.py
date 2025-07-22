@@ -54,14 +54,14 @@ class URLProcessor:
 
                 if result_data.get("statut") == "ok":
                     successful_count += 1
-                    self.logger.debug(f"[{lieu.identifiant}] URL OK pour '{lieu.nom}'")
+                    self.logger.debug(f"*{lieu.identifiant}* URL OK pour '{lieu.nom}'")
                 else:
                     self.logger.warning(
-                        f"[{lieu.identifiant}] URL en échec pour '{lieu.nom}' - {result_data.get('message')}"
+                        f"*{lieu.identifiant}* URL en échec pour '{lieu.nom}' - {result_data.get('message')}"
                     )
             except Exception as e:
                 self.logger.error(
-                    f"[{lieu.identifiant}] Erreur traitement URL pour '{lieu.nom}': {e}"
+                    f"*{lieu.identifiant}* Erreur traitement URL pour '{lieu.nom}': {e}"
                 )
 
         self.logger.info(

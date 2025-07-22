@@ -19,7 +19,7 @@ logger = create_logger(
     user_message="Erreur lors de la conversion HTML vers Markdown",
     default_return="",
 )
-def convert_html_to_markdown(html: str) -> str:
+def convert_html_to_markdown(html: str, identifiant: str = None) -> str:
     """
     Convertit une chaîne HTML en Markdown.
 
@@ -28,13 +28,15 @@ def convert_html_to_markdown(html: str) -> str:
 
     Args:
         html (str): Le contenu HTML à convertir.
+        identifiant (str, optional): L'identifiant du lieu pour le logging. Defaults to None.
 
     Returns:
         str: Le contenu converti en Markdown.
     """
+    log_prefix = f"*{identifiant}* " if identifiant else ""
     if not html:
         return ""
-    logger.debug("Conversion HTML vers Markdown avec BeautifulSoup + lxml")
+    logger.debug(f"{log_prefix}Conversion HTML vers Markdown avec BeautifulSoup + lxml")
     # Utiliser BeautifulSoup pour parser et nettoyer le HTML
     soup = bs4.BeautifulSoup(html, "lxml").get_text()  # n'extraire que le texte
     # Convertir l'objet Soup en Markdown

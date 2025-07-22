@@ -148,7 +148,9 @@ class MarkdownCleaner:
         stats.texts_processed = len(resultats_a_nettoyer)
 
         for i, (resultat, lieu) in enumerate(resultats_a_nettoyer, 1):
-            self.logger.debug(f"Nettoyage {i}/{len(resultats_a_nettoyer)}: {lieu.nom}")
+            self.logger.debug(
+                f"*{lieu.identifiant}* Nettoyage {i}/{len(resultats_a_nettoyer)} pour '{lieu.nom}'"
+            )
 
             original_markdown = resultat.markdown_brut or ""
             if not original_markdown.strip():

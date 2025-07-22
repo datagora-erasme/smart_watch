@@ -214,14 +214,18 @@ class DatabaseProcessor:
                                 count += 1
                             except Exception as e:
                                 self.logger.error(
-                                    f"[{row['identifiant']}] Erreur conversion pour '{row.get('nom', 'Nom Inconnu')}': {e}"
+                                    f"*{row['identifiant']}* Erreur conversion pour '{row.get('nom', 'Nom Inconnu')}': {e}"
                                 )
 
                 session.commit()
-                self.logger.info(f"Références {nom} mises à jour: {count} lieux")
+                self.logger.info(
+                    f"*{row['identifiant']}* Références pour '{nom}' mises à jour: {count} lieux"
+                )
 
             except Exception as e:
-                self.logger.error(f"Erreur chargement {nom}: {e}")
+                self.logger.error(
+                    f"*{row['identifiant']}* Erreur chargement '{nom}' : {e}"
+                )
 
     def _create_execution(self, session) -> int:
         """
@@ -307,7 +311,7 @@ class DatabaseProcessor:
                 # Mettre à jour l'ID d'exécution immédiatement
                 resultat.id_execution = execution_id
                 self.logger.info(
-                    f"[{lieu.identifiant}] Enregistrement pour '{lieu.nom}' assigné à l'exécution {execution_id} pour reprise"
+                    f"*{lieu.identifiant}* Enregistrement pour '{lieu.nom}' assigné à l'exécution {execution_id} pour reprise"
                 )
 
                 # Classifier selon ce qui manque

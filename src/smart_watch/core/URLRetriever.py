@@ -65,9 +65,9 @@ def retrieve_url(
 
     try:
         if total > 0:
-            logger.info(f"[{identifiant}] URL {index}/{total} en cours : {url}")
+            logger.info(f"*{identifiant}* URL {index}/{total} en cours : {url}")
         else:
-            logger.debug(f"[{identifiant}] Récupération URL avec Playwright: {url}")
+            logger.debug(f"*{identifiant}* Récupération URL avec Playwright: {url}")
 
         # Stratégies SSL/TLS progressives avec Playwright
         # 'low_security' et 'full_mitigation' sont gérés par 'ignore_https_errors=True'
@@ -93,7 +93,7 @@ def retrieve_url(
                         html_content = page.content()
                         if strategy != "default":
                             logger.debug(
-                                f"[{identifiant}] Succès avec la stratégie Playwright '{strategy}'"
+                                f"*{identifiant}* Succès avec la stratégie Playwright '{strategy}'"
                             )
                         break  # Success, exit the loop
 
@@ -101,7 +101,7 @@ def retrieve_url(
                     error_str = str(e).lower()
                     if "ssl" in error_str or "certificate" in error_str:
                         logger.warning(
-                            f"[{identifiant}] Échec avec la stratégie '{strategy}': {e}"
+                            f"*{identifiant}* Échec avec la stratégie '{strategy}': {e}"
                         )
                         if strategy == ssl_strategies[-1]:
                             raise  # Re-raise if it's the last strategy
@@ -111,7 +111,7 @@ def retrieve_url(
                             message="too many redirects",
                             code_http=310,
                         )
-                        logger.warning(f"[{identifiant}] Trop de redirections: {url}")
+                        logger.warning(f"*{identifiant}* Trop de redirections: {url}")
                         return row_dict
                     else:
                         raise  # Re-raise other Playwright errors
@@ -130,17 +130,19 @@ def retrieve_url(
                 code_http=response.status,
                 message=f"HTTP error {response.status}",
             )
-            logger.warning(f"[{identifiant}] Erreur HTTP {response.status} pour {url}")
+            logger.warning(f"*{identifiant}* Erreur HTTP {response.status} pour {url}")
         else:
             logger.debug(
-                f"[{identifiant}] Contenu récupéré : {len(html_content)} caractères"
+                f"*{identifiant}* Contenu récupéré : {len(html_content)} caractères"
             )
             row_dict["html"] = html_content
             if sortie == "markdown":
-                row_dict["markdown"] = convert_html_to_markdown(html=html_content)
+                row_dict["markdown"] = convert_html_to_markdown(
+                    html=html_content, identifiant=identifiant
+                )
 
             row_dict.update(statut="ok", code_http=response.status, message="")
-            logger.info(f"[{identifiant}] Récupération réussie : {url}")
+            logger.info(f"*{identifiant}* Récupération réussie : {url}")
 
     except PlaywrightTimeoutError as e:
         error_handler.handle_error(

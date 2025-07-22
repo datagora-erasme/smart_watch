@@ -80,7 +80,7 @@ class LLMProcessor:
             llm_data = json.loads(llm_result)
         except json.JSONDecodeError as e:
             self.logger.warning(
-                f"[{identifiant}] Le résultat LLM pour n'est pas un JSON valide: {e}"
+                f"*{identifiant}* Le résultat LLM pour n'est pas un JSON valide: {e}"
             )
             return "Erreur Conversion OSM: JSON invalide"
 
@@ -105,7 +105,7 @@ class LLMProcessor:
 
         if not osm_horaires:
             self.logger.debug(
-                f"[{identifiant}] La conversion OSM n'a produit aucun résultat."
+                f"*{identifiant}* La conversion OSM n'a produit aucun résultat."
             )
 
         return osm_horaires
@@ -121,7 +121,7 @@ class LLMProcessor:
 
             # Étape 1: Nettoyer systématiquement les horaires spécifiques passés pour tous les lieux.
             self.logger.debug(
-                f"[{lieu.identifiant}] Nettoyage des jours passés pour '{lieu.nom}'"
+                f"*{lieu.identifiant}* Nettoyage des jours passés pour '{lieu.nom}'"
             )
             periodes = llm_data.get("horaires_ouverture", {}).get("periodes", {})
             for periode_key, periode_data in periodes.items():
@@ -137,12 +137,12 @@ class LLMProcessor:
                                 horaires_filtres[date_str] = value
                         except ValueError:
                             self.logger.warning(
-                                f"[{lieu.identifiant}] Format de date invalide '{date_str}' dans les horaires spécifiques pour '{lieu.nom}', ignoré."
+                                f"*{lieu.identifiant}* Format de date invalide '{date_str}' dans les horaires spécifiques pour '{lieu.nom}', ignoré."
                             )
 
                     if len(horaires_filtres) < len(horaires_originaux):
                         self.logger.debug(
-                            f"[{lieu.identifiant}] Nettoyage de {len(horaires_originaux) - len(horaires_filtres)} jour(s) spécial(aux) passé(s) pour la période '{periode_key}' de '{lieu.nom}'"
+                            f"*{lieu.identifiant}* Nettoyage de {len(horaires_originaux) - len(horaires_filtres)} jour(s) spécial(aux) passé(s) pour la période '{periode_key}' de '{lieu.nom}'"
                         )
                     periode_data["horaires_specifiques"] = horaires_filtres
 
@@ -153,7 +153,7 @@ class LLMProcessor:
                 return json.dumps(llm_data, ensure_ascii=False)
 
             self.logger.debug(
-                f"[{lieu.identifiant}] Enrichissement en jours fériés pour '{lieu.nom}'"
+                f"*{lieu.identifiant}* Enrichissement en jours fériés pour '{lieu.nom}'"
             )
 
             # Récupérer et ajouter les jours fériés futurs
@@ -174,7 +174,7 @@ class LLMProcessor:
 
             if not tous_jours_feries:
                 self.logger.debug(
-                    f"[{lieu.identifiant}] Aucun jour férié futur à ajouter pour '{lieu.nom}'. Le nettoyage a peut-être eu lieu."
+                    f"*{lieu.identifiant}* Aucun jour férié futur à ajouter pour '{lieu.nom}'. Le nettoyage a peut-être eu lieu."
                 )
                 return json.dumps(llm_data, ensure_ascii=False)
 
@@ -198,26 +198,26 @@ class LLMProcessor:
                     horaires_specifiques[date_ferie] = "ferme"
                     nouveaux_jours_feries += 1
                     self.logger.debug(
-                        f"[{lieu.identifiant}] Ajout jour férié pour '{lieu.nom}': {date_ferie} - {nom_ferie}"
+                        f"*{lieu.identifiant}* Ajout jour férié pour '{lieu.nom}': {date_ferie} - {nom_ferie}"
                     )
 
             if nouveaux_jours_feries > 0:
                 periodes["jours_feries"]["horaires_specifiques"] = horaires_specifiques
                 periodes["jours_feries"]["source_found"] = True
                 self.logger.info(
-                    f"[{lieu.identifiant}] Enrichissement pour '{lieu.nom}': {nouveaux_jours_feries} nouveaux jours fériés ajoutés."
+                    f"*{lieu.identifiant}* Enrichissement pour '{lieu.nom}': {nouveaux_jours_feries} nouveaux jours fériés ajoutés."
                 )
 
             return json.dumps(llm_data, ensure_ascii=False)
 
         except requests.exceptions.RequestException as e:
             self.logger.warning(
-                f"[{lieu.identifiant}] Impossible de récupérer les jours fériés pour '{lieu.nom}' (erreur réseau): {e}"
+                f"*{lieu.identifiant}* Impossible de récupérer les jours fériés pour '{lieu.nom}' (erreur réseau): {e}"
             )
             return llm_result
         except Exception as e:
             self.logger.error(
-                f"[{lieu.identifiant}] Erreur lors du traitement des jours spéciaux pour '{lieu.nom}': {e}"
+                f"*{lieu.identifiant}* Erreur lors du traitement des jours spéciaux pour '{lieu.nom}': {e}"
             )
             return llm_result
 
@@ -261,7 +261,7 @@ class LLMProcessor:
                 if isinstance(llm_response, str):
                     # La réponse est une chaîne d'erreur
                     self.logger.error(
-                        f"[{lieu.identifiant}] Appel LLM échoué pour '{lieu.nom}': {llm_response}"
+                        f"*{lieu.identifiant}* Appel LLM échoué pour '{lieu.nom}': {llm_response}"
                     )
                     result_data["llm_horaires_json"] = f"Erreur LLM: {llm_response}"
                     result_data["llm_horaires_osm"] = f"Erreur LLM: {llm_response}"
@@ -271,7 +271,7 @@ class LLMProcessor:
                 # Vérifier si c'est bien un objet LLMResponse
                 if not hasattr(llm_response, "co2_emissions"):
                     self.logger.error(
-                        f"[{lieu.identifiant}] Réponse LLM inattendue pour '{lieu.nom}': {type(llm_response)}"
+                        f"*{lieu.identifiant}* Réponse LLM inattendue pour '{lieu.nom}': {type(llm_response)}"
                     )
                     result_data["llm_horaires_json"] = "Erreur LLM: réponse inattendue"
                     result_data["llm_horaires_osm"] = "Erreur LLM: réponse inattendue"
@@ -284,7 +284,7 @@ class LLMProcessor:
 
                 # Logger les émissions individuelles
                 self.logger.debug(
-                    f"[{lieu.identifiant}] Émissions CO2 pour cette requête pour '{lieu.nom}': {individual_emissions:.6f} kg"
+                    f"*{lieu.identifiant}* Émissions CO2 pour cette requête pour '{lieu.nom}': {individual_emissions:.6f} kg"
                 )
 
                 # Puis accumuler pour le total
@@ -317,14 +317,14 @@ class LLMProcessor:
                         error_msg = f"Erreur LLM: reçu '{llm_response.content}' - réponse inattendue"
 
                     self.logger.error(
-                        f"[{lieu.identifiant}] Appel LLM échoué pour '{lieu.nom}': {error_msg}"
+                        f"*{lieu.identifiant}* Appel LLM échoué pour '{lieu.nom}': {error_msg}"
                     )
                     result_data["llm_horaires_json"] = error_msg
                     result_data["llm_horaires_osm"] = error_msg
 
             except Exception as e:
                 self.logger.error(
-                    f"[{lieu.identifiant}] Erreur lors de l'appel LLM pour '{lieu.nom}': {e}"
+                    f"*{lieu.identifiant}* Erreur lors de l'appel LLM pour '{lieu.nom}': {e}"
                 )
                 error_msg = f"Erreur LLM: {e}"
                 result_data["llm_horaires_json"] = error_msg
@@ -334,7 +334,7 @@ class LLMProcessor:
 
         except Exception as e:
             self.logger.error(
-                f"[{lieu.identifiant}] Erreur critique traitement LLM pour '{lieu.nom}': {e}"
+                f"*{lieu.identifiant}* Erreur critique traitement LLM pour '{lieu.nom}': {e}"
             )
             return None
 
@@ -357,7 +357,7 @@ class LLMProcessor:
         successful_count = 0
         for i, (resultat, lieu) in enumerate(resultats_pour_llm, 1):
             self.logger.info(
-                f"[{lieu.identifiant}] LLM {i}/{len(resultats_pour_llm)} pour '{lieu.nom}'"
+                f"*{lieu.identifiant}* LLM {i}/{len(resultats_pour_llm)} pour '{lieu.nom}'"
             )
 
             try:
@@ -377,7 +377,7 @@ class LLMProcessor:
                 else:
                     # Erreur critique (pas de prompt généré)
                     self.logger.warning(
-                        f"[{lieu.identifiant}] Échec critique LLM pour '{lieu.nom}' - aucune donnée générée"
+                        f"*{lieu.identifiant}* Échec critique LLM pour '{lieu.nom}' - aucune donnée générée"
                     )
 
                 # Délai adaptatif
@@ -391,7 +391,7 @@ class LLMProcessor:
 
             except Exception as e:
                 self.logger.error(
-                    f"[{lieu.identifiant}] Erreur LLM pour '{lieu.nom}': {e}"
+                    f"*{lieu.identifiant}* Erreur LLM pour '{lieu.nom}': {e}"
                 )
                 # Ne pas mettre à jour la base de données en cas d'exception
 

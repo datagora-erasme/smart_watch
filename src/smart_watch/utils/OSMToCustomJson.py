@@ -448,7 +448,7 @@ class OsmToJsonConverter:
     ) -> Dict:
         """Convertit une chaîne OSM en JSON personnalisé."""
         logger.info(
-            f"Converting OSM string for: {metadata.get('identifiant', 'unknown') if metadata else 'unknown'}"
+            f"'{metadata.get('identifiant', 'unknown') if metadata else 'unknown'}' Conversion d'une chaîne OSM en JSON personnalisé."
         )
 
         # Parse la chaîne OSM

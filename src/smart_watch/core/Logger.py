@@ -105,7 +105,7 @@ class SmartWatchLogger:
                 return
 
             formatter = logging.Formatter(
-                "%(asctime)s - %(levelname)s - %(name)s : %(message)s"
+                "%(asctime)s | %(levelname)s | %(name)s | %(message)s"
             )
 
             # Créer le dossier logs s'il n'existe pas
