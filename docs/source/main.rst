@@ -1,8 +1,8 @@
 .. _main:
 
-#########################
-Orchestrateur ``main.py``
-#########################
+#############
+Orchestrateur
+#############
 
 Le fichier ``main.py`` est le point d'entrée principal de l'application **SmartWatch**. 
 Il orchestre l'ensemble du processus d'extraction, de traitement et de comparaison des horaires.

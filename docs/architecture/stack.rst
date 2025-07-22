@@ -113,15 +113,3 @@ Formats de données
 
 `HTML <https://developer.mozilla.org/fr/docs/Web/HTML>`__
     Format de rapport final avec visualisations interactives.
-
-
-Performance et parallélisme
-===========================
-
-Le système est optimisé pour traiter efficacement de grandes quantités d'URLs :
-
-- Traitement parallèle : ThreadPoolExecutor pour les requêtes HTTP
-- Gestion mémoire : Utilisation de Polars pour les gros datasets
-- Cache intelligent : Évite le retraitement des données inchangées
-- Rotation des logs : Prévient l'accumulation excessive de fichiers
-- Timeouts configurables : Évite les blocages sur les ressources lentes
