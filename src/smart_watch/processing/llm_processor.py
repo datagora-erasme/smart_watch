@@ -110,28 +110,17 @@ class LLMProcessor:
 
         return osm_horaires
 
-    def _enrich_with_jours_feries(self, llm_result: str, lieu) -> str:
+    def _process_special_days(self, llm_result: str, lieu) -> str:
         """
-        Enrichit le JSON LLM avec les jours fériés et nettoie les dates passées.
+        Nettoie les jours spéciaux passés du JSON LLM et l'enrichit avec les jours fériés
+        pour les types de lieux spécifiques.
         """
         try:
-            # Définir les types de lieux pour l'enrichissement des jours fériés
-            types_de_lieux_concernes = ["mairie", "bibliothèque"]
-
-            # Vérifier si le type de lieu est concerné
-            if lieu.type_lieu.lower() not in types_de_lieux_concernes:
-                return llm_result
-
-            self.logger.debug(
-                f"Début du traitement des jours spéciaux pour: {lieu.nom}"
-            )
-
-            # Parser le JSON LLM
             llm_data = json.loads(llm_result)
             today = datetime.now().date()
 
-            # 1. Nettoyer les horaires spécifiques (jours spéciaux) passés ou présents
-            # récupérés par le LLM dans toutes les périodes.
+            # Étape 1: Nettoyer systématiquement les horaires spécifiques passés pour tous les lieux.
+            self.logger.debug(f"Nettoyage des jours passés pour: {lieu.nom}")
             periodes = llm_data.get("horaires_ouverture", {}).get("periodes", {})
             for periode_key, periode_data in periodes.items():
                 if "horaires_specifiques" in periode_data and isinstance(
@@ -141,19 +130,29 @@ class LLMProcessor:
                     horaires_filtres = {}
                     for date_str, value in horaires_originaux.items():
                         try:
+                            # Conserver uniquement les dates strictement futures
                             if datetime.strptime(date_str, "%Y-%m-%d").date() > today:
                                 horaires_filtres[date_str] = value
                         except ValueError:
                             self.logger.warning(
                                 f"Format de date invalide '{date_str}' dans les horaires spécifiques pour {lieu.identifiant}, ignoré."
                             )
+
                     if len(horaires_filtres) < len(horaires_originaux):
                         self.logger.debug(
-                            f"Nettoyage de {len(horaires_originaux) - len(horaires_filtres)} jour(s) spécial(aux) passé(s) pour la période '{periode_key}'"
+                            f"Nettoyage de {len(horaires_originaux) - len(horaires_filtres)} jour(s) spécial(aux) passé(s) pour la période '{periode_key}' de {lieu.nom}"
                         )
                     periode_data["horaires_specifiques"] = horaires_filtres
 
-            # 2. Récupérer et ajouter les jours fériés futurs
+            # Étape 2: Enrichir avec les jours fériés uniquement pour certains types de lieux.
+            types_de_lieux_concernes = ["mairie", "bibliothèque"]
+            if lieu.type_lieu.lower() not in types_de_lieux_concernes:
+                # Retourner le JSON nettoyé si le lieu n'est pas concerné par l'enrichissement.
+                return json.dumps(llm_data, ensure_ascii=False)
+
+            self.logger.debug(f"Enrichissement en jours fériés pour: {lieu.nom}")
+
+            # Récupérer et ajouter les jours fériés futurs
             annee_courante = today.year
             jours_feries_courants = get_jours_feries(annee=annee_courante) or {}
             jours_feries_suivants = get_jours_feries(annee=annee_courante + 1) or {}
@@ -212,7 +211,7 @@ class LLMProcessor:
             return llm_result
         except Exception as e:
             self.logger.error(
-                f"Erreur enrichissement jours fériés pour {lieu.identifiant}: {e}"
+                f"Erreur lors du traitement des jours spéciaux pour {lieu.identifiant}: {e}"
             )
             return llm_result
 
@@ -289,14 +288,16 @@ class LLMProcessor:
                 if llm_response.content and not str(llm_response.content).startswith(
                     "Erreur"
                 ):
-                    # Enrichissement avec les jours fériés
-                    enriched_result = self._enrich_with_jours_feries(
+                    # Traitement des jours spéciaux (nettoyage et enrichissement)
+                    processed_result = self._process_special_days(
                         llm_response.content, lieu
                     )
 
                     # Conversion OSM (le try/except n'est plus nécessaire ici)
-                    osm_result = self._convert_to_osm(enriched_result, lieu.identifiant)
-                    result_data["llm_horaires_json"] = enriched_result
+                    osm_result = self._convert_to_osm(
+                        processed_result, lieu.identifiant
+                    )
+                    result_data["llm_horaires_json"] = processed_result
                     result_data["llm_horaires_osm"] = osm_result
                 else:
                     # Gestion des erreurs LLM avec messages plus explicites
