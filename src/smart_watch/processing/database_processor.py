@@ -214,7 +214,7 @@ class DatabaseProcessor:
                                 count += 1
                             except Exception as e:
                                 self.logger.error(
-                                    f"Erreur conversion {row['identifiant']}: {e}"
+                                    f"[{row['identifiant']}] Erreur conversion pour '{row.get('nom', 'Nom Inconnu')}': {e}"
                                 )
 
                 session.commit()
@@ -307,7 +307,7 @@ class DatabaseProcessor:
                 # Mettre à jour l'ID d'exécution immédiatement
                 resultat.id_execution = execution_id
                 self.logger.info(
-                    f"Enregistrement '{lieu.identifiant}' assigné à l'exécution {execution_id} pour reprise"
+                    f"[{lieu.identifiant}] Enregistrement pour '{lieu.nom}' assigné à l'exécution {execution_id} pour reprise"
                 )
 
                 # Classifier selon ce qui manque

@@ -163,7 +163,7 @@ class ComparisonProcessor:
             successful_count = 0
             for i, (resultat, lieu) in enumerate(resultats_pour_comparaison, 1):
                 self.logger.info(
-                    f"Comparaison {i}/{len(resultats_pour_comparaison)}: {lieu.nom} (exec: {resultat.id_execution})"
+                    f"[{lieu.identifiant}] Comparaison {i}/{len(resultats_pour_comparaison)} pour '{lieu.nom}' (exec: {resultat.id_execution})"
                 )
 
                 try:
@@ -179,11 +179,13 @@ class ComparisonProcessor:
                         successful_count += 1
                     else:
                         self.logger.warning(
-                            f"Comparaison échouée pour {lieu.nom} : {comparison_result.get('differences', 'Erreur inconnue')} - Base non modifiée"
+                            f"[{lieu.identifiant}] Comparaison échouée pour '{lieu.nom}': {comparison_result.get('differences', 'Erreur inconnue')} - Base non modifiée"
                         )
 
                 except Exception as e:
-                    self.logger.error(f"Erreur comparaison pour {lieu.nom}: {e}")
+                    self.logger.error(
+                        f"[{lieu.identifiant}] Erreur comparaison pour '{lieu.nom}': {e}"
+                    )
                     # Ne pas mettre à jour la base en cas d'erreur
 
             self.logger.info(

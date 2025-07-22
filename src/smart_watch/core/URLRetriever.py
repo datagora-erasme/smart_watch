@@ -65,7 +65,7 @@ def retrieve_url(
 
     try:
         if total > 0:
-            logger.info(f"URL {index}/{total} en cours : {url}")
+            logger.info(f"[{identifiant}] URL {index}/{total} en cours : {url}")
         else:
             logger.debug(f"[{identifiant}] Récupération URL avec Playwright: {url}")
 
@@ -93,7 +93,7 @@ def retrieve_url(
                         html_content = page.content()
                         if strategy != "default":
                             logger.debug(
-                                f"[{identifiant}] Succès avec la stratégie Playwright : {strategy}"
+                                f"[{identifiant}] Succès avec la stratégie Playwright '{strategy}'"
                             )
                         break  # Success, exit the loop
 
@@ -111,7 +111,7 @@ def retrieve_url(
                             message="too many redirects",
                             code_http=310,
                         )
-                        logger.warning(f"[{identifiant}] Trop de redirections : {url}")
+                        logger.warning(f"[{identifiant}] Trop de redirections: {url}")
                         return row_dict
                     else:
                         raise  # Re-raise other Playwright errors
