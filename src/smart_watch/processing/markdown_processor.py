@@ -3,16 +3,15 @@ Processeur pour filtrer le contenu markdown et extraire les sections pertinentes
 Utilise des embeddings sémantiques pour identifier les sections les plus pertinentes.
 """
 
-import re
 from typing import List, Tuple
 
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 
-from ..core.ErrorHandler import ErrorCategory, ErrorSeverity, handle_errors
-from ..data_models.schema_bdd import Lieux, ResultatsExtraction
 from ..core.ConfigManager import ConfigManager
+from ..core.ErrorHandler import ErrorCategory, ErrorSeverity, handle_errors
 from ..core.LLMClient import LLMResponse, MistralAPIClient, OpenAICompatibleClient
+from ..data_models.schema_bdd import Lieux, ResultatsExtraction
 
 
 class MarkdownProcessor:
@@ -233,46 +232,68 @@ class MarkdownProcessor:
             return markdown_content, co2_for_this_document
 
         try:
-            # Segmenter le texte en phrases
-            phrases = [
-                p.strip() for p in re.split(r"[.\n]", markdown_content) if p.strip()
-            ]
-            if not phrases:
+            # Diviser le contenu en lignes, en conservant les sauts de ligne
+            lines = markdown_content.splitlines(keepends=True)
+
+            # Filtrer les lignes vides pour l'analyse sémantique, mais les conserver pour la reconstruction
+            non_empty_lines = [line for line in lines if line.strip()]
+
+            if not non_empty_lines:
                 return markdown_content, co2_for_this_document
 
-            # Générer les embeddings des phrases du document
-            embed_phrases, co2_phrases = self._get_embeddings(phrases)
-            co2_for_this_document += co2_phrases
-            embed_phrases = np.array(embed_phrases)
+            # Générer les embeddings pour les lignes non vides
+            embed_lines, co2_lines = self._get_embeddings(non_empty_lines)
+            co2_for_this_document += co2_lines
+            embed_lines = np.array(embed_lines)
 
-            # Calculer les similarités avec les embeddings de référence pré-calculés
-            similarites = cosine_similarity(self.reference_embeddings, embed_phrases)
+            # Calculer les similarités avec les embeddings de référence
+            similarites = cosine_similarity(self.reference_embeddings, embed_lines)
             similarites_max = similarites.max(axis=0)
 
-            # Normaliser pour obtenir des scores [0, 1]
-            min_val = similarites_max.min()
-            max_val = similarites_max.max()
-            if max_val - min_val > 0:
-                similarites_norm = (similarites_max - min_val) / (max_val - min_val)
-            else:
-                similarites_norm = similarites_max * 0  # all zeros
+            # Normaliser les scores
+            min_val, max_val = similarites_max.min(), similarites_max.max()
+            similarites_norm = (
+                (similarites_max - min_val) / (max_val - min_val)
+                if max_val > min_val
+                else np.zeros_like(similarites_max)
+            )
 
-            # Filtrer les phrases ayant un score élevé
+            # Identifier les lignes pertinentes
             threshold = self.config.markdown_filtering.similarity_threshold
             context_window = self.config.markdown_filtering.context_window
-            relevant_indices = set()
 
+            # Créer une map pour retrouver l'index original dans `lines`
+            line_map = {
+                i: original_idx
+                for i, (original_idx, _) in enumerate(
+                    filter(lambda x: x[1].strip(), enumerate(lines))
+                )
+            }
+
+            relevant_indices = set()
             for i, score in enumerate(similarites_norm):
                 if score >= threshold:
-                    context_indices = self._extract_context_around_phrase(
-                        phrases, i, context_window
+                    # Extraire le contexte basé sur les lignes non vides
+                    context_indices_non_empty = self._extract_context_around_phrase(
+                        non_empty_lines, i, context_window
                     )
-                    relevant_indices.update(context_indices)
+                    # Mapper vers les indices originaux
+                    for idx in context_indices_non_empty:
+                        if idx in line_map:
+                            relevant_indices.add(line_map[idx])
 
-            # Reconstruire le contenu
+            # Reconstruire le contenu en préservant la structure
             if relevant_indices:
-                relevant_phrases = [phrases[i] for i in sorted(list(relevant_indices))]
-                filtered_content = ". ".join(relevant_phrases)
+                # Assurer que les lignes vides entre les sections pertinentes sont conservées
+                final_indices = set()
+                sorted_indices = sorted(list(relevant_indices))
+                if sorted_indices:
+                    for i in range(min(sorted_indices), max(sorted_indices) + 1):
+                        final_indices.add(i)
+
+                filtered_content = "".join(
+                    lines[i] for i in sorted(list(final_indices))
+                )
                 return (
                     filtered_content if filtered_content.strip() else markdown_content
                 ), co2_for_this_document
@@ -295,38 +316,3 @@ class MarkdownProcessor:
                 session.commit()
         finally:
             session.close()
-            resultat = session.get(ResultatsExtraction, resultat_id)
-            if resultat:
-                resultat.markdown_horaires = filtered_markdown
-                session.commit()
-        """Met à jour le markdown filtré en base de données."""
-        session = db_manager.Session()
-        try:
-            resultat = session.get(ResultatsExtraction, resultat_id)
-            if resultat:
-                resultat.markdown_horaires = filtered_markdown
-                session.commit()
-        finally:
-            session.close()
-            resultat = session.get(ResultatsExtraction, resultat_id)
-            if resultat:
-                resultat.markdown_horaires = filtered_markdown
-                session.commit()
-            session.close()
-            resultat = session.get(ResultatsExtraction, resultat_id)
-            if resultat:
-                resultat.markdown_horaires = filtered_markdown
-                session.commit()
-        """Met à jour le markdown filtré en base de données."""
-        session = db_manager.Session()
-        try:
-            resultat = session.get(ResultatsExtraction, resultat_id)
-            if resultat:
-                resultat.markdown_horaires = filtered_markdown
-                session.commit()
-        finally:
-            session.close()
-            resultat = session.get(ResultatsExtraction, resultat_id)
-            if resultat:
-                resultat.markdown_horaires = filtered_markdown
-                session.commit()
