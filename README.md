@@ -120,16 +120,24 @@ Le modèle JSON sera automatiquement passé en argument du prompt et assure norm
     cd smart_watch
     ```
 
-2.  **Créez un environnement virtuel et activez-le :**
-    ```sh
-    python -m venv .venv
-    source .venv/bin/activate  # Sur Windows: .venv\Scripts\activate
-    ```
+2.  **Créez un environnement virtuel et installez les dépendances :**
 
-3.  **Installez les dépendances :**
-    ```sh
-    pip install -r requirements.txt
-    ```
+    *   **Avec `pip` (méthode classique) :**
+        ```sh
+        # Créez et activez l'environnement virtuel
+        python -m venv .venv
+        source .venv/bin/activate  # Sur Windows: .venv\Scripts\activate
+
+        # Installez les dépendances
+        pip install -r requirements.txt
+        ```
+
+    *   **Avec `uv` (méthode recommandée, plus rapide) :**
+        ```sh
+        # Créez, activez et installez les dépendances en une seule commande
+        uv sync
+        ```
+        Pour activer l'environnement par la suite : `source .venv/bin/activate` (ou `.venv\Scripts\activate` sur Windows).
 
 ## Configuration
 
