@@ -19,7 +19,7 @@ class LLMConfig:
 
     fournisseur: str
     modele: str
-    api_key: str
+    api_key: Optional[str] = None  # Clé API optionnelle
     base_url: Optional[str] = None
     temperature: float = 0
     timeout: int = 30
@@ -47,6 +47,9 @@ class LLMConfigManager(BaseConfig):
         # Tentative Mistral
         llm_api_key_mistral = self.get_env_var("LLM_API_KEY_MISTRAL")
 
+        # Tentative modèle local
+        embed_modele_local = self.get_env_var("EMBED_MODELE_LOCAL")
+
         if llm_api_key_openai:
             return LLMConfig(
                 fournisseur="OPENAI",
@@ -64,25 +67,28 @@ class LLMConfigManager(BaseConfig):
                 temperature=float(self.get_env_var("LLM_TEMPERATURE", "0")),
                 timeout=int(self.get_env_var("LLM_TIMEOUT", "30")),
             )
+        elif embed_modele_local:
+            return LLMConfig(
+                fournisseur="LOCAL",
+                modele=embed_modele_local,
+                api_key=None,  # Pas de clé API pour le modèle local
+            )
         else:
             raise ValueError(
-                "Aucune clé API LLM trouvée (LLM_API_KEY_OPENAI ou LLM_API_KEY_MISTRAL)"
+                "Aucune configuration LLM ou embedding local trouvée."
+                "Veuillez définir LLM_API_KEY_OPENAI, LLM_API_KEY_MISTRAL, ou EMBED_MODELE_LOCAL."
             )
 
-    def _get_default_config(self):
+    def _get_default_config(self) -> LLMConfig:
         """Retourne une configuration par défaut en cas d'erreur."""
-        return type(
-            "DefaultConfig",
-            (),
-            {
-                "fournisseur": "OPENAI",
-                "modele": "gpt-3.5-turbo",
-                "api_key": "",
-                "base_url": "http://localhost:8000",
-                "temperature": 0.1,
-                "timeout": 30,
-            },
-        )()
+        return LLMConfig(
+            fournisseur="LOCAL",
+            modele="paraphrase-multilingual-mpnet-base-v2",
+            api_key=None,
+            base_url=None,
+            temperature=0.1,
+            timeout=30,
+        )
 
     @handle_errors(
         category=ErrorCategory.CONFIGURATION,
@@ -94,9 +100,11 @@ class LLMConfigManager(BaseConfig):
         """Valide la configuration LLM."""
         validation_errors = []
 
-        # Vérifier la clé API
-        if not self.config.api_key:
-            validation_errors.append("Clé API LLM manquante")
+        # Si le fournisseur n'est pas local, vérifier la clé API
+        if self.config.fournisseur != "LOCAL" and not self.config.api_key:
+            validation_errors.append(
+                "Clé API LLM manquante pour le fournisseur configuré"
+            )
 
         # Vérifier le modèle
         if not self.config.modele:

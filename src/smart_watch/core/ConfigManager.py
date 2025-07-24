@@ -161,11 +161,9 @@ class ConfigManager:
 
         logger.info("---")
         logger.info(f"Embeddings: {self.markdown_filtering.embed_fournisseur}")
-        if self.markdown_filtering.embed_fournisseur == "OPENAI":
-            logger.info(f"  Modèle: {self.markdown_filtering.embed_modele_openai}")
-            logger.info(f"  URL: {self.markdown_filtering.embed_base_url_openai}")
-        else:  # MISTRAL
-            logger.info(f"  Modèle: {self.markdown_filtering.embed_modele_mistral}")
+        logger.info(f"  Modèle: {self.markdown_filtering.embed_modele}")
+        if self.markdown_filtering.embed_fournisseur in ["OPENAI", "MISTRAL"]:
+            logger.info(f"  URL: {self.markdown_filtering.embed_base_url}")
 
         logger.info(
             f"  Seuil similarité: {self.markdown_filtering.similarity_threshold}"
