@@ -6,6 +6,7 @@ Utilise des embeddings sémantiques pour identifier les sections les plus pertin
 from typing import List, Tuple
 
 import numpy as np
+from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 
 from ..core.ConfigManager import ConfigManager
@@ -24,6 +25,7 @@ class MarkdownProcessor:
             0.0  # Accumulation des émissions pour cette exécution
         )
         self.reference_embeddings = None  # Pour stocker les embeddings de référence
+        self.local_embed_model = None  # Pour le modèle local
 
         # Initialisation du client pour les embeddings selon le fournisseur configuré
         try:
@@ -42,25 +44,40 @@ class MarkdownProcessor:
         """Initialise le client approprié pour les embeddings selon la configuration."""
         embed_config = self.config.markdown_filtering
 
-        if embed_config.embed_fournisseur == "MISTRAL":
+        # Par défaut, on utilise le modèle local (SentenceTransformer)
+        if (
+            embed_config.embed_fournisseur == "LOCAL"
+            or not embed_config.embed_fournisseur
+        ):
+            try:
+                self.local_embed_model = SentenceTransformer(embed_config.embed_modele)
+                self.logger.info(
+                    f"Modèle d'embedding local chargé: {embed_config.embed_modele}"
+                )
+                self.embed_client = None  # Pas de client API pour le local
+            except Exception as e:
+                self.logger.error(f"Erreur chargement modèle local: {e}")
+                raise
+        elif embed_config.embed_fournisseur == "MISTRAL":
             self.embed_client = MistralAPIClient(
-                api_key=embed_config.embed_api_key_mistral,
-                model=embed_config.embed_modele_mistral,
+                api_key=embed_config.embed_api_key,
+                model=embed_config.embed_modele,
                 timeout=30,
             )
             self.logger.debug(
-                f"Client embeddings Mistral initialisé avec modèle {embed_config.embed_modele_mistral}"
+                f"Client embeddings Mistral initialisé avec modèle {embed_config.embed_modele}"
             )
         else:  # Par défaut ou si "OPENAI"
-            self.embed_client = OpenAICompatibleClient(
-                api_key=embed_config.embed_api_key_openai,
-                model=embed_config.embed_modele_openai,
-                base_url=embed_config.embed_base_url_openai,
-                timeout=30,
-            )
-            self.logger.debug(
-                f"Client embeddings OpenAI initialisé avec modèle {embed_config.embed_modele_openai}"
-            )
+            if embed_config.embed_api_key:
+                self.embed_client = OpenAICompatibleClient(
+                    api_key=embed_config.embed_api_key,
+                    model=embed_config.embed_modele,
+                    base_url=embed_config.embed_base_url,
+                    timeout=30,
+                )
+                self.logger.debug(
+                    f"Client embeddings OpenAI initialisé avec modèle {embed_config.embed_modele}"
+                )
 
     @handle_errors(
         category=ErrorCategory.EMBEDDINGS,
@@ -71,27 +88,38 @@ class MarkdownProcessor:
     )
     def _get_embeddings(self, texts: List[str]) -> Tuple[np.ndarray, float]:
         """Obtient les embeddings pour une liste de textes."""
-        if not self.embed_client:
-            raise ValueError("Le client embeddings n'est pas initialisé")
-
-        try:
-            # Appel aux embeddings avec le client approprié
-            response: LLMResponse = self.embed_client.call_embeddings(texts)
-
-            if isinstance(response.content, list):
-                embeddings = np.array(response.content)
-
-                # Accumuler les émissions CO2
-                self.total_co2_emissions += response.co2_emissions
-
-                return embeddings, response.co2_emissions
-            else:
-                self.logger.error("Format de réponse embeddings inattendu")
-                raise ValueError("Format de réponse embeddings inattendu")
-
-        except Exception as e:
-            self.logger.error(f"Erreur lors du calcul des embeddings: {e}")
-            raise
+        if self.local_embed_model:
+            try:
+                embeddings = self.local_embed_model.encode(
+                    texts, show_progress_bar=False
+                )
+                self.logger.info(
+                    f"{len(texts)} embeddings calculés avec le modèle local."
+                )
+                return np.array(embeddings), 0.0  # Pas d'émissions CO2 pour le local
+            except Exception as e:
+                self.logger.error(f"Erreur calcul embeddings locaux: {e}")
+                raise
+        elif self.embed_client:
+            try:
+                response: LLMResponse = self.embed_client.call_embeddings(texts)
+                if isinstance(response.content, list):
+                    embeddings = np.array(response.content)
+                    self.total_co2_emissions += response.co2_emissions
+                    self.logger.info(
+                        f"{len(texts)} embeddings calculés avec le modèle {self.embed_client.model}."
+                    )
+                    return embeddings, response.co2_emissions
+                else:
+                    self.logger.error("Format de réponse embeddings inattendu")
+                    raise ValueError("Format de réponse embeddings inattendu")
+            except Exception as e:
+                self.logger.error(f"Erreur lors du calcul des embeddings: {e}")
+                raise
+        else:
+            raise ValueError(
+                "Aucun client d'embedding (local ou API) n'est initialisé."
+            )
 
     def _calculate_reference_embeddings(self):
         """Calcule les embeddings pour les phrases de référence."""
@@ -134,8 +162,9 @@ class MarkdownProcessor:
         self.total_co2_emissions = 0.0
         self.reference_embeddings = None  # Réinitialiser pour chaque exécution
 
-        if not self.embed_client:
-            self.logger.warning("Client embeddings non disponible - filtrage ignoré")
+        # Ne bloque pas si embed_client est None (cas LOCAL)
+        if not self.local_embed_model and not self.embed_client:
+            self.logger.warning("Aucun modèle d'embedding disponible - filtrage ignoré")
             return
 
         # Récupérer les enregistrements avec markdown à filtrer
@@ -154,9 +183,6 @@ class MarkdownProcessor:
             self.logger.info("Pré-calcul des embeddings de référence...")
             embed_themes, _ = self._get_embeddings(self.reference_phrases)
             self.reference_embeddings = np.array(embed_themes)
-            self.logger.info(
-                f"{len(self.reference_phrases)} embeddings de référence calculés."
-            )
         except Exception as e:
             self.logger.error(f"Erreur calcul embeddings de référence: {e}. Arrêt.")
             return
@@ -240,6 +266,10 @@ class MarkdownProcessor:
 
     def _filter_single_markdown(self, markdown_content: str) -> Tuple[str, float]:
         """Filtre un contenu markdown et retourne le contenu filtré et les émissions CO2."""
+        # Paramètres de chunking
+        CHUNK_SIZE = 200  # Nombre de caractères par chunk
+        CHUNK_OVERLAP = 50  # Chevauchement entre chunks
+
         co2_for_this_document = 0.0
         if (
             not markdown_content
@@ -249,74 +279,94 @@ class MarkdownProcessor:
             return markdown_content, co2_for_this_document
 
         try:
-            # Diviser le contenu en lignes, en conservant les sauts de ligne
-            lines = markdown_content.splitlines(keepends=True)
+            # Créer des chunks avec chevauchement
+            chunks = []
+            chunk_positions = []  # Pour retrouver la position dans le texte original
 
-            # Filtrer les lignes vides pour l'analyse sémantique, mais les conserver pour la reconstruction
-            non_empty_lines = [line for line in lines if line.strip()]
-            print(f"Nombre de lignes non vides: {len(non_empty_lines)}")
+            text = markdown_content.strip()
+            start = 0
 
-            if not non_empty_lines:
+            while start < len(text):
+                end = min(start + CHUNK_SIZE, len(text))
+
+                # Ajuster la fin pour éviter de couper au milieu d'un mot
+                if end < len(text):
+                    # Chercher le dernier espace avant la fin
+                    last_space = text.rfind(" ", start, end)
+                    if last_space > start:
+                        end = last_space
+
+                chunk = text[start:end].strip()
+                if chunk:  # Ignorer les chunks vides
+                    chunks.append(chunk)
+                    chunk_positions.append((start, end))
+
+                # Avancer avec chevauchement
+                start = max(start + 1, end - CHUNK_OVERLAP)
+
+                # Éviter la boucle infinie si on n'avance pas
+                if start >= end:
+                    start = end
+
+            if not chunks:
                 return markdown_content, co2_for_this_document
 
-            # Générer les embeddings pour les lignes non vides
-            embed_lines, co2_lines = self._get_embeddings(non_empty_lines)
-            co2_for_this_document += co2_lines
-            embed_lines = np.array(embed_lines)
+            # Générer les embeddings pour les chunks
+            embed_chunks, co2_chunks = self._get_embeddings(chunks)
+            co2_for_this_document += co2_chunks
+            embed_chunks = np.array(embed_chunks)
 
             # Calculer les similarités avec les embeddings de référence
-            similarites = cosine_similarity(self.reference_embeddings, embed_lines)
+            if self.reference_embeddings is None:
+                raise ValueError("Les embeddings de référence ne sont pas calculés.")
+
+            similarites = cosine_similarity(self.reference_embeddings, embed_chunks)
             similarites_max = similarites.max(axis=0)
 
-            # Normaliser les scores
-            min_val, max_val = similarites_max.min(), similarites_max.max()
-            similarites_norm = (
-                (similarites_max - min_val) / (max_val - min_val)
-                if max_val > min_val
-                else np.zeros_like(similarites_max)
-            )
-
-            # Identifier les lignes pertinentes
+            # Utiliser le seuil directement sans normalisation
             threshold = self.config.markdown_filtering.similarity_threshold
             context_window = self.config.markdown_filtering.context_window
 
-            # Créer une map pour retrouver l'index original dans `lines`
-            line_map = {
-                i: original_idx
-                for i, (original_idx, _) in enumerate(
-                    filter(lambda x: x[1].strip(), enumerate(lines))
-                )
-            }
-
-            relevant_indices = set()
-            for i, score in enumerate(similarites_norm):
+            # Identifier les chunks pertinents
+            relevant_chunks = set()
+            for i, score in enumerate(similarites_max):
                 if score >= threshold:
-                    # Extraire le contexte basé sur les lignes non vides
-                    context_indices_non_empty = self._extract_context_around_phrase(
-                        non_empty_lines, i, context_window
-                    )
-                    # Mapper vers les indices originaux
-                    for idx in context_indices_non_empty:
-                        if idx in line_map:
-                            relevant_indices.add(line_map[idx])
+                    # Ajouter le contexte autour du chunk pertinent
+                    start_ctx = max(0, i - context_window)
+                    end_ctx = min(len(chunks), i + context_window + 1)
+                    for j in range(start_ctx, end_ctx):
+                        relevant_chunks.add(j)
 
-            # Reconstruire le contenu en préservant la structure
-            if relevant_indices:
-                # Assurer que les lignes vides entre les sections pertinentes sont conservées
-                final_indices = set()
-                sorted_indices = sorted(list(relevant_indices))
-                if sorted_indices:
-                    for i in range(min(sorted_indices), max(sorted_indices) + 1):
-                        final_indices.add(i)
-
-                filtered_content = "".join(
-                    lines[i] for i in sorted(list(final_indices))
-                )
-                return (
-                    filtered_content if filtered_content.strip() else markdown_content
-                ), co2_for_this_document
-            else:
+            if not relevant_chunks:
                 return markdown_content, co2_for_this_document
+
+            # Reconstruire le contenu à partir des chunks pertinents
+            # Fusionner les régions qui se chevauchent pour éviter les doublons
+            sorted_chunks = sorted(list(relevant_chunks))
+            merged_regions = []
+
+            for chunk_idx in sorted_chunks:
+                start_pos, end_pos = chunk_positions[chunk_idx]
+
+                # Fusionner avec la région précédente si elle chevauche
+                if merged_regions and start_pos <= merged_regions[-1][1]:
+                    merged_regions[-1] = (
+                        merged_regions[-1][0],
+                        max(merged_regions[-1][1], end_pos),
+                    )
+                else:
+                    merged_regions.append((start_pos, end_pos))
+
+            # Extraire le contenu filtré
+            filtered_parts = []
+            for start_pos, end_pos in merged_regions:
+                filtered_parts.append(text[start_pos:end_pos])
+
+            filtered_content = "\n\n".join(filtered_parts)
+
+            return (
+                filtered_content if filtered_content.strip() else markdown_content
+            ), co2_for_this_document
 
         except Exception as e:
             self.logger.error(f"Erreur lors du filtrage: {e}")
