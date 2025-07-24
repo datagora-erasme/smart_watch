@@ -13,7 +13,7 @@ from .base_config import BaseConfig
 class ProcessingConfig:
     """Configuration traitement."""
 
-    nb_threads_url: int = 5
+    nb_threads_url: int = 1
     delai_entre_appels: float = 1.0
     delai_en_cas_erreur: float = 5.0
     char_replacements: Dict[str, str] = None
@@ -59,9 +59,9 @@ class ProcessingConfigManager(BaseConfig):
         }
 
         return ProcessingConfig(
-            nb_threads_url=int(self.get_env_var("NB_THREADS_URL", "100")),
-            delai_entre_appels=float(self.get_env_var("DELAI_ENTRE_APPELS", "2.0")),
-            delai_en_cas_erreur=float(self.get_env_var("DELAI_EN_CAS_ERREUR", "30")),
+            nb_threads_url=int(self.get_env_var("NB_THREADS_URL")),
+            delai_entre_appels=float(self.get_env_var("DELAI_ENTRE_APPELS")),
+            delai_en_cas_erreur=float(self.get_env_var("DELAI_EN_CAS_ERREUR")),
             char_replacements=char_replacements,
         )
 
