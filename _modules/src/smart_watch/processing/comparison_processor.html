@@ -1,0 +1,374 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.smart_watch.processing.comparison_processor &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.jpg"/>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=d2e4462e"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/translations.js?v=e6b791cb"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/introduction.html">Présentation du projet</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/docker.html">Utilisation avec Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/configuration.html">Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture technique</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/main.html">Orchestrateur</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/diagramme.html">Pipeline de traitement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/bdd.html">Base de données</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/stack.html">Stack technique</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/config/index.html">Modules Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/config/index.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/config/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/config/index.html#architecture-de-configuration">Architecture de configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/config/index.html#hierarchie-de-configuration">Hiérarchie de configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/core/index.html">Vue d’ensemble</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/processing/index.html">Modules Processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/processing/index.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/processing/index.html#vue-d-ensemble">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/processing/index.html#modules">Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/utils/index.html">Modules Utils</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reporting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html">Modules Reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html#vue-d-ensemble">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html#pipeline-de-reporting">Pipeline de reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html#fonctionnalites-des-rapports">Fonctionnalités des rapports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html#classes-de-donnees-utilisees">Classes de données utilisées</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modèles de données</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/bdd.html">Base de données</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/diagramme.html">Pipeline de traitement</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Code du module</a></li>
+      <li class="breadcrumb-item active">src.smart_watch.processing.comparison_processor</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Code source de src.smart_watch.processing.comparison_processor</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Processeur pour les comparaisons d&#39;horaires.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..core.ComparateurHoraires</span><span class="w"> </span><span class="kn">import</span> <span class="n">HorairesComparator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..core.ConfigManager</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigManager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..data_models.schema_bdd</span><span class="w"> </span><span class="kn">import</span> <span class="n">Lieux</span><span class="p">,</span> <span class="n">ResultatsExtraction</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.database_processor</span><span class="w"> </span><span class="kn">import</span> <span class="n">DatabaseProcessor</span>
+
+
+<div class="viewcode-block" id="ComparisonProcessor">
+<a class="viewcode-back" href="../../../../source/modules/processing/comparison_processor.html#src.smart_watch.processing.comparison_processor.ComparisonProcessor">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ComparisonProcessor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Processeur pour les comparaisons d&#39;horaires.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ComparisonProcessor.__init__">
+<a class="viewcode-back" href="../../../../source/modules/processing/comparison_processor.html#src.smart_watch.processing.comparison_processor.ComparisonProcessor.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">ConfigManager</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span></div>
+
+
+<div class="viewcode-block" id="ComparisonProcessor._get_pending_comparisons">
+<a class="viewcode-back" href="../../../../source/modules/processing/comparison_processor.html#src.smart_watch.processing.comparison_processor.ComparisonProcessor._get_pending_comparisons">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_pending_comparisons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_manager</span><span class="p">:</span> <span class="n">DatabaseProcessor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Récupère les enregistrements en attente de comparaison.&quot;&quot;&quot;</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="n">db_manager</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Récupérer TOUS les enregistrements qui ont besoin d&#39;une comparaison</span>
+            <span class="c1"># peu importe leur execution_id</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">ResultatsExtraction</span><span class="p">,</span> <span class="n">Lieux</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Lieux</span><span class="p">,</span> <span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">lieu_id</span> <span class="o">==</span> <span class="n">Lieux</span><span class="o">.</span><span class="n">identifiant</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+                    <span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">llm_horaires_json</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                    <span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">llm_horaires_json</span><span class="o">.</span><span class="n">notlike</span><span class="p">(</span><span class="s2">&quot;Erreur LLM:%&quot;</span><span class="p">),</span>
+                    <span class="c1"># Condition principale : comparaison pas encore effectuée (NULL ou vide)</span>
+                    <span class="p">(</span>
+                        <span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">horaires_identiques</span><span class="o">.</span><span class="n">is_</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+                        <span class="o">|</span> <span class="p">(</span><span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">horaires_identiques</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+                    <span class="p">),</span>
+                <span class="p">)</span>
+                <span class="o">.</span><span class="n">all</span><span class="p">()</span>
+            <span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="ComparisonProcessor._compare_single">
+<a class="viewcode-back" href="../../../../source/modules/processing/comparison_processor.html#src.smart_watch.processing.comparison_processor.ComparisonProcessor._compare_single">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compare_single</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">comparator</span><span class="p">,</span> <span class="n">resultat</span><span class="p">,</span> <span class="n">lieu</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compare un seul enregistrement et retourne les résultats structurés.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Vérifier si on a des horaires data.grandlyon.com JSON pour ce lieu</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="ow">not</span> <span class="n">lieu</span><span class="o">.</span><span class="n">horaires_data_gl_json</span>
+                <span class="ow">or</span> <span class="n">lieu</span><span class="o">.</span><span class="n">horaires_data_gl_json</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span>
+            <span class="p">):</span>
+                <span class="k">return</span> <span class="p">{</span>
+                    <span class="s2">&quot;identique&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="s2">&quot;differences&quot;</span><span class="p">:</span> <span class="s2">&quot;Pas d&#39;horaires de référence data.grandlyon.com disponibles&quot;</span><span class="p">,</span>
+                <span class="p">}</span>
+
+            <span class="c1"># Charger les horaires data.grandlyon.com (déjà en format JSON)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">lieu</span><span class="o">.</span><span class="n">horaires_data_gl_json</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Erreur conversion:&quot;</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="p">{</span>
+                        <span class="s2">&quot;identique&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                        <span class="s2">&quot;differences&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Erreur dans les données GL: </span><span class="si">{</span><span class="n">lieu</span><span class="o">.</span><span class="n">horaires_data_gl_json</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="p">}</span>
+
+                <span class="n">horaires_gl_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">lieu</span><span class="o">.</span><span class="n">horaires_data_gl_json</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">{</span>
+                    <span class="s2">&quot;identique&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="s2">&quot;differences&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Erreur parsing JSON data.grandlyon.com: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="p">}</span>
+
+            <span class="c1"># Charger les horaires extraits par LLM</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">horaires_llm_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">resultat</span><span class="o">.</span><span class="n">llm_horaires_json</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">{</span>
+                    <span class="s2">&quot;identique&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="s2">&quot;differences&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Erreur parsing JSON LLM: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="p">}</span>
+
+            <span class="c1"># Effectuer la comparaison directe entre les deux JSON</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">comparison_result</span> <span class="o">=</span> <span class="n">comparator</span><span class="o">.</span><span class="n">compare_schedules</span><span class="p">(</span>
+                    <span class="n">horaires_gl_json</span><span class="p">,</span> <span class="n">horaires_llm_json</span>
+                <span class="p">)</span>
+
+                <span class="c1"># Préparer les résultats structurés</span>
+                <span class="k">if</span> <span class="n">comparison_result</span><span class="o">.</span><span class="n">identical</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="p">{</span>
+                        <span class="s2">&quot;identique&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>  <span class="c1"># True = identiques</span>
+                        <span class="s2">&quot;differences&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>  <span class="c1"># Pas de différences</span>
+                    <span class="p">}</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">differences_text</span> <span class="o">=</span> <span class="n">comparison_result</span><span class="o">.</span><span class="n">differences</span>
+
+                    <span class="k">return</span> <span class="p">{</span>
+                        <span class="s2">&quot;identique&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>  <span class="c1"># False = différents</span>
+                        <span class="s2">&quot;differences&quot;</span><span class="p">:</span> <span class="n">differences_text</span><span class="p">,</span>
+                    <span class="p">}</span>
+
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">{</span>
+                    <span class="s2">&quot;identique&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="s2">&quot;differences&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Erreur lors de la comparaison: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="p">}</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;identique&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">&quot;differences&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Erreur générale: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="ComparisonProcessor._update_comparison_result">
+<a class="viewcode-back" href="../../../../source/modules/processing/comparison_processor.html#src.smart_watch.processing.comparison_processor.ComparisonProcessor._update_comparison_result">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_update_comparison_result</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">db_manager</span><span class="p">:</span> <span class="n">DatabaseProcessor</span><span class="p">,</span> <span class="n">resultat_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result_data</span><span class="p">:</span> <span class="n">Dict</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Met à jour le résultat d&#39;une comparaison.&quot;&quot;&quot;</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="n">db_manager</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">resultat</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ResultatsExtraction</span><span class="p">,</span> <span class="n">resultat_id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">resultat</span><span class="p">:</span>
+                <span class="n">resultat</span><span class="o">.</span><span class="n">horaires_identiques</span> <span class="o">=</span> <span class="n">result_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;identique&quot;</span><span class="p">)</span>
+                <span class="n">resultat</span><span class="o">.</span><span class="n">differences_horaires</span> <span class="o">=</span> <span class="n">result_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;differences&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+                <span class="c1"># Ajouter erreur de comparaison si échec</span>
+                <span class="k">if</span> <span class="n">result_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;identique&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">db_manager</span><span class="o">.</span><span class="n">_add_error_to_result</span><span class="p">(</span>
+                        <span class="n">resultat</span><span class="p">,</span>
+                        <span class="s2">&quot;COMPARAISON&quot;</span><span class="p">,</span>
+                        <span class="n">result_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;differences&quot;</span><span class="p">,</span> <span class="s2">&quot;Erreur inconnue&quot;</span><span class="p">),</span>
+                    <span class="p">)</span>
+
+                <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="ComparisonProcessor.process_comparisons">
+<a class="viewcode-back" href="../../../../source/modules/processing/comparison_processor.html#src.smart_watch.processing.comparison_processor.ComparisonProcessor.process_comparisons">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">process_comparisons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_manager</span><span class="p">:</span> <span class="n">DatabaseProcessor</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Traite les comparaisons avec data.grandlyon.com.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">section</span><span class="p">(</span><span class="s2">&quot;COMPARAISON HORAIRES&quot;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">comparator</span> <span class="o">=</span> <span class="n">HorairesComparator</span><span class="p">()</span>
+
+            <span class="c1"># Récupérer les enregistrements nécessitant une comparaison</span>
+            <span class="n">resultats_pour_comparaison</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_pending_comparisons</span><span class="p">(</span><span class="n">db_manager</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">resultats_pour_comparaison</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Aucune comparaison nécessaire&quot;</span><span class="p">)</span>
+                <span class="k">return</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">resultats_pour_comparaison</span><span class="p">)</span><span class="si">}</span><span class="s2"> comparaisons à effectuer&quot;</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Afficher la répartition par execution_id pour debug</span>
+            <span class="n">executions_stats</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">resultat</span><span class="p">,</span> <span class="n">lieu</span> <span class="ow">in</span> <span class="n">resultats_pour_comparaison</span><span class="p">:</span>
+                <span class="n">exec_id</span> <span class="o">=</span> <span class="n">resultat</span><span class="o">.</span><span class="n">id_execution</span>
+                <span class="n">executions_stats</span><span class="p">[</span><span class="n">exec_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">executions_stats</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">exec_id</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+
+            <span class="k">for</span> <span class="n">exec_id</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">executions_stats</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - Exécution </span><span class="si">{</span><span class="n">exec_id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2"> comparaisons&quot;</span><span class="p">)</span>
+
+            <span class="n">successful_count</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">resultat</span><span class="p">,</span> <span class="n">lieu</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">resultats_pour_comparaison</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">lieu</span><span class="o">.</span><span class="n">identifiant</span><span class="si">}</span><span class="s2">* Comparaison </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">resultats_pour_comparaison</span><span class="p">)</span><span class="si">}</span><span class="s2"> pour &#39;</span><span class="si">{</span><span class="n">lieu</span><span class="o">.</span><span class="n">nom</span><span class="si">}</span><span class="s2">&#39; (exec: </span><span class="si">{</span><span class="n">resultat</span><span class="o">.</span><span class="n">id_execution</span><span class="si">}</span><span class="s2">)&quot;</span>
+                <span class="p">)</span>
+
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">comparison_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compare_single</span><span class="p">(</span><span class="n">comparator</span><span class="p">,</span> <span class="n">resultat</span><span class="p">,</span> <span class="n">lieu</span><span class="p">)</span>
+
+                    <span class="c1"># Ne mettre à jour que si la comparaison a réussi</span>
+                    <span class="k">if</span> <span class="n">comparison_result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;identique&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_update_comparison_result</span><span class="p">(</span>
+                            <span class="n">db_manager</span><span class="p">,</span>
+                            <span class="n">resultat</span><span class="o">.</span><span class="n">id_resultats_extraction</span><span class="p">,</span>
+                            <span class="n">comparison_result</span><span class="p">,</span>
+                        <span class="p">)</span>
+                        <span class="n">successful_count</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">lieu</span><span class="o">.</span><span class="n">identifiant</span><span class="si">}</span><span class="s2">* Comparaison échouée pour &#39;</span><span class="si">{</span><span class="n">lieu</span><span class="o">.</span><span class="n">nom</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">comparison_result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;differences&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Erreur inconnue&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2"> - Base non modifiée&quot;</span>
+                        <span class="p">)</span>
+
+                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">lieu</span><span class="o">.</span><span class="n">identifiant</span><span class="si">}</span><span class="s2">* Erreur comparaison pour &#39;</span><span class="si">{</span><span class="n">lieu</span><span class="o">.</span><span class="n">nom</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+                    <span class="c1"># Ne pas mettre à jour la base en cas d&#39;erreur</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Comparaisons: </span><span class="si">{</span><span class="n">successful_count</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">resultats_pour_comparaison</span><span class="p">)</span><span class="si">}</span><span class="s2"> réussies&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Comparateur non disponible: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur comparaisons: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

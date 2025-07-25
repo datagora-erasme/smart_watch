@@ -1,0 +1,237 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Report Manager &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.jpg"/>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=d2e4462e"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/translations.js?v=e6b791cb"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../search.html" />
+    <link rel="next" title="HTML Generator" href="html_generator.html" />
+    <link rel="prev" title="Modules Reporting" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/introduction.html">Présentation du projet</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/docker.html">Utilisation avec Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/configuration.html">Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture technique</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../main.html">Orchestrateur</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/diagramme.html">Pipeline de traitement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/bdd.html">Base de données</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/stack.html">Stack technique</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html">Modules Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html#architecture-de-configuration">Architecture de configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html#hierarchie-de-configuration">Hiérarchie de configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../core/index.html">Vue d’ensemble</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../processing/index.html">Modules Processing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../processing/index.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../processing/index.html#vue-d-ensemble">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../processing/index.html#modules">Modules</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../utils/index.html">Modules Utils</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reporting</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Modules Reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#fonctionnalites">Fonctionnalités</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#vue-d-ensemble">Vue d’ensemble</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html#modules">Modules</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Report Manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="html_generator.html">HTML Generator</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#pipeline-de-reporting">Pipeline de reporting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#fonctionnalites-des-rapports">Fonctionnalités des rapports</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#classes-de-donnees-utilisees">Classes de données utilisées</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modèles de données</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/bdd.html">Base de données</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/diagramme.html">Pipeline de traitement</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Modules Reporting</a></li>
+      <li class="breadcrumb-item active">Report Manager</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/source/modules/reporting/report_manager.rst.txt" rel="nofollow"> Afficher la source de la page</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="report-manager">
+<h1>Report Manager<a class="headerlink" href="#report-manager" title="Lien vers cette rubrique"></a></h1>
+<section id="fonctionnalites">
+<h2>Fonctionnalités<a class="headerlink" href="#fonctionnalites" title="Lien vers cette rubrique"></a></h2>
+<p>Le ReportManager orchestre la génération et l’envoi de rapports HTML avec création automatique d’archives ZIP contenant les logs. Il coordonne les différents composants de reporting et gère la configuration email.</p>
+<p><strong>Génération de rapports :</strong></p>
+<ul class="simple">
+<li><p>Coordination avec GenererRapportHTML pour création des rapports</p></li>
+<li><p>Génération simultanée du rapport complet et du résumé email</p></li>
+<li><p>Intégration des métadonnées d’exécution et statistiques</p></li>
+<li><p>Gestion des informations du modèle LLM utilisé</p></li>
+</ul>
+<p><strong>Création d’archives :</strong></p>
+<ul class="simple">
+<li><p>Création automatique de fichiers ZIP contenant les logs</p></li>
+<li><p>Inclusion des rapports HTML dans les archives</p></li>
+<li><p>Gestion des fichiers temporaires avec nettoyage automatique</p></li>
+<li><p>Compression optimisée pour l’envoi par email</p></li>
+</ul>
+<p><strong>Envoi par email :</strong></p>
+<ul class="simple">
+<li><p>Utilisation du EmailSender pour l’envoi des rapports</p></li>
+<li><p>Pièces jointes automatiques (ZIP + HTML)</p></li>
+<li><p>Template email avec résumé intégré</p></li>
+<li><p>Gestion des erreurs d’envoi avec logging détaillé</p></li>
+</ul>
+<p><strong>Nettoyage automatique :</strong></p>
+<ul class="simple">
+<li><p>Suppression des fichiers temporaires après envoi</p></li>
+<li><p>Gestion des erreurs de nettoyage</p></li>
+<li><p>Préservation des logs permanents</p></li>
+<li><p>Optimisation de l’espace disque</p></li>
+</ul>
+</section>
+<section id="module-src.smart_watch.reporting.report_manager">
+<span id="modules"></span><h2>Modules<a class="headerlink" href="#module-src.smart_watch.reporting.report_manager" title="Lien vers cette rubrique"></a></h2>
+<p>Gestionnaire pour la génération et l’envoi de rapports.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.smart_watch.reporting.report_manager.ReportManager">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.smart_watch.reporting.report_manager.</span></span><span class="sig-name descname"><span class="pre">ReportManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../core/ConfigManager.html#src.smart_watch.core.ConfigManager.ConfigManager" title="src.smart_watch.core.ConfigManager.ConfigManager"><span class="pre">ConfigManager</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/reporting/report_manager.html#ReportManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.reporting.report_manager.ReportManager" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(disponible dans Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Gestionnaire pour la génération et l’envoi de rapports.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.reporting.report_manager.ReportManager.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../core/ConfigManager.html#src.smart_watch.core.ConfigManager.ConfigManager" title="src.smart_watch.core.ConfigManager.ConfigManager"><span class="pre">ConfigManager</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/reporting/report_manager.html#ReportManager.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.reporting.report_manager.ReportManager.__init__" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.reporting.report_manager.ReportManager._create_logs_zip">
+<span class="sig-name descname"><span class="pre">_create_logs_zip</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/reporting/report_manager.html#ReportManager._create_logs_zip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.reporting.report_manager.ReportManager._create_logs_zip" title="Lien vers cette définition"></a></dt>
+<dd><p>Crée un fichier zip contenant tous les logs et la base de données.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.reporting.report_manager.ReportManager.generate_and_send_report">
+<span class="sig-name descname"><span class="pre">generate_and_send_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">execution_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/reporting/report_manager.html#ReportManager.generate_and_send_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.reporting.report_manager.ReportManager.generate_and_send_report" title="Lien vers cette définition"></a></dt>
+<dd><p>Génère et envoie le rapport par email.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.reporting.report_manager.ReportManager._send_email_report">
+<span class="sig-name descname"><span class="pre">_send_email_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resume_html</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">fichier_html</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">execution_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/reporting/report_manager.html#ReportManager._send_email_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.reporting.report_manager.ReportManager._send_email_report" title="Lien vers cette définition"></a></dt>
+<dd><p>Envoie le rapport par email.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pied de page">
+        <a href="index.html" class="btn btn-neutral float-left" title="Modules Reporting" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Précédent</a>
+        <a href="html_generator.html" class="btn btn-neutral float-right" title="HTML Generator" accesskey="n" rel="next">Suivant <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
