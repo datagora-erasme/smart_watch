@@ -155,25 +155,30 @@ class ConfigManager:
             None
         """
         logger.info("=== RÉSUMÉ CONFIGURATION ===")
-        logger.info(f"LLM: {self.llm.fournisseur} - {self.llm.modele}")
+        logger.info(f"LLM : {self.llm.fournisseur} - {self.llm.modele}")
         if self.llm.base_url:
-            logger.info(f"  URL: {self.llm.base_url}")
+            logger.info(f"  URL : {self.llm.base_url}")
 
         logger.info("---")
-        logger.info(f"Embeddings: {self.markdown_filtering.embed_fournisseur}")
-        logger.info(f"  Modèle: {self.markdown_filtering.embed_modele}")
+        logger.info(f"Embeddings : {self.markdown_filtering.embed_fournisseur}")
+        logger.info(f"  Modèle : {self.markdown_filtering.embed_modele}")
         if self.markdown_filtering.embed_fournisseur in ["OPENAI", "MISTRAL"]:
-            logger.info(f"  URL: {self.markdown_filtering.embed_base_url}")
+            logger.info(f"  URL : {self.markdown_filtering.embed_base_url}")
 
         logger.info(
-            f"  Seuil similarité: {self.markdown_filtering.similarity_threshold}"
-        )
-        logger.info(f"  Fenêtre contexte: {self.markdown_filtering.context_window}")
-        logger.info(
-            f"  Taille min contenu: {self.markdown_filtering.min_content_length}"
+            f"  Seuil similarité : {self.markdown_filtering.similarity_threshold}"
         )
         logger.info(
-            f"  Phrases référence: {len(self.markdown_filtering.reference_phrases)} phrases"
+            f"  Taille des chunks pour embeds : {self.markdown_filtering.chunk_size}"
+        )
+        logger.info(
+            f"  Chevauchement entre les chunks : {self.markdown_filtering.chunk_overlap}"
+        )
+        logger.info(
+            f"  Taille min contenu pour filtrer : {self.markdown_filtering.min_content_length}"
+        )
+        logger.info(
+            f"  Phrases référence : {len(self.markdown_filtering.reference_phrases)} phrases"
         )
 
         logger.info("---")

@@ -40,7 +40,10 @@ def convert_html_to_markdown(html: str, identifiant: str = None) -> str:
     len_avant = len(html)
 
     # Utiliser BeautifulSoup pour parser et nettoyer le HTML
-    soup = bs4.BeautifulSoup(html, "lxml").get_text()  # n'extraire que le texte
+    # N'extraire que le texte, et remplacer les balises HTML par des espaces
+    # pour éviter les problèmes de formatage
+    soup = bs4.BeautifulSoup(html, "lxml").get_text(separator=" ")
+
     cleaned_text = str(soup)
     len_apres = len(cleaned_text)
 

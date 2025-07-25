@@ -30,9 +30,11 @@ class MarkdownFilteringConfig:
             self.embed_base_url = None
 
         self.similarity_threshold = config_data.get("similarity_threshold")
-        self.context_window = config_data.get("context_window")
+        self.chunk_size = config_data.get("chunk_size")
+        self.chunk_overlap = config_data.get("chunk_overlap")
         self.min_content_length = config_data.get("min_content_length")
         self.reference_phrases = config_data.get("reference_phrases")
+        self.context_window_size = config_data.get("context_window_size", 1)
 
     def _determine_embed_provider(self, config_data: Dict) -> str:
         """
@@ -73,20 +75,20 @@ class MarkdownFilteringConfigManager(BaseConfig):
 
         return MarkdownFilteringConfig(
             {
-                # Paramètres embeddings OpenAI
                 "embed_api_key_openai": self.get_env_var("EMBED_API_KEY_OPENAI"),
                 "embed_base_url_openai": self.get_env_var("EMBED_BASE_URL_OPENAI"),
                 "embed_modele_openai": self.get_env_var("EMBED_MODELE_OPENAI"),
-                # Paramètres embeddings Mistral
                 "embed_api_key_mistral": self.get_env_var("EMBED_API_KEY_MISTRAL"),
                 "embed_modele_mistral": self.get_env_var("EMBED_MODELE_MISTRAL"),
-                # Modèle local
                 "embed_modele_local": self.get_env_var("EMBED_MODELE_LOCAL"),
-                # Paramètres généraux de filtrage
                 "similarity_threshold": float(self.get_env_var("SIMILARITY_THRESHOLD")),
-                "context_window": int(self.get_env_var("CONTEXT_WINDOW")),
+                "chunk_size": int(self.get_env_var("CHUNK_SIZE")),
+                "chunk_overlap": int(self.get_env_var("CHUNK_OVERLAP")),
                 "min_content_length": int(self.get_env_var("MIN_CONTENT_LENGTH")),
                 "reference_phrases": reference_phrases,
+                "context_window_size": int(
+                    self.get_env_var("CONTEXT_WINDOW_SIZE", "1")
+                ),
             }
         )
 
@@ -119,15 +121,29 @@ class MarkdownFilteringConfigManager(BaseConfig):
             )
 
         # Validation des autres paramètres
-        if not (0.0 <= self.config.similarity_threshold <= 1.0):
+        if self.config.similarity_threshold is not None and not (
+            0.0 <= self.config.similarity_threshold <= 1.0
+        ):
             validation_errors.append(
                 f"SIMILARITY_THRESHOLD doit être entre 0.0 et 1.0 (valeur actuelle: {self.config.similarity_threshold})"
             )
 
-        if self.config.context_window < 0:
+        if self.config.chunk_size is None or self.config.chunk_size <= 0:
             validation_errors.append(
-                f"CONTEXT_WINDOW doit être positif (valeur actuelle: {self.config.context_window})"
+                f"CHUNK_SIZE doit être un entier positif (valeur actuelle: {self.config.chunk_size})"
             )
+
+        if self.config.chunk_overlap is None or self.config.chunk_overlap < 0:
+            validation_errors.append(
+                f"CHUNK_OVERLAP doit être un entier positif ou nul (valeur actuelle: {self.config.chunk_overlap})"
+            )
+
+        if (
+            self.config.chunk_overlap is not None
+            and self.config.chunk_size is not None
+            and self.config.chunk_overlap >= self.config.chunk_size
+        ):
+            validation_errors.append("CHUNK_OVERLAP doit être inférieur à CHUNK_SIZE")
 
         if not self.config.reference_phrases:
             validation_errors.append("REFERENCE_PHRASES est vide ou non configuré")
