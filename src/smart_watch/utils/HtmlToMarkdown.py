@@ -51,7 +51,7 @@ def convert_html_to_markdown(html: str, identifiant: str = None) -> str:
         reduction = ((len_avant - len_apres) / len_avant) * 100
         logger.info(
             f"{log_prefix}Taille avant/après filtrage texte HTML : {len_avant} -> {len_apres} "
-            f"caractères (réduction de {reduction:.2f}%)."
+            f"caractères (-{reduction:.2f}%)."
         )
     else:
         logger.info(f"{log_prefix}Pas de contenu HTML à nettoyer (0 caractère).")

@@ -196,7 +196,7 @@ class MarkdownProcessor:
                     reduction = ((len_avant - len_apres) / len_avant) * 100
                     self.logger.info(
                         f"*{lieu.identifiant}* Taille avant/après filtrage: {len_avant} -> {len_apres} "
-                        f"caractères (réduction de {reduction:.2f}%)."
+                        f"caractères (-{reduction:.2f}%)."
                     )
                 else:
                     self.logger.info(
