@@ -13,14 +13,25 @@ L'enjeu est de contraindre la sortie du LLM afin d'obtenir des données fiables,
 
 Dans une démarche d'IA responsable, le projet intègre également le suivi de la consommation carbone des modèles utilisés.
 
-Documentation
-==============
+Sommaire
+========
 
-Cette documentation détaille les divers modules du projet Smart Watch, leurs interactions et leur architecture technique.
+Cette documentation détaille les divers modules du projet Smart Watch, leurs interactions et leur architecture technique. Elle est organisée de la manière suivante :
 
-Elle est organisée de la manière suivante :
-
-1. Introduction
-2. :doc:`Installation et configuration <installation>`
-3. :doc:`Architecture technique <../architecture/introduction>`
-4. :doc:`Description des modules <../architecture/modules>`
+* **Introduction** : Cette section, qui présente le projet.
+* **Démarrage** : Contient les guides pour l'installation, la configuration et l'utilisation du projet.
+    * :doc:`Installation <installation>`
+    * :doc:`Utilisation avec Docker <docker>`
+    * :doc:`Configuration du projet <configuration>`
+* **Architecture technique** : Fournit une vue d'ensemble de l'architecture du projet.
+    * :doc:`Point d'entrée (main.py) <../source/main>`
+    * :doc:`Diagramme d'architecture <../architecture/diagramme>`
+    * :doc:`Description des modules <../architecture/modules>`
+    * :doc:`Base de données <../architecture/bdd>`
+    * :doc:`Stack technique <../architecture/stack>`
+* **Documentation des Modules** : Offre une documentation détaillée pour chaque module spécifique du projet.
+    * :doc:`Configuration <../source/modules/config/index>`
+    * :doc:`Core <../source/modules/core/index>`
+    * :doc:`Processing <../source/modules/processing/index>`
+    * :doc:`Utils <../source/modules/utils/index>`
+    * :doc:`Reporting <../source/modules/reporting/index>`

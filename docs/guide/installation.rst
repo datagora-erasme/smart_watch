@@ -30,15 +30,19 @@ Avant de commencer, assurez-vous d'avoir :
 
        cd smart_watch
 
-2.  **Créer un environnement virtuel**
+2.  **Créer un environnement virtuel et installer les dépendances**
 
-    Facultatif mais permet d'isoler les dépendances du projet.
+    Vous avez deux options pour cette étape :
+
+    **Option A : Avec `pip` (méthode classique)**
+
+    Créez un environnement virtuel :
 
     .. code-block:: bash
 
        python -m venv .venv
 
-3.  **Activer l'environnement virtuel**
+    Activez l'environnement virtuel :
 
     *   Sur **Windows** :
 
@@ -52,14 +56,39 @@ Avant de commencer, assurez-vous d'avoir :
 
            source .venv/bin/activate
 
-
-4.  **Installer les dépendances**
-
-    Installez les bibliothèques Python requises à l'aide du fichier ``requirements.txt``.
+    Installez les dépendances :
 
     .. code-block:: bash
 
        pip install -r requirements.txt
+
+    **Option B : Avec `uv` (méthode recommandée, plus rapide)**
+
+    Installez d'abord `uv` si ce n'est pas déjà fait :
+
+    .. code-block:: bash
+
+       pip install uv
+
+    Créez, activez et installez les dépendances en une seule commande :
+
+    .. code-block:: bash
+
+       uv sync
+
+    Pour activer l'environnement par la suite :
+
+    *   Sur **Windows** :
+
+        .. code-block:: bash
+
+           .venv\Scripts\activate
+
+    *   Sur **Linux ou macOS** :
+
+        .. code-block:: bash
+
+           source .venv/bin/activate
 
 Si vous préférez l'option conteneurisée, vous pouvez suivre les instructions de la page :doc:`docker` pour exécuter l'application dans un conteneur Docker.
 
