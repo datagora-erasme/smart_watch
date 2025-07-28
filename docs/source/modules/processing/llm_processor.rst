@@ -1,45 +1,21 @@
 LLM Processor
 =============
 
+Le ``LLMProcessor`` est le cœur de l'extraction de données intelligentes. Il prend le Markdown filtré, le soumet à un Modèle de Langage (LLM) pour en extraire des horaires structurés, puis enrichit et transforme ces données.
+
 Fonctionnalités
 ---------------
 
-Le LLMProcessor gère l'extraction d'horaires via modèles de langage avec structured outputs. Il utilise un pipeline d'enrichissement automatique et supporte plusieurs fournisseurs LLM.
+- **Extraction par LLM** : Construit un prompt détaillé incluant le Markdown filtré et un schéma JSON, puis l'envoie à un LLM (OpenAI ou Mistral) pour obtenir des horaires au format JSON structuré.
+- **Enrichissement des Données** : Post-traite la réponse JSON du LLM pour :
+    - Nettoyer les horaires spécifiques correspondant à des dates passées.
+    - Enrichir les horaires des mairies et bibliothèques avec les jours fériés français à venir.
+- **Conversion au Format OSM** : Utilise l'utilitaire ``JsonToOsmConverter`` pour transformer la réponse JSON finale en une chaîne de caractères au format standard `opening_hours`.
+- **Mise à Jour de la Base de Données** : Sauvegarde le prompt, le JSON final, la chaîne OSM et les émissions de CO2 estimées dans la base de données via le :doc:`DatabaseProcessor <database_processor>`.
 
-**Support multi-providers :**
+.. admonition:: Usage
 
-- OpenAI-compatible (OpenAI, LM Studio, Ollama, LiteLLM)
-- Mistral API native avec support des tools/functions
-- Détection automatique du fournisseur selon la configuration
-- Adaptation des formats de requête par provider
-
-**Structured Outputs :**
-
-- Utilisation du schéma JSON `opening_hours_schema.json`
-- Validation automatique de la structure retournée
-- Gestion des erreurs de parsing avec fallback
-- Support des formats OpenAI (response_format) et Mistral (tools)
-
-**Pipeline d'enrichissement :**
-
-- Utilisation prioritaire du `markdown_filtre` avec fallback
-- Génération de prompts avec schéma JSON intégré
-- Enrichissement automatique des mairies avec jours fériés français
-- Conversion JSON → OSM via JsonToOsmConverter
-
-**Gestion robuste :**
-
-- Traitement séquentiel avec délais configurables entre appels
-- Délais adaptatifs en cas d'erreur (progression géométrique)
-- Traçabilité complète des prompts et réponses
-- Accumulation des émissions CO2 avec reporting
-
-**Enrichissement spécialisé :**
-
-- Détection automatique des mairies par type_lieu
-- Intégration des jours fériés français via API gouvernementale
-- Enrichissement conditionnel selon le type d'établissement
-- Préservation des horaires d'origine avec enrichissement
+   Ce processeur s'exécute après le filtrage du Markdown. Il constitue l'étape la plus coûteuse en temps et en ressources. Le résultat de son traitement (le JSON et l'OSM) est ensuite utilisé par le :doc:`ComparisonProcessor <comparison_processor>`.
 
 Modules
 -------
@@ -48,6 +24,5 @@ Modules
    :members:
    :undoc-members:
    :private-members:
-   :special-members: __init__, __call__
-   :inherited-members:
+   :special-members: __init__
    :show-inheritance:

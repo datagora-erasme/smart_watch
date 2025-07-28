@@ -1,44 +1,21 @@
 Comparison Processor
 ====================
 
+Le ``ComparisonProcessor`` est la dernière étape du pipeline de traitement. Sa fonction est de valider la qualité de l'extraction LLM en comparant les horaires obtenus avec ceux de la source de données de référence (data.grandlyon.com).
+
 Fonctionnalités
 ---------------
 
-Le ComparisonProcessor compare les horaires extraits par LLM avec les données de référence data.grandlyon.com. Il utilise une comparaison JSON normalisée avec gestion intelligente des cas particuliers.
+- **Comparaison d'Horaires** : Utilise l'utilitaire ``HorairesComparator`` pour effectuer une comparaison sémantique entre deux objets JSON représentant des horaires : celui extrait par le LLM et celui provenant de la source de référence.
+- **Traitement Global** : Récupère tous les enregistrements de la base de données qui ont une extraction LLM valide mais qui n'ont pas encore été comparés, indépendamment de leur exécution d'origine. Cela permet de rattraper les comparaisons qui auraient pu échouer lors d'exécutions précédentes.
+- **Gestion des Résultats** : Met à jour la base de données avec le résultat de la comparaison :
+    - ``True`` si les horaires sont identiques.
+    - ``False`` si des différences sont détectées, avec une description des écarts.
+    - ``None`` si la comparaison n'a pas pu être effectuée (ex: données de référence manquantes).
 
-**Sources de comparaison :**
+.. admonition:: Usage
 
-- Référence : données data.grandlyon.com converties en JSON via OSMToCustomJson
-- Extraction : horaires LLM au format JSON personnalisé
-- Comparaison directe JSON vs JSON avec normalisation préalable
-- Gestion des formats OSM et JSON avec conversion automatique
-
-**Logique de comparaison :**
-
-- Utilisation du HorairesComparator pour comparaison intelligente
-- Normalisation des structures (tri, formats, occurrences)
-- Détection des fermetures définitives et temporaires
-- Comparaison par période (hors vacances, vacances, jours fériés)
-
-**Types de résultats :**
-
-- `True` : horaires identiques après normalisation
-- `False` : différences détectées avec description détaillée
-- `None` : impossible de comparer (erreur ou données manquantes)
-
-**Traitement global :**
-
-- Traite tous les enregistrements nécessitant une comparaison
-- Indépendant de l'execution_id pour rattrapage automatique
-- Mise à jour sélective uniquement si comparaison réussie
-- Gestion des cas d'erreur avec préservation des données partielles
-
-**Gestion des erreurs :**
-
-- Validation des données JSON avant comparaison
-- Traçabilité des erreurs dans la chaîne pipeline
-- Logging détaillé des résultats et différences
-- Préservation des données partielles en cas d'erreur
+   Ce processeur s'exécute à la fin du pipeline. Ses résultats sont essentiels pour le rapport final, car ils permettent de quantifier la fiabilité des extractions et d'identifier les changements d'horaires.
 
 Modules
 -------
@@ -47,6 +24,5 @@ Modules
    :members:
    :undoc-members:
    :private-members:
-   :special-members: __init__, __call__
-   :inherited-members:
+   :special-members: __init__
    :show-inheritance:

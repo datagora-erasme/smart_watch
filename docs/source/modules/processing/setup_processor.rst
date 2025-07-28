@@ -1,26 +1,21 @@
 Setup Processor
 ===============
 
+Le ``SetupProcessor`` est la première étape du pipeline de traitement. Son rôle est d'initialiser une nouvelle exécution en chargeant la liste des lieux à traiter et en préparant la base de données.
+
 Fonctionnalités
 ---------------
 
-Le module SetupProcessor gère l'initialisation du pipeline SmartWatch :
-il charge les données CSV (locales ou distantes) dans un DataFrame Polars,
-puis initialise la base de données SQLite avec ces données.
+- **Chargement des Données Initiales** : Utilise l'utilitaire ``CSVToPolars`` pour charger le fichier CSV principal contenant la liste des lieux et leurs URLs, tel que défini dans la configuration.
+- **Initialisation de l'Exécution** : Appelle la méthode ``setup_execution`` du :doc:`DatabaseProcessor <database_processor>` pour effectuer plusieurs actions critiques :
+    - Mettre à jour la table des lieux.
+    - Enrichir les lieux avec des données de référence.
+    - Créer un nouvel enregistrement dans la table des exécutions.
+    - Préparer les enregistrements de résultats pour chaque lieu.
 
-**Étapes d'initialisation :**
+.. admonition:: Usage
 
-- Chargement du fichier CSV principal via CSVToPolars
-- Détection automatique du séparateur CSV
-- Gestion des sources distantes (URL) ou locales
-- Création ou remplacement de la base SQLite avec les données extraites
-- Validation et gestion des erreurs centralisée
-
-**Gestion des erreurs :**
-
-- Validation du fichier CSV et de la connexion réseau
-- Gestion des exceptions lors de l'initialisation de la base
-- Logging détaillé des opérations et erreurs
+   Ce processeur est appelé une seule fois au début de chaque exécution du pipeline pour s'assurer que l'environnement est correctement configuré avant de commencer le traitement des URLs.
 
 Modules
 -------
@@ -29,6 +24,5 @@ Modules
    :members:
    :undoc-members:
    :private-members:
-   :special-members: __init__, __call__
-   :inherited-members:
+   :special-members: __init__
    :show-inheritance:

@@ -1,58 +1,30 @@
 Modules Processing
 ==================
 
-Fonctionnalités
-===============
+Les modules de traitement forment le cœur du pipeline de l'application. Ils exécutent une séquence d'opérations pour extraire, filtrer, analyser et comparer les données d'horaires d'ouverture, depuis la source web jusqu'au résultat final stocké en base de données.
 
-Les modules Processing constituent le pipeline central de traitement des données SmartWatch. Ils orchestrent l'extraction, la transformation et la comparaison des horaires d'ouverture selon un flux séquentiel optimisé.
+Le Pipeline de Traitement
+-------------------------
 
-**Pipeline de traitement :**
+Le traitement suit un pipeline séquentiel où chaque processeur est responsable d'une étape distincte :
 
-- Extraction parallèle du contenu web avec conversion HTML → Markdown
-- Traitement LLM avec structured outputs et enrichissement automatique
-- Comparaison intelligente avec les données de référence
-- Gestion de base de données relationnelle avec traçabilité complète
+1.  **Setup** : Initialise une nouvelle exécution, charge les lieux à traiter depuis un fichier CSV et prépare la base de données.
+2.  **URL** : Récupère le contenu HTML de chaque URL et le convertit en Markdown brut.
+3.  **Markdown** : Filtre le Markdown brut en utilisant des embeddings sémantiques pour ne conserver que les sections de texte pertinentes aux horaires, réduisant ainsi la charge pour l'étape suivante.
+4.  **LLM** : Envoie le Markdown filtré à un modèle de langage (LLM) pour en extraire les horaires sous forme de JSON structuré, puis convertit ce JSON au format OSM.
+5.  **Comparison** : Compare les horaires extraits par le LLM avec les horaires de référence pour détecter les différences.
 
-**Architecture modulaire :**
-
-- Chaque processeur gère une étape spécifique du pipeline
-- Interfaces communes avec classes ProcessingStats unifiées
-- Gestion d'erreurs intégrée avec continuation du traitement
-- Logging détaillé et métriques de performance
-
-**Gestion des données :**
-
-- Base SQLite relationnelle (lieux, executions, resultats_extraction)
-- Traçabilité complète de markdown_brut → markdown_nettoye → markdown_filtre
-- Chaîne d'erreurs avec timestamps et types détaillés
-- Reprise intelligente des exécutions incomplètes
-
-**Optimisations :**
-
-- Traitement parallèle configurable pour les URLs
-- Mises à jour par batch pour optimiser les performances base
-- Structured outputs JSON pour fiabiliser l'extraction LLM
-- Comparaison normalisée avec gestion des cas particuliers
-
-Vue d'ensemble
-===============
-
-- **SetupProcessor** : Initialisation du pipeline avec chargement des données CSV et configuration de la base
-- **DatabaseProcessor** : Gestion de la base SQLite avec 3 tables relationnelles (lieux, executions, resultats_extraction)
-- **URLProcessor** : Extraction et conversion HTML → markdown brut avec gestion parallèle
-- **LLMProcessor** : Extraction d'horaires via LLM avec structured outputs JSON + conversion OSM
-- **ComparisonProcessor** : Comparaison intelligente des horaires extraits vs données de référence
-- **MarkdownProcessor** : Filtrage sémantique par embeddings pour extraire les sections horaires
+Le `DatabaseProcessor` n'est pas une étape du pipeline, mais un service central utilisé par tous les autres processeurs pour interagir avec la base de données.
 
 Modules
-========
+-------
 
 .. toctree::
    :maxdepth: 1
 
    setup_processor
-   database_processor
    url_processor
+   markdown_processor
    llm_processor
    comparison_processor
-   markdown_processor
+   database_processor

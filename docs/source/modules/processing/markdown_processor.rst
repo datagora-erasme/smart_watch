@@ -1,46 +1,27 @@
 Markdown Processor
 ==================
 
+Le ``MarkdownProcessor`` est une étape d'optimisation cruciale dans le pipeline. Son rôle est de filtrer le Markdown brut pour n'en conserver que les parties sémantiquement liées aux horaires d'ouverture, afin de réduire la taille et le coût des requêtes envoyées au LLM.
+
 Fonctionnalités
 ---------------
 
-Le MarkdownProcessor utilise des embeddings sémantiques pour filtrer intelligemment le contenu markdown et extraire uniquement les sections pertinentes aux horaires d'ouverture. Il optimise les appels LLM en réduisant la taille des prompts.
+- **Filtrage Sémantique par Embeddings** : Le processeur utilise des modèles d'embeddings (locaux ou via une API comme Mistral/OpenAI) pour convertir des phrases de référence (ex: "nos horaires") et les segments du texte en vecteurs numériques.
+- **Calcul de Similarité** : Il calcule la similarité cosinus entre les vecteurs de référence et ceux du texte pour identifier les segments les plus pertinents.
+- **Sélection de Contenu** : Les segments de texte dont la similarité dépasse un seuil configurable sont conservés, ainsi que les segments adjacents (fenêtre de contexte) pour préserver le sens.
+- **Mise à Jour de la Base de Données** : Le contenu filtré et réduit est sauvegardé dans la colonne ``markdown_filtre`` de la base de données via le :doc:`DatabaseProcessor <database_processor>`.
+- **Suivi des Émissions CO2** : Il enregistre et accumule les émissions de CO2 estimées lors des appels aux APIs d'embeddings.
 
-**Filtrage sémantique :**
+.. admonition:: Usage
 
-- Segmentation du contenu en phrases avec patterns configurables
-- Calcul d'embeddings via API OpenAI/Mistral compatibles
-- Comparaison de similarité cosinus avec phrases de référence
-- Sélection des sections au-dessus du seuil de pertinence
-
-**Optimisation des embeddings :**
-
-- Pré-calcul des embeddings de référence une seule fois par exécution
-- Réutilisation des embeddings pour tous les documents
-- Accumulation des émissions CO2 pour reporting global
-- Gestion des erreurs d'API avec fallback vers contenu original
-
-**Enrichissement contextuel :**
-
-- Fenêtre de contexte autour des phrases pertinentes
-- Préservation du sens avec phrases adjacentes
-- Reconstruction du contenu filtré avec ponctuation
-- Validation de la longueur minimale avant filtrage
-
-**Gestion d'erreurs :**
-
-- Fallback vers markdown nettoyé en cas d'erreur
-- Traçabilité des erreurs dans la chaîne pipeline
-- Logging détaillé des opérations et statistiques
-- Mise à jour des émissions CO2 en base de données
+   Ce processeur s'exécute après la récupération des URLs. Il prend en entrée le ``markdown_nettoye``, le filtre, et produit le ``markdown_filtre`` qui sera utilisé par le :doc:`LLMProcessor <llm_processor>` suivant.
 
 Modules
 -------
 
-.. automodule:: smart_watch.processing.markdown_processor
+.. automodule:: src.smart_watch.processing.markdown_processor
    :members:
    :undoc-members:
    :private-members:
-   :special-members: __init__, __call__
-   :inherited-members:
+   :special-members: __init__
    :show-inheritance:

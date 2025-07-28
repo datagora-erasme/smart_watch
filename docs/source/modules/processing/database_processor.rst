@@ -1,38 +1,20 @@
 Database Processor
 ==================
 
+Le ``DatabaseProcessor`` est un module de service central qui encapsule toutes les interactions avec la base de données pour le pipeline de traitement. Il ne constitue pas une étape du pipeline lui-même, mais fournit une API de haut niveau aux autres processeurs pour lire et écrire des données de manière structurée.
+
 Fonctionnalités
 ---------------
 
-Le DatabaseProcessor gère la base de données SQLite avec un schéma relationnel à 3 tables. Il fournit une interface complète pour les opérations CRUD, la gestion des exécutions et la traçabilité des erreurs.
+- **Gestion de la Base de Données** : Utilise SQLAlchemy pour gérer la connexion, les sessions et le schéma de la base de données (création des tables `lieux`, `executions`, `resultats_extraction`).
+- **Initialisation d'Exécution** : La méthode ``setup_execution`` est une fonction clé qui prépare une nouvelle exécution en mettant à jour la liste des lieux, en créant un enregistrement d'exécution, et en identifiant les tâches incomplètes des exécutions précédentes à reprendre.
+- **Fournisseur de Données** : Offre des méthodes spécifiques comme ``get_pending_urls`` et ``get_pending_llm`` que les processeurs du pipeline utilisent pour récupérer leur file de travail.
+- **Persistance des Résultats** : Propose des méthodes dédiées (ex: ``update_url_result``, ``update_llm_result``) pour que chaque processeur puisse sauvegarder les résultats de son traitement à l'étape correspondante.
+- **Gestion des Erreurs** : Centralise l'enregistrement des erreurs du pipeline dans la base de données, en les ajoutant à une chaîne d'erreurs traçable pour chaque lieu.
 
-**Schéma relationnel :**
+.. admonition:: Usage
 
-- Table `lieux` : référentiel des établissements avec horaires de référence
-- Table `executions` : historique des exécutions avec métadonnées LLM
-- Table `resultats_extraction` : résultats détaillés par lieu et exécution
-- Relations avec contraintes d'intégrité référentielle
-
-**Gestion des exécutions :**
-
-- Setup automatique des exécutions avec détection de reprises
-- Classification des résultats selon l'état du pipeline
-- Traçabilité complète des étapes (URL, nettoyage, LLM, comparaison)
-- Accumulation des émissions CO2 par exécution
-
-**Traçabilité des erreurs :**
-
-- Chaîne d'erreurs avec timestamps : `[HH:MM:SS] TYPE: message`
-- Types d'erreur : URL, NETTOYAGE, FILTRAGE, LLM, OSM, COMPARAISON
-- Accumulation des erreurs par étape avec préservation historique
-- Méthodes spécialisées pour ajouter des erreurs par type
-
-**Optimisations :**
-
-- Mises à jour par batch pour l'insertion des lieux
-- Requêtes optimisées avec jointures pour la récupération
-- Gestion des transactions pour assurer la cohérence
-- Indexation sur les clés étrangères pour les performances
+   Une instance de ``DatabaseProcessor`` est créée au début du pipeline et est ensuite passée en argument à chaque processeur qui a besoin d'interagir avec la base de données.
 
 Modules
 -------
@@ -41,6 +23,5 @@ Modules
    :members:
    :undoc-members:
    :private-members:
-   :special-members: __init__, __call__
-   :inherited-members:
+   :special-members: __init__
    :show-inheritance:

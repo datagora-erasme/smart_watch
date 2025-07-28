@@ -1,38 +1,19 @@
 URL Processor
 =============
 
+Le ``URLProcessor`` est la deuxième étape du pipeline. Il est chargé de récupérer le contenu web pour chaque lieu et de le convertir en Markdown brut.
+
 Fonctionnalités
 ---------------
 
-Le URLProcessor gère l'extraction parallèle du contenu web avec conversion HTML vers markdown. Il utilise un ThreadPoolExecutor pour optimiser les performances et fournit une gestion robuste des erreurs réseau.
+- **Traitement des URLs en Attente** : Récupère la liste des URLs à traiter pour l'exécution en cours auprès du :doc:`DatabaseProcessor <database_processor>`.
+- **Récupération de Contenu Web** : Pour chaque URL, il utilise la fonction ``retrieve_url`` (du module ``URLRetriever``) qui se sert de Playwright pour naviguer sur la page et en extraire le contenu HTML.
+- **Conversion en Markdown** : Le contenu HTML récupéré est immédiatement converti en Markdown brut.
+- **Mise à Jour de la Base de Données** : Le statut de la requête (succès, erreur), le code HTTP, et le Markdown brut sont sauvegardés en base de données via le :doc:`DatabaseProcessor <database_processor>`.
 
-**Traitement parallèle :**
+.. admonition:: Note sur le traitement séquentiel
 
-- ThreadPoolExecutor avec nombre de threads configurable
-- Traitement par batch pour optimiser les mises à jour base de données
-- Gestion des timeouts et retry avec délais adaptatifs
-- Limitation du taux de requêtes pour éviter les blocages
-
-**Pipeline de conversion :**
-
-- Récupération HTML via URLRetriever avec User-Agent personnalisé
-- Conversion HTML → Markdown avec HtmlToMarkdown et BeautifulSoup
-- Nettoyage et normalisation du contenu markdown
-- Stockage du `markdown_brut` en base avec métadonnées
-
-**Gestion d'erreurs :**
-
-- Codes HTTP détaillés avec messages explicites
-- Gestion des timeouts, connexions échouées, et erreurs serveur
-- Traçabilité complète dans la chaîne d'erreurs
-- Continuation du traitement même en cas d'erreurs partielles
-
-**Statistiques et monitoring :**
-
-- Compteurs de succès/échec par type d'erreur
-- Temps de traitement et performance par thread
-- Logging détaillé des opérations et erreurs
-- Reporting des statistiques consolidées
+   Bien qu'initialement conçu pour un traitement parallèle, ce processeur fonctionne de manière **séquentielle**. L'utilisation de l'API synchrone de Playwright pour la récupération des URLs ne permet pas une parallélisation simple avec des threads.
 
 Modules
 -------
@@ -41,6 +22,5 @@ Modules
    :members:
    :undoc-members:
    :private-members:
-   :special-members: __init__, __call__
-   :inherited-members:
+   :special-members: __init__
    :show-inheritance:
