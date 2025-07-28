@@ -1,44 +1,22 @@
 LLM Configuration
 =================
 
+Le module ``LLMConfigManager`` gère la configuration des modèles de langage (LLM). Sa principale caractéristique est la détection automatique du fournisseur de services (OpenAI, Mistral, ou un modèle local) en fonction des variables d'environnement disponibles.
+
 Fonctionnalités
 ---------------
 
-Le module LLMConfig gère la configuration des modèles de langage avec détection automatique du fournisseur selon les clés API disponibles. Il supporte les fournisseurs OpenAI-compatibles et Mistral.
+- **Détection Automatique du Fournisseur** : Le gestionnaire sélectionne le fournisseur à utiliser selon la présence des clés d'API dans l'environnement, avec la priorité suivante :
+    1. **OpenAI** (ou compatible) si ``LLM_API_KEY_OPENAI`` est définie.
+    2. **Mistral** si ``LLM_API_KEY_MISTRAL`` est définie.
+    3. **Modèle Local** si ``EMBED_MODELE_LOCAL`` est défini.
+- **Configuration Flexible** : Permet de définir le modèle, la température et le timeout des requêtes via des variables d'environnement.
+- **Validation Adaptative** : La méthode ``validate`` adapte ses vérifications au fournisseur sélectionné. Par exemple, une clé d'API n'est requise que pour les fournisseurs distants. Elle valide également la plage des valeurs pour la température et le timeout.
+- **Configuration de Secours** : En cas d'échec de l'initialisation, une configuration par défaut utilisant un modèle local est chargée pour garantir la résilience du système.
 
-**Détection automatique du fournisseur :**
+.. admonition:: Usage
 
-- Priorité OpenAI/compatible si LLM_API_KEY_OPENAI présente
-- Fallback vers Mistral si LLM_API_KEY_MISTRAL présente
-- Configuration par défaut en cas d'erreur d'initialisation
-- Validation des paramètres obligatoires
-
-**Support multi-fournisseurs :**
-
-- OpenAI et APIs compatibles (LM Studio, Ollama, LiteLLM)
-- Mistral via API officielle
-- URL de base configurable pour APIs locales
-- Paramètres de température et timeout personnalisables
-
-**Gestion robuste :**
-
-- Configuration par défaut en cas d'erreur
-- Logging des erreurs d'initialisation
-- Validation des clés API et modèles
-- Gestion des exceptions avec fallback
-
-**Paramètres configurables :**
-
-- Température (défaut: 0 pour cohérence)
-- Timeout des requêtes (défaut: 30 secondes)
-- Modèle spécifique par fournisseur
-- URL de base pour déploiements locaux
-
-Fournisseurs supportés
-----------------------
-
-- **OpenAI** et compatibles (LM Studio, Ollama, LiteLLM)
-- **Mistral** via API officielle
+   Le ``LLMConfigManager`` est instancié par le :doc:`ConfigManager <../core/ConfigManager>` central. L'application accède à la configuration via ``ConfigManager.llm``, qui contient une instance du dataclass ``LLMConfig``.
 
 Modules
 -------
@@ -47,6 +25,5 @@ Modules
    :members:
    :undoc-members:
    :private-members:
-   :special-members: __init__, __call__
-   :inherited-members:
+   :special-members: __init__
    :show-inheritance:

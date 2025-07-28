@@ -1,38 +1,20 @@
 Report Manager
 ==============
 
+Le ``ReportManager`` est l'orchestrateur central du processus de reporting. Il coordonne la génération du rapport, l'archivage des logs et l'envoi final par e-mail.
+
 Fonctionnalités
 ---------------
 
-Le ReportManager orchestre la génération et l'envoi de rapports HTML avec création automatique d'archives ZIP contenant les logs. Il coordonne les différents composants de reporting et gère la configuration email.
+- **Orchestration Complète** : Sa méthode principale, ``generate_and_send_report``, exécute l'ensemble du pipeline de reporting.
+- **Génération de Rapport** : Fait appel au module :doc:`html_generator` pour créer le rapport HTML détaillé ainsi qu'un résumé pour l'e-mail.
+- **Archivage des Logs** : Crée une archive ``.zip`` contenant le fichier de log de l'application et la base de données SQLite pour faciliter le débogage et l'archivage.
+- **Envoi par E-mail** : Utilise le module ``EmailSender`` pour envoyer un e-mail contenant le résumé du rapport, avec le rapport HTML complet et l'archive des logs en pièces jointes.
+- **Nettoyage Automatique** : Supprime les fichiers temporaires (rapport HTML et archive zip) après leur envoi pour maintenir un environnement propre.
 
-**Génération de rapports :**
+.. admonition:: Usage
 
-- Coordination avec GenererRapportHTML pour création des rapports
-- Génération simultanée du rapport complet et du résumé email
-- Intégration des métadonnées d'exécution et statistiques
-- Gestion des informations du modèle LLM utilisé
-
-**Création d'archives :**
-
-- Création automatique de fichiers ZIP contenant les logs
-- Inclusion des rapports HTML dans les archives
-- Gestion des fichiers temporaires avec nettoyage automatique
-- Compression optimisée pour l'envoi par email
-
-**Envoi par email :**
-
-- Utilisation du EmailSender pour l'envoi des rapports
-- Pièces jointes automatiques (ZIP + HTML)
-- Template email avec résumé intégré
-- Gestion des erreurs d'envoi avec logging détaillé
-
-**Nettoyage automatique :**
-
-- Suppression des fichiers temporaires après envoi
-- Gestion des erreurs de nettoyage
-- Préservation des logs permanents
-- Optimisation de l'espace disque
+   Une instance de ``ReportManager`` est créée dans le script principal de l'application. Elle est initialisée avec l'instance de ``ConfigManager`` pour accéder à toutes les configurations nécessaires (chemins, e-mail, etc.).
 
 Modules
 -------
@@ -41,6 +23,5 @@ Modules
    :members:
    :undoc-members:
    :private-members:
-   :special-members: __init__, __call__
-   :inherited-members:
+   :special-members: __init__
    :show-inheritance:

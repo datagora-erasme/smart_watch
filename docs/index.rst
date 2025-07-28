@@ -67,13 +67,6 @@ Modules
    
    source/modules/reporting/index
 
-.. toctree::
-   :maxdepth: 1
-   :caption: Modèles de données
-
-   architecture/bdd
-   architecture/diagramme
-
 Indices et tables
 ==================
 

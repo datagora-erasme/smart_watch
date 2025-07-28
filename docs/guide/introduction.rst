@@ -1,4 +1,3 @@
-======================
 Présentation du projet
 ======================
 
@@ -14,4 +13,14 @@ L'enjeu est de contraindre la sortie du LLM afin d'obtenir des données fiables,
 
 Dans une démarche d'IA responsable, le projet intègre également le suivi de la consommation carbone des modèles utilisés.
 
-Cette documentation détaille les divers modules conçus à cette fin, leurs interactions et leur architecture technique.
+Documentation
+==============
+
+Cette documentation détaille les divers modules du projet Smart Watch, leurs interactions et leur architecture technique.
+
+Elle est organisée de la manière suivante :
+
+1. Introduction
+2. :doc:`Installation et configuration <installation>`
+3. :doc:`Architecture technique <../architecture/introduction>`
+4. :doc:`Description des modules <../architecture/modules>`

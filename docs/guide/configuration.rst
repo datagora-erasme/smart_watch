@@ -37,15 +37,17 @@ Paramètres de traitement
 Filtrage sémantique du Markdown
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Ces paramètres contrôlent la manière dont le contenu HTML (converti en Markdown) est filtré pour n'en garder que les parties pertinentes.
+Ces paramètres contrôlent la manière dont le contenu HTML (converti en Markdown) est filtré par embeddings pour n'en garder que les parties pertinentes.
 
 *   ``SIMILARITY_THRESHOLD``: Seuil de similarité (entre 0.0 et 1.0) pour qu'une phrase soit considérée comme pertinente. (Défaut: 0.5)
-*   ``CONTEXT_WINDOW``: Nombre de phrases de contexte à inclure avant et après une phrase pertinente. (Défaut: 1)
-*   ``MIN_CONTENT_LENGTH``: Longueur minimale (en caractères) du Markdown pour que le filtrage soit appliqué. (Défaut: 1000)
-*   ``REFERENCE_PHRASES``: Phrases de référence (séparées par ``;;``) utilisées pour trouver les sections d'horaires. (Défaut: "horaires d'ouverture et de fermeture")
+*   ``CHUNK_SIZE``: Taille des chunks de texte pour le découpage du Markdown. (Défaut: 100)
+*   ``CHUNK_OVERLAP``: Nombre de phrases qui se chevauchent entre les chunks. Cela permet de conserver le contexte entre les phrases. (Défaut: 15)
+*   ``CONTEXT_WINDOW_SIZE``: Nombre de chunks de contexte à inclure avant et après une phrase pertinente. Cela permet de conserver le contexte autour des phrases extraites. (Défaut: 1)
+*   ``MIN_CONTENT_LENGTH``: Longueur minimale (en caractères) du Markdown pour que le filtrage soit appliqué. Cela permet d'éviter de traiter des contenus déjà suffisamment courts. (Défaut: 1000)
+*   ``REFERENCE_PHRASES``: Phrases de référence (séparées par ``;;``) utilisées pour identifier les sections pertinentes du Markdown. Ces phrases servent de guide pour le filtrage sémantique. 
 
-Configuration des embeddings
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Configuration des modèles d'embeddings
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Configurez ici le modèle à utiliser pour le filtrage sémantique du contenu. Vous pouvez utiliser soit une API compatible OpenAI, soit l'API Mistral, indépendamment du LLM principal.
 
@@ -59,6 +61,10 @@ Configurez ici le modèle à utiliser pour le filtrage sémantique du contenu. V
 
 *   ``EMBED_API_KEY_MISTRAL``: Votre clé d'API Mistral pour les embeddings.
 *   ``EMBED_MODELE_MISTRAL``: Le nom du modèle (ex: ``nomic-embed-text``).
+
+**Pour embeddings locaux avec sentence-transformers :**
+
+*   ``EMBED_MODELE_LOCAL``: Le nom du modèle à utiliser (ex: ``paraphrase-multilingual-MiniLM-L12-v2``).
 
 Configuration du LLM
 ~~~~~~~~~~~~~~~~~~~~
@@ -79,7 +85,7 @@ Configurez ici le modèle de langage qui extraira les horaires.
 *   ``LLM_MODELE_MISTRAL``: Le nom du modèle (ex: ``mistral-large-latest``).
 
 .. note::
-   Vous devez définir la clé API pour **un seul** fournisseur. Si les deux sont définies, la configuration OpenAI sera prioritaire (cf. :py:meth:`smart_watch.processing.markdown_processor.MarkdownProcessor._init_embedding_client`)
+   Vous devez définir la clé API pour **un seul** fournisseur LLM. Si les deux sont définies, la configuration OpenAI sera prioritaire (cf. :py:meth:`smart_watch.processing.markdown_processor.MarkdownProcessor._init_embedding_client`)
 
 Envoi de rapport par email
 ~~~~~~~~~~~~~~~~~~~~~~~~~~

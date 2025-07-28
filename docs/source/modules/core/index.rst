@@ -3,6 +3,7 @@ Vue d'ensemble
 
 - **ComparateurHoraires** : Comparaison intelligente d'horaires JSON avec normalisation
 - **ConfigManager** : Configuration centralisée modulaire agrégant toutes les configurations
+- **DatabaseManager** : Gestionnaire générique de base de données SQLite.
 - **EnvoyerMail** : Envoi d'emails avec pièces jointes et templates
 - **ErrorHandler** : Gestion centralisée des erreurs avec traçabilité et catégorisation
 - **GetPrompt** : Génération de prompts optimisés pour extraction d'horaires
@@ -22,6 +23,7 @@ Les modules Core constituent le cœur du système SmartWatch, fournissant les fo
 
    ComparateurHoraires
    ConfigManager
+   DatabaseManager
    EnvoyerEmail
    ErrorHandler
    GetPrompt

@@ -1,22 +1,19 @@
 Base Configuration
 ==================
 
+Le module ``BaseConfig`` est le socle du système de configuration de l'application. Il fournit les fonctionnalités fondamentales pour charger et valider les variables d'environnement, servant de classe de base à tous les gestionnaires de configuration spécialisés.
+
 Fonctionnalités
 ---------------
 
-Le module BaseConfig fournit la couche de base pour la gestion des configurations dans SmartWatch.
-Il centralise le chargement des variables d'environnement depuis le fichier .env ou les variables système, et tient compte d'une éventuelle exécution dans un environnement conteneurisé.
+- **Chargement d'Environnement** : Charge les variables depuis un fichier ``.env`` ou directement depuis l'environnement système.
+- **Détection de Conteneur** : Identifie si l'application s'exécute dans un environnement conteneurisé (Docker, Kubernetes) pour adapter son comportement.
+- **Gestion d'Erreurs** : Intègre un gestionnaire d'erreurs pour capturer et signaler les problèmes de configuration de manière centralisée.
+- **Accès Sécurisé aux Variables** : Fournit la méthode ``get_env_var`` pour récupérer des variables, en spécifiant si elles sont requises ou en fournissant une valeur par défaut.
 
+.. admonition:: Usage
 
-La classe ``BaseConfig`` est utilisée dans `ConfigManager.py <https://datagora-erasme.github.io/smart_watch/source/modules/config/base_config.html>`__, `database_config.py <https://datagora-erasme.github.io/smart_watch/source/modules/config/database_config.html>`__, `email_config.py <https://datagora-erasme.github.io/smart_watch/source/modules/config/email_config.html>`__, `llm_config.py <https://datagora-erasme.github.io/smart_watch/source/modules/config/llm_config.html>`__, `markdown_filtering.py <https://datagora-erasme.github.io/smart_watch/source/modules/config/markdown_filtering.html>`__, `processing_config.py <https://datagora-erasme.github.io/smart_watch/source/modules/config/processing_config.html>`__.
-
-**Chargement des variables :**
-
-- Support des fichiers .env avec fallback vers les variables système
-- Validation des variables requises vs optionnelles
-- Gestion des erreurs de configuration
-- Détection automatique des environnements Docker/Kubernetes
-- Messages d'erreur explicites pour les variables manquantes
+   ``BaseConfig`` n'est pas instanciée directement. Elle est héritée par les gestionnaires de configuration spécifiques (comme :doc:`DatabaseConfigManager <database_config>`, :doc:`LLMConfigManager <llm_config>`, etc.) qui s'appuient sur ses fonctionnalités pour construire leur propre configuration.
 
 Modules
 -------
@@ -25,6 +22,5 @@ Modules
    :members:
    :undoc-members:
    :private-members:
-   :special-members: __init__, __call__
-   :inherited-members:
+   :special-members: __init__
    :show-inheritance:

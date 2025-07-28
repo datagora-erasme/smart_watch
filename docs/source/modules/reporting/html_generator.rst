@@ -1,80 +1,23 @@
 HTML Generator
 ==============
 
-.. automodule:: src.smart_watch.reporting.GenererRapportHTML
-   :members:
-   :undoc-members:
-   :show-inheritance:
+Le module ``GenererRapportHTML`` est responsable de la transformation des données brutes de la base de données en un rapport HTML interactif et un résumé pour l'e-mail.
 
 Fonctionnalités
 ---------------
 
-Le générateur HTML crée des rapports interactifs sophistiqués avec classification intelligente des résultats et visualisation des données. Il utilise des templates Jinja2 pour générer deux types de rapports.
+- **Génération via Templates** : Utilise des templates Jinja2 (``ReportTemplate.html`` pour le rapport complet, ``SimpleReportTemplate.html`` pour le résumé) pour générer le HTML.
+- **Extraction de Données** : Se connecte à la base de données pour extraire l'ensemble des résultats d'une exécution via une requête SQL.
+- **Agrégation et Statistiques** : Calcule de nombreuses statistiques après l'extraction des données :
+    - Statistiques globales (nombre d'URLs, succès des comparaisons, etc.).
+    - Regroupement des URLs par statut (succès, différence, erreur).
+    - Répartition par type de lieu et par code de réponse HTTP.
+- **Traitement des Données** : Nettoie et formate les données pour l'affichage, notamment en parsant les chaînes d'erreurs pour les rendre plus lisibles.
+- **Filtre Personnalisé** : Inclut un filtre Jinja2 personnalisé, ``tojson``, pour encoder les données complexes (comme des objets JSON) en base64, permettant de les intégrer de manière sûre dans le HTML pour des visualisations interactives.
 
-**Templates et rapports :**
+.. admonition:: Usage
 
-- ReportTemplate.html : rapport complet avec onglets, tri et modals JavaScript
-- SimpleReportTemplate.html : résumé concis pour les emails
-- Support des données JSON/OSM avec visualisation dans modals
-- Fonctionnalités interactives (tri, filtrage, recherche)
-
-**Classification intelligente :**
-
-- Succès (✅) : URLs accessibles, horaires extraits et identiques
-- Différences horaires (⚠️) : horaires extraits mais différents de la référence
-- Erreurs d'accès (🔒) : URLs inaccessibles, codes HTTP non-200
-- Erreurs d'extraction (❌) : URLs accessibles mais échec LLM/parsing
-
-**Extraction et traitement des données :**
-
-- Extraction depuis base SQLite avec jointures optimisées
-- Traçabilité complète : markdown_brut → markdown_nettoye → markdown_filtre
-- Chaîne d'erreurs avec timestamps et types détaillés
-- Statistiques par type de lieu et codes HTTP
-- Suivi des émissions de CO2 par requête et pour l'exécution totale
-
-**Fonctionnalités avancées :**
-
-- Gestion des caractères UTF-8 avec encodage base64
-- Conversion automatique des données JSON invalides
-- Gestion des templates manquants avec erreurs explicites
-- Export et impression des données avec JavaScript intégré
-
-Structure des données du rapport
---------------------------------
-
-**Données d'entrée (base SQLite) :**
-
-.. code-block:: sql
-
-   SELECT 
-       l.type_lieu, l.identifiant, l.nom, l.url, l.horaires_data_gl,
-       r.statut_url, r.message_url, r.code_http,
-       r.markdown_brut, r.markdown_nettoye, r.markdown_filtre,
-       r.llm_horaires_json, r.llm_horaires_osm,
-       r.horaires_identiques, r.differences_horaires,
-       r.erreurs_pipeline, r.llm_consommation_requete
-   FROM resultats_extraction r 
-   JOIN lieux l ON r.lieu_id - l.identifiant
-
-**Données de sortie (template) :**
-
-- ``stats_globales`` : Compteurs totaux et pourcentages
-- ``statuts_disponibles`` : Groupement par statut avec URLs détaillées
-- ``types_lieu_stats`` : Répartition par type d'établissement
-- ``codes_http_stats`` : Distribution des codes de réponse HTTP
-- ``execution_data`` : Données de l'exécution, comme la consommation CO2 totale
-
-Gestion des erreurs et edge cases
----------------------------------
-
-- **JSON invalide** : Conversion automatique en chaîne et encodage base64
-- **Templates manquants** : Vérification d'existence et erreurs explicites
-- **Base corrompue** : Gestion des erreurs SQL avec messages utilisateur
-- **Données manquantes** : Valeurs par défaut pour tous les champs requis
-- **Caractères UTF-8** : Préservation complète via encodage base64
-
-Le module utilise des décorateurs de gestion d'erreurs pour la traçabilité complète.
+   La fonction ``generer_rapport_html`` est appelée par le :doc:`ReportManager <report_manager>`, qui lui fournit le chemin vers la base de données. Elle retourne le contenu HTML du résumé et le chemin vers le fichier du rapport complet sauvegardé.
 
 Modules
 -------
@@ -83,6 +26,5 @@ Modules
    :members:
    :undoc-members:
    :private-members:
-   :special-members: __init__, __call__
-   :inherited-members:
+   :special-members: __init__
    :show-inheritance:

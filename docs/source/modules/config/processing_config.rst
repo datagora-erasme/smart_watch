@@ -1,23 +1,19 @@
 Processing Configuration
 ========================
 
+Le module ``ProcessingConfigManager`` configure les paramètres généraux de traitement, notamment ceux liés à la performance du scraping web et au nettoyage initial des données textuelles.
+
 Fonctionnalités
 ---------------
 
-Le module ProcessingConfig configure les paramètres de traitement des URLs et du contenu markdown. Il gère la concurrence, les délais entre appels et les règles de nettoyage du contenu.
+- **Gestion de la Concurrence** : Définit le nombre de threads parallèles (``NB_THREADS_URL``) à utiliser pour le traitement des URLs, permettant d'accélérer la collecte de données.
+- **Contrôle des Délais** : Configure les délais d'attente entre les appels réseau (``DELAI_ENTRE_APPELS``) et en cas d'erreur (``DELAI_EN_CAS_ERREUR``) pour éviter de surcharger les serveurs distants.
+- **Nettoyage de Caractères** : Contient un dictionnaire de remplacements de caractères (``char_replacements``) qui est utilisé pour normaliser le texte brut. Il gère la conversion des guillemets, des tirets et la standardisation des espaces.
+- **Validation** : La méthode ``validate`` s'assure que le nombre de threads et les délais sont des valeurs positives et que le dictionnaire de remplacements n'est pas vide.
 
-**Configuration du traitement parallèle :**
+.. admonition:: Usage
 
-- Nombre de threads pour le traitement des URLs
-- Délais entre les appels API pour éviter les limitations
-- Délais d'attente en cas d'erreur avec progression géométrique
-- Configuration des timeouts pour les requêtes HTTP
-
-**Nettoyage du contenu :**
-
-- Dictionnaire de remplacements de caractères pour le nettoyage markdown
-- Patterns de suppression des éléments indésirables
-- Règles de normalisation du contenu textuel
+   Ce gestionnaire est instancié par le :doc:`ConfigManager <../core/ConfigManager>`. Ses paramètres, accessibles via ``ConfigManager.processing``, sont utilisés par les modules qui effectuent des requêtes réseau ou du nettoyage de texte.
 
 Modules
 -------
@@ -26,11 +22,5 @@ Modules
    :members:
    :undoc-members:
    :private-members:
-   :special-members: __init__, __call__
-   :inherited-members:
+   :special-members: __init__
    :show-inheritance:
-
-   proc_config - ProcessingConfigManager()
-   
-   print(f"Threads: {proc_config.config.nb_threads_url}")
-   print(f"Délai: {proc_config.config.delai_entre_appels}s")
