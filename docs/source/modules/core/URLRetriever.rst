@@ -1,38 +1,19 @@
-URL Retriever
-=============
+Récupérateur d'URL
+==================
+
+Le module ``URLRetriever`` gère la récupération de contenu à partir d'URLs web.
 
 Fonctionnalités
 ---------------
 
-Le URLRetriever gère la récupération robuste de contenu web avec gestion avancée des erreurs SSL et conversion automatique HTML vers Markdown. Il utilise des stratégies progressives pour contourner les problèmes de certificats.
+- Récupère le contenu HTML des pages web à l'aide de Playwright, garantissant la compatibilité avec les sites modernes (JavaScript).
+- Met en œuvre des stratégies progressives pour gérer les erreurs de certificat SSL.
+- Gère les erreurs réseau courantes comme les redirections et les temps morts.
+- Convertit automatiquement le contenu HTML récupéré en Markdown à l'aide du module :doc:`HtmlToMarkdown <../utils/HtmlToMarkdown>`.
 
-**Récupération robuste :**
+.. admonition:: Usage
 
-- Stratégies SSL progressives (default → no_verify → low_security → full_mitigation)
-- Gestion des certificats SSL défaillants ou expirés
-- User-Agent réaliste pour éviter les blocages
-- Retry automatique avec différentes configurations
-
-**Gestion des erreurs réseau :**
-
-- Détection et gestion des redirections infinies
-- Timeouts configurables avec gestion des dépassements
-- Codes HTTP détaillés avec messages explicites
-- Logging contextuel avec identifiants de lieux
-
-**Conversion automatique :**
-
-- HTML vers Markdown via HtmlToMarkdown
-- Fallback HTML si conversion Markdown échoue
-- Détection et gestion des encodages de caractères
-- Préservation du contenu original en cas d'erreur
-
-**Intégration système :**
-
-- Utilisation du système ErrorHandler centralisé
-- Contexte d'erreur enrichi avec URL et identifiant
-- Logging détaillé des opérations et stratégies utilisées
-- Retour de dictionnaire enrichi avec métadonnées
+   Ce module est utilisé par le :doc:`URLProcessor <../processing/url_processor>` pour récupérer le contenu des pages web à analyser.
 
 Modules
 -------

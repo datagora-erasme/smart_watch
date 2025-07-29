@@ -4,7 +4,7 @@
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Union
+from typing import Any, Dict, List, Union
 
 from .Logger import create_logger
 
@@ -17,20 +17,17 @@ logger = create_logger(
 @dataclass
 class ComparisonResult:
     """
-    Classe représentant le résultat d'une comparaison d'horaires.
+    Représente le résultat d'une comparaison d'horaires.
 
     Attributes:
-        identical (bool): Indique si les horaires comparés sont identiques.
-        differences (str): Description textuelle des différences trouvées lors de la comparaison.
-        details (Dict[str, any]): Détails supplémentaires sur les différences, organisés par clé.
-
-    Methods:
-        __str__(): Retourne une représentation textuelle du résultat de la comparaison, incluant le statut et les différences.
+        identical: Indique si les horaires comparés sont identiques.
+        differences: Description textuelle des différences trouvées.
+        details: Détails supplémentaires sur les différences.
     """
 
     identical: bool
     differences: str
-    details: Dict[str, any]
+    details: Dict[str, Any]
 
     def __str__(self) -> str:
         status = "IDENTIQUE" if self.identical else "DIFFÉRENT"
@@ -61,19 +58,19 @@ class ScheduleNormalizer:
     """
 
     @staticmethod
-    def normalize_time_slot(slot: Dict) -> Dict:
+    def normalize_time_slot(slot: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Normalise un créneau horaire en assurant la présence des clés 'debut', 'fin' et 'occurence'.
+        Normalise un créneau horaire.
 
-        Cette fonction prend un dictionnaire représentant un créneau horaire et retourne un nouveau dictionnaire
-        contenant les clés normalisées. Les valeurs par défaut pour 'debut' et 'fin' sont des chaînes vides si elles
-        ne sont pas présentes. La clé 'occurence' est triée si elle est une liste.
+        Assure la présence des clés 'debut', 'fin' et 'occurence'.
+        Les valeurs par défaut pour 'debut' et 'fin' sont des chaînes vides.
+        La clé 'occurence' est triée si elle est une liste.
 
         Args:
-            slot (Dict): Dictionnaire représentant un créneau horaire, pouvant contenir les clés 'debut', 'fin' et 'occurence'.
+            slot: Dictionnaire du créneau horaire.
 
         Returns:
-            Dict: Dictionnaire normalisé avec les clés 'debut', 'fin' et éventuellement 'occurence'.
+            Dictionnaire du créneau horaire normalisé.
         """
         normalized = {"debut": slot.get("debut", ""), "fin": slot.get("fin", "")}
 
@@ -88,22 +85,15 @@ class ScheduleNormalizer:
         return normalized
 
     @staticmethod
-    def normalize_day_schedule(day_data: Dict) -> Dict:
+    def normalize_day_schedule(day_data: Any) -> Dict[str, Any]:
         """
-        Normalise les données d'un jour d'ouverture et trie les créneaux horaires.
-
-        Cette fonction prend un dictionnaire représentant les horaires d'un jour,
-        vérifie sa validité, normalise les créneaux horaires à l'aide de
-        ScheduleNormalizer.normalize_time_slot, puis les trie par heure de début
-        et par occurrence.
+        Normalise les données d'un jour d'ouverture et trie les créneaux.
 
         Args:
-            day_data (Dict): Dictionnaire contenant les informations du jour,
-                avec les clés "ouvert" (bool) et "creneaux" (list de dict).
+            day_data: Dictionnaire des informations du jour.
 
         Returns:
-            Dict: Dictionnaire normalisé avec les clés "ouvert" (bool) et
-                "creneaux" (list de dict triés et normalisés).
+            Dictionnaire normalisé avec les clés "ouvert" et "creneaux".
         """
         if not isinstance(day_data, dict):
             return {"ouvert": False, "creneaux": []}
@@ -129,21 +119,15 @@ class ScheduleNormalizer:
         return normalized
 
     @staticmethod
-    def normalize_special_schedules(schedules: Dict) -> Dict:
+    def normalize_special_schedules(schedules: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Normalise les horaires spéciaux fournis sous forme de dictionnaire.
-
-        Cette fonction prend un dictionnaire représentant des horaires spéciaux, où chaque clé est une date
-        et chaque valeur peut être une chaîne de caractères ou un dictionnaire décrivant l'horaire du jour.
-        Les horaires sous forme de dictionnaire sont normalisés via la méthode `ScheduleNormalizer.normalize_day_schedule`.
-        Les horaires sous forme de chaîne sont conservés tels quels.
+        Normalise un dictionnaire d'horaires spéciaux.
 
         Args:
-            schedules (Dict): Dictionnaire des horaires spéciaux à normaliser. Les clés sont des dates (str),
-                les valeurs sont soit des chaînes de caractères, soit des dictionnaires représentant un horaire.
+            schedules: Dictionnaire des horaires spéciaux.
 
         Returns:
-            Dict: Dictionnaire des horaires normalisés, avec les mêmes clés (dates) et des valeurs normalisées.
+            Dictionnaire des horaires spéciaux normalisés.
         """
         if not isinstance(schedules, dict):
             return {}
@@ -161,30 +145,28 @@ class ScheduleNormalizer:
 class HorairesComparator:
     """Comparateur principal d'horaires d'ouverture."""
 
-    def __init__(self):
+    def __init__(self) -> None:
+        """Initialise le comparateur d'horaires."""
         self.normalizer = ScheduleNormalizer()
         logger.debug("Comparateur d'horaires initialisé")
 
-    def compare_schedules(self, schedule1: Dict, schedule2: Dict) -> ComparisonResult:
+    def compare_schedules(
+        self, schedule1: Dict[str, Any], schedule2: Dict[str, Any]
+    ) -> ComparisonResult:
         """
         Compare deux horaires d'ouverture et retourne le résultat de la comparaison.
 
         Cette méthode analyse les horaires d'ouverture de deux établissements, en tenant compte des fermetures définitives et des différences pour chaque période d'ouverture. Elle retourne un objet `ComparisonResult` contenant le statut d'identité, les différences détectées et des détails sur la comparaison.
 
         Args:
-            schedule1 (Dict): Dictionnaire représentant les horaires d'ouverture du premier établissement.
-            schedule2 (Dict): Dictionnaire représentant les horaires d'ouverture du second établissement.
+            schedule1: Horaires d'ouverture du premier établissement.
+            schedule2: Horaires d'ouverture du second établissement.
 
         Returns:
-            ComparisonResult: Objet contenant le résultat de la comparaison, incluant si les horaires sont identiques, la liste des différences, et des détails sur la comparaison.
+            Résultat de la comparaison.
 
         Raises:
-            Exception: En cas d'erreur lors de la comparaison des horaires.
-
-        Exemple:
-            >>> result = compare_schedules(schedule1, schedule2)
-            >>> print(result.identical)
-            >>> print(result.differences)
+            Exception: En cas d'erreur lors de la comparaison.
         """
         try:
             logger.debug("Début comparaison horaires")
@@ -293,19 +275,15 @@ class HorairesComparator:
                 details={"error": str(e)},
             )
 
-    def _is_permanently_closed(self, horaires: Dict) -> bool:
+    def _is_permanently_closed(self, horaires: Dict[str, Any]) -> bool:
         """
         Détermine si un ensemble d'horaires indique une fermeture permanente.
 
-        Cette méthode analyse les différentes périodes d'ouverture (hors vacances scolaires, vacances scolaires d'été, petites vacances scolaires, jours fériés, jours spéciaux)
-        pour vérifier si toutes les sources d'horaires disponibles indiquent une fermeture. Elle considère qu'une période est fermée si aucun jour n'est marqué comme ouvert
-        et qu'aucun créneau n'est disponible. Pour les jours fériés et spéciaux, la présence d'horaires spécifiques indique une ouverture.
-
         Args:
-            horaires (Dict): Dictionnaire contenant les périodes et horaires à analyser.
+            horaires: Dictionnaire contenant les périodes et horaires.
 
         Returns:
-            bool: True si toutes les périodes avec une source indiquent une fermeture permanente, False sinon.
+            True si l'établissement est considéré comme fermé, False sinon.
         """
         periods = horaires.get("periodes", {})
 
@@ -343,20 +321,19 @@ class HorairesComparator:
 
         return has_source and all_closed
 
-    def _compare_period(self, period1: Dict, period2: Dict, period_name: str) -> str:
+    def _compare_period(
+        self, period1: Dict[str, Any], period2: Dict[str, Any], period_name: str
+    ) -> str:
         """
-        Compare deux périodes horaires et retourne une chaîne décrivant les différences.
-
-        Selon le type de période (jours fériés, jours spéciaux ou période hebdomadaire),
-        la comparaison est effectuée par des méthodes spécifiques.
+        Compare deux périodes horaires.
 
         Args:
-            period1 (Dict): Première période à comparer.
-            period2 (Dict): Deuxième période à comparer.
-            period_name (str): Nom du type de période ('jours_feries', 'jours_speciaux', etc.).
+            period1: Première période à comparer.
+            period2: Deuxième période à comparer.
+            period_name: Nom de la période ('jours_feries', etc.).
 
         Returns:
-            str: Description des différences entre les deux périodes. Chaîne vide si aucune période n'est définie.
+            Description textuelle des différences.
         """
         if not period1 and not period2:
             return ""
@@ -367,16 +344,18 @@ class HorairesComparator:
         else:
             return self._compare_weekly_period(period1, period2)
 
-    def _compare_weekly_period(self, period1: Dict, period2: Dict) -> str:
+    def _compare_weekly_period(
+        self, period1: Dict[str, Any], period2: Dict[str, Any]
+    ) -> str:
         """
-        Compare deux périodes hebdomadaires et retourne les différences entre les horaires de chaque jour.
+        Compare deux périodes hebdomadaires.
 
         Args:
-            period1 (Dict): Première période contenant les horaires par jour.
-            period2 (Dict): Deuxième période contenant les horaires par jour.
+            period1: Première période hebdomadaire.
+            period2: Deuxième période hebdomadaire.
 
         Returns:
-            str: Chaîne de caractères listant les différences pour chaque jour, séparées par " | ".
+            Description textuelle des différences.
         """
         horaires1 = period1.get("horaires", {})
         horaires2 = period2.get("horaires", {})
@@ -402,22 +381,17 @@ class HorairesComparator:
 
         return " | ".join(differences)
 
-    def _compare_day_schedule(self, day1: Dict, day2: Dict, day_name: str) -> str:
+    def _compare_day_schedule(self, day1: Any, day2: Any, day_name: str) -> str:
         """
-        Compare les horaires d'ouverture d'un jour donné entre deux ensembles d'horaires.
-
-        Cette méthode normalise les horaires des deux jours, puis compare leur statut d'ouverture
-        (ouvert/fermé) ainsi que les créneaux horaires. Les différences sont formatées sous forme
-        de chaîne de caractères lisible.
+        Compare les horaires d'un jour donné.
 
         Args:
-            day1 (Dict): Horaires du premier jour à comparer.
-            day2 (Dict): Horaires du second jour à comparer.
-            day_name (str): Nom du jour (ex: "lundi").
+            day1: Horaires du premier jour.
+            day2: Horaires du second jour.
+            day_name: Nom du jour.
 
         Returns:
-            str: Description des différences entre les deux horaires pour le jour donné,
-                séparées par " | ". Si aucune différence, retourne une chaîne vide.
+            Description textuelle des différences.
         """
         norm1 = self.normalizer.normalize_day_schedule(day1)
         norm2 = self.normalizer.normalize_day_schedule(day2)
@@ -437,20 +411,18 @@ class HorairesComparator:
 
         return " | ".join(differences)
 
-    def _compare_time_slots(self, slots1: List[Dict], slots2: List[Dict]) -> str:
+    def _compare_time_slots(
+        self, slots1: List[Dict[str, Any]], slots2: List[Dict[str, Any]]
+    ) -> str:
         """
-        Compare deux listes de créneaux horaires et retourne les différences sous forme de chaîne.
-
-        Cette méthode convertit chaque créneau horaire en chaîne de caractères, puis en set, pour faciliter la comparaison.
-        Elle identifie les créneaux ajoutés et supprimés entre les deux listes en exploitant les caractéristiques des set;
-        puis retourne une description textuelle des différences.
+        Compare deux listes de créneaux horaires.
 
         Args:
-            slots1 (List[Dict]): Liste de créneaux horaires initiale.
-            slots2 (List[Dict]): Nouvelle liste de créneaux horaires à comparer.
+            slots1: Première liste de créneaux.
+            slots2: Seconde liste de créneaux.
 
         Returns:
-            str: Description des créneaux ajoutés et supprimés, séparés par " | ".
+            Description textuelle des créneaux ajoutés et supprimés.
         """
         # Convertit en ensembles pour comparaison
         set1 = {self._slot_to_string(slot) for slot in slots1}
@@ -467,20 +439,15 @@ class HorairesComparator:
 
         return " | ".join(differences)
 
-    def _slot_to_string(self, slot: Dict) -> str:
+    def _slot_to_string(self, slot: Dict[str, Any]) -> str:
         """
-        Convertit un créneau horaire sous forme de dictionnaire en une chaîne de caractères lisible.
-
-        Cette méthode prend un dictionnaire représentant un créneau horaire, contenant au minimum les clés 'debut' et 'fin'.
-        Si la clé 'occurence' est présente, elle est ajoutée à la chaîne entre crochets.
-        La valeur de 'occurence' peut être une liste ou un entier.
+        Convertit un créneau horaire en chaîne de caractères.
 
         Args:
-            slot (Dict): Dictionnaire contenant les informations du créneau horaire.
-                Doit inclure les clés 'debut' et 'fin', et optionnellement 'occurence'.
+            slot: Dictionnaire du créneau horaire.
 
         Returns:
-            str: Représentation textuelle du créneau horaire, incluant éventuellement l'occurrence.
+            Représentation textuelle du créneau.
         """
         base = f"{slot['debut']}-{slot['fin']}"
         if "occurence" in slot:
@@ -491,16 +458,18 @@ class HorairesComparator:
                 base += f"[{occur}]"
         return base
 
-    def _compare_special_schedules(self, schedules1: Dict, schedules2: Dict) -> str:
+    def _compare_special_schedules(
+        self, schedules1: Dict[str, Any], schedules2: Dict[str, Any]
+    ) -> str:
         """
-        Compare deux dictionnaires d'horaires spécifiques et retourne une description des différences.
+        Compare deux dictionnaires d'horaires spécifiques.
 
         Args:
-            schedules1 (Dict): Premier dictionnaire d'horaires spécifiques (normalisé).
-            schedules2 (Dict): Second dictionnaire d'horaires spécifiques (normalisé).
+            schedules1: Premier dictionnaire d'horaires.
+            schedules2: Second dictionnaire d'horaires.
 
         Returns:
-            str: Description textuelle des différences, séparées par " | ".
+            Description textuelle des différences.
         """
         differences = []
         all_dates = set(schedules1.keys()) | set(schedules2.keys())
@@ -527,20 +496,18 @@ class HorairesComparator:
 
         return " | ".join(differences)
 
-    def _compare_special_period(self, period1: Dict, period2: Dict) -> str:
+    def _compare_special_period(
+        self, period1: Dict[str, Any], period2: Dict[str, Any]
+    ) -> str:
         """
-        Compare les horaires spécifiques entre deux périodes et retourne une description des différences.
-
-        Cette méthode normalise les horaires spécifiques des deux périodes, puis compare chaque date
-        présente dans l'une ou l'autre des périodes. Elle identifie les ajouts, suppressions ou modifications
-        d'horaires pour chaque date et retourne une chaîne résumant ces différences.
+        Compare les horaires spécifiques de deux périodes.
 
         Args:
-            period1 (Dict): Dictionnaire représentant la première période, contenant éventuellement la clé "horaires_specifiques".
-            period2 (Dict): Dictionnaire représentant la seconde période, contenant éventuellement la clé "horaires_specifiques".
+            period1: Première période.
+            period2: Seconde période.
 
         Returns:
-            str: Description textuelle des différences entre les horaires spécifiques des deux périodes, séparées par " | ".
+            Description textuelle des différences.
         """
         schedules1 = self.normalizer.normalize_special_schedules(
             period1.get("horaires_specifiques", {})
@@ -562,15 +529,11 @@ class HorairesComparator:
         ou un format JSON invalide, et retourne un objet `ComparisonResult` détaillant le résultat.
 
         Args:
-            file1 (Union[str, Path]): Chemin vers le premier fichier JSON à comparer.
-            file2 (Union[str, Path]): Chemin vers le second fichier JSON à comparer.
+            file1: Chemin vers le premier fichier JSON.
+            file2: Chemin vers le second fichier JSON.
 
         Returns:
-            ComparisonResult: Résultat de la comparaison, incluant si les fichiers sont identiques,
-            les différences détectées et des détails sur d'éventuelles erreurs.
-
-        Raises:
-            Aucun. Les exceptions sont capturées et traitées dans le résultat retourné.
+            Résultat de la comparaison.
         """
         try:
             logger.info(

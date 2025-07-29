@@ -1,38 +1,19 @@
-Get Prompt
-==========
+Générateur de Prompt
+=====================
+
+Le module ``GetPrompt`` génère des prompts optimisés pour l'extraction d'horaires à l'aide de modèles de langage (LLM).
 
 Fonctionnalités
 ---------------
 
-Le module GetPrompt génère des prompts optimisés pour l'extraction d'horaires via LLM. Il intègre le schéma JSON dans le prompt et fournit des instructions spécialisées selon le type d'établissement.
+- Crée un prompt système définissant le rôle et les instructions pour le LLM.
+- Intègre dynamiquement le schéma JSON attendu dans le prompt.
+- Construit un prompt utilisateur avec le contexte spécifique du lieu à analyser (nom, contenu de la page, etc.).
+- Fournit des instructions détaillées pour gérer les cas complexes (occurrences spéciales, dates, etc.).
 
-**Génération de prompts :**
+.. admonition:: Usage
 
-- Prompt système avec rôle d'expert en extraction d'horaires
-- Instructions détaillées pour le format JSON attendu
-- Intégration automatique du schéma JSON dans le prompt
-- Contexte spécifique au lieu (nom, type, contenu markdown)
-
-**Instructions spécialisées :**
-
-- Gestion des occurrences spéciales (1er lundi du mois, etc.)
-- Format de dates standardisé (YYYY-MM-DD)
-- Année de référence automatique pour les dates sans année
-- Extraction des jours spéciaux avec dates précises
-
-**Optimisation LLM :**
-
-- Séparation claire entre prompt système et utilisateur
-- Instructions pour éviter les inventions de données
-- Guidance pour la sélection des horaires les plus pertinents
-- Format de sortie JSON exclusif sans formatage supplémentaire
-
-**Gestion des cas complexes :**
-
-- Multiples jeux d'horaires avec sélection du plus pertinent
-- Détection des fermetures temporaires ou définitives
-- Gestion des services multiples avec priorisation
-- Validation des données extraites avant structuration
+   Ce module est utilisé par le :doc:`LLMProcessor <../processing/llm_processor>` pour préparer la requête envoyée au LLM.
 
 Modules
 -------

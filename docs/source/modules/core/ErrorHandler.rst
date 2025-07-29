@@ -1,39 +1,19 @@
 Error Handler
 =============
 
+Le module ``ErrorHandler`` fournit un système centralisé pour la gestion et la traçabilité des erreurs dans l'application.
+
 Fonctionnalités
 ---------------
 
-Le module ErrorHandler fournit un système centralisé de gestion d'erreurs avec catégorisation, traçabilité et propositions de solutions.
-Il standardise le traitement des erreurs dans tout le système SmartWatch.
+- Catégorise les erreurs par type (Configuration, Réseau, LLM, etc.) et par niveau de gravité.
+- Enregistre les erreurs avec un contexte détaillé pour faciliter le débogage.
+- Fournit un décorateur ``@handle_errors`` pour une intégration simplifiée dans le code.
+- Suggère des solutions pour les erreurs courantes.
 
-**Système de catégorisation :**
+.. admonition:: Usage
 
-- Classification des erreurs par catégorie (CONFIGURATION, DATABASE, NETWORK, LLM, etc.)
-- Niveaux de gravité (LOW, MEDIUM, HIGH, CRITICAL)
-- Traitement spécialisé selon la catégorie d'erreur
-- Suggestions de solutions
-
-**Traçabilité complète :**
-
-- Contexte enrichi avec module, fonction et opération
-- Registre centralisé de toutes les erreurs traitées
-- Timestamps et tracebacks détaillés
-- Données contextuelles pour debugging
-
-**Gestion adaptative :**
-
-- Décorateur @handle_errors pour simplifier l'usage
-- Valeurs de retour par défaut en cas d'erreur
-- Option pour relancer ou continuer selon le contexte
-- Logging automatique
-
-**Solutions automatiques :**
-
-- Détection de patterns d'erreur courants
-- Suggestions de corrections
-- Messages d'aide contextualisés
-- Résumés d'erreurs pour reporting
+   L'``ErrorHandler`` est utilisé dans toute l'application pour garantir une gestion cohérente et robuste des exceptions.
 
 Modules
 -------
