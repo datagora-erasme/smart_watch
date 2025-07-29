@@ -164,18 +164,19 @@ Le programme effectuera les actions suivantes :
 
 ## Utilisation avec Docker
 
-Vous pouvez également lancer l'application dans un conteneur Docker.
+Pour lancer l'application avec Docker, la méthode recommandée est d'utiliser `docker-compose`, qui simplifie la gestion du conteneur et des variables d'environnement.
 
-1.  **Construisez l'image :**
-    ```sh
-    docker build -t smartwatch .
-    ```
+1.  **Assurez-vous que votre fichier `.env` est présent** à la racine du projet.
 
-2.  **Exécutez le conteneur :**
-    Assurez-vous que votre fichier `.env` est présent à la racine.
+2.  **Construisez l'image et lancez le conteneur avec `docker-compose` :**
     ```sh
-    docker run --env-file .env -v $(pwd)/data:/app/data -v $(pwd)/logs:/app/logs smartwatch
+    docker-compose up --build
     ```
+    Cette commande va :
+    - Construire l'image Docker en se basant sur le `Dockerfile`.
+    - Créer et démarrer le conteneur.
+    - Charger automatiquement les variables d'environnement depuis le fichier `.env`.
+
     Les rapports et la base de données seront générés dans les dossiers `data` et `logs` de votre machine hôte.
 
 ## Contribuer

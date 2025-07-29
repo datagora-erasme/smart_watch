@@ -12,6 +12,7 @@ pyarrow
 pytest
 requests
 scikit-learn
+sentence-transformers
 sphinx
 sphinx_rtd_theme
 sqlalchemy

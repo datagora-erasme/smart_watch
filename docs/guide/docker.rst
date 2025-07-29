@@ -10,23 +10,22 @@ Prérequis
 *   **Docker** doit être installé et en cours d'exécution sur votre machine.
 *   Vous devez avoir cloné le dépôt et configuré votre fichier ``.env`` comme décrit dans les sections :doc:`installation` et :doc:`configuration`.
 
-Étapes
-------
+Méthode recommandée : Docker Compose
+------------------------------------
 
-1.  **Construire l'image Docker**
+L'utilisation de ``docker-compose`` est la méthode recommandée car elle simplifie le processus de build et de lancement, tout en gérant correctement les variables d'environnement.
 
-    À la racine du projet (où se trouve le `Dockerfile`), exécutez la commande suivante pour construire l'image, nommée `smartwatch` pour cet exemple.
+1.  **Assurez-vous que votre fichier ``.env`` est présent** à la racine du projet.
 
-    .. code-block:: bash
-
-       docker build -t smartwatch .
-
-2.  **Exécuter le conteneur**
-
-    Une fois l'image construite, vous pouvez lancer l'application avec la commande suivante :
+2.  **Lancez l'application avec `docker-compose`** :
 
     .. code-block:: bash
 
-       docker run --rm --env-file .env smartwatch
+       docker-compose up --build
+
+    Cette commande unique s'occupe de :
+    - Construire l'image Docker si elle n'existe pas ou si le `Dockerfile` a changé.
+    - Démarrer le conteneur.
+    - Injecter les variables d'environnement depuis le fichier ``.env`` de manière sécurisée.
 
 L'application s'exécutera alors dans le conteneur, en utilisant votre configuration locale, décrite dans la page :doc:`configuration`.

@@ -1,9 +1,11 @@
 [project]
 name = "SmartWatch"
-version = "0.3.0"
-description = "Le monitoring intelligent des horaires d'ouverture"
+version = "1.0.0"
+description = "Le monitoring intelligent des horaires d'ouverture pour la Métropole de Lyon"
 readme = "README.md"
 requires-python = ">=3.13"
+homepage = "https://github.com/datagora-erasme/smart_watch"
+documentation = "https://datagora-erasme.github.io/smart_watch"
 dependencies = [
     "codecarbon>=3.0.2",
     "connectorx>=0.4.3",
@@ -14,7 +16,7 @@ dependencies = [
     "lxml>=6.0.0",
     "matplotlib>=3.10.3",
     "pandas>=2.3.1",
-    "playwright>=1.53.0",
+    "playwright>=1.54.0",
     "polars>=1.31.0",
     "pyarrow>=20.0.0",
     "pytest>=8.4.1",

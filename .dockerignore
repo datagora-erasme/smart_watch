@@ -14,7 +14,6 @@ notebooks/
 .env
 .python-version
 .python-versions
-uv.lock
 data/SmartWatch.db
 data/SmartWatch.log
 *.7z
