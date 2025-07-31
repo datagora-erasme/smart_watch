@@ -17,6 +17,7 @@ data/SmartWatch.db
 logs/SmartWatch.log
 *.7z
 *.csv
+a_faire.md
 
 # Distribution / packaging
 .Python
