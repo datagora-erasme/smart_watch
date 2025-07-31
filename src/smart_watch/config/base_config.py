@@ -48,8 +48,7 @@ class BaseConfig:
     """
     Gère la configuration de base de l'application.
 
-    d'environnement depuis un fichier .env, et fournit un accès sécurisé
-    à ces variables.
+    Charge les variables d'environnement depuis un fichier .env, et fournit un accès sécurisé à ces variables.
     """
 
     def __init__(self, env_file: Optional[Path] = None):
@@ -57,9 +56,7 @@ class BaseConfig:
         Initialise une instance de BaseConfig.
 
         Args:
-        Args:
-            env_file (Path, optional): Chemin vers le fichier .env.
-                Si non fourni, sera recherché à la racine du projet.
+            env_file (Path, optional): Chemin vers le fichier .env. Si non fourni, sera recherché à la racine du projet.
         """
         # Définir la racine du projet et le fichier .env
         self.project_root = Path(__file__).resolve().parents[3]
@@ -75,9 +72,7 @@ class BaseConfig:
         """
         Réinitialise les variables d'environnement du fichier .env.
 
-        Supprime les variables chargées depuis le fichier .env pour éviter
-        les conflits avec les variables système ou conteneurisées.
-        Ne s'exécute pas dans un environnement conteneurisé.
+        Supprime les variables chargées depuis le fichier .env pour éviter les conflits avec les variables système ou conteneurisées. Ne s'exécute pas dans un environnement conteneurisé.
         """
         # Ne supprimer que les variables provenant du fichier .env pour ne pas
         # affecter l'environnement système ou conteneurisé.
@@ -96,9 +91,7 @@ class BaseConfig:
         """
         Charge les variables d'environnement depuis le fichier .env.
 
-        Réinitialise d'abord les variables (sauf en environnement conteneurisé)
-        puis charge celles du fichier .env. Si le fichier n'existe pas,
-        utilise les variables système existantes.
+        Réinitialise d'abord les variables (sauf en environnement conteneurisé) puis charge celles du fichier .env. Si le fichier n'existe pas, utilise les variables système existantes.
         """
         if not _is_containerized():
             self._reset_environment()
@@ -107,8 +100,8 @@ class BaseConfig:
         if self.env_file.exists():
             try:
                 load_dotenv(
-                    self.env_file, override=False
-                )  # Ne pas écraser les variables existantes
+                    self.env_file, override=True
+                )  # Ecraser les variables existantes
                 logger.debug(
                     f"Variables d'environnement chargées depuis: {self.env_file.name}"
                 )
@@ -132,13 +125,13 @@ class BaseConfig:
         Récupère une variable d'environnement de manière sécurisée.
 
         Args:
-            required (bool): Si True, lève une exception si manquante.
+            key (str): La clé de la variable d'environnement à récupérer.
+            default (Optional[str], optional): La valeur par défaut si la variable n'est pas trouvée.
+            required (bool): Si True, lèvera une exception si la valeur est manquante.
 
         Returns:
             Optional[str]: La valeur de la variable d'environnement, ou None.
 
-        Raises:
-            ValueError: Si la variable est requise mais non définie.
         Raises:
             ValueError: Si la variable est requise mais non définie.
         """

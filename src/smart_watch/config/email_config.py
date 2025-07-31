@@ -1,9 +1,9 @@
-"""
-Configuration email centralisée.
-"""
+# Documentation
+# https://datagora-erasme.github.io/smart_watch/source/modules/config/email_config.html
 
 import re
 from dataclasses import dataclass
+from pathlib import Path
 from typing import List, Optional
 
 from ..core.ErrorHandler import ErrorCategory, ErrorSeverity, handle_errors
@@ -12,10 +12,20 @@ from .base_config import BaseConfig
 
 @dataclass
 class EmailConfig:
-    """Configuration email."""
+    """
+    Dataclasse pour stocker les paramètres de configuration email.
+
+    Attributes:
+        emetteur (str) : Adresse email de l'expéditeur.
+        recepteurs (List[str]) : Liste des adresses email des destinataires.
+        smtp_server (str) : Adresse du serveur SMTP.
+        smtp_port (int) : Port du serveur SMTP.
+        smtp_password (str) : Mot de passe SMTP pour l'authentification.
+        smtp_login (Optional[str]) : Identifiant de connexion SMTP. Par défaut à None.
+    """
 
     emetteur: str
-    recepteurs: List[str]  # Changé de recepteur à recepteurs (liste)
+    recepteurs: List[str]
     smtp_server: str
     smtp_port: int
     smtp_password: str
@@ -23,24 +33,44 @@ class EmailConfig:
 
 
 class EmailConfigManager(BaseConfig):
-    """Gestionnaire de configuration email."""
+    """
+    Gère le chargement et la validation de la configuration email depuis les variables d'environnement.
 
-    def __init__(self, env_file=None):
+    Cette classe hérite de `BaseConfig` et fournit des méthodes pour initialiser et valider les paramètres email, en s'assurant que tous les paramètres requis sont présents et correctement formatés.
+
+    Attributes:
+        config (Optional[EmailConfig]) : objet de configuration email chargé.
+    """
+
+    def __init__(self, env_file: Optional[Path] = None) -> None:
+        """
+        Initialise le gestionnaire de configuration email.
+
+        Args:
+            env_file (Optional[Path]) : chemin vers le fichier d'environnement.
+        """
         super().__init__(env_file)
-        self.config = self._init_email_config()
+        self.config: Optional[EmailConfig] = self._init_email_config()
 
     def _init_email_config(self) -> Optional[EmailConfig]:
-        """Initialise la configuration email."""
-        emetteur = self.get_env_var("MAIL_EMETTEUR", required=True)
-        recepteur_raw = self.get_env_var("MAIL_RECEPTEUR", required=True)
+        """
+        Initialise la configuration email à partir des variables d'environnement.
 
-        # Parser les destinataires multiples (séparés par des virgules)
-        recepteurs = [
+        Returns:
+            Optional[EmailConfig] : un objet `EmailConfig` si toutes les variables requises sont trouvées, sinon None.
+
+        Raises:
+            ValueError : si aucun destinataire email valide n'est configuré.
+        """
+        emetteur: str = self.get_env_var("MAIL_EMETTEUR", required=True)
+        recepteur_raw: str = self.get_env_var("MAIL_RECEPTEUR", required=True)
+
+        recepteurs: List[str] = [
             email.strip() for email in recepteur_raw.split(",") if email.strip()
         ]
 
         if not recepteurs:
-            raise ValueError("Aucun destinataire email valide configuré")
+            raise ValueError("Aucun destinataire email valide n'est configuré.")
 
         return EmailConfig(
             emetteur=emetteur,
@@ -54,55 +84,62 @@ class EmailConfigManager(BaseConfig):
     @handle_errors(
         category=ErrorCategory.CONFIGURATION,
         severity=ErrorSeverity.HIGH,
-        user_message="Erreur lors de la validation de la configuration email",
+        user_message="Erreur lors de la validation de la configuration email.",
         reraise=True,
     )
     def validate(self) -> bool:
-        """Valide la configuration email."""
-        validation_errors = []
+        """
+        Valide la configuration email chargée.
+
+        Cette méthode vérifie la présence des champs obligatoires, valide le format des adresses email et s'assure que le port SMTP est dans la plage autorisée.
+
+        Returns:
+            bool : True si la configuration est valide.
+
+        Raises:
+            ValueError : si la configuration est absente ou invalide.
+        """
+        validation_errors: List[str] = []
 
         if not self.config:
-            validation_errors.append("Configuration email manquante")
-            error_message = "Validation échouée:\n" + "\n".join(
+            validation_errors.append("La configuration email est absente.")
+            error_message: str = "Échec de la validation :\n" + "\n".join(
                 f"  - {error}" for error in validation_errors
             )
             raise ValueError(error_message)
 
-        # Vérifier le mot de passe SMTP
         if not self.config.smtp_password:
-            validation_errors.append("SMTP_PASSWORD manquant")
+            validation_errors.append("SMTP_PASSWORD est manquant.")
 
-        # Vérifier qu'au moins un destinataire valide existe
         if not self.config.recepteurs:
-            validation_errors.append("Aucun destinataire email configuré")
+            validation_errors.append("Aucun destinataire email n'est configuré.")
 
-        # Valider le format des emails
-        email_pattern = re.compile(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
+        email_pattern: re.Pattern = re.compile(
+            r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+        )
 
         if not email_pattern.match(self.config.emetteur):
             validation_errors.append(
-                f"Format d'email émetteur invalide: {self.config.emetteur}"
+                f"Format d'email expéditeur invalide : {self.config.emetteur}"
             )
 
         for email in self.config.recepteurs:
             if not email_pattern.match(email):
                 validation_errors.append(
-                    f"Format d'email destinataire invalide: {email}"
+                    f"Format d'email destinataire invalide : {email}"
                 )
 
-        # Vérifier le port SMTP
         if not (1 <= self.config.smtp_port <= 65535):
             validation_errors.append(
-                f"Port SMTP invalide: {self.config.smtp_port} (doit être entre 1 et 65535)"
+                f"Port SMTP invalide : {self.config.smtp_port} "
+                f"(doit être compris entre 1 et 65535)."
             )
 
-        # Vérifier le serveur SMTP
         if not self.config.smtp_server:
-            validation_errors.append("SMTP_SERVER manquant")
+            validation_errors.append("SMTP_SERVER est manquant.")
 
-        # Si des erreurs sont trouvées, lever une exception avec les détails
         if validation_errors:
-            error_message = "Validation échouée:\n" + "\n".join(
+            error_message = "Échec de la validation :\n" + "\n".join(
                 f"  - {error}" for error in validation_errors
             )
             raise ValueError(error_message)

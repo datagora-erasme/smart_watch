@@ -1,26 +1,7 @@
-"""
-Fonctionnalités
-===============
+# Documentation
+# https://datagora-erasme.github.io/smart_watch/source/modules/config/database_config.html
 
-Le module DatabaseConfig gère la configuration des sources de données et de la base de données SQLite. Il centralise les chemins des fichiers et URLs des sources CSV.
-
-**Configuration des sources :**
-
-- Chemins des fichiers de base de données SQLite
-- URLs des sources CSV (data.grandlyon.com)
-- Gestion automatique des répertoires de données
-- Validation des chemins et accessibilité des fichiers
-
-**Gestion des chemins :**
-
-- Résolution automatique des chemins relatifs depuis la racine du projet
-- Création automatique des répertoires si nécessaires
-- Validation de l'existence et des permissions des fichiers
-
-Modules
-=======
-"""
-
+import urllib.parse
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict
@@ -33,15 +14,14 @@ from .base_config import BaseConfig
 class DatabaseConfig:
     """Configuration de la base de données et des sources de données.
 
-    Cette classe stocke tous les paramètres nécessaires pour l'accès
-    aux données : fichiers locaux, URLs de téléchargement et schémas.
+    Cette classe de données stocke les chemins vers les fichiers locaux, les URL de téléchargement et les schémas nécessaires à l'application.
 
     Attributes:
-        db_file (Path): Chemin vers le fichier de base de données SQLite.
-        csv_file (Path): Chemin vers le fichier CSV principal en cache local.
-        csv_file_ref (Dict[str, str]): Dictionnaire des URLs des fichiers CSV de référence.
-        schema_file (Path): Chemin vers le fichier de schéma JSON.
-        csv_url (str): URL du fichier CSV principal à télécharger.
+        db_file: Chemin vers le fichier de base de données SQLite.
+        csv_file: Chemin vers le fichier CSV principal mis en cache localement.
+        csv_file_ref: Dictionnaire des URL des fichiers CSV de référence.
+        schema_file: Chemin vers le fichier de schéma JSON.
+        csv_url: URL du fichier CSV principal à télécharger.
     """
 
     db_file: Path
@@ -52,31 +32,27 @@ class DatabaseConfig:
 
 
 class DatabaseConfigManager(BaseConfig):
-    """Gestionnaire de configuration pour la base de données.
+    """Gère la configuration de la base de données.
 
-    Hérite de BaseConfig pour bénéficier de la gestion des variables
-    d'environnement et initialise la configuration spécifique à la base
-    de données.
+    Cette classe hérite de `BaseConfig` pour charger les variables d'environnement et initialiser les paramètres spécifiques à la base de données.
     """
 
-    def __init__(self, env_file=None):
-        """Initialise le gestionnaire de configuration de base de données.
+    def __init__(self, env_file: Path | None = None) -> None:
+        """Initialise le gestionnaire de configuration de la base de données.
 
         Args:
-            env_file (Path, optional): Chemin vers un fichier .env personnalisé.
+            env_file: Chemin optionnel vers un fichier .env personnalisé.
         """
         super().__init__(env_file)
-        self.config = self._init_database_config()
+        self.config: DatabaseConfig = self._init_database_config()
 
     def _init_database_config(self) -> DatabaseConfig:
         """Initialise la configuration de la base de données.
 
-        Lit les variables d'environnement pour construire les chemins
-        vers les fichiers et URLs nécessaires au fonctionnement de
-        l'application.
+        Cette méthode lit les variables d'environnement pour construire les chemins vers les fichiers et les URL nécessaires.
 
         Returns:
-            DatabaseConfig: Configuration complète de la base de données.
+            Une instance de `DatabaseConfig` contenant la configuration.
         """
         data_dir = self.project_root / "data"
 
@@ -91,8 +67,6 @@ class DatabaseConfigManager(BaseConfig):
         csv_url = self.get_env_var("CSV_URL_HORAIRES", required=True)
 
         # Extraire le nom du fichier depuis l'URL pour le cache local
-        import urllib.parse
-
         parsed_url = urllib.parse.urlparse(csv_url)
         filename = parsed_url.path.split("/")[-1]
 
@@ -121,11 +95,13 @@ class DatabaseConfigManager(BaseConfig):
     def validate(self) -> bool:
         """Valide la configuration de la base de données.
 
-        Vérifie que les fichiers critiques existent et que la configuration
-        est valide pour le fonctionnement de l'application.
+        Cette méthode vérifie que les fichiers et répertoires critiques existent et que les URL de sources de données sont valides.
 
         Returns:
-            bool: True si la configuration est valide, False sinon.
+            True si la configuration est valide.
+
+        Raises:
+            ValueError: Si la validation échoue, avec une liste des erreurs.
         """
         validation_errors = []
 

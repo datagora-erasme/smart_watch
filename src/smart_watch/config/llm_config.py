@@ -1,6 +1,5 @@
-"""
-Configuration LLM centralisée.
-"""
+# Documentation
+# https://datagora-erasme.github.io/smart_watch/source/modules/config/llm_config.html
 
 import logging
 from dataclasses import dataclass
@@ -15,20 +14,40 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class LLMConfig:
-    """Configuration LLM simplifiée."""
+    """Représente la configuration pour un client LLM.
+
+    Attributes:
+        fournisseur (str): Le nom du fournisseur de LLM ("OPENAI", "MISTRAL", "LOCAL").
+        modele (str): Le nom du modèle de LLM à utiliser.
+        api_key (Optional[str]): La clé API pour accéder au service du LLM.
+        base_url (Optional[str]): L'URL de base pour les appels API, principalement pour les fournisseurs compatibles OpenAI.
+        temperature (float): La température pour la génération de texte, contrôle le caractère aléatoire.
+        timeout (int): Le délai d'attente en secondes pour les requêtes API.
+    """
 
     fournisseur: str
     modele: str
-    api_key: Optional[str] = None  # Clé API optionnelle
+    api_key: Optional[str] = None
     base_url: Optional[str] = None
     temperature: float = 0
     timeout: int = 30
 
 
 class LLMConfigManager(BaseConfig):
-    """Gestionnaire de configuration LLM."""
+    """Gère la configuration du client LLM à partir des variables d'environnement.
 
-    def __init__(self, env_file: Path = None):
+    Cette classe lit les variables d'environnement pour configurer le client LLM, en détectant automatiquement le fournisseur (OpenAI, Mistral, ou local) en fonction des clés API disponibles.
+
+    Attributes:
+        config (LLMConfig): L'objet de configuration LLM initialisé.
+    """
+
+    def __init__(self, env_file: Optional[Path] = None) -> None:
+        """Initialise le gestionnaire de configuration LLM.
+
+        Args:
+            env_file (Optional[Path]): Le chemin vers un fichier .env personnalisé. Si non fourni, utilise les variables d'environnement système.
+        """
         super().__init__(env_file)
         try:
             self.config = self._init_llm_config()
@@ -39,7 +58,16 @@ class LLMConfigManager(BaseConfig):
             self.config = self._get_default_config()
 
     def _init_llm_config(self) -> LLMConfig:
-        """Initialise la configuration LLM avec détection automatique."""
+        """Initialise la configuration LLM en détectant le fournisseur.
+
+        La méthode recherche les clés API pour OpenAI, puis Mistral, et enfin un modèle local. Le premier trouvé est utilisé pour la configuration.
+
+        Returns:
+            LLMConfig: L'objet de configuration LLM initialisé.
+
+        Raises:
+            ValueError: Si aucune configuration de LLM (OpenAI, Mistral) ou de modèle d'embedding local n'est trouvée.
+        """
         # Tentative OpenAI/compatible
         llm_api_key_openai = self.get_env_var("LLM_API_KEY_OPENAI")
         llm_base_url_openai = self.get_env_var("LLM_BASE_URL_OPENAI")
@@ -80,7 +108,13 @@ class LLMConfigManager(BaseConfig):
             )
 
     def _get_default_config(self) -> LLMConfig:
-        """Retourne une configuration par défaut en cas d'erreur."""
+        """Retourne une configuration LLM par défaut.
+
+        Cette configuration est utilisée comme solution de repli en cas d'échec de l'initialisation pour permettre au système de démarrer sans planter.
+
+        Returns:
+            LLMConfig: Une configuration LLM locale par défaut.
+        """
         return LLMConfig(
             fournisseur="LOCAL",
             modele="paraphrase-multilingual-mpnet-base-v2",
@@ -97,7 +131,16 @@ class LLMConfigManager(BaseConfig):
         reraise=True,
     )
     def validate(self) -> bool:
-        """Valide la configuration LLM."""
+        """Valide la configuration LLM chargée.
+
+        Vérifie que les paramètres essentiels sont présents et valides, comme la clé API pour les fournisseurs distants, le nom du modèle, et les valeurs de température et de timeout.
+
+        Returns:
+            bool: True si la configuration est valide.
+
+        Raises:
+            ValueError: Si la validation échoue, avec un message détaillant les erreurs.
+        """
         validation_errors = []
 
         # Si le fournisseur n'est pas local, vérifier la clé API

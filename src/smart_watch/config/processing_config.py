@@ -1,9 +1,9 @@
-"""
-Configuration traitement centralisée.
-"""
+# Documentation
+# https://datagora-erasme.github.io/smart_watch/source/modules/config/processing_config.html
 
-from dataclasses import dataclass
-from typing import Dict
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Dict, Optional
 
 from ..core.ErrorHandler import ErrorCategory, ErrorSeverity, handle_errors
 from .base_config import BaseConfig
@@ -11,50 +11,74 @@ from .base_config import BaseConfig
 
 @dataclass
 class ProcessingConfig:
-    """Configuration traitement."""
+    """Représente la configuration pour le traitement des données.
+
+    Attributes:
+        nb_threads_url (int): Le nombre de threads à utiliser pour le traitement des URLs.
+        delai_entre_appels (float): Le délai en secondes entre chaque appel d'URL.
+        delai_en_cas_erreur (float): Le délai en secondes à attendre en cas d'erreur.
+        char_replacements (Dict[str, str]): Un dictionnaire pour le remplacement de caractères lors du nettoyage.
+    """
 
     nb_threads_url: int = 1
     delai_entre_appels: float = 1.0
     delai_en_cas_erreur: float = 5.0
-    char_replacements: Dict[str, str] = None
+    char_replacements: Dict[str, str] = field(default_factory=dict)
 
 
 class ProcessingConfigManager(BaseConfig):
-    """Gestionnaire de configuration traitement."""
+    """Gère la configuration de traitement de l'application.
 
-    def __init__(self, env_file=None):
+    Cette classe charge la configuration depuis les variables d'environnement et la valide.
+
+    Attributes:
+        config (ProcessingConfig): L'objet de configuration de traitement.
+    """
+
+    def __init__(self, env_file: Optional[Path] = None) -> None:
+        """Initialise le gestionnaire de configuration de traitement.
+
+        Args:
+            env_file (Optional[Path]): Le chemin vers le fichier .env. Par défaut, None.
+        """
         super().__init__(env_file)
-        self.config = self._init_processing_config()
+        self.config: ProcessingConfig = self._init_processing_config()
 
     def _init_processing_config(self) -> ProcessingConfig:
-        """Initialise la configuration de traitement."""
+        """Initialise l'objet de configuration de traitement.
+
+        Charge les valeurs depuis les variables d'environnement et définit les remplacements de caractères par défaut.
+
+        Returns:
+            ProcessingConfig: Un objet contenant la configuration de traitement.
+        """
         # Remplacements de caractères pour le nettoyage markdown
-        char_replacements = {
+        char_replacements: Dict[str, str] = {
             # Guillemets
             "«": '"',
             "»": '"',
-            """: '"',
-            """: '"',
-            "'": "'",
-            "'": "'",
+            "“": '"',
+            "”": '"',
+            "‘": "'",
+            "’": "'",
             # Tirets
             "–": "-",
             "—": "-",
             # Espaces spéciaux
-            "\u00a0": " ",  # Non-breaking space
-            "\u2009": " ",  # Thin space
-            "\u200b": "",  # Zero-width space
+            "\u00a0": " ",  # Espace insécable
+            "\u2009": " ",  # Espace fin
+            "\u200b": "",  # Espace sans chasse
             # Caractères de formatage markdown
             "*": " ",
             "_": " ",
             "`": " ",
             "+": " ",
             "\\": " ",
-            # Nettoyage des espaces (ordre important pour éviter les récursions infinies)
+            # Nettoyage des espaces (ordre important)
             "\t": " ",  # Tabulations vers espaces
-            "    ": " ",  # 4 espaces vers 1 (en premier)
+            "    ": " ",  # 4 espaces vers 1
             "   ": " ",  # 3 espaces vers 1
-            "  ": " ",  # 2 espaces vers 1 (en dernier)
+            "  ": " ",  # 2 espaces vers 1
             " \n": "\n",  # Espaces en fin de ligne
         }
 
@@ -68,35 +92,47 @@ class ProcessingConfigManager(BaseConfig):
     @handle_errors(
         category=ErrorCategory.CONFIGURATION,
         severity=ErrorSeverity.MEDIUM,
-        user_message="Erreur lors de la validation de la configuration processing",
+        user_message="Erreur lors de la validation de la configuration de traitement.",
         reraise=True,
     )
     def validate(self) -> bool:
-        """Valide la configuration traitement."""
-        validation_errors = []
+        """Valide la configuration de traitement.
+
+        Vérifie que les valeurs de configuration sont dans des plages valides.
+
+        Returns:
+            bool: True si la configuration est valide.
+
+        Raises:
+            ValueError: Si une ou plusieurs valeurs de configuration sont invalides.
+        """
+        validation_errors: list[str] = []
 
         if self.config.nb_threads_url <= 0:
             validation_errors.append(
-                f"NB_THREADS_URL doit être positif (valeur actuelle: {self.config.nb_threads_url})"
+                "NB_THREADS_URL doit être un entier positif "
+                f"(valeur: {self.config.nb_threads_url})."
             )
 
         if self.config.delai_entre_appels < 0:
             validation_errors.append(
-                f"DELAI_ENTRE_APPELS doit être positif ou nul (valeur actuelle: {self.config.delai_entre_appels})"
+                "DELAI_ENTRE_APPELS doit être un nombre positif ou nul "
+                f"(valeur: {self.config.delai_entre_appels})."
             )
 
         if self.config.delai_en_cas_erreur < 0:
             validation_errors.append(
-                f"DELAI_EN_CAS_ERREUR doit être positif ou nul (valeur actuelle: {self.config.delai_en_cas_erreur})"
+                "DELAI_EN_CAS_ERREUR doit être un nombre positif ou nul "
+                f"(valeur: {self.config.delai_en_cas_erreur})."
             )
 
-        # Validation des remplacements de caractères
         if not self.config.char_replacements:
-            validation_errors.append("char_replacements ne peut pas être vide")
+            validation_errors.append(
+                "Le dictionnaire char_replacements ne peut pas être vide."
+            )
 
-        # Si des erreurs sont trouvées, lever une exception avec les détails
         if validation_errors:
-            error_message = "Validation échouée:\n" + "\n".join(
+            error_message = "Validation de la configuration échouée:\n" + "\n".join(
                 f"  - {error}" for error in validation_errors
             )
             raise ValueError(error_message)
