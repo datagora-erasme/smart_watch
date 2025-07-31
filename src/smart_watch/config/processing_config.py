@@ -39,7 +39,7 @@ class ProcessingConfigManager(BaseConfig):
         """Initialise le gestionnaire de configuration de traitement.
 
         Args:
-            env_file (Optional[Path]): Le chemin vers le fichier .env. Par défaut, None.
+            env_file (Optional[Path], optional): le chemin vers le fichier .env. Par défaut, None.
         """
         super().__init__(env_file)
         self.config: ProcessingConfig = self._init_processing_config()
