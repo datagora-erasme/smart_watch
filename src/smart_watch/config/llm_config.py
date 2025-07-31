@@ -46,7 +46,7 @@ class LLMConfigManager(BaseConfig):
         """Initialise le gestionnaire de configuration LLM.
 
         Args:
-            env_file (Optional[Path]): Le chemin vers un fichier .env personnalisé. Si non fourni, utilise les variables d'environnement système.
+            env_file (Optional[Path], optional): Le chemin vers un fichier .env personnalisé. Si non fourni, utilise les variables d'environnement système.
         """
         super().__init__(env_file)
         try:

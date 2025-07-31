@@ -17,11 +17,11 @@ class DatabaseConfig:
     Cette classe de données stocke les chemins vers les fichiers locaux, les URL de téléchargement et les schémas nécessaires à l'application.
 
     Attributes:
-        db_file: chemin vers le fichier de base de données SQLite.
-        csv_file: chemin vers le fichier CSV principal mis en cache localement.
-        csv_file_ref: dictionnaire des URL des fichiers CSV de référence.
-        schema_file: chemin vers le fichier de schéma JSON.
-        csv_url: URL du fichier CSV principal à télécharger.
+        db_file (Path): chemin vers le fichier de base de données SQLite.
+        csv_file (Path): chemin vers le fichier CSV principal mis en cache localement.
+        csv_file_ref (Dict[str, str]): dictionnaire des URL des fichiers CSV de référence.
+        schema_file (Path): chemin vers le fichier de schéma JSON.
+        csv_url (str): URL du fichier CSV principal à télécharger.
     """
 
     db_file: Path
@@ -41,7 +41,7 @@ class DatabaseConfigManager(BaseConfig):
         """Initialise le gestionnaire de configuration de la base de données.
 
         Args:
-            env_file: chemin optionnel vers un fichier .env personnalisé.
+            env_file (Path, optional): chemin optionnel vers un fichier .env personnalisé.
         """
         super().__init__(env_file)
         self.config: DatabaseConfig = self._init_database_config()
@@ -52,7 +52,7 @@ class DatabaseConfigManager(BaseConfig):
         Cette méthode lit les variables d'environnement pour construire les chemins vers les fichiers et les URL nécessaires.
 
         Returns:
-            Une instance de `DatabaseConfig` contenant la configuration.
+            DatabaseConfig: une instance de `DatabaseConfig` contenant la configuration.
         """
         data_dir = self.project_root / "data"
 

@@ -47,7 +47,7 @@ class EmailConfigManager(BaseConfig):
         Initialise le gestionnaire de configuration email.
 
         Args:
-            env_file : chemin vers le fichier d'environnement.
+            env_file (Optional[Path], optional) : chemin vers le fichier d'environnement.
         """
         super().__init__(env_file)
         self.config: Optional[EmailConfig] = self._init_email_config()

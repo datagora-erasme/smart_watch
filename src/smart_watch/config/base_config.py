@@ -56,7 +56,7 @@ class BaseConfig:
         Initialise une instance de BaseConfig.
 
         Args:
-            env_file (Path, optional): chemin vers le fichier .env. Si non fourni, sera recherché à la racine du projet.
+            env_file (Path[Optional], optional): chemin vers le fichier .env. Si non fourni, sera recherché à la racine du projet.
         """
         # Définir la racine du projet et le fichier .env
         self.project_root = Path(__file__).resolve().parents[3]
