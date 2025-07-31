@@ -27,37 +27,6 @@
             margin-bottom: 15px;
         }
 
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        li {
-            margin: 8px 0;
-            padding: 5px;
-        }
-
-        .status-item {
-            border-left: 3px solid;
-            padding-left: 10px;
-        }
-
-        .status-success {
-            border-left-color: #28a745;
-        }
-
-        .status-warning {
-            border-left-color: #ffc107;
-        }
-
-        .status-error {
-            border-left-color: #dc3545;
-        }
-
-        .status-unknown {
-            border-left-color: #6c757d;
-        }
-
         .stats-table {
             width: 100%;
             border-collapse: collapse;
@@ -75,17 +44,6 @@
         .stats-table th {
             background-color: #007acc;
             color: white;
-        }
-
-        .category-cell {
-            background-color: #f2f2f2;
-            font-weight: bold;
-            vertical-align: middle;
-        }
-
-        .subcategory-cell {
-            padding-left: 20px !important;
-            font-style: italic;
         }
 
         .level-separator {
@@ -107,7 +65,7 @@
     {% if execution_data and execution_data.llm_consommation_execution > 0 %}
     <p style="font-size: 0.9em; opacity: 0.8;">
         <strong>Émissions CO2 totales dues aux appels LLM :</strong> {{
-        "%.3f"|format(execution_data.llm_consommation_execution * 1000) }} g
+        "%.3f"|format(execution_data.llm_consommation_execution) }} g
     </p>
     {% endif %}
 
@@ -129,7 +87,13 @@
                     <span title="{{ statut.description }}">{{ statut.emoji }} {{ statut.nom }}</span>
                 </td>
                 <td>{{ statut.count }}</td>
-                <td>{{ (statut.count / stats_globales.total_urls * 100)|round(1) }}%</td>
+                <td>
+                    {% if stats_globales.total_urls > 0 %}
+                        {{ (statut.count / stats_globales.total_urls * 100)|round(1) }}%
+                    {% else %}
+                        0%
+                    {% endif %}
+                </td>
             </tr>
             {% else %}
             <tr>

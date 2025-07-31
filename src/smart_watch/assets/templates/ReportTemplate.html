@@ -410,7 +410,7 @@
             {% if execution_data and execution_data.llm_consommation_execution > 0 %}
             <p style="font-size:0.9em;opacity:0.8;">
                 Émissions CO2 totales dues aux appels LLM : <strong>{{
-                    "%.3f"|format(execution_data.llm_consommation_execution * 1000) }} g</strong>
+                    "%.3f"|format(execution_data.llm_consommation_execution) }} g</strong>
             </p>
             {% endif %}
         </div>
@@ -557,7 +557,7 @@
                                 {% endif %}
                                 {% endif %}
                             </td>
-                            <td>{{ "%.3f"|format((url.llm_consommation_requete or 0) * 1000) }}</td>
+                            <td>{{ "%.3f"|format(url.llm_consommation_requete or 0) }}</td>
                             {% endif %}
                         </tr>
                         {% endfor %}

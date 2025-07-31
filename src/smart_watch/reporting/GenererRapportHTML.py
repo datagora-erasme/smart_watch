@@ -164,9 +164,10 @@ def _extract_execution_data(db_manager: DatabaseManager) -> Optional[dict]:
     logger.debug(f"Exécution de la requête : {query}")
     results = db_manager.execute_query(query)
     logger.debug(f"Données extraites : {len(results)} enregistrements")
-    if results and len(results) > 0:
-        # results est une liste de tuples, on convertit en dict
-        return {"llm_consommation_execution": results[0][0]}
+    if results and len(results) > 0 and results[0][0] is not None:
+        # results est une liste de tuples, on convertit en dict,
+        # et on multiplie par 1000 pour avoir la consommation en g et pas en kg
+        return {"llm_consommation_execution": results[0][0] * 1000}
     return None
 
 
@@ -231,6 +232,10 @@ def _process_data(donnees_urls: list) -> None:
     """Traite et normalise les données extraites."""
     for url in donnees_urls:
         try:
+            # Multiplier la consommation par 1000 pour avoir des g et pas de kg
+            if url.get("llm_consommation_requete") is not None:
+                url["llm_consommation_requete"] *= 1000
+
             # Convertir llm_horaires_json en objet Python si c'est une chaîne JSON
             if "llm_horaires_json" in url and url["llm_horaires_json"]:
                 if isinstance(url["llm_horaires_json"], str) and not url[
