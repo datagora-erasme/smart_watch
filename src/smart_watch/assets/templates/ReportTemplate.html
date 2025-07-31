@@ -180,12 +180,7 @@
             width: 180px
         }
 
-        .preview.gl {
-            background: #e8f5e8;
-            border: 1px solid #c3e6c3
-        }
-
-        .preview.llm {
+        .preview.data {
             background: #e8f5e8;
             border: 1px solid #c3e6c3
         }
@@ -444,7 +439,14 @@
                         <tr>
                             <td><span class="badge {{ statut.type }}">{{ statut.emoji }} {{ statut.nom }}</span></td>
                             <td>{{ statut.count }}</td>
-                            <td>{{ (statut.count / stats_globales.total_urls * 100)|round(1) }}%</td>
+                            <td>
+                                <!-- MODIFICATION 1 : Protection contre la division par zéro -->
+                                {% if stats_globales.total_urls > 0 %}
+                                    {{ (statut.count / stats_globales.total_urls * 100)|round(1) }}%
+                                {% else %}
+                                    0%
+                                {% endif %}
+                            </td>
                             <td style="font-size: 0.9em; line-height: 1.4;">{{ statut.description }}</td>
                         </tr>
                         {% endfor %}
@@ -459,7 +461,7 @@
                     <div class="chart-label">{{ type_lieu.type }}</div>
                     <div class="chart-progress">
                         <div class="chart-fill"
-                            data-width="{{ (type_lieu.count / stats_globales.total_urls * 100)|round(1) }}"
+                            data-width="{% if stats_globales.total_urls > 0 %}{{ (type_lieu.count / stats_globales.total_urls * 100)|round(1) }}{% else %}0{% endif %}"
                             style="background:#667eea"></div>
                     </div>
                     <div class="chart-value">{{ type_lieu.count }}</div>
@@ -478,11 +480,11 @@
                 <table>
                     <thead>
                         <tr>
-                            <th onclick="sortTable(this,0,'string')" class="col-type">Type</th>
-                            <th onclick="sortTable(this,1,'string')" class="col-id">ID</th>
-                            <th onclick="sortTable(this,2,'string')" class="col-name">Nom</th>
-                            <th onclick="sortTable(this,3,'number')" class="col-http">HTTP</th>
-                            <th onclick="sortTable(this,4,'string')" class="col-details">Détails</th>
+                            <th onclick="sortTable(this,'string')" class="col-type">Type</th>
+                            <th onclick="sortTable(this,'string')" class="col-id">ID</th>
+                            <th onclick="sortTable(this,'string')" class="col-name">Nom</th>
+                            <th onclick="sortTable(this,'number')" class="col-http">HTTP</th>
+                            <th onclick="sortTable(this,'string')" class="col-details">Détails</th>
                             <th class="col-gl">Horaires GL</th>
                             <th class="col-llm">Horaires LLM</th>
                             {% if statut.code == 'success' %}
@@ -492,12 +494,12 @@
                             {% elif statut.code == 'extraction_error' %}
                             <th class="col-comparison">Erreur extraction</th>
                             {% endif %}
-                            <th onclick="sortTable(this, 12, 'number')">CO2 (g)</th>
+                            <th onclick="sortTable(this, 'number')">CO2 (g)</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for url in statut.urls %}
-                        <tr {% if url.horaires_identiques==false %}class="horaires-differents" {% endif %}>
+                        <tr>
                             <td class="col-type">{{ url.type_lieu or '-' }}</td>
                             <td class="col-id">{{ url.identifiant or '-' }}</td>
                             <td class="col-name">
@@ -516,14 +518,14 @@
                                 style="color: #dc3545; font-weight: 500;" {% endif %}>{{ url.message or '-' }}</td>
                             <td class="col-gl">
                                 {% if url.horaires_data_gl %}
-                                <div class="preview gl">{{ url.horaires_data_gl[:60] }}{% if url.horaires_data_gl|length
+                                <div class="preview data">{{ url.horaires_data_gl[:60] }}{% if url.horaires_data_gl|length
                                     > 60 %}...{% endif %}</div>
                                 {{ view_button('Horaires GL - ' ~ url.identifiant, url.horaires_data_gl) }}
                                 {% else %}-{% endif %}
                             </td>
                             <td class="col-llm">
                                 {% if url.llm_horaires_osm %}
-                                <div class="preview llm">{{ url.llm_horaires_osm[:60] }}{% if
+                                <div class="preview data">{{ url.llm_horaires_osm[:60] }}{% if
                                     url.llm_horaires_osm|length > 60 %}...{% endif %}</div>
                                 {{ view_button('Horaires LLM OSM - ' ~ url.identifiant, url.llm_horaires_osm) }}
                                 {% else %}-{% endif %}
@@ -578,7 +580,7 @@
                 <h3 id="modalTitle"></h3>
                 <div>
                     <button class="btn" onclick="copyContent()">📋 Copier</button>
-                    <span class="close" onclick="closeModal()">&times;</span>
+                    <span class="close" onclick="closeModal()">×</span>
                 </div>
             </div>
             <div id="modalContent" class="content-display"></div>
@@ -638,9 +640,10 @@
             });
         });
 
-        // Tri de tableau amélioré
-        function sortTable(header, colIndex, dataType) {
+        // Fonction de tri des tableaux
+        function sortTable(header, dataType) {
             const table = header.closest('table');
+            const colIndex = Array.from(header.parentElement.children).indexOf(header); // Calcul dynamique de l'index
             const rows = Array.from(table.querySelectorAll('tbody tr'));
             const isAsc = !header.classList.contains('asc');
 
@@ -649,8 +652,13 @@
             header.classList.add(isAsc ? 'asc' : 'desc');
 
             rows.sort((a, b) => {
-                const aVal = a.cells[colIndex].textContent.trim();
-                const bVal = b.cells[colIndex].textContent.trim();
+                // S'assurer que les cellules existent avant de lire leur contenu
+                const aCell = a.cells[colIndex];
+                const bCell = b.cells[colIndex];
+                if (!aCell || !bCell) return 0;
+
+                const aVal = aCell.textContent.trim();
+                const bVal = bCell.textContent.trim();
 
                 let comparison = 0;
                 if (dataType === 'number') {
