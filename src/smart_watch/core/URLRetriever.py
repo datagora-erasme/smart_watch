@@ -40,6 +40,25 @@ def retrieve_url(
     index: int = 0,
     total: int = 0,
 ) -> dict:
+    """Récupère le contenu d'une URL et le retourne sous forme de dictionnaire.
+
+    Args:
+        row (dict): dictionnaire contenant les informations de l'URL et d'autres métadonnées.
+        sortie (str): format de sortie souhaité, par défaut "html".
+        encoding_errors (str): stratégie de gestion des erreurs d'encodage, par défaut "ignore".
+        config (dict, optional): configuration supplémentaire, non utilisée dans cette fonction.
+        index (int): index de l'URL dans une liste, utilisé pour le logging.
+        total (int): nombre total d'URLs à traiter, utilisé pour le logging.
+
+    Returns:
+        dict: dictionnaire contenant :
+            - toutes les clés d'entrée du paramètre `row`
+            - 'statut' (str) : état de la récupération ('ok', 'warning', 'critical')
+            - 'message' (str) : message d'erreur ou d'information
+            - 'code_http' (int) : code HTTP de la réponse (0 si non disponible)
+            - 'html' (str) : contenu HTML récupéré (si succès)
+            - 'markdown' (str) : contenu converti en markdown (si sortie == "markdown" et succès)
+    """
     row_dict = dict(row)
     url = row.get("url", "")
     identifiant = row.get("identifiant", "N/A")

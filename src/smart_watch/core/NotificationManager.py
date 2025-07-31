@@ -19,13 +19,27 @@ class NotificationManager:
         db_manager: DatabaseManager,
         logger: SmartWatchLogger,
     ):
+        """Initialise le NotificationManager avec les gestionnaires de configuration, base de données et journalisation.
+
+        Args:
+            config_manager (ConfigManager): gestionnaire de configuration de l'application.
+            db_manager (DatabaseManager): gestionnaire de la base de données.
+            logger (SmartWatchLogger): instance de journalisation pour enregistrer les événements.
+
+        Raises:
+            ValueError: si les paramètres fournis sont invalides.
+        """
         self.config_manager = config_manager
         self.db_manager = db_manager
         self.logger = logger
         self.email_sender = EmailSender(config_manager)
 
     def send_report_email(self, stats: Dict):
-        """Génère le rapport, compresse les logs et envoie l'email."""
+        """Génère le rapport, compresse les logs et envoie l'email.
+
+        Args:
+            stats (Dict): statistiques à inclure dans le rapport.
+        """
         report_path = self._generate_report()
         zip_log_path = self._zip_log_file()
 
@@ -56,7 +70,11 @@ class NotificationManager:
                 self.logger.debug("Fichier de log zippé temporaire supprimé.")
 
     def _generate_report(self) -> str:
-        """Génère le rapport HTML."""
+        """Génère le rapport HTML.
+
+        Returns:
+            str: chemin du fichier HTML généré, ou une chaîne vide en cas d'erreur.
+        """
         try:
             # Utiliser la fonction generer_rapport_html du module GenererRapportHTML
             model_info = {
@@ -78,7 +96,11 @@ class NotificationManager:
             return ""
 
     def _zip_log_file(self) -> str:
-        """Compresse le fichier de log et retourne le chemin du fichier zip."""
+        """Compresse le fichier de log et retourne le chemin du fichier zip.
+
+        Returns:
+            str: chemin du fichier zip créé, ou une chaîne vide en cas d'erreur
+        """
         log_file_path = str(self.logger.log_file)
         if not os.path.exists(log_file_path):
             self.logger.warning("Fichier de log non trouvé, ne peut pas être zippé.")

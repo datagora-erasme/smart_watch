@@ -26,17 +26,14 @@ class ConfigManager:
         """
         Initialise le gestionnaire de configuration centralisée.
 
-        Cette méthode configure le chemin du projet, charge le fichier d'environnement (.env),
-        initialise la configuration de base et les gestionnaires de configuration satellites.
+        Cette méthode configure le chemin du projet, charge le fichier d'environnement (.env), initialise la configuration de base et les gestionnaires de configuration satellites.
         Elle gère également les erreurs critiques lors de l'initialisation.
 
         Args:
-            env_file (Optional[Path]): Chemin personnalisé vers le fichier d'environnement (.env).
-                Si non spécifié, le fichier .env à la racine du projet sera utilisé.
+            env_file (Optional[Path], optional): chemin personnalisé vers le fichier d'environnement (.env). Si non spécifié, le fichier .env à la racine du projet sera utilisé.
 
         Raises:
-            Exception: Toute erreur survenant lors de l'initialisation des gestionnaires de configuration
-                est capturée, traitée par le gestionnaire d'erreurs, puis relancée avec une sévérité critique.
+            Exception: toute erreur survenant lors de l'initialisation des gestionnaires de configuration est capturée, traitée par le gestionnaire d'erreurs, puis relancée avec une sévérité critique.
         """
         self.project_root = Path(__file__).resolve().parents[3]
         self.env_file = env_file or self.project_root / ".env"
@@ -70,21 +67,20 @@ class ConfigManager:
         """
         Initialise les gestionnaires de configuration modulaires et expose leurs configurations.
 
-        Cette méthode crée et initialise les gestionnaires de configuration pour différents modules
-        (LLM, base de données, email, traitement, filtrage Markdown) en utilisant le fichier d'environnement
-        fourni. Les configurations de chaque gestionnaire sont exposées comme attributs de l'instance.
+        Cette méthode crée et initialise les gestionnaires de configuration pour différents modules (LLM, base de données, email, traitement, filtrage Markdown) en utilisant le fichier d'environnement fourni.
+        Les configurations de chaque gestionnaire sont exposées comme attributs de l'instance.
         Les références aux gestionnaires sont conservées pour permettre la validation ultérieure.
 
         Args:
             Aucun argument.
 
         Attributes:
-            llm (dict): Configuration du gestionnaire LLM.
-            database (dict): Configuration du gestionnaire de base de données.
-            email (dict): Configuration du gestionnaire d'email.
-            processing (dict): Configuration du gestionnaire de traitement.
-            markdown_filtering (dict): Configuration du gestionnaire de filtrage Markdown.
-            _managers (dict): Références aux gestionnaires de configuration pour la validation.
+            llm (dict): configuration du gestionnaire LLM.
+            database (dict): configuration du gestionnaire de base de données.
+            email (dict): configuration du gestionnaire d'email.
+            processing (dict): configuration du gestionnaire de traitement.
+            markdown_filtering (dict): configuration du gestionnaire de filtrage Markdown.
+            _managers (dict): références aux gestionnaires de configuration pour la validation.
         """
         # Initialiser les gestionnaires modulaires
         llm_manager = LLMConfigManager(self.env_file)
@@ -113,13 +109,7 @@ class ConfigManager:
         """
         Valide les configurations de tous les gestionnaires modulaires.
 
-        Parcourt chaque gestionnaire de configuration enregistré et appelle sa méthode `validate`.
-        Si une configuration est invalide ou si une exception est levée lors de la validation,
-        un message d'erreur est enregistré. Si toutes les configurations sont valides, un message
-        d'information est enregistré.
-
-        Cela permet de s'assurer que toutes les configurations nécessaires sont correctement
-        définies avant de démarrer l'application.
+        Parcourt chaque gestionnaire de configuration enregistré et appelle sa méthode `validate`. Si une configuration est invalide ou si une exception est levée lors de la validation, un message d'erreur est enregistré. Si toutes les configurations sont valides, un message d'information est enregistré. Cela permet de s'assurer que toutes les configurations nécessaires sont correctement définies avant de démarrer l'application.
 
         Returns:
             bool: True si toutes les configurations sont valides, False sinon.
@@ -146,10 +136,7 @@ class ConfigManager:
         """
         Affiche un résumé détaillé de la configuration actuelle du système dans les logs.
 
-        Cette méthode envoie au logger les informations principales concernant la configuration du LLM,
-        des embeddings, de la base de données, du fichier CSV, de l'email et du traitement
-        des threads. Les informations sont adaptées selon le fournisseur d'embeddings utilisé
-        (OPENAI ou MISTRAL) et selon la présence ou non de la configuration email.
+        Cette méthode envoie au logger les informations principales concernant la configuration du LLM, des embeddings, de la base de données, du fichier CSV, de l'email et du traitement des threads.
 
         Returns:
             None

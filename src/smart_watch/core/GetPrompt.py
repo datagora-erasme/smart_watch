@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+from typing import Optional
 
 from .Logger import create_logger
 
@@ -9,17 +10,17 @@ logger = create_logger(
 )
 
 
-def get_prompt(row: dict, json_schema: dict = None) -> list:
+def get_prompt(row: dict, json_schema: Optional[dict] = None) -> list:
     """
     Construit le prompt pour l'extraction d'horaires d'ouverture.
     Le schéma JSON est injecté dans le prompt pour guider le LLM.
 
     Args:
-        row: Dictionnaire contenant les informations du lieu.
-        json_schema: Le schéma JSON à suivre pour la réponse.
+        row (dict): dictionnaire contenant les informations du lieu.
+        json_schema (Optional[dict]): le schéma JSON à suivre pour la réponse.
 
     Returns:
-        list: Liste des messages pour le LLM.
+        list: liste des messages pour le LLM.
     """
     identifiant = row.get("identifiant", "N/A")
     logger.debug(

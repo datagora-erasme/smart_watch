@@ -16,10 +16,10 @@ class ErrorSeverity(Enum):
     Enumération représentant le niveau de gravité d'une erreur.
 
     Attributes:
-        LOW (str): Erreur mineure, le traitement peut continuer.
-        MEDIUM (str): Erreur modérée, le traitement peut continuer avec une dégradation des fonctionnalités.
-        HIGH (str): Erreur grave, il est recommandé d'arrêter le traitement.
-        CRITICAL (str): Erreur critique, le traitement ne peut pas continuer.
+        LOW (str): erreur mineure, le traitement peut continuer.
+        MEDIUM (str): erreur modérée, le traitement peut continuer avec une dégradation des fonctionnalités.
+        HIGH (str): erreur grave, il est recommandé d'arrêter le traitement.
+        CRITICAL (str): erreur critique, le traitement ne peut pas continuer.
     """
 
     LOW = "low"
@@ -33,17 +33,17 @@ class ErrorCategory(Enum):
     Enumération d'erreurs utilisées pour classifier les exceptions dans l'application.
 
     Attributes:
-        CONFIGURATION (ErrorCategory): Erreur liée à la configuration de l'application.
-        DATABASE (ErrorCategory): Erreur en lien avec la base de données.
-        NETWORK (ErrorCategory): Erreur de connexion ou de communication réseau.
-        LLM (ErrorCategory): Erreur liée au modèle de langage (LLM).
-        FILE_IO (ErrorCategory): Erreur lors des opérations d'entrée/sortie sur les fichiers.
-        VALIDATION (ErrorCategory): Erreur de validation des données ou des paramètres.
-        CONVERSION (ErrorCategory): Erreur lors de la conversion de données ou de formats.
-        PARSING (ErrorCategory): Erreur lors de l'analyse ou du parsing de données.
-        EMAIL (ErrorCategory): Erreur lors de l'envoi ou de la réception d'emails.
-        EMBEDDINGS (ErrorCategory): Erreur lors de l'utilisation des embeddings.
-        UNKNOWN (ErrorCategory): Erreur non catégorisée.
+        CONFIGURATION (str): erreur liée à la configuration de l'application.
+        DATABASE (str): erreur en lien avec la base de données.
+        NETWORK (str): erreur de connexion ou de communication réseau.
+        LLM (str): erreur liée au modèle de langage (LLM).
+        FILE_IO (str): erreur lors des opérations d'entrée/sortie sur les fichiers.
+        VALIDATION (str): erreur de validation des données ou des paramètres.
+        CONVERSION (str): erreur lors de la conversion de données ou de formats.
+        PARSING (str): erreur lors de l'analyse ou du parsing de données.
+        EMAIL (str): erreur lors de l'envoi ou de la réception d'emails.
+        EMBEDDINGS (str): erreur lors de l'utilisation des embeddings.
+        UNKNOWN (str): erreur non catégorisée.
     """
 
     CONFIGURATION = "configuration"
@@ -65,11 +65,11 @@ class ErrorContext:
     Classe représentant le contexte d'une erreur survenue dans l'application.
 
     Attributes:
-        module (str): Nom du module où l'erreur s'est produite.
-        function (str): Nom de la fonction où l'erreur s'est produite.
-        operation (str): Description de l'opération en cours lors de l'erreur.
-        data (Optional[Dict[str, Any]]): Données supplémentaires liées à l'erreur (optionnel).
-        user_message (Optional[str]): Message destiné à l'utilisateur concernant l'erreur (optionnel).
+        module (str): nom du module où l'erreur s'est produite.
+        function (str): nom de la fonction où l'erreur s'est produite.
+        operation (str): description de l'opération en cours lors de l'erreur.
+        data (Optional[Dict[str, Any]]): données supplémentaires liées à l'erreur.
+        user_message (Optional[str]): message destiné à l'utilisateur concernant l'erreur.
     """
 
     module: str
@@ -91,8 +91,8 @@ class HandledError:
         context (ErrorContext): contexte dans lequel l'erreur s'est produite.
         timestamp (str): date et heure de l'occurrence de l'erreur.
         traceback (str): trace complète de l'erreur.
-        resolved (bool): Indique si l'erreur a été résolue.
-        solution_attempted (Optional[str]): Description de la solution tentée, si applicable.
+        resolved (bool): indique si l'erreur a été résolue.
+        solution_attempted (Optional[str]): description de la solution tentée, si applicable.
     """
 
     category: ErrorCategory
@@ -112,13 +112,12 @@ class ErrorHandler:
         """
         Initialise le gestionnaire d'erreurs.
 
-        Ce constructeur configure le logger pour le module ErrorHandler, initialise le registre des erreurs traitées,
-        et prépare les gestionnaires spécialisés pour chaque catégorie d'erreur.
+        Ce constructeur configure le logger pour le module ErrorHandler, initialise le registre des erreurs traitées, et prépare les gestionnaires spécialisés pour chaque catégorie d'erreur.
 
         Attributes:
-            logger: Logger dédié au module ErrorHandler.
-            error_registry: Liste des erreurs traitées par le gestionnaire.
-            category_handlers: Dictionnaire associant chaque catégorie d'erreur à sa méthode de gestion spécialisée.
+            logger: logger dédié au module ErrorHandler.
+            error_registry: liste des erreurs traitées par le gestionnaire.
+            category_handlers: dictionnaire associant chaque catégorie d'erreur à sa méthode de gestion spécialisée.
         """
         self.logger = create_logger(
             module_name="ErrorHandler",
@@ -150,24 +149,23 @@ class ErrorHandler:
         default_return: Any = None,
     ) -> Any:
         """
-        Traite une exception de manière centralisée, en enregistrant l'erreur, en la journalisant,
-        et en appliquant un traitement spécialisé selon la catégorie et la gravité.
+        Traite une exception de manière centralisée, en enregistrant l'erreur, en la journalisant, et en appliquant un traitement spécialisé selon la catégorie et la gravité.
 
         Peut relancer l'exception ou retourner une valeur par défaut.
 
         Args:
-            exception (Exception): L'exception à traiter.
-            context (ErrorContext): Contexte additionnel lié à l'erreur.
-            severity (ErrorSeverity): Gravité de l'erreur.
-            category (ErrorCategory): Catégorie de l'erreur.
-            reraise (bool, optionnel): Si True, relance l'exception après traitement. Par défaut à False.
-            default_return (Any, optionnel): Valeur à retourner si aucun résultat n'est produit par le traitement spécialisé.
+            exception (Exception): l'exception à traiter.
+            context (ErrorContext): contexte additionnel lié à l'erreur.
+            severity (ErrorSeverity): gravité de l'erreur.
+            category (ErrorCategory): catégorie de l'erreur.
+            reraise (bool, optionnel): si True, relance l'exception après traitement. Par défaut à False.
+            default_return (Any, optionnel): valeur à retourner si aucun résultat n'est produit par le traitement spécialisé.
 
         Returns:
-            Any: Résultat du traitement spécialisé, ou la valeur par défaut si aucun résultat n'est produit.
+            Any: résultat du traitement spécialisé, ou la valeur par défaut si aucun résultat n'est produit.
 
         Raises:
-            Exception: Relance l'exception d'origine si `reraise` est True.
+            Exception: relance l'exception d'origine si `reraise` est True.
         """
 
         # Création de l'erreur traitée
@@ -199,16 +197,12 @@ class ErrorHandler:
         """
         Enregistre une erreur gérée dans le système de logs avec différents niveaux de gravité.
 
-        Cette méthode construit un message d'erreur détaillé incluant la catégorie, le contexte,
-        l'opération, l'exception, un message utilisateur optionnel et des données contextuelles.
+        Cette méthode construit un message d'erreur détaillé incluant la catégorie, le contexte, l'opération, l'exception, un message utilisateur optionnel et des données contextuelles.
 
-        Le niveau de log est déterminé en fonction de la gravité de l'erreur. Pour les erreurs
-        graves (HIGH ou CRITICAL), la trace complète est également enregistrée en debug.
+        Le niveau de log est déterminé en fonction de la gravité de l'erreur. Pour les erreurs graves (HIGH ou CRITICAL), la trace complète est également enregistrée en debug.
 
         Args:
-            handled_error (HandledError): L'objet représentant l'erreur gérée, contenant toutes
-                les informations nécessaires pour le logging (catégorie, contexte, exception,
-                gravité, message utilisateur, données, traceback).
+            handled_error (HandledError): l'objet représentant l'erreur gérée, contenant toutes les informations nécessaires pour le logging (catégorie, contexte, exception, gravité, message utilisateur, données, traceback).
         """
 
         # Message de base
@@ -248,17 +242,13 @@ class ErrorHandler:
         """
         Applique un traitement spécialisé à une erreur gérée selon sa catégorie.
 
-        Cette méthode tente de récupérer un gestionnaire spécialisé pour la catégorie
-        de l'erreur fournie. Si un gestionnaire est trouvé, il est exécuté avec l'erreur
-        en paramètre. En cas d'exception lors de l'exécution du gestionnaire, une erreur
-        est enregistrée dans le logger. Si aucun gestionnaire n'est disponible ou en cas
-        d'échec, la méthode retourne None.
+        Cette méthode tente de récupérer un gestionnaire spécialisé pour la catégorie de l'erreur fournie. Si un gestionnaire est trouvé, il est exécuté avec l'erreur en paramètre. En cas d'exception lors de l'exécution du gestionnaire, une erreur est enregistrée dans le logger. Si aucun gestionnaire n'est disponible ou en cas d'échec, la méthode retourne None.
 
         Args:
-            handled_error (HandledError): L'erreur à traiter, encapsulée dans un objet HandledError.
+            handled_error (HandledError): l'erreur à traiter, encapsulée dans un objet HandledError.
 
         Returns:
-            Any: Le résultat du gestionnaire spécialisé si disponible et sans erreur, sinon None.
+            Any: le résultat du gestionnaire spécialisé si disponible et sans erreur, sinon None.
         """
 
         handler = self.category_handlers.get(handled_error.category)
@@ -274,14 +264,13 @@ class ErrorHandler:
         """
         Gère les erreurs de configuration spécifiques et propose des solutions adaptées.
 
-        Cette méthode analyse l'exception contenue dans l'objet `HandledError` et, selon le type d'erreur (KeyError ou ValueError),
-        elle renseigne une tentative de solution et suggère des actions correctives via le logger.
+        Cette méthode analyse l'exception contenue dans l'objet `HandledError` et, selon le type d'erreur (KeyError ou ValueError), elle renseigne une tentative de solution et suggère des actions correctives via le logger.
 
         Args:
-            error (HandledError): L'objet d'erreur contenant l'exception à traiter.
+            error (HandledError): l'objet d'erreur contenant l'exception à traiter.
 
         Returns:
-            Any: Toujours None, cette méthode est utilisée pour ses effets de bord (journalisation et modification de l'objet d'erreur).
+            Any: toujours None, cette méthode est utilisée pour ses effets de bord (journalisation et modification de l'objet d'erreur).
         """
 
         if isinstance(error.exception, KeyError):
@@ -309,18 +298,13 @@ class ErrorHandler:
         """
         Gère les erreurs spécifiques liées à la base de données et propose des solutions.
 
-        Cette méthode analyse le message d'exception pour détecter des erreurs courantes
-        telles que l'absence de table ou le verrouillage de la base de données. Elle
-        consigne une solution adaptée dans le logger et met à jour l'attribut
-        `solution_attempted` de l'objet d'erreur.
+        Cette méthode analyse le message d'exception pour détecter des erreurs courantes telles que l'absence de table ou le verrouillage de la base de données. Elle consigne une solution adaptée dans le logger et met à jour l'attribut `solution_attempted` de l'objet d'erreur.
 
         Args:
-            error (HandledError): L'objet représentant l'erreur interceptée, contenant
-                l'exception et les informations associées.
+            error (HandledError): l'objet représentant l'erreur interceptée, contenant l'exception et les informations associées.
 
         Returns:
-            Any: Toujours None, cette méthode est utilisée pour ses effets de bord
-            (journalisation et mise à jour de l'erreur).
+            Any: toujours None, cette méthode est utilisée pour ses effets de bord (journalisation et mise à jour de l'erreur).
         """
 
         if "no such table" in str(error.exception).lower():
@@ -339,15 +323,13 @@ class ErrorHandler:
         """
         Gère les erreurs liées au réseau en analysant le type d'exception et en proposant une solution.
 
-        Cette méthode vérifie si l'erreur est une erreur de connexion ou un timeout réseau,
-        puis met à jour la tentative de solution dans l'objet `HandledError` et enregistre
-        une suggestion dans le logger.
+        Cette méthode vérifie si l'erreur est une erreur de connexion ou un timeout réseau, puis met à jour la tentative de solution dans l'objet `HandledError` et enregistre une suggestion dans le logger.
 
         Args:
-            error (HandledError): L'objet contenant l'exception à traiter et les informations associées.
+            error (HandledError): l'objet contenant l'exception à traiter et les informations associées.
 
         Returns:
-            Any: Toujours None, cette méthode ne retourne pas de valeur utile.
+            Any: toujours None, cette méthode ne retourne pas de valeur utile.
         """
 
         if isinstance(error.exception, ConnectionError):
@@ -365,10 +347,10 @@ class ErrorHandler:
         Traite les erreurs liées au LLM et propose des solutions ou messages adaptés.
 
         Args:
-            error (HandledError): L'erreur interceptée contenant l'exception à analyser.
+            error (HandledError): l'erreur interceptée contenant l'exception à analyser.
 
         Returns:
-            Any: Retourne un message d'erreur spécifique si un timeout est détecté, sinon None.
+            Any: retourne un message d'erreur spécifique si un timeout est détecté, sinon None.
 
         Notes:
             - Modifie l'attribut `solution_attempted` de l'objet error selon le type d'erreur détecté.
@@ -401,10 +383,10 @@ class ErrorHandler:
         - Si les permissions sont insuffisantes (`PermissionError`), elle indique ce problème.
 
         Args:
-            error (HandledError): L'objet contenant l'exception à traiter.
+            error (HandledError): l'objet contenant l'exception à traiter.
 
         Returns:
-            Any: Toujours `None`, cette méthode modifie l'objet d'erreur en place.
+            Any: toujours `None`, cette méthode modifie l'objet d'erreur en place.
         """
 
         if isinstance(error.exception, FileNotFoundError):
@@ -420,15 +402,13 @@ class ErrorHandler:
         """
         Gère les erreurs de parsing des données d'entrée.
 
-        Cette méthode modifie l'attribut `solution_attempted` de l'erreur pour indiquer qu'une erreur de parsing a eu lieu,
-        enregistre une information dans le logger pour suggérer de vérifier le format des données d'entrée, puis retourne
-        `None` afin que la valeur par défaut définie par le décorateur soit utilisée.
+        Cette méthode modifie l'attribut `solution_attempted` de l'erreur pour indiquer qu'une erreur de parsing a eu lieu, enregistre une information dans le logger pour suggérer de vérifier le format des données d'entrée, puis retourne `None` afin que la valeur par défaut définie par le décorateur soit utilisée.
 
         Args:
-            error (HandledError): L'objet représentant l'erreur de parsing rencontrée.
+            error (HandledError): l'objet représentant l'erreur de parsing rencontrée.
 
         Returns:
-            Any: Toujours `None`, pour permettre l'utilisation d'une valeur par défaut.
+            Any: toujours `None`, pour permettre l'utilisation d'une valeur par défaut.
         """
         error.solution_attempted = "Erreur de parsing des données"
         self.logger.info(
@@ -441,15 +421,13 @@ class ErrorHandler:
         """
         Traite une erreur de validation et retourne une réponse structurée.
 
-        Cette méthode modifie l'attribut `solution_attempted` de l'objet `error` pour indiquer
-        qu'une tentative de solution a été effectuée, puis retourne un dictionnaire contenant
-        un message d'erreur et les détails de l'exception.
+        Cette méthode modifie l'attribut `solution_attempted` de l'objet `error` pour indiquer qu'une tentative de solution a été effectuée, puis retourne un dictionnaire contenant un message d'erreur et les détails de l'exception.
 
         Args:
-            error (HandledError): L'objet représentant l'erreur de validation à traiter.
+            error (HandledError): l'objet représentant l'erreur de validation à traiter.
 
         Returns:
-            Any: Un dictionnaire avec les clés 'error' et 'details' décrivant l'échec de la validation.
+            Any: un dictionnaire avec les clés 'error' et 'details' décrivant l'échec de la validation.
         """
 
         error.solution_attempted = "Données invalides"
@@ -459,15 +437,13 @@ class ErrorHandler:
         """
         Traite les erreurs liées à l'envoi d'emails et propose une solution adaptée.
 
-        Cette méthode analyse le message d'exception associé à une erreur d'email,
-        puis définit une tentative de solution en fonction du type d'erreur détectée
-        (authentification ou connexion SMTP).
+        Cette méthode analyse le message d'exception associé à une erreur d'email, puis définit une tentative de solution en fonction du type d'erreur détectée (authentification ou connexion SMTP).
 
         Args:
-            error (HandledError): L'objet représentant l'erreur à traiter, contenant l'exception d'origine.
+            error (HandledError): l'objet représentant l'erreur à traiter, contenant l'exception d'origine.
 
         Returns:
-            Any: Toujours None. La solution proposée est enregistrée dans l'attribut `solution_attempted` de l'objet error.
+            Any: toujours None. La solution proposée est enregistrée dans l'attribut `solution_attempted` de l'objet error.
         """
 
         error_str = str(error.exception).lower()
@@ -485,10 +461,10 @@ class ErrorHandler:
         Gère les erreurs spécifiques aux embeddings.
 
         Args:
-            error (HandledError): L'objet d'erreur contenant l'exception à traiter.
+            error (HandledError): l'objet d'erreur contenant l'exception à traiter.
 
         Returns:
-            Any: Toujours None, cette méthode est utilisée pour ses effets de bord.
+            Any: toujours None, cette méthode est utilisée pour ses effets de bord.
         """
         error_str = str(error.exception).lower()
 
@@ -529,14 +505,14 @@ class ErrorHandler:
         Crée un contexte d'erreur pour faciliter la gestion et le suivi des erreurs dans le module.
 
         Args:
-            module (str): Nom du module où l'erreur s'est produite.
-            function (str): Nom de la fonction concernée par l'erreur.
-            operation (str): Description de l'opération en cours lors de l'erreur.
-            data (Optional[Dict[str, Any]]): Données supplémentaires liées à l'erreur (par défaut None).
-            user_message (Optional[str]): Message destiné à l'utilisateur pour expliquer l'erreur (par défaut None).
+            module (str): nom du module où l'erreur s'est produite.
+            function (str): nom de la fonction concernée par l'erreur.
+            operation (str): description de l'opération en cours lors de l'erreur.
+            data (Optional[Dict[str, Any]]): données supplémentaires liées à l'erreur (par défaut None).
+            user_message (Optional[str]): message destiné à l'utilisateur pour expliquer l'erreur (par défaut None).
 
         Returns:
-            ErrorContext: Objet contenant toutes les informations contextuelles sur l'erreur.
+            ErrorContext: objet contenant toutes les informations contextuelles sur l'erreur.
         """
 
         return ErrorContext(
@@ -551,8 +527,7 @@ class ErrorHandler:
         """
         Résume les erreurs enregistrées dans le registre d'erreurs.
 
-        Retourne un dictionnaire contenant le nombre total d'erreurs, la répartition par catégorie et par gravité,
-        ainsi que les cinq dernières erreurs enregistrées avec leurs détails.
+        Retourne un dictionnaire contenant le nombre total d'erreurs, la répartition par catégorie et par gravité, ainsi que les cinq dernières erreurs enregistrées avec leurs détails.
 
         Returns:
             Dict[str, Any]:
@@ -607,7 +582,7 @@ class ErrorHandler:
         Elle peut être utilisée pour réinitialiser l'état des erreurs avant une nouvelle opération ou après un traitement.
 
         Raises:
-            AttributeError: Si le registre d'erreurs n'est pas initialisé correctement.
+            AttributeError: si le registre d'erreurs n'est pas initialisé correctement.
         """
         self.error_registry.clear()
 
@@ -623,19 +598,16 @@ def handle_errors(
     """
     Décorateur pour gérer les erreurs lors de l'exécution d'une fonction, en utilisant un gestionnaire d'erreurs centralisé.
 
-    Ce décorateur intercepte les exceptions levées par la fonction décorée, crée un contexte d'erreur, et délègue le traitement
-    au gestionnaire d'erreurs approprié. Il permet de personnaliser la catégorie et la sévérité de l'erreur, d'afficher un message
-    utilisateur, et de choisir si l'exception doit être relancée ou non.
+    Ce décorateur intercepte les exceptions levées par la fonction décorée, crée un contexte d'erreur, et délègue le traitement au gestionnaire d'erreurs approprié. Il permet de personnaliser la catégorie et la sévérité de l'erreur, d'afficher un message utilisateur, et de choisir si l'exception doit être relancée ou non.
 
-    Il utilise la fonction functools.wraps pour conserver les métadonnées de la fonction d'origine. Cela permet par exemple
-    d'afficher la documentation de la fonction décorée avec Sphinx.
+    Il utilise la fonction functools.wraps pour conserver les métadonnées de la fonction d'origine. Cela permet par exemple d'afficher la documentation de la fonction décorée avec Sphinx.
 
     Args:
-        category (ErrorCategory): Catégorie de l'erreur à signaler.
-        severity (ErrorSeverity): Niveau de sévérité de l'erreur.
-        reraise (bool, optionnel): Si True, relance l'exception après traitement. Sinon, retourne `default_return`. Par défaut à False.
-        default_return (Any, optionnel): Valeur à retourner en cas d'erreur si `reraise` est False. Par défaut à None.
-        user_message (str, optionnel): Message personnalisé à afficher à l'utilisateur. Par défaut à None.
+        category (ErrorCategory): catégorie de l'erreur à signaler.
+        severity (ErrorSeverity): niveau de sévérité de l'erreur.
+        reraise (bool, optionnel): si True, relance l'exception après traitement. Sinon, retourne `default_return`. Par défaut à False.
+        default_return (Any, optionnel): valeur à retourner en cas d'erreur si `reraise` est False. Par défaut à None.
+        user_message (str, optionnel): message personnalisé à afficher à l'utilisateur. Par défaut à None.
 
     Returns:
         Callable: Le décorateur appliqué à la fonction cible.
@@ -695,13 +667,10 @@ def _get_global_error_handler() -> ErrorHandler:
     """
     Retourne l'instance globale du gestionnaire d'erreurs.
 
-    Cette fonction vérifie si une instance globale de `ErrorHandler` existe déjà.
-    Si ce n'est pas le cas, elle en crée une nouvelle et la retourne. Cela permet
-    de garantir qu'une seule instance du gestionnaire d'erreurs est utilisée
-    dans toute l'application.
+    Cette fonction vérifie si une instance globale de `ErrorHandler` existe déjà. Si ce n'est pas le cas, elle en crée une nouvelle et la retourne. Cela permet de garantir qu'une seule instance du gestionnaire d'erreurs est utilisée dans toute l'application.
 
     Returns:
-        ErrorHandler: L'instance globale du gestionnaire d'erreurs.
+        ErrorHandler: l'instance globale du gestionnaire d'erreurs.
     """
     global _global_error_handler
     if _global_error_handler is None:
@@ -713,10 +682,9 @@ def get_error_handler() -> ErrorHandler:
     """
     Récupère l'instance globale du gestionnaire d'erreurs.
 
-    Cette fonction permet d'obtenir le gestionnaire d'erreurs utilisé globalement dans l'application.
-    Elle est utile pour centraliser la gestion des exceptions et des erreurs.
+    Cette fonction permet d'obtenir le gestionnaire d'erreurs utilisé globalement dans l'application. Elle est utile pour centraliser la gestion des exceptions et des erreurs.
 
     Returns:
-        ErrorHandler: L'instance globale du gestionnaire d'erreurs.
+        ErrorHandler: l'instance globale du gestionnaire d'erreurs.
     """
     return _get_global_error_handler()

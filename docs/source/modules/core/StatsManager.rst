@@ -3,6 +3,10 @@ Gestionnaire de Statistiques
 
 Le module ``StatsManager`` collecte, analyse et présente les statistiques d'exécution du pipeline de traitement.
 
+.. admonition:: Usage
+
+   ``StatsManager`` est utilisé à la fin du pipeline pour générer un résumé des performances et des résultats du traitement.
+
 Fonctionnalités
 ---------------
 
@@ -11,10 +15,6 @@ Fonctionnalités
 - Fournit des méthodes pour afficher les statistiques dans les logs ou les formater pour une API.
 - Calcule des métriques de performance (taux de réussite, temps de traitement, etc.).
 
-.. admonition:: Usage
-
-   Le ``StatsManager`` est utilisé à la fin du pipeline pour générer un résumé des performances et des résultats du traitement.
-
 Modules
 -------
 
@@ -22,6 +22,6 @@ Modules
    :members:
    :undoc-members:
    :private-members:
-   :special-members: __init__, __call__
+   :special-members: __init__
    :inherited-members:
    :show-inheritance:

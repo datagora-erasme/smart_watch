@@ -16,6 +16,14 @@ class EmailSender:
     """Classe pour envoyer des emails via SMTP."""
 
     def __init__(self, config: ConfigManager):
+        """
+        Initialise l'EmailSender avec la configuration du gestionnaire de configuration.
+
+        Cette classe utilise les paramètres de configuration pour envoyer des emails, y compris les destinataires, l'émetteur, le serveur SMTP et les informations d'authentification.
+
+        Args:
+            config (ConfigManager): instance de ConfigManager contenant les paramètres de configuration.
+        """
         self.config = config.email
         self.logger = create_logger(self.__class__.__name__)
 
@@ -25,10 +33,14 @@ class EmailSender:
         """
         Envoie un email avec support pour pièces jointes multiples.
 
+        L'envoi se fait avec _send_ssl ou _send_starttls en fonction du port configuré :
+            - Port 465 : SSL/TLS
+            - Port 587 : STARTTLS
+
         Args:
-            subject: Sujet de l'email.
-            body: Corps de l'email (HTML).
-            attachments: Liste des chemins vers les fichiers à joindre.
+            subject (str): sujet de l'email.
+            body (str): corps de l'email (HTML).
+            attachments (Optional[List[str]]): liste des chemins vers les fichiers à joindre.
         """
         message = MIMEMultipart()
         message["From"] = self.config.emetteur
@@ -74,7 +86,15 @@ class EmailSender:
             raise
 
     def _send_ssl(self, email_string: str):
-        """Envoie via SSL."""
+        """
+        Envoie l'email via une connexion SSL/TLS. Utilise le port 465 pour la connexion SSL.
+
+        Args:
+            email_string (str): contenu de l'email à envoyer.
+
+        Warning:
+            Cette méthode utilise une connexion SSL/TLS non vérifiée pour contourner les erreurs de certificat SSL. Ceci est INSECURISÉ car bien que l'on connaisse le serveur dans notre cas, on ne peut être certain du réseau par contre.
+        """
         # NOTE: Utilisation d'un contexte non vérifié pour contourner les erreurs de certificat SSL.
         # Ceci est INSECURISÉ et ne devrait être utilisé que si vous faites confiance au réseau et au serveur.
         context = ssl._create_unverified_context()
@@ -91,7 +111,12 @@ class EmailSender:
             )
 
     def _send_starttls(self, email_string: str):
-        """Envoie via STARTTLS."""
+        """
+        Envoie l'email via une connexion STARTTLS. Utilise le port 587 pour STARTTLS.
+
+        Args:
+            email_string (str): contenu de l'email à envoyer.
+        """
         self.logger.debug(f"Connexion SMTP STARTTLS port {self.config.smtp_port}")
         with smtplib.SMTP(self.config.smtp_server, self.config.smtp_port) as server:
             # NOTE: Utilisation d'un contexte non vérifié pour contourner les erreurs de certificat SSL.

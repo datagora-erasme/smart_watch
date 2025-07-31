@@ -23,7 +23,7 @@ class DatabaseManager:
         Initialise le gestionnaire de base de données.
 
         Args:
-            db_file: Chemin vers le fichier de base de données SQLite
+            db_file (Union[str, Path]): chemin vers le fichier de base de données SQLite
         """
         self.db_file = Path(db_file)
         logger.debug(f"DatabaseManager initialisé avec {self.db_file}")
@@ -33,10 +33,10 @@ class DatabaseManager:
         Vérifie si une table existe dans la base de données.
 
         Args:
-            table_name: Nom de la table à vérifier
+            table_name (str): nom de la table à vérifier
 
         Returns:
-            True si la table existe, False sinon
+            bool: True si la table existe, False sinon
         """
         try:
             conn = sqlite3.connect(self.db_file)
@@ -62,12 +62,12 @@ class DatabaseManager:
         Initialise une table dans la base de données SQLite avec les données de base.
 
         Args:
-            table_name: Nom de la table à initialiser
-            df_initial: DataFrame initial
-            if_exists: Comportement si la table existe ("fail", "replace", "skip")
+            table_name (str): nom de la table à initialiser
+            df_initial (pl.DataFrame): dataFrame initial
+            if_exists (str): comportement si la table existe ("fail", "replace", "skip")
 
         Raises:
-            Exception: En cas d'erreur lors de l'initialisation
+            Exception: en cas d'erreur lors de l'initialisation
         """
         try:
             table_exists = self.table_exists(table_name)
@@ -116,14 +116,14 @@ class DatabaseManager:
         Charge les données depuis une table de la base SQLite.
 
         Args:
-            table_name: Nom de la table à charger
-            query: Requête SQL personnalisée (optionnel)
+            table_name (str): nom de la table à charger
+            query (Optional[str]): requête SQL personnalisée
 
         Returns:
-            DataFrame avec les données
+            pl.DataFrame : dataFrame avec les données
 
         Raises:
-            Exception: En cas d'erreur lors du chargement
+            Exception: en cas d'erreur lors du chargement
         """
         try:
             if query is None:
@@ -151,15 +151,15 @@ class DatabaseManager:
         Met à jour des enregistrements dans une table de la base SQLite.
 
         Args:
-            table_name: Nom de la table à mettre à jour
-            where_conditions: Conditions WHERE (colonne: valeur)
-            update_values: Valeurs à mettre à jour (colonne: valeur)
+            table_name (str): nom de la table à mettre à jour
+            where_conditions (Dict[str, Any]): conditions WHERE (colonne: valeur)
+            update_values (Dict[str, Any]): valeurs à mettre à jour (colonne: valeur)
 
         Returns:
-            Nombre d'enregistrements mis à jour
+            int: nombre d'enregistrements mis à jour
 
         Raises:
-            Exception: En cas d'erreur lors de la mise à jour
+            Exception: en cas d'erreur lors de la mise à jour
         """
         try:
             # Construire la requête UPDATE
@@ -193,11 +193,11 @@ class DatabaseManager:
         Exécute une requête SQL personnalisée.
 
         Args:
-            query: Requête SQL à exécuter
-            params: Paramètres pour la requête (optionnel)
+            query (str): requête SQL à exécuter
+            params (Optional[tuple]): paramètres pour la requête (optionnel)
 
         Returns:
-            Résultats de la requête
+            List[tuple]: résultats de la requête
         """
         try:
             logger.debug(f"Exécution requête: {query[:50]}...")

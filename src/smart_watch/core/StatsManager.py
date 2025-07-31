@@ -17,17 +17,38 @@ class StatItem:
     """Représente un élément de statistique avec sa valeur, son libellé et son unité."""
 
     def __init__(self, value: Any, label: str, unit: str = "", format_str: str = "{}"):
+        """
+        Initialise un élément de statistique.
+
+        Args:
+            value (Any): la valeur de la statistique.
+            label (str): le libellé de la statistique.
+            unit (str): l'unité de la statistique.
+            format_str (str): le format de la valeur, par défaut "{}".
+        """
         self.value = value
         self.label = label
         self.unit = unit
         self.format_str = format_str
 
     def formatted_value(self) -> str:
-        """Retourne la valeur formatée avec son unité."""
+        """Retourne la valeur formatée avec son unité.
+
+        Si l'unité est vide, retourne juste la valeur formatée.
+        Si la valeur est None, retourne "N/A".
+
+        Returns:
+            str: la valeur formatée avec son unité ou juste la valeur.
+        """
         formatted = self.format_str.format(self.value)
         return f"{formatted} {self.unit}" if self.unit else formatted
 
     def __str__(self) -> str:
+        """Retourne une représentation en chaîne de l'élément de statistique.
+
+        Returns:
+            str: la représentation de l'élément de statistique.
+        """
         return f"{self.label}: {self.formatted_value()}"
 
 
@@ -35,15 +56,35 @@ class StatsSection:
     """Représente une section de statistiques."""
 
     def __init__(self, title: str, items: Dict[str, StatItem]):
+        """
+        Initialise une section de statistiques.
+        Args:
+            title (str): le titre de la section.
+            items (Dict[str, StatItem]): les éléments de statistique dans la section.
+        """
         self.title = title
         self.items = items
 
     def get_item_value(self, key: str) -> Any:
-        """Récupère la valeur d'un élément de statistique."""
+        """Récupère la valeur d'un élément de statistique.
+
+        Args:
+            key (str): la clé de l'élément de statistique.
+
+        Returns:
+            Any: la valeur de l'élément de statistique, ou "N/A"
+        """
         return self.items.get(key, StatItem("N/A", "")).value
 
     def get_formatted_value(self, key: str) -> str:
-        """Récupère la valeur formatée d'un élément de statistique."""
+        """Récupère la valeur formatée d'un élément de statistique.
+
+        Args:
+            key (str): la clé de l'élément de statistique.
+
+        Returns:
+            str: la valeur formatée de l'élément de statistique, ou "N
+        """
         return self.items.get(key, StatItem("N/A", "")).formatted_value()
 
 
@@ -51,17 +92,22 @@ class StatsManager:
     """Gestionnaire de statistiques basé sur les requêtes SQL."""
 
     def __init__(self, config: ConfigManager, logger):
+        """
+        Initialise le gestionnaire de statistiques.
+        Args:
+            config (ConfigManager): instance de gestionnaire de configuration.
+            logger: instance de logger pour les messages.
+        """
         self.config = config
         self.logger = logger
-        self.db_manager = DatabaseManager(
-            db_file=config.database.db_file
-        )
+        self.db_manager = DatabaseManager(db_file=config.database.db_file)
 
     def get_pipeline_stats(self) -> Dict[str, StatsSection]:
         """
         Génère les statistiques du pipeline avec libellés et unités.
 
-        :return: Dictionnaire de sections de statistiques
+        Returns:
+            Dict[str, StatsSection]: dictionnaire des sections de statistiques.
         """
         logger.info("Génération des statistiques globales depuis la base de données...")
 
@@ -75,7 +121,13 @@ class StatsManager:
         }
 
     def _get_header_stats(self) -> StatsSection:
-        """Informations d'en-tête."""
+        """Crée une section de statistiques pour l'en-tête de l'exécution.
+
+        Returns:
+            StatsSection: Un objet StatsSection contenant :
+                          - L'ID d'exécution ('global').
+                          - L'horodatage actuel de la génération des statistiques.
+        """
         return StatsSection(
             "En-tête",
             {
@@ -85,7 +137,16 @@ class StatsManager:
         )
 
     def _get_url_stats(self) -> StatsSection:
-        """Statistiques de traitement des URLs."""
+        """Calcule et retourne les statistiques sur le traitement des URLs.
+
+        Returns:
+            StatsSection: Un objet StatsSection contenant les statistiques suivantes :
+                          - Le nombre total d'URLs traitées.
+                          - Le nombre de succès et d'échecs.
+                          - Le taux de réussite.
+                          - La taille moyenne du contenu.
+                          - Le nombre d'erreurs HTTP et de timeouts.
+        """
         try:
             query = """
             SELECT 
@@ -144,7 +205,14 @@ class StatsManager:
         )
 
     def _get_markdown_stats(self) -> StatsSection:
-        """Statistiques de traitement Markdown."""
+        """Calcule et retourne les statistiques sur le traitement des fichiers Markdown.
+
+        Returns:
+            StatsSection: Un objet StatsSection contenant les statistiques suivantes :
+                          - Le nombre de documents traités, nettoyés et filtrés.
+                          - La taille moyenne du contenu après filtrage.
+                          - Le nombre total de caractères supprimés pendant le nettoyage.
+        """
         try:
             query = """
             SELECT 
@@ -195,7 +263,15 @@ class StatsManager:
         )
 
     def _get_llm_stats(self) -> StatsSection:
-        """Statistiques de traitement LLM."""
+        """Calcule et retourne les statistiques sur les extractions faites par le LLM.
+
+        Returns:
+            StatsSection: Un objet StatsSection contenant les statistiques suivantes :
+                          - Le nombre d'extractions tentées, réussies (JSON et OSM), et échouées.
+                          - Le taux de réussite.
+                          - La taille moyenne des horaires extraits.
+                          - Les émissions totales de CO2.
+        """
         try:
             query = """
             SELECT 
@@ -272,7 +348,15 @@ class StatsManager:
         )
 
     def _get_comparison_stats(self) -> StatsSection:
-        """Statistiques de comparaison."""
+        """Calcule et retourne les statistiques sur la comparaison des horaires.
+
+        Returns:
+            StatsSection: Un objet StatsSection contenant les statistiques suivantes :
+                          - Le nombre total de comparaisons.
+                          - Le nombre d'horaires identiques ou différents.
+                          - Le nombre de cas non comparés.
+                          - Le taux de précision global.
+        """
         try:
             query = """
             SELECT 
@@ -320,7 +404,17 @@ class StatsManager:
         )
 
     def _get_global_stats(self) -> StatsSection:
-        """Statistiques globales."""
+        """Calcule et retourne les statistiques globales sur l'ensemble de l'exécution.
+
+        Returns:
+            StatsSection: Un objet StatsSection contenant les informations récapitulatives suivantes :
+                          - L'ID d'exécution.
+                          - Le nombre total d'enregistrements.
+                          - Le nombre d'enregistrements avec erreurs.
+                          - La date d'exécution.
+                          - Le modèle et le fournisseur LLM utilisés.
+                          - Les émissions totales de CO2 pour l'ensemble du processus.
+        """
         try:
             # Statistiques d'exécution
             exec_query = """
@@ -431,9 +525,11 @@ class StatsManager:
     def generate_custom_text(self, template: str) -> str:
         """
         Génère un texte personnalisé en remplaçant les variables dans le template.
+        Args:
+            template (str): le template avec des variables au format {section.item}.
 
-        :param template: Template avec des variables au format {section.item}
-        :return: Texte avec les variables remplacées
+        Returns:
+            str: le texte généré avec les variables remplacées par les valeurs des statistiques.
         """
         stats = self.get_pipeline_stats()
 
@@ -461,7 +557,8 @@ class StatsManager:
         """
         Retourne les statistiques dans un format adapté pour une API.
 
-        :return: Dictionnaire avec les statistiques structurées
+        Returns:
+            Dict[str, Any]: dictionnaire des statistiques avec les sections et leurs éléments.
         """
         stats = self.get_pipeline_stats()
 
