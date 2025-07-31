@@ -14,23 +14,23 @@ class MarkdownFilteringConfig:
     Cette classe stocke les paramètres spécifiques au filtrage sémantique de documents Markdown, y compris la configuration du fournisseur d'embeddings et les seuils de similarité.
 
     Attributes:
-        embed_fournisseur (str): Le fournisseur d'embeddings à utiliser ("OPENAI", "MISTRAL", ou "LOCAL").
-        embed_modele (Optional[str]): Le modèle d'embedding à utiliser.
-        embed_api_key (Optional[str]): La clé API pour le service d'embedding.
-        embed_base_url (Optional[str]): L'URL de base pour le service d'embedding (spécifique à OpenAI).
-        similarity_threshold (Optional[float]): Le seuil de similarité pour filtrer les contenus.
-        chunk_size (Optional[int]): La taille des morceaux (chunks) de texte.
-        chunk_overlap (Optional[int]): Le chevauchement entre les morceaux de texte.
-        min_content_length (Optional[int]): La longueur minimale du contenu pour être traité.
-        reference_phrases (Optional[List[str]]): Les phrases de référence pour la comparaison de similarité.
-        context_window_size (int): La taille de la fenêtre de contexte pour l'analyse.
+        embed_fournisseur (str): le fournisseur d'embeddings à utiliser ("OPENAI", "MISTRAL", ou "LOCAL").
+        embed_modele (Optional[str]): le modèle d'embedding à utiliser.
+        embed_api_key (Optional[str]): la clé API pour le service d'embedding.
+        embed_base_url (Optional[str]): l'URL de base pour le service d'embedding (spécifique à OpenAI).
+        similarity_threshold (Optional[float]): le seuil de similarité pour filtrer les contenus.
+        chunk_size (Optional[int]): la taille des morceaux (chunks) de texte.
+        chunk_overlap (Optional[int]): le chevauchement entre les morceaux de texte.
+        min_content_length (Optional[int]): la longueur minimale du contenu pour être traité.
+        reference_phrases (Optional[List[str]]): les phrases de référence pour la comparaison de similarité.
+        context_window_size (int): la taille de la fenêtre de contexte pour l'analyse.
     """
 
     def __init__(self, config_data: Dict[str, Any]) -> None:
         """Initialise l'objet de configuration de filtrage Markdown.
 
         Args:
-            config_data (Dict[str, Any]): Un dictionnaire contenant les données de configuration, chargées depuis des variables d'environnement.
+            config_data (Dict[str, Any]): un dictionnaire contenant les données de configuration, chargées depuis des variables d'environnement.
         """
         self.embed_fournisseur: str = self._determine_embed_provider(config_data)
 

@@ -14,10 +14,10 @@ class ProcessingConfig:
     """Représente la configuration pour le traitement des données.
 
     Attributes:
-        nb_threads_url (int): Le nombre de threads à utiliser pour le traitement des URLs.
-        delai_entre_appels (float): Le délai en secondes entre chaque appel d'URL.
-        delai_en_cas_erreur (float): Le délai en secondes à attendre en cas d'erreur.
-        char_replacements (Dict[str, str]): Un dictionnaire pour le remplacement de caractères lors du nettoyage.
+        nb_threads_url (int): le nombre de threads à utiliser pour le traitement des URLs.
+        delai_entre_appels (float): le délai en secondes entre chaque appel d'URL.
+        delai_en_cas_erreur (float): le délai en secondes à attendre en cas d'erreur.
+        char_replacements (Dict[str, str]): un dictionnaire pour le remplacement de caractères lors du nettoyage.
     """
 
     nb_threads_url: int = 1
@@ -32,7 +32,7 @@ class ProcessingConfigManager(BaseConfig):
     Cette classe charge la configuration depuis les variables d'environnement et la valide.
 
     Attributes:
-        config (ProcessingConfig): L'objet de configuration de traitement.
+        config (ProcessingConfig): l'objet de configuration de traitement.
     """
 
     def __init__(self, env_file: Optional[Path] = None) -> None:
@@ -50,7 +50,7 @@ class ProcessingConfigManager(BaseConfig):
         Charge les valeurs depuis les variables d'environnement et définit les remplacements de caractères par défaut.
 
         Returns:
-            ProcessingConfig: Un objet contenant la configuration de traitement.
+            ProcessingConfig: un objet contenant la configuration de traitement.
         """
         # Remplacements de caractères pour le nettoyage markdown
         char_replacements: Dict[str, str] = {
@@ -104,7 +104,7 @@ class ProcessingConfigManager(BaseConfig):
             bool: True si la configuration est valide.
 
         Raises:
-            ValueError: Si une ou plusieurs valeurs de configuration sont invalides.
+            ValueError: si une ou plusieurs valeurs de configuration sont invalides.
         """
         validation_errors: list[str] = []
 

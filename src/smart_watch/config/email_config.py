@@ -16,12 +16,12 @@ class EmailConfig:
     Dataclasse pour stocker les paramètres de configuration email.
 
     Attributes:
-        emetteur (str) : Adresse email de l'expéditeur.
-        recepteurs (List[str]) : Liste des adresses email des destinataires.
-        smtp_server (str) : Adresse du serveur SMTP.
-        smtp_port (int) : Port du serveur SMTP.
-        smtp_password (str) : Mot de passe SMTP pour l'authentification.
-        smtp_login (Optional[str]) : Identifiant de connexion SMTP. Par défaut à None.
+        emetteur (str) : adresse email de l'expéditeur.
+        recepteurs (List[str]) : liste des adresses email des destinataires.
+        smtp_server (str) : adresse du serveur SMTP.
+        smtp_port (int) : port du serveur SMTP.
+        smtp_password (str) : mot de passe SMTP pour l'authentification.
+        smtp_login (Optional[str]) : identifiant de connexion SMTP. Par défaut à None.
     """
 
     emetteur: str
@@ -47,7 +47,7 @@ class EmailConfigManager(BaseConfig):
         Initialise le gestionnaire de configuration email.
 
         Args:
-            env_file (Optional[Path]) : chemin vers le fichier d'environnement.
+            env_file : chemin vers le fichier d'environnement.
         """
         super().__init__(env_file)
         self.config: Optional[EmailConfig] = self._init_email_config()

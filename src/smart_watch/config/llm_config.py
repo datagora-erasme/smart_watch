@@ -17,12 +17,12 @@ class LLMConfig:
     """Représente la configuration pour un client LLM.
 
     Attributes:
-        fournisseur (str): Le nom du fournisseur de LLM ("OPENAI", "MISTRAL", "LOCAL").
-        modele (str): Le nom du modèle de LLM à utiliser.
-        api_key (Optional[str]): La clé API pour accéder au service du LLM.
-        base_url (Optional[str]): L'URL de base pour les appels API, principalement pour les fournisseurs compatibles OpenAI.
-        temperature (float): La température pour la génération de texte, contrôle le caractère aléatoire.
-        timeout (int): Le délai d'attente en secondes pour les requêtes API.
+        fournisseur (str): le nom du fournisseur de LLM ("OPENAI", "MISTRAL", "LOCAL").
+        modele (str): le nom du modèle de LLM à utiliser.
+        api_key (Optional[str]): la clé API pour accéder au service du LLM.
+        base_url (Optional[str]): l'URL de base pour les appels API, principalement pour les fournisseurs compatibles OpenAI.
+        temperature (float): la température pour la génération de texte, contrôle le caractère aléatoire.
+        timeout (int): le délai d'attente en secondes pour les requêtes API.
     """
 
     fournisseur: str
@@ -39,7 +39,7 @@ class LLMConfigManager(BaseConfig):
     Cette classe lit les variables d'environnement pour configurer le client LLM, en détectant automatiquement le fournisseur (OpenAI, Mistral, ou local) en fonction des clés API disponibles.
 
     Attributes:
-        config (LLMConfig): L'objet de configuration LLM initialisé.
+        config (LLMConfig): l'objet de configuration LLM initialisé.
     """
 
     def __init__(self, env_file: Optional[Path] = None) -> None:
@@ -63,10 +63,10 @@ class LLMConfigManager(BaseConfig):
         La méthode recherche les clés API pour OpenAI, puis Mistral, et enfin un modèle local. Le premier trouvé est utilisé pour la configuration.
 
         Returns:
-            LLMConfig: L'objet de configuration LLM initialisé.
+            LLMConfig: l'objet de configuration LLM initialisé.
 
         Raises:
-            ValueError: Si aucune configuration de LLM (OpenAI, Mistral) ou de modèle d'embedding local n'est trouvée.
+            ValueError: si aucune configuration de LLM (OpenAI, Mistral) ou de modèle d'embedding local n'est trouvée.
         """
         # Tentative OpenAI/compatible
         llm_api_key_openai = self.get_env_var("LLM_API_KEY_OPENAI")
@@ -113,7 +113,7 @@ class LLMConfigManager(BaseConfig):
         Cette configuration est utilisée comme solution de repli en cas d'échec de l'initialisation pour permettre au système de démarrer sans planter.
 
         Returns:
-            LLMConfig: Une configuration LLM locale par défaut.
+            LLMConfig: une configuration LLM locale par défaut.
         """
         return LLMConfig(
             fournisseur="LOCAL",
@@ -139,7 +139,7 @@ class LLMConfigManager(BaseConfig):
             bool: True si la configuration est valide.
 
         Raises:
-            ValueError: Si la validation échoue, avec un message détaillant les erreurs.
+            ValueError: si la validation échoue, avec un message détaillant les erreurs.
         """
         validation_errors = []
 

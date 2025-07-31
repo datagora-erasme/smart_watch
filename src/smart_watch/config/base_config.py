@@ -56,7 +56,7 @@ class BaseConfig:
         Initialise une instance de BaseConfig.
 
         Args:
-            env_file (Path, optional): Chemin vers le fichier .env. Si non fourni, sera recherché à la racine du projet.
+            env_file (Path, optional): chemin vers le fichier .env. Si non fourni, sera recherché à la racine du projet.
         """
         # Définir la racine du projet et le fichier .env
         self.project_root = Path(__file__).resolve().parents[3]
@@ -125,15 +125,15 @@ class BaseConfig:
         Récupère une variable d'environnement de manière sécurisée.
 
         Args:
-            key (str): La clé de la variable d'environnement à récupérer.
-            default (Optional[str], optional): La valeur par défaut si la variable n'est pas trouvée.
-            required (bool): Si True, lèvera une exception si la valeur est manquante.
+            key (str): la clé de la variable d'environnement à récupérer.
+            default (Optional[str], optional): la valeur par défaut si la variable n'est pas trouvée.
+            required (bool): si True, lèvera une exception si la valeur est manquante.
 
         Returns:
-            Optional[str]: La valeur de la variable d'environnement, ou None.
+            Optional[str]: la valeur de la variable d'environnement, ou None.
 
         Raises:
-            ValueError: Si la variable est requise mais non définie.
+            ValueError: si la variable est requise mais non définie.
         """
         value = os.getenv(key, default)
 
