@@ -81,7 +81,7 @@ Table `executions`
    * - Champ
      - Type SQL
      - Description
-   * - **id_executions** (PK auto-increment)
+   * - **id_execution** (PK auto-increment)
      - INTEGER
      - Identifiant unique de l'exécution.
    * - date_execution

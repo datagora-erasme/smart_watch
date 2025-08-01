@@ -3,12 +3,18 @@
 
 import re
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Sequence, Tuple
+
+from sqlalchemy.engine import Row
 
 from ..core.DatabaseManager import DatabaseManager
 from ..core.ErrorHandler import ErrorCategory, ErrorSeverity, handle_errors
 from ..core.Logger import create_logger
 from ..data_models.schema_bdd import Lieux, ResultatsExtraction
+
+# Import conditionnel pour éviter les importations circulaires
+if TYPE_CHECKING:
+    from ..processing.database_processor import DatabaseProcessor
 
 # Initialize logger for this module
 logger = create_logger(
@@ -94,7 +100,7 @@ class MarkdownCleaner:
 
     def _get_pending_cleaning(
         self, db_manager: DatabaseManager, execution_id: int
-    ) -> List[Tuple[ResultatsExtraction, Lieux]]:
+    ) -> Sequence[Row[Tuple[ResultatsExtraction, Lieux]]]:
         """Récupère les enregistrements de la base de données nécessitant un nettoyage du markdown.
 
         Args:
@@ -102,8 +108,8 @@ class MarkdownCleaner:
             execution_id (int): L'identifiant de l'exécution en cours.
 
         Returns:
-            List[Tuple[ResultatsExtraction, Lieux]]: Une liste de tuples, chacun
-            contenant un objet `ResultatsExtraction` et un objet `Lieux`.
+            Sequence[Row[Tuple[ResultatsExtraction, Lieux]]]: Une séquence de rows,
+            chacune contenant un objet `ResultatsExtraction` et un objet `Lieux`.
         """
         session = db_manager.Session()
         try:
@@ -123,68 +129,37 @@ class MarkdownCleaner:
             session.close()
 
     def process_markdown_cleaning(
-        self, db_manager: DatabaseManager, execution_id: int
-    ) -> None:
-        """Orchestre le processus de nettoyage du markdown pour une exécution donnée.
-
-        Il récupère les enregistrements en attente, nettoie leur contenu markdown,
-        et met à jour la base de données avec le texte nettoyé.
+        self, db_processor: "DatabaseProcessor", execution_id: int
+    ):
+        """
+        Nettoie le markdown brut de tous les résultats d'une exécution.
 
         Args:
-            db_manager (DatabaseManager): L'instance du gestionnaire de base de données.
-            execution_id (int): L'identifiant de l'exécution en cours.
+            db_processor (DatabaseProcessor): Processeur de base de données
+            execution_id (int): ID de l'exécution
         """
-        self.logger.section("NETTOYAGE MARKDOWN")
+        # Récupérer les résultats avec markdown brut
+        pending_results = db_processor.get_results_with_raw_markdown(execution_id)
 
-        resultats_a_nettoyer = self._get_pending_cleaning(db_manager, execution_id)
+        for result in pending_results:
+            # Nettoyer le markdown - utiliser getattr pour obtenir la valeur string
+            markdown_content = getattr(result, "markdown_brut", "") or ""
+            cleaned_markdown = self.clean_markdown_content(markdown_content)
 
-        if not resultats_a_nettoyer:
-            self.logger.info("Aucun markdown à nettoyer")
-            return
+            resultat_id = getattr(result, "id_resultats_extraction", None)
 
-        self.logger.info(f"{len(resultats_a_nettoyer)} contenus markdown à nettoyer")
+            # S'assurer que c'est bien un int
+            if resultat_id is not None:
+                # Conversion explicite en int si nécessaire
+                if not isinstance(resultat_id, int):
+                    resultat_id = int(resultat_id)
 
-        stats = CleaningStats()
-        stats.texts_processed = len(resultats_a_nettoyer)
-
-        for i, (resultat, lieu) in enumerate(resultats_a_nettoyer, 1):
-            self.logger.debug(
-                f"*{lieu.identifiant}* Nettoyage {i}/{len(resultats_a_nettoyer)} pour '{lieu.nom}'"
-            )
-
-            original_markdown = resultat.markdown_brut or ""
-            if not original_markdown.strip():
-                continue
-
-            len_avant = len(original_markdown)
-            # Nettoyer le markdown (la gestion d'erreur est dans la méthode)
-            cleaned_markdown = self.clean_markdown_content(original_markdown)
-            len_apres = len(cleaned_markdown)
-
-            if len_avant > 0:
-                reduction = ((len_avant - len_apres) / len_avant) * 100
-                self.logger.info(
-                    f"*{lieu.identifiant}* Taille avant/après nettoyage: {len_avant} -> {len_apres} "
-                    f"caractères (-{reduction:.2f}%)."
-                )
+                # Mettre à jour en base
+                db_processor.update_cleaned_markdown(resultat_id, cleaned_markdown)
             else:
-                self.logger.info(
-                    f"*{lieu.identifiant}* Pas de contenu à nettoyer (0 caractère)."
+                self.logger.warning(
+                    "Impossible de trouver l'ID pour un résultat de nettoyage"
                 )
-
-            # Compter les modifications
-            if cleaned_markdown != original_markdown:
-                stats.chars_replaced += len(original_markdown) - len(cleaned_markdown)
-
-            # Mettre à jour en base
-            db_manager.update_cleaned_markdown(
-                resultat.id_resultats_extraction, cleaned_markdown
-            )
-            stats.texts_successful += 1
-
-        self.logger.info(
-            f"Markdown nettoyé: {stats.texts_successful}/{stats.texts_processed} réussies"
-        )
 
     @handle_errors(
         category=ErrorCategory.CONVERSION,

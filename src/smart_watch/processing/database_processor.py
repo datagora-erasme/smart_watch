@@ -3,11 +3,14 @@
 
 import json
 from datetime import datetime
-from typing import List, Tuple
+from typing import TYPE_CHECKING, Any, Optional, Sequence, Tuple
 
-from sqlalchemy import create_engine, text
+from sqlalchemy import text
 from sqlalchemy.dialects.sqlite import insert
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.engine import Row
+
+from src.smart_watch.core.DatabaseManager import DatabaseManager
+from src.smart_watch.core.Logger import SmartWatchLogger
 
 from ..core.ConfigManager import ConfigManager
 from ..data_models.schema_bdd import (
@@ -19,51 +22,47 @@ from ..data_models.schema_bdd import (
 from ..utils.CSVToPolars import CSVToPolars
 from ..utils.OSMToCustomJson import OsmToJsonConverter
 
+if TYPE_CHECKING:
+    # Type hints pour éviter les erreurs Pylance avec SQLAlchemy
+    pass
+
 
 class DatabaseProcessor:
-    def __init__(self, config: ConfigManager, logger):
-        """
-        Initialise le processeur de base de données avec la configuration et le logger fournis.
+    """Crée la base de données et les tables nécessaires."""
 
-        Cette méthode configure la connexion à la base de données SQLite, initialise la session SQLAlchemy,
-        et crée les tables nécessaires si elles n'existent pas encore.
-
-        Args:
-            config (ConfigManager): Instance de gestion de la configuration contenant les paramètres de la base de données.
-            logger: Instance du logger pour la journalisation des événements.
-
-        Attributes:
-            config (ConfigManager): Stocke la configuration de la base de données.
-            logger: Stocke l'instance du logger.
-            engine (sqlalchemy.engine.Engine): Moteur SQLAlchemy pour la connexion à la base de données.
-            Session (sqlalchemy.orm.session.sessionmaker): Fabrique de sessions SQLAlchemy pour les transactions.
-        """
+    def __init__(self, config: ConfigManager, logger: SmartWatchLogger):
+        """Initialise le processeur de base de données."""
         self.config = config
         self.logger = logger
-        self.engine = create_engine(f"sqlite:///{config.database.db_file}")
-        self.Session = sessionmaker(bind=self.engine)
+        # Le DatabaseManager est initialisé avec le chemin du fichier de la base de données.
+        self.db_manager = DatabaseManager(self.config.database.db_file)
 
-    def create_database(self):
+    def create_database(self) -> DatabaseManager:
         """
-        Crée les tables de la base de données si elles n'existent pas.
+        Crée les tables de la base de données si elles n'existent pas et retourne le manager.
         """
         self.logger.info(
             f"Initialisation de la base de données {self.config.database.db_file}..."
         )
-        Base.metadata.create_all(self.engine)
+        # Utiliser l'engine du db_manager pour créer les tables
+        Base.metadata.create_all(self.db_manager.engine)
+        self.logger.info("Base de données et tables créées avec succès.")
+        return self.db_manager
 
-    def execute_query(self, query: str, params: tuple = None) -> List[Tuple]:
+    def execute_query(
+        self, query: str, params: Optional[dict] = None
+    ) -> Sequence[Row[Any]]:
         """
         Exécute une requête SQL sur la base de données et retourne les résultats.
 
         Args:
             query (str): La requête SQL à exécuter.
-            params (tuple, optionnel): Les paramètres à utiliser dans la requête SQL. Par défaut à None.
+            params (Optional[dict], optionnel): Les paramètres à utiliser dans la requête SQL. Par défaut à None.
 
         Returns:
-            List[Tuple]: Une liste de tuples représentant les lignes retournées par la requête.
+            Sequence[Row[Any]]: Une séquence de lignes retournées par la requête.
         """
-        with self.engine.connect() as connection:
+        with self.db_manager.engine.connect() as connection:
             try:
                 result = connection.execute(text(query), params or {})
                 return result.fetchall()
@@ -88,7 +87,7 @@ class DatabaseProcessor:
         Returns:
             int: Identifiant unique de l'exécution créée.
         """
-        session = self.Session()
+        session = self.db_manager.Session()
         try:
             # 1. Mise à jour des lieux
             self._update_lieux_batch(session, df_csv)
@@ -177,6 +176,7 @@ class DatabaseProcessor:
             osm_converter = None
 
         for nom, url in self.config.database.csv_file_ref.items():
+            row = None  # Initialiser row à None avant la boucle
             try:
                 csv_loader = CSVToPolars(
                     source=url,
@@ -218,21 +218,22 @@ class DatabaseProcessor:
                                 )
 
                 session.commit()
-                self.logger.info(
-                    f"*{row['identifiant']}* Références pour '{nom}' mises à jour: {count} lieux"
-                )
+                if row:  # S'assurer que la boucle a été exécutée au moins une fois
+                    self.logger.info(
+                        f"*{row['identifiant']}* Références pour '{nom}' mises à jour: {count} lieux"
+                    )
 
             except Exception as e:
-                self.logger.error(
-                    f"*{row['identifiant']}* Erreur chargement '{nom}' : {e}"
-                )
+                log_message = f"Erreur chargement '{nom}'"
+                if row and "identifiant" in row:
+                    log_message = f"*{row['identifiant']}* {log_message}: {e}"
+                else:
+                    log_message += f": {e}"
+                self.logger.error(log_message)
 
     def _create_execution(self, session) -> int:
         """
-        Crée une nouvelle "execution" (session de travail) dans la base de données.
-
-        Utilise les informations de configuration LLM pour renseigner le modèle, le fournisseur et l'URL.
-        Enregistre la date d'exécution à l'instant courant.
+        Crée une nouvelle exécution et retourne son ID.
 
         Args:
             session (Session): Session SQLAlchemy active.
@@ -240,19 +241,46 @@ class DatabaseProcessor:
         Returns:
             int: Identifiant unique de l'exécution créée.
         """
-        nouvelle_execution = Executions(
-            date_execution=datetime.now(),
-            llm_modele=self.config.llm.modele,
-            llm_fournisseur=self.config.llm.fournisseur,
-            llm_url=self.config.llm.base_url,
-        )
-        session.add(nouvelle_execution)
-        session.commit()
+        try:
+            nouvelle_execution = Executions(date_execution=datetime.now())
+            session.add(nouvelle_execution)
 
-        execution_id = nouvelle_execution.id_executions
-        self.logger.info(f"Nouvelle exécution créée: {execution_id}")
+            # Essayer flush + refresh d'abord
+            try:
+                session.flush()
+                session.refresh(nouvelle_execution)
+                execution_id = nouvelle_execution.id_execution
 
-        return execution_id
+                # Vérifier que c'est bien un int
+                if isinstance(execution_id, int):
+                    session.commit()
+                    self.logger.info(
+                        f"Nouvelle exécution créée avec ID: {execution_id}"
+                    )
+                    return execution_id
+            except Exception:
+                # Si flush/refresh échoue, utiliser commit + requête
+                pass
+
+            # Fallback : commit puis requête
+            session.commit()
+
+            # Récupérer le dernier enregistrement inséré
+            last_execution = (
+                session.query(Executions)
+                .order_by(Executions.id_execution.desc())
+                .first()
+            )
+
+            execution_id = int(last_execution.id_execution)
+
+            self.logger.info(f"Nouvelle exécution créée avec ID: {execution_id}")
+            return execution_id
+
+        except Exception as e:
+            self.logger.error(f"Erreur lors de la création de l'exécution: {e}")
+            session.rollback()
+            raise
 
     def _setup_resultats_extraction(self, session, df_csv, execution_id):
         """
@@ -376,9 +404,11 @@ class DatabaseProcessor:
 
         session.commit()
 
-    def get_pending_urls(self, execution_id) -> List[Tuple]:
+    def get_pending_urls(
+        self, execution_id
+    ) -> Sequence[Row[Tuple[ResultatsExtraction, Lieux]]]:
         """Récupère les URLs en attente de traitement."""
-        session = self.Session()
+        session = self.db_manager.Session()
         try:
             return (
                 session.query(ResultatsExtraction, Lieux)
@@ -392,9 +422,11 @@ class DatabaseProcessor:
         finally:
             session.close()
 
-    def get_pending_llm(self, execution_id) -> List[Tuple]:
+    def get_pending_llm(
+        self, execution_id
+    ) -> Sequence[Row[Tuple[ResultatsExtraction, Lieux]]]:
         """Récupère les enregistrements en attente d'extraction LLM."""
-        session = self.Session()
+        session = self.db_manager.Session()
         try:
             return (
                 session.query(ResultatsExtraction, Lieux)
@@ -411,18 +443,115 @@ class DatabaseProcessor:
         finally:
             session.close()
 
-    def update_url_result(self, resultat_id: int, result_data: dict):
-        """Met à jour le résultat d'une extraction URL."""
-        session = self.Session()
+    def get_results_with_raw_markdown(
+        self, execution_id: int
+    ) -> Sequence[ResultatsExtraction]:
+        """Récupère les résultats avec markdown brut à nettoyer."""
+        session = self.db_manager.Session()
+        try:
+            return (
+                session.query(ResultatsExtraction)
+                .filter(
+                    ResultatsExtraction.id_execution == execution_id,
+                    ResultatsExtraction.statut_url == "ok",
+                    ResultatsExtraction.markdown_brut != "",
+                    ResultatsExtraction.markdown_nettoye == "",
+                )
+                .all()
+            )
+        finally:
+            session.close()
+
+    def get_results_with_cleaned_markdown(
+        self, execution_id: int
+    ) -> Sequence[ResultatsExtraction]:
+        """Récupère les résultats avec markdown nettoyé à filtrer."""
+        session = self.db_manager.Session()
+        try:
+            return (
+                session.query(ResultatsExtraction)
+                .filter(
+                    ResultatsExtraction.id_execution == execution_id,
+                    ResultatsExtraction.markdown_nettoye != "",
+                    ResultatsExtraction.markdown_filtre == "",
+                )
+                .all()
+            )
+        finally:
+            session.close()
+
+    def get_results_with_schedules(self) -> Sequence[ResultatsExtraction]:
+        """Récupère les résultats avec horaires extraits pour comparaison."""
+        session = self.db_manager.Session()
+        try:
+            return (
+                session.query(ResultatsExtraction)
+                .filter(ResultatsExtraction.llm_horaires_json != "")
+                .all()
+            )
+        finally:
+            session.close()
+
+    def get_pending_comparisons(
+        self,
+    ) -> Sequence[Row[Tuple[ResultatsExtraction, Lieux]]]:
+        """Récupère les enregistrements en attente de comparaison."""
+        session = self.db_manager.Session()
+        try:
+            return (
+                session.query(ResultatsExtraction, Lieux)
+                .join(Lieux, ResultatsExtraction.lieu_id == Lieux.identifiant)
+                .filter(
+                    ResultatsExtraction.llm_horaires_json != "",
+                    ResultatsExtraction.llm_horaires_json.notlike("Erreur LLM:%"),
+                    (
+                        ResultatsExtraction.horaires_identiques.is_(None)
+                        | (ResultatsExtraction.horaires_identiques == "")
+                    ),
+                )
+                .all()
+            )
+        finally:
+            session.close()
+
+    def update_comparison_result(self, resultat_id: int, comparison_data: dict):
+        """Met à jour le résultat d'une comparaison."""
+        session = self.db_manager.Session()
         try:
             resultat = session.get(ResultatsExtraction, resultat_id)
             if resultat:
-                resultat.statut_url = result_data.get("statut", "error")
-                resultat.code_http = int(result_data.get("code_http", 0))
-                resultat.message_url = result_data.get("message", "")
-                resultat.markdown_brut = result_data.get(
-                    "markdown", ""
-                )  # Sauvegarder comme markdown brut
+                setattr(
+                    resultat, "horaires_identiques", comparison_data.get("identique")
+                )
+                setattr(
+                    resultat,
+                    "differences_horaires",
+                    comparison_data.get("differences", ""),
+                )
+
+                # Ajouter erreur de comparaison si échec
+                if comparison_data.get("identique") is None:
+                    self._add_error_to_result(
+                        resultat,
+                        "COMPARAISON",
+                        comparison_data.get("differences", "Erreur inconnue"),
+                    )
+
+                session.commit()
+        finally:
+            session.close()
+
+    def update_url_result(self, resultat_id: int, result_data: dict):
+        """Met à jour le résultat d'une extraction URL."""
+        session = self.db_manager.Session()
+        try:
+            resultat = session.get(ResultatsExtraction, resultat_id)
+            if resultat:
+                # Utiliser setattr pour éviter les erreurs de typage Pylance
+                setattr(resultat, "statut_url", result_data.get("statut", "error"))
+                setattr(resultat, "code_http", int(result_data.get("code_http", 0)))
+                setattr(resultat, "message_url", result_data.get("message", ""))
+                setattr(resultat, "markdown_brut", result_data.get("markdown", ""))
 
                 # Ajouter erreur URL si échec
                 if result_data.get("statut") != "ok":
@@ -435,11 +564,11 @@ class DatabaseProcessor:
 
     def update_cleaned_markdown(self, resultat_id: int, cleaned_markdown: str):
         """Met à jour le markdown nettoyé."""
-        session = self.Session()
+        session = self.db_manager.Session()
         try:
             resultat = session.get(ResultatsExtraction, resultat_id)
             if resultat:
-                resultat.markdown_nettoye = cleaned_markdown
+                setattr(resultat, "markdown_nettoye", cleaned_markdown)
                 session.commit()
         finally:
             session.close()
@@ -448,33 +577,43 @@ class DatabaseProcessor:
         self, resultat_id: int, filtered_markdown: str, co2_emissions: float = 0.0
     ):
         """Met à jour le markdown filtré et ajoute les émissions CO2."""
-        session = self.Session()
+        session = self.db_manager.Session()
         try:
             resultat = session.get(ResultatsExtraction, resultat_id)
             if resultat:
-                resultat.markdown_filtre = filtered_markdown
+                setattr(resultat, "markdown_filtre", filtered_markdown)
                 # Ajouter les émissions de l'embedding à la consommation existante
-                current_emissions = resultat.llm_consommation_requete or 0.0
-                resultat.llm_consommation_requete = current_emissions + co2_emissions
+                current_emissions = (
+                    getattr(resultat, "llm_consommation_requete", None) or 0.0
+                )
+                setattr(
+                    resultat,
+                    "llm_consommation_requete",
+                    current_emissions + co2_emissions,
+                )
                 session.commit()
         finally:
             session.close()
 
     def update_llm_result(self, resultat_id: int, llm_data: dict):
         """Met à jour le résultat d'une extraction LLM."""
-        session = self.Session()
+        session = self.db_manager.Session()
         try:
             resultat = session.get(ResultatsExtraction, resultat_id)
             if resultat:
                 # Toujours mettre à jour le prompt s'il est fourni
                 if llm_data.get("prompt_message"):
-                    resultat.prompt_message = llm_data["prompt_message"]
+                    setattr(resultat, "prompt_message", llm_data["prompt_message"])
 
                 # Mettre à jour la consommation CO2 de la requête
                 if "llm_consommation_requete" in llm_data:
-                    current_emissions = resultat.llm_consommation_requete or 0.0
-                    resultat.llm_consommation_requete = (
-                        current_emissions + llm_data["llm_consommation_requete"]
+                    current_emissions = (
+                        getattr(resultat, "llm_consommation_requete", None) or 0.0
+                    )
+                    setattr(
+                        resultat,
+                        "llm_consommation_requete",
+                        current_emissions + llm_data["llm_consommation_requete"],
                     )
 
                 # Variable pour éviter les erreurs dupliquées
@@ -482,7 +621,9 @@ class DatabaseProcessor:
 
                 # Mettre à jour les résultats LLM (JSON et OSM), y compris les erreurs
                 if "llm_horaires_json" in llm_data:
-                    resultat.llm_horaires_json = llm_data["llm_horaires_json"]
+                    setattr(
+                        resultat, "llm_horaires_json", llm_data["llm_horaires_json"]
+                    )
                     # Ajouter erreur LLM si échec (une seule fois)
                     if (
                         llm_data["llm_horaires_json"].startswith("Erreur")
@@ -494,7 +635,7 @@ class DatabaseProcessor:
                         error_added = True
 
                 if "llm_horaires_osm" in llm_data:
-                    resultat.llm_horaires_osm = llm_data["llm_horaires_osm"]
+                    setattr(resultat, "llm_horaires_osm", llm_data["llm_horaires_osm"])
                     # Ajouter erreur OSM seulement si c'est différent de l'erreur LLM
                     if llm_data["llm_horaires_osm"].startswith("Erreur") and llm_data[
                         "llm_horaires_osm"
@@ -509,13 +650,17 @@ class DatabaseProcessor:
 
     def update_execution_emissions(self, execution_id: int, total_emissions: float):
         """Met à jour les émissions CO2 totales d'une exécution en les ajoutant au total existant."""
-        session = self.Session()
+        session = self.db_manager.Session()
         try:
             execution = session.get(Executions, execution_id)
             if execution:
-                current_emissions = execution.llm_consommation_execution or 0.0
-                execution.llm_consommation_execution = (
-                    current_emissions + total_emissions
+                current_emissions = (
+                    getattr(execution, "llm_consommation_execution", None) or 0.0
+                )
+                setattr(
+                    execution,
+                    "llm_consommation_execution",
+                    current_emissions + total_emissions,
                 )
                 session.commit()
                 self.logger.debug(
@@ -528,14 +673,18 @@ class DatabaseProcessor:
         self, execution_id: int, embeddings_emissions: float
     ):
         """Met à jour les émissions CO2 des embeddings d'une exécution."""
-        session = self.Session()
+        session = self.db_manager.Session()
         try:
             execution = session.get(Executions, execution_id)
             if execution:
                 # Ajouter aux émissions existantes (LLM + embeddings)
-                current_emissions = execution.llm_consommation_execution or 0.0
-                execution.llm_consommation_execution = (
-                    current_emissions + embeddings_emissions
+                current_emissions = (
+                    getattr(execution, "llm_consommation_execution", None) or 0.0
+                )
+                setattr(
+                    execution,
+                    "llm_consommation_execution",
+                    current_emissions + embeddings_emissions,
                 )
                 session.commit()
                 self.logger.debug(
@@ -546,7 +695,7 @@ class DatabaseProcessor:
 
     def add_pipeline_error(self, resultat_id: int, error_type: str, error_message: str):
         """Ajoute une erreur à la chaîne d'erreurs du pipeline."""
-        session = self.Session()
+        session = self.db_manager.Session()
         try:
             resultat = session.get(ResultatsExtraction, resultat_id)
             if resultat:
@@ -556,12 +705,14 @@ class DatabaseProcessor:
                 timestamp = datetime.now().strftime("%H:%M:%S")
                 error_entry = f"[{timestamp}] {error_type}: {error_message}"
 
-                # Ajouter à la chaîne existante
-                if resultat.erreurs_pipeline:
-                    resultat.erreurs_pipeline += f" | {error_entry}"
+                # Ajouter à la chaîne existante en utilisant getattr/setattr
+                current_errors = getattr(resultat, "erreurs_pipeline", None) or ""
+                if current_errors:
+                    new_errors = f"{current_errors} | {error_entry}"
                 else:
-                    resultat.erreurs_pipeline = error_entry
+                    new_errors = error_entry
 
+                setattr(resultat, "erreurs_pipeline", new_errors)
                 session.commit()
         finally:
             session.close()
@@ -573,7 +724,11 @@ class DatabaseProcessor:
         timestamp = datetime.now().strftime("%H:%M:%S")
         error_entry = f"[{timestamp}] {error_type}: {error_message}"
 
-        if resultat.erreurs_pipeline:
-            resultat.erreurs_pipeline += f" | {error_entry}"
+        # Utiliser getattr/setattr pour éviter les erreurs de typage
+        current_errors = getattr(resultat, "erreurs_pipeline", None) or ""
+        if current_errors:
+            new_errors = f"{current_errors} | {error_entry}"
         else:
-            resultat.erreurs_pipeline = error_entry
+            new_errors = error_entry
+
+        setattr(resultat, "erreurs_pipeline", new_errors)

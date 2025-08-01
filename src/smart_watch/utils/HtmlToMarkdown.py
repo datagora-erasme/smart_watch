@@ -1,6 +1,8 @@
 # Convertisseur HTML vers Markdown
 # https://datagora-erasme.github.io/smart_watch/source/modules/utils/HtmlToMarkdown.html
 
+from typing import Optional
+
 import bs4
 from html_to_markdown import convert_to_markdown
 
@@ -19,7 +21,7 @@ logger = create_logger(
     user_message="Erreur lors de la conversion HTML vers Markdown",
     default_return="",
 )
-def convert_html_to_markdown(html: str, identifiant: str = None) -> str:
+def convert_html_to_markdown(html: str, identifiant: Optional[str] = None) -> str:
     """
     Convertit une chaîne HTML en Markdown.
 

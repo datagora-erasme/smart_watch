@@ -19,7 +19,9 @@ logger = create_logger(
 class LLMResponse:
     """Réponse enrichie d'un appel LLM avec mesure de consommation."""
 
-    content: str
+    content: Union[
+        str, List[Any]
+    ]  # Accepte du texte ou une liste (pour les embeddings)
     co2_emissions: float  # En kg CO2
 
 
@@ -173,7 +175,7 @@ class BaseLLMClient(ABC):
             embeddings = [data["embedding"] for data in result["data"]]
 
             # Arrêter le tracking et récupérer les émissions
-            emissions = tracker.stop()
+            emissions = tracker.stop() or 0.0
             logger.debug(
                 f"Embeddings API: {len(embeddings)} vecteurs, {emissions:.6f} kg CO2"
             )
@@ -272,7 +274,7 @@ class OpenAICompatibleClient(BaseLLMClient):
             logger.debug(f"Réponse OpenAI reçue: {len(result)} caractères")
 
             # Arrêter le tracking et récupérer les émissions
-            emissions = tracker.stop()
+            emissions = tracker.stop() or 0.0
             logger.debug(f"LLM API: {emissions:.6f} kg CO2")
 
             return LLMResponse(content=result, co2_emissions=emissions)
@@ -298,8 +300,7 @@ class OpenAICompatibleClient(BaseLLMClient):
             tracker.stop()
             # Log de l'exception détaillée pour un meilleur débogage
             logger.error(
-                f"Exception détaillée lors de l'appel au LLM compatible OpenAI: {e}",
-                exc_info=True,
+                f"Exception détaillée lors de l'appel au LLM compatible OpenAI: {e}"
             )
             raise e
 
@@ -397,7 +398,7 @@ class MistralAPIClient(BaseLLMClient):
             logger.debug(f"Réponse Mistral reçue: {len(result)} caractères")
 
             # Arrêter le tracking et récupérer les émissions
-            emissions = tracker.stop()
+            emissions = tracker.stop() or 0.0
             logger.debug(f"Émissions CO2 mesurées: {emissions:.6f} kg")
 
             return LLMResponse(content=result, co2_emissions=emissions)
@@ -405,9 +406,7 @@ class MistralAPIClient(BaseLLMClient):
         except (requests.exceptions.RequestException, KeyError, IndexError) as e:
             tracker.stop()
             # Log de l'exception détaillée pour un meilleur débogage
-            logger.error(
-                f"Exception détaillée lors de l'appel Mistral: {e}", exc_info=True
-            )
+            logger.error(f"Exception détaillée lors de l'appel Mistral: {e}")
             # Laisse le décorateur @handle_errors gérer l'exception
             raise e
 
@@ -456,7 +455,7 @@ class MistralAPIClient(BaseLLMClient):
             embeddings = [data["embedding"] for data in result["data"]]
 
             # Arrêter le tracking et récupérer les émissions
-            emissions = tracker.stop()
+            emissions = tracker.stop() or 0.0
             logger.debug(
                 f"Embeddings API Mistral: {len(embeddings)} vecteurs, {emissions:.6f} kg CO2"
             )

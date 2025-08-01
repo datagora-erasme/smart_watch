@@ -47,7 +47,7 @@ class HoraireExtractor:
         self.config.display_summary()
 
         # B. Instancier les processeurs principaux avec la configuration
-        self.db_manager = DatabaseProcessor(self.config, self.logger)
+        self.db_processor = DatabaseProcessor(self.config, self.logger)
         self.setup_processor = SetupProcessor(self.config, self.logger)
         self.url_processor = URLProcessor(self.config, self.logger)
         self.markdown_cleaner = MarkdownCleaner(self.config, self.logger)
@@ -71,30 +71,37 @@ class HoraireExtractor:
         start_time = time.time()
         try:
             # 1. Création de la base de données
-            self.db_manager.create_database()
+            db_manager = self.db_processor.create_database()
+
+            # Vérifier que le manager de BDD a bien été créé
+            if not db_manager:
+                self.logger.critical(
+                    "Le gestionnaire de base de données n'a pas pu être initialisé. Arrêt du pipeline."
+                )
+                return
 
             # 2. Chargement des données, préparation de l'exécution
-            execution_id = self.setup_processor.setup_execution(self.db_manager)
+            execution_id = self.setup_processor.setup_execution(self.db_processor)
 
-            # Traitement
+            # Traitement - Utiliser db_processor partout pour la cohérence
             # 3. Extraction des URLs
-            self.url_processor.process_urls(self.db_manager, execution_id)
+            self.url_processor.process_urls(self.db_processor, execution_id)
 
             # 4. Nettoyage du contenu Markdown brut
             self.markdown_cleaner.process_markdown_cleaning(
-                self.db_manager, execution_id
+                self.db_processor, execution_id
             )
 
             # 5. Filtrage sémantique du Markdown (par embeddings)
             self.markdown_processor.process_markdown_filtering(
-                self.db_manager, execution_id
+                self.db_processor, execution_id
             )
 
             # 6. Extraction des horaires via LLM
-            self.llm_processor.process_llm_extractions(self.db_manager, execution_id)
+            self.llm_processor.process_llm_extractions(self.db_processor, execution_id)
 
             # 7. Comparaison des horaires extraits
-            self.comparison_processor.process_comparisons(self.db_manager)
+            self.comparison_processor.process_comparisons(self.db_processor)
 
             # 8. Génération et envoi du rapport
             self.report_manager.generate_and_send_report(execution_id)

@@ -165,7 +165,7 @@ class ConfigManager:
             f"  Taille min contenu pour filtrer : {self.markdown_filtering.min_content_length}"
         )
         logger.info(
-            f"  Phrases référence : {len(self.markdown_filtering.reference_phrases)} phrases"
+            f"  Phrases référence : {len(self.markdown_filtering.reference_phrases) if self.markdown_filtering.reference_phrases else 0} phrases"
         )
 
         logger.info("---")

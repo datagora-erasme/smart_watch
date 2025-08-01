@@ -16,11 +16,17 @@ class URLProcessor:
         self.config = config
         self.logger = logger
 
-    def process_urls(self, db_manager: DatabaseProcessor, execution_id: int):
-        """Traite les URLs en parallèle."""
+    def process_urls(self, db_processor: DatabaseProcessor, execution_id: int):
+        """
+        Traite toutes les URLs en attente pour une exécution donnée.
+
+        Args:
+            db_processor (DatabaseProcessor): Processeur de base de données
+            execution_id (int): ID de l'exécution
+        """
         self.logger.section("EXTRACTION CONTENU URLs")
 
-        resultats_a_traiter = db_manager.get_pending_urls(execution_id)
+        resultats_a_traiter = db_processor.get_pending_urls(execution_id)
 
         if not resultats_a_traiter:
             self.logger.info("Aucune URL à traiter")
@@ -48,7 +54,7 @@ class URLProcessor:
                 result_data = self._process_single_url(
                     row_data, resultat.id_resultats_extraction, index, total_urls
                 )
-                db_manager.update_url_result(
+                db_processor.update_url_result(
                     resultat.id_resultats_extraction, result_data
                 )
 

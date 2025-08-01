@@ -31,7 +31,7 @@ class Executions(Base):
 
     __tablename__ = "executions"
 
-    id_executions = Column(Integer, primary_key=True, autoincrement=True)
+    id_execution = Column(Integer, primary_key=True, autoincrement=True)
     date_execution = Column(DateTime, nullable=False)
     llm_modele = Column(Text, nullable=True)
     llm_fournisseur = Column(Text, nullable=True)
@@ -50,7 +50,7 @@ class ResultatsExtraction(Base):
     id_resultats_extraction = Column(Integer, primary_key=True, autoincrement=True)
     lieu_id = Column(Text, ForeignKey("lieux.identifiant"), nullable=False)
     id_execution = Column(
-        Integer, ForeignKey("executions.id_executions"), nullable=False
+        Integer, ForeignKey("executions.id_execution"), nullable=False
     )
     statut_url = Column(Text, default="")
     code_http = Column(Integer, default=0)

@@ -7,7 +7,7 @@ import sys
 from enum import Enum
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 from dotenv import load_dotenv
 
@@ -50,7 +50,7 @@ class SmartWatchLogger:
     def __init__(
         self,
         module_name: str = "main",
-        outputs: List[LogOutput] = None,
+        outputs: Optional[List[LogOutput]] = None,
     ):
         """
         Initialise une instance du logger pour le module spécifié, avec les sorties désirées.
@@ -223,7 +223,7 @@ class SmartWatchLogger:
 
 def create_logger(
     module_name: str = "main",
-    outputs: List[str] = None,
+    outputs: Optional[List[str]] = None,
 ) -> SmartWatchLogger:
     """
     Crée et retourne une instance de SmartWatchLogger pour le module spécifié.

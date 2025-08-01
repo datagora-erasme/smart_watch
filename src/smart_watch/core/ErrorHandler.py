@@ -197,12 +197,7 @@ class ErrorHandler:
         """
         Enregistre une erreur gérée dans le système de logs avec différents niveaux de gravité.
 
-        Cette méthode construit un message d'erreur détaillé incluant la catégorie, le contexte, l'opération, l'exception, un message utilisateur optionnel et des données contextuelles.
-
-        Le niveau de log est déterminé en fonction de la gravité de l'erreur. Pour les erreurs graves (HIGH ou CRITICAL), la trace complète est également enregistrée en debug.
-
-        Args:
-            handled_error (HandledError): l'objet représentant l'erreur gérée, contenant toutes les informations nécessaires pour le logging (catégorie, contexte, exception, gravité, message utilisateur, données, traceback).
+        Le traceback complet est géré par le décorateur pour éviter la duplication.
         """
 
         # Message de base
@@ -234,9 +229,8 @@ class ErrorHandler:
         log_level = log_level_mapping[handled_error.severity]
         self.logger.log(log_level, error_message)
 
-        # Traceback pour les erreurs graves
-        if handled_error.severity in (ErrorSeverity.HIGH, ErrorSeverity.CRITICAL):
-            self.logger.debug(f"Traceback: {handled_error.traceback}")
+        # Note: Le traceback est maintenant géré par le décorateur
+        # pour éviter la duplication et être plus précis sur le moment de capture
 
     def _apply_specialized_handling(self, handled_error: HandledError) -> Any:
         """
@@ -600,7 +594,7 @@ def handle_errors(
 
     Ce décorateur intercepte les exceptions levées par la fonction décorée, crée un contexte d'erreur, et délègue le traitement au gestionnaire d'erreurs approprié. Il permet de personnaliser la catégorie et la sévérité de l'erreur, d'afficher un message utilisateur, et de choisir si l'exception doit être relancée ou non.
 
-    Il utilise la fonction functools.wraps pour conserver les métadonnées de la fonction d'origine. Cela permet par exemple d'afficher la documentation de la fonction décorée avec Sphinx.
+    Le traceback complet est automatiquement capturé pour les erreurs de sévérité HIGH et CRITICAL.
 
     Args:
         category (ErrorCategory): catégorie de l'erreur à signaler.
@@ -611,16 +605,6 @@ def handle_errors(
 
     Returns:
         Callable: Le décorateur appliqué à la fonction cible.
-
-    Exemple d'utilisation:
-        @handle_errors(
-            category=ErrorCategory.CONFIGURATION,
-            severity=ErrorSeverity.HIGH,
-            user_message="Erreur lors de l'exécution du pipeline",
-        )
-
-        def run(self):
-        ...
     """
 
     def decorator(func: Callable) -> Callable:
@@ -629,6 +613,29 @@ def handle_errors(
             try:
                 return func(*args, **kwargs)
             except Exception as e:
+                # Récupérer le logger de l'instance si disponible
+                logger = None
+                if args and hasattr(args[0], "logger"):
+                    logger = args[0].logger
+
+                # Capture du traceback pour les erreurs critiques
+                if severity in (ErrorSeverity.HIGH, ErrorSeverity.CRITICAL) and logger:
+                    logger.error("TRACEBACK COMPLET (erreur critique):")
+                    logger.error(traceback.format_exc())
+
+                    # Diagnostic spécialisé pour AttributeError
+                    if isinstance(e, AttributeError):
+                        logger.error("DIAGNOSTIC AttributeError:")
+                        error_msg = str(e)
+                        if "object has no attribute" in error_msg:
+                            parts = error_msg.split("'")
+                            if len(parts) >= 3:
+                                obj_type = parts[1] if len(parts) > 1 else "inconnu"
+                                attr_name = parts[3] if len(parts) > 3 else "inconnu"
+                                logger.error(
+                                    f"Type d'objet: '{obj_type}', Attribut manquant: '{attr_name}'"
+                                )
+
                 # Récupérer l'instance ErrorHandler depuis les arguments ou créer une instance globale
                 error_handler = (
                     getattr(args[0], "error_handler", None) if args else None

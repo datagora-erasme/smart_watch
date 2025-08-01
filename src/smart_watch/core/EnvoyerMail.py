@@ -24,6 +24,12 @@ class EmailSender:
         Args:
             config (ConfigManager): instance de ConfigManager contenant les paramètres de configuration.
         """
+        if not config.email:
+            # Cette erreur ne devrait jamais se produire si la validation en amont est correcte.
+            # Elle sert de garde-fou et informe l'analyseur de code Pylance.
+            raise ValueError(
+                "EmailSender a été initialisé sans configuration email valide."
+            )
         self.config = config.email
         self.logger = create_logger(self.__class__.__name__)
 
@@ -42,6 +48,7 @@ class EmailSender:
             body (str): corps de l'email (HTML).
             attachments (Optional[List[str]]): liste des chemins vers les fichiers à joindre.
         """
+
         message = MIMEMultipart()
         message["From"] = self.config.emetteur
 

@@ -3,9 +3,8 @@ Processeur pour les extractions LLM.
 """
 
 import json
-import time
 from datetime import datetime
-from typing import Dict
+from typing import Any, Dict
 
 import requests
 
@@ -17,9 +16,9 @@ from ..core.LLMClient import (
     get_mistral_tool_format,
     get_structured_response_format,
 )
+from ..processing.database_processor import DatabaseProcessor
 from ..utils.CustomJsonToOSM import JsonToOsmConverter
 from ..utils.JoursFeries import get_jours_feries
-from .database_processor import DatabaseProcessor
 
 
 class LLMProcessor:
@@ -37,11 +36,16 @@ class LLMProcessor:
         """Initialise le client LLM selon la configuration."""
         llm_config = self.config.llm
 
+        # Vérifier que base_url n'est pas None avant de l'utiliser
+        base_url = llm_config.base_url
+        if base_url is None:
+            raise ValueError("La configuration LLM doit définir une base_url")
+
         if llm_config.fournisseur == "OPENAI":
             self.llm_client = OpenAICompatibleClient(
                 api_key=llm_config.api_key,
                 model=llm_config.modele,
-                base_url=llm_config.base_url,
+                base_url=base_url,  # base_url est maintenant garanti non-None
                 temperature=llm_config.temperature,
                 timeout=llm_config.timeout,
             )
@@ -221,7 +225,7 @@ class LLMProcessor:
             )
             return llm_result
 
-    def _process_single_llm(self, resultat, lieu) -> Dict:
+    def _process_single_llm(self, resultat, lieu) -> Dict[str, Any]:
         """Traite une extraction LLM individuelle."""
         try:
             # Préparation des données - utiliser le markdown filtré
@@ -336,71 +340,38 @@ class LLMProcessor:
             self.logger.error(
                 f"*{lieu.identifiant}* Erreur critique traitement LLM pour '{lieu.nom}': {e}"
             )
-            return None
+            # Retourner un dictionnaire d'erreur au lieu de None
+            return {
+                "prompt_message": "",
+                "llm_horaires_json": f"Erreur: Aucun résultat LLM ({str(e)})",
+                "llm_horaires_osm": f"Erreur: Aucun résultat LLM ({str(e)})",
+                "llm_consommation_requete": 0.0,
+            }
 
-    def process_llm_extractions(self, db_manager: DatabaseProcessor, execution_id: int):
-        """Traite les extractions LLM."""
-        self.logger.section("EXTRACTION HORAIRES LLM")
+    def process_llm_extractions(
+        self, db_processor: DatabaseProcessor, execution_id: int
+    ):
+        """
+        Traite toutes les extractions LLM pour une exécution donnée.
 
-        # Reset des émissions pour cette exécution
-        self.total_co2_emissions = 0.0
+        Args:
+            db_processor (DatabaseProcessor): Processeur de base de données
+            execution_id (int): ID de l'exécution
+        """
+        # Récupérer les résultats prêts pour l'extraction LLM
+        pending_llm = db_processor.get_pending_llm(execution_id)
 
-        resultats_pour_llm = db_manager.get_pending_llm(execution_id)
+        for result_row in pending_llm:
+            resultat, lieu = result_row
 
-        if not resultats_pour_llm:
-            self.logger.info("Aucune extraction LLM nécessaire")
-            return
+            # Extraction via LLM
+            llm_result = self._process_single_llm(resultat, lieu)
 
-        self.logger.info(f"{len(resultats_pour_llm)} extractions LLM à effectuer")
+            # Mettre à jour en base
+            db_processor.update_llm_result(resultat.id_resultats_extraction, llm_result)
 
-        # Traitement séquentiel
-        successful_count = 0
-        for i, (resultat, lieu) in enumerate(resultats_pour_llm, 1):
-            self.logger.info(
-                f"*{lieu.identifiant}* LLM {i}/{len(resultats_pour_llm)} pour '{lieu.nom}'"
-            )
-
-            try:
-                llm_result = self._process_single_llm(resultat, lieu)
-
-                # Toujours mettre à jour la base, même en cas d'erreur LLM
-                if llm_result is not None:
-                    db_manager.update_llm_result(
-                        resultat.id_resultats_extraction, llm_result
-                    )
-
-                    # Compter comme succès seulement si on a un résultat JSON valide
-                    if llm_result.get("llm_horaires_json") and not llm_result[
-                        "llm_horaires_json"
-                    ].startswith("Erreur"):
-                        successful_count += 1
-                else:
-                    # Erreur critique (pas de prompt généré)
-                    self.logger.warning(
-                        f"*{lieu.identifiant}* Échec critique LLM pour '{lieu.nom}' - aucune donnée générée"
-                    )
-
-                # Délai adaptatif
-                if i < len(resultats_pour_llm):
-                    delay = self.config.processing.delai_entre_appels
-                    if llm_result is None or (
-                        llm_result.get("llm_horaires_json", "").startswith("Erreur")
-                    ):
-                        delay = self.config.processing.delai_en_cas_erreur
-                    time.sleep(delay)
-
-            except Exception as e:
-                self.logger.error(
-                    f"*{lieu.identifiant}* Erreur LLM pour '{lieu.nom}': {e}"
+            # Mettre à jour les émissions totales de l'exécution
+            if "llm_consommation_requete" in llm_result:
+                db_processor.update_execution_emissions(
+                    execution_id, llm_result["llm_consommation_requete"]
                 )
-                # Ne pas mettre à jour la base de données en cas d'exception
-
-        # Mettre à jour les émissions totales dans la table executions
-        db_manager.update_execution_emissions(execution_id, self.total_co2_emissions)
-
-        self.logger.info(
-            f"LLM traité: {successful_count}/{len(resultats_pour_llm)} réussies"
-        )
-        self.logger.info(
-            f"Émissions CO2 (appels LLM): {self.total_co2_emissions:.6f} kg"
-        )

@@ -3,11 +3,10 @@ Processeur pour les comparaisons d'horaires.
 """
 
 import json
-from typing import Dict, List, Tuple
+from typing import Dict
 
 from ..core.ComparateurHoraires import HorairesComparator
 from ..core.ConfigManager import ConfigManager
-from ..data_models.schema_bdd import Lieux, ResultatsExtraction
 from .database_processor import DatabaseProcessor
 
 
@@ -17,29 +16,6 @@ class ComparisonProcessor:
     def __init__(self, config: ConfigManager, logger):
         self.config = config
         self.logger = logger
-
-    def _get_pending_comparisons(self, db_manager: DatabaseProcessor) -> List[Tuple]:
-        """Récupère les enregistrements en attente de comparaison."""
-        session = db_manager.Session()
-        try:
-            # Récupérer TOUS les enregistrements qui ont besoin d'une comparaison
-            # peu importe leur execution_id
-            return (
-                session.query(ResultatsExtraction, Lieux)
-                .join(Lieux, ResultatsExtraction.lieu_id == Lieux.identifiant)
-                .filter(
-                    ResultatsExtraction.llm_horaires_json != "",
-                    ResultatsExtraction.llm_horaires_json.notlike("Erreur LLM:%"),
-                    # Condition principale : comparaison pas encore effectuée (NULL ou vide)
-                    (
-                        ResultatsExtraction.horaires_identiques.is_(None)
-                        | (ResultatsExtraction.horaires_identiques == "")
-                    ),
-                )
-                .all()
-            )
-        finally:
-            session.close()
 
     def _compare_single(self, comparator, resultat, lieu) -> Dict:
         """Compare un seul enregistrement et retourne les résultats structurés."""
@@ -110,38 +86,20 @@ class ComparisonProcessor:
                 "differences": f"Erreur générale: {str(e)}",
             }
 
-    def _update_comparison_result(
-        self, db_manager: DatabaseProcessor, resultat_id: int, result_data: Dict
-    ):
-        """Met à jour le résultat d'une comparaison."""
-        session = db_manager.Session()
-        try:
-            resultat = session.get(ResultatsExtraction, resultat_id)
-            if resultat:
-                resultat.horaires_identiques = result_data.get("identique")
-                resultat.differences_horaires = result_data.get("differences", "")
+    def process_comparisons(self, db_processor: DatabaseProcessor):
+        """
+        Compare les horaires extraits avec les références.
 
-                # Ajouter erreur de comparaison si échec
-                if result_data.get("identique") is None:
-                    db_manager._add_error_to_result(
-                        resultat,
-                        "COMPARAISON",
-                        result_data.get("differences", "Erreur inconnue"),
-                    )
-
-                session.commit()
-        finally:
-            session.close()
-
-    def process_comparisons(self, db_manager: DatabaseProcessor):
-        """Traite les comparaisons avec data.grandlyon.com."""
+        Args:
+            db_processor (DatabaseProcessor): Processeur de base de données
+        """
         self.logger.section("COMPARAISON HORAIRES")
 
         try:
             comparator = HorairesComparator()
 
-            # Récupérer les enregistrements nécessitant une comparaison
-            resultats_pour_comparaison = self._get_pending_comparisons(db_manager)
+            # Utiliser la méthode du DatabaseProcessor
+            resultats_pour_comparaison = db_processor.get_pending_comparisons()
 
             if not resultats_pour_comparaison:
                 self.logger.info("Aucune comparaison nécessaire")
@@ -154,7 +112,7 @@ class ComparisonProcessor:
             # Afficher la répartition par execution_id pour debug
             executions_stats = {}
             for resultat, lieu in resultats_pour_comparaison:
-                exec_id = resultat.id_execution
+                exec_id = getattr(resultat, "id_execution", "unknown")
                 executions_stats[exec_id] = executions_stats.get(exec_id, 0) + 1
 
             for exec_id, count in executions_stats.items():
@@ -162,29 +120,49 @@ class ComparisonProcessor:
 
             successful_count = 0
             for i, (resultat, lieu) in enumerate(resultats_pour_comparaison, 1):
+                lieu_id = getattr(lieu, "identifiant", "unknown")
+                lieu_nom = getattr(lieu, "nom", "unknown")
+                exec_id = getattr(resultat, "id_execution", "unknown")
+
                 self.logger.info(
-                    f"*{lieu.identifiant}* Comparaison {i}/{len(resultats_pour_comparaison)} pour '{lieu.nom}' (exec: {resultat.id_execution})"
+                    f"*{lieu_id}* Comparaison {i}/{len(resultats_pour_comparaison)} pour '{lieu_nom}' (exec: {exec_id})"
                 )
 
                 try:
                     comparison_result = self._compare_single(comparator, resultat, lieu)
 
-                    # Ne mettre à jour que si la comparaison a réussi
+                    # Utiliser la méthode du DatabaseProcessor
                     if comparison_result.get("identique") is not None:
-                        self._update_comparison_result(
-                            db_manager,
-                            resultat.id_resultats_extraction,
-                            comparison_result,
+                        # Essayer différents noms d'attributs pour l'ID
+                        resultat_id = (
+                            getattr(resultat, "id_resultats_extraction", None)
+                            or getattr(resultat, "id", None)
+                            or getattr(resultat, "resultat_id", None)
                         )
-                        successful_count += 1
+
+                        if resultat_id is not None:
+                            try:
+                                db_processor.update_comparison_result(
+                                    int(resultat_id),  # Conversion explicite en int
+                                    comparison_result,
+                                )
+                                successful_count += 1
+                            except (ValueError, TypeError) as e:
+                                self.logger.error(
+                                    f"*{lieu_id}* ID invalide ({resultat_id}) pour '{lieu_nom}': {e}"
+                                )
+                        else:
+                            self.logger.error(
+                                f"*{lieu_id}* Impossible de trouver l'ID du résultat pour '{lieu_nom}'"
+                            )
                     else:
                         self.logger.warning(
-                            f"*{lieu.identifiant}* Comparaison échouée pour '{lieu.nom}': {comparison_result.get('differences', 'Erreur inconnue')} - Base non modifiée"
+                            f"*{lieu_id}* Comparaison échouée pour '{lieu_nom}': {comparison_result.get('differences', 'Erreur inconnue')} - Base non modifiée"
                         )
 
                 except Exception as e:
                     self.logger.error(
-                        f"*{lieu.identifiant}* Erreur comparaison pour '{lieu.nom}': {e}"
+                        f"*{lieu_id}* Erreur comparaison pour '{lieu_nom}': {e}"
                     )
                     # Ne pas mettre à jour la base en cas d'erreur
 

@@ -1,7 +1,6 @@
 # Documentation
 # https://datagora-erasme.github.io/smart_watch/source/modules/config/email_config.html
 
-import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Optional
@@ -39,7 +38,7 @@ class EmailConfigManager(BaseConfig):
     Cette classe hérite de `BaseConfig` et fournit des méthodes pour initialiser et valider les paramètres email, en s'assurant que tous les paramètres requis sont présents et correctement formatés.
 
     Attributes:
-        config (Optional[EmailConfig]) : objet de configuration email chargé.
+        config (EmailConfig) : objet de configuration email chargé.
     """
 
     def __init__(self, env_file: Optional[Path] = None) -> None:
@@ -50,20 +49,27 @@ class EmailConfigManager(BaseConfig):
             env_file (Optional[Path], optional) : chemin vers le fichier d'environnement.
         """
         super().__init__(env_file)
-        self.config: Optional[EmailConfig] = self._init_email_config()
+        self.config: EmailConfig = self._init_email_config()
 
-    def _init_email_config(self) -> Optional[EmailConfig]:
+    def _init_email_config(self) -> EmailConfig:
         """
         Initialise la configuration email à partir des variables d'environnement.
 
         Returns:
-            Optional[EmailConfig] : un objet `EmailConfig` si toutes les variables requises sont trouvées, sinon None.
+            EmailConfig : un objet `EmailConfig` si toutes les variables requises sont trouvées.
 
         Raises:
-            ValueError : si aucun destinataire email valide n'est configuré.
+            ValueError : si une variable d'environnement requise est manquante ou invalide.
         """
         emetteur: str = self.get_env_var("MAIL_EMETTEUR", required=True)
         recepteur_raw: str = self.get_env_var("MAIL_RECEPTEUR", required=True)
+
+        if not emetteur or not recepteur_raw:
+            # Cette vérification est redondante si required=True lève une exception,
+            # mais elle enlève les erreurs Pylance.
+            raise ValueError(
+                "Les variables d'environnement MAIL_EMETTEUR et MAIL_RECEPTEUR sont obligatoires."
+            )
 
         recepteurs: List[str] = [
             email.strip() for email in recepteur_raw.split(",") if email.strip()
@@ -89,59 +95,29 @@ class EmailConfigManager(BaseConfig):
     )
     def validate(self) -> bool:
         """
-        Valide la configuration email chargée.
-
-        Cette méthode vérifie la présence des champs obligatoires, valide le format des adresses email et s'assure que le port SMTP est dans la plage autorisée.
-
-        Returns:
-            bool : True si la configuration est valide.
-
-        Raises:
-            ValueError : si la configuration est absente ou invalide.
+        Valide la configuration email. Lève une exception si la configuration est absente ou incomplète.
         """
-        validation_errors: List[str] = []
-
-        if not self.config:
-            validation_errors.append("La configuration email est absente.")
-            error_message: str = "Échec de la validation :\n" + "\n".join(
-                f"  - {error}" for error in validation_errors
-            )
-            raise ValueError(error_message)
-
-        if not self.config.smtp_password:
-            validation_errors.append("SMTP_PASSWORD est manquant.")
-
-        if not self.config.recepteurs:
-            validation_errors.append("Aucun destinataire email n'est configuré.")
-
-        email_pattern: re.Pattern = re.compile(
-            r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-        )
-
-        if not email_pattern.match(self.config.emetteur):
-            validation_errors.append(
-                f"Format d'email expéditeur invalide : {self.config.emetteur}"
+        # Si l'émetteur n'est pas défini, la configuration est considérée comme absente et invalide.
+        if not self.config.emetteur:
+            raise ValueError(
+                "La configuration pour l'envoi d'email est obligatoire. "
+                "Veuillez définir EMAIL_EMETTEUR et les variables associées dans le fichier .env."
             )
 
-        for email in self.config.recepteurs:
-            if not email_pattern.match(email):
-                validation_errors.append(
-                    f"Format d'email destinataire invalide : {email}"
-                )
+        # Si l'émetteur est défini, les autres champs obligatoires doivent l'être aussi.
+        required_fields = {
+            "recepteurs": self.config.recepteurs,
+            "smtp_server": self.config.smtp_server,
+            "smtp_port": self.config.smtp_port,
+        }
 
-        if not (1 <= self.config.smtp_port <= 65535):
-            validation_errors.append(
-                f"Port SMTP invalide : {self.config.smtp_port} "
-                f"(doit être compris entre 1 et 65535)."
+        missing_fields = [
+            field for field, value in required_fields.items() if not value
+        ]
+
+        if missing_fields:
+            raise ValueError(
+                f"Configuration email incomplète. Champs manquants: {', '.join(missing_fields)}"
             )
-
-        if not self.config.smtp_server:
-            validation_errors.append("SMTP_SERVER est manquant.")
-
-        if validation_errors:
-            error_message = "Échec de la validation :\n" + "\n".join(
-                f"  - {error}" for error in validation_errors
-            )
-            raise ValueError(error_message)
 
         return True

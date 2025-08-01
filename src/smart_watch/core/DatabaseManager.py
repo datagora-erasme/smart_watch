@@ -6,6 +6,8 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 
 import polars as pl
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
 from .Logger import create_logger
 
@@ -16,7 +18,7 @@ logger = create_logger(
 
 
 class DatabaseManager:
-    """Gestionnaire générique de base de données SQLite."""
+    """Gestionnaire de base de données avec SQLAlchemy."""
 
     def __init__(self, db_file: Union[str, Path]):
         """
@@ -26,7 +28,27 @@ class DatabaseManager:
             db_file (Union[str, Path]): chemin vers le fichier de base de données SQLite
         """
         self.db_file = Path(db_file)
+        # Créer le dossier parent si nécessaire
+        self.db_file.parent.mkdir(parents=True, exist_ok=True)
+
+        # Créer l'engine SQLAlchemy
+        self.engine = create_engine(
+            f"sqlite:///{self.db_file}",
+            echo=False,  # Mettre à True pour voir les requêtes SQL
+        )
+
+        # Créer la session factory - correction de l'annotation de type
+        self.Session = sessionmaker(bind=self.engine)
+
         logger.debug(f"DatabaseManager initialisé avec {self.db_file}")
+
+    def get_session(self):
+        """Retourne une nouvelle session."""
+        return self.Session()
+
+    def close(self):
+        """Ferme le moteur de base de données."""
+        self.engine.dispose()
 
     def table_exists(self, table_name: str) -> bool:
         """
@@ -188,7 +210,7 @@ class DatabaseManager:
             logger.error(f"Erreur mise à jour dans '{table_name}': {err}")
             raise
 
-    def execute_query(self, query: str, params: tuple = None) -> List[tuple]:
+    def execute_query(self, query: str, params: Optional[tuple] = None) -> List[tuple]:
         """
         Exécute une requête SQL personnalisée.
 

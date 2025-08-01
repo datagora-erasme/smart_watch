@@ -3,7 +3,7 @@
 
 import re
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 from ..core.ErrorHandler import ErrorCategory, ErrorSeverity, handle_errors
 from ..core.Logger import create_logger
@@ -321,7 +321,7 @@ class OSMParser:
                         )
                         weekly_schedule[day].time_slots.append(new_slot)
 
-    def _parse_days_with_occurrence(self, day_part: str) -> List[Dict]:
+    def _parse_days_with_occurrence(self, day_part: str) -> List[Dict[str, Any]]:
         """Parse une spécification de jours avec gestion des occurrences."""
         days_info = []
 
@@ -330,15 +330,15 @@ class OSMParser:
         occurrence = None
 
         if occurrence_match:
+            occ_str = occurrence_match.group(1)
             try:
-                occ_str = occurrence_match.group(1)
                 if "," in occ_str:
                     occurrence = [int(x.strip()) for x in occ_str.split(",")]
                 else:
                     occurrence = int(occ_str)
             except ValueError:
                 logger.warning(f"Impossible de parser l'occurrence: {occ_str}")
-                pass  # Garde occurrence=None
+                occurrence = None
 
             # Supprime l'occurrence de la chaîne
             day_part = re.sub(r"\[([^\]]+)\]", "", day_part)
@@ -348,7 +348,7 @@ class OSMParser:
 
         # Ajoute l'information d'occurrence
         for day in french_days:
-            day_info = {"day": day}
+            day_info: Dict[str, Any] = {"day": day}
             if occurrence is not None:
                 day_info["occurrence"] = occurrence
             days_info.append(day_info)
@@ -400,7 +400,7 @@ class OSMParser:
 
     def _parse_time_slots(
         self, time_part: str, occurrence: Optional[Union[int, List[int]]] = None
-    ) -> List[Dict]:
+    ) -> List[Dict[str, Any]]:
         """Parse les créneaux horaires."""
         slots = []
 
@@ -419,7 +419,11 @@ class OSMParser:
                     if self._is_valid_time(start_time) and self._is_valid_time(
                         end_time
                     ):
-                        slots.append({"start": start_time, "end": end_time})
+                        slot_dict: Dict[str, Any] = {
+                            "start": start_time,
+                            "end": end_time,
+                        }
+                        slots.append(slot_dict)
                 except ValueError:
                     logger.warning(f"Could not parse time slot: {slot_part}")
 
@@ -519,9 +523,11 @@ class OsmToJsonConverter:
         logger.info("OSM conversion completed successfully")
         return result
 
-    def _format_weekly_schedule(self, weekly_schedule: Dict[str, DaySchedule]) -> Dict:
+    def _format_weekly_schedule(
+        self, weekly_schedule: Dict[str, DaySchedule]
+    ) -> Dict[str, Any]:
         """Convertit le planning de DaySchedule en dictionnaire JSON."""
-        formatted = {}
+        formatted: Dict[str, Any] = {}
         for day, schedule in weekly_schedule.items():
             formatted[day] = {
                 "source_found": schedule.source_found,
@@ -530,16 +536,16 @@ class OsmToJsonConverter:
             }
         return formatted
 
-    def _format_time_slot(self, time_slot: TimeSlot) -> Dict:
+    def _format_time_slot(self, time_slot: TimeSlot) -> Dict[str, Any]:
         """Convertit un TimeSlot en dictionnaire JSON."""
-        result = {"debut": time_slot.start, "fin": time_slot.end}
+        result: Dict[str, Any] = {"debut": time_slot.start, "fin": time_slot.end}
         if time_slot.occurrence is not None:
             result["occurence"] = time_slot.occurrence
         return result
 
-    def _create_empty_formatted_schedule(self) -> Dict:
+    def _create_empty_formatted_schedule(self) -> Dict[str, Any]:
         """Crée un planning hebdomadaire formaté et vide."""
-        schedule = {}
+        schedule: Dict[str, Any] = {}
         day_names = [
             "lundi",
             "mardi",
