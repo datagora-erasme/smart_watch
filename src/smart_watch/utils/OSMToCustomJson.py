@@ -97,9 +97,13 @@ class OSMParser:
         weekly_schedule = self._create_empty_weekly_schedule()
         special_dates = []
         vacation_periods = []
+        public_holidays_rule = None
 
         # Parse chaque règle
         for rule in rules:
+            if rule.strip().upper().startswith("PH"):
+                public_holidays_rule = rule
+                continue
             if self._is_date_rule(rule):
                 # Règle avec date spécifique
                 if self._is_vacation_period(rule):
@@ -118,6 +122,7 @@ class OSMParser:
             "special_dates": special_dates,
             "vacation_periods": vacation_periods,
             "permanently_closed": False,
+            "public_holidays_rule": public_holidays_rule,
         }
 
     def _create_closed_schedule(self) -> Dict:
@@ -463,6 +468,15 @@ class OsmToJsonConverter:
         special_dates_list = parsed_data.get("special_dates", [])
         special_dates_dict = {sd.date: sd.status for sd in special_dates_list}
 
+        public_holidays_rule = parsed_data.get("public_holidays_rule")
+        jours_feries_source_found = (
+            len(special_dates_dict) > 0 or public_holidays_rule is not None
+        )
+        jours_feries_mode = "ferme"  # default
+        if public_holidays_rule:
+            if "open" in public_holidays_rule.lower():
+                jours_feries_mode = "ouvert"
+
         # Crée la structure JSON selon le schéma
         result = {
             "horaires_ouverture": {
@@ -496,10 +510,10 @@ class OsmToJsonConverter:
                         "horaires": self._create_empty_formatted_schedule(),
                     },
                     "jours_feries": {
-                        "source_found": len(special_dates_dict) > 0,
+                        "source_found": jours_feries_source_found,
                         "label": "Jours fériés",
                         "condition": "PH",
-                        "mode": "ferme",
+                        "mode": jours_feries_mode,
                         "horaires_specifiques": special_dates_dict,
                     },
                     "jours_speciaux": {
