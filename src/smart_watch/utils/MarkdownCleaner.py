@@ -79,7 +79,7 @@ class MarkdownCleaner:
 
     # Regex pour les sauts de ligne multiples
     # 3 sauts de ligne ou plus
-    _RE_MULTI_NEWLINES = re.compile(r"\n{3,}")
+    _RE_MULTI_NEWLINES = re.compile(r"(\r\n|\n|\r){3,}")
 
     # Regex pour les lignes composées uniquement de caractères de formatage
     _RE_FORMATTING_LINES = re.compile(r"^[\s#\-\"=_\(\[\]\)\.]+$", re.MULTILINE)
