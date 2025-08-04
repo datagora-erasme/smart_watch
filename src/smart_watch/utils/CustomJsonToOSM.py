@@ -48,12 +48,14 @@ class TimeSlot:
     @staticmethod
     def _validate_time_format(time_str: str) -> bool:
         """Valide le format d'heure HH:MM."""
+        if not isinstance(time_str, str):
+            return False
         try:
             parts = time_str.split(":")
             if len(parts) != 2:
                 return False
             hour, minute = int(parts[0]), int(parts[1])
-            return 0 <= hour <= 23 and 0 <= minute <= 59
+            return 0 <= hour <= 23 and 0 <= minute <= 59 and len(parts[0]) == 2 and len(parts[1]) == 2
         except (ValueError, IndexError):
             return False
 
@@ -322,12 +324,19 @@ class JsonToOsmConverter:
 
         # Gestion des jours fermés (off)
         closed_days = []
-        for day in OSMDayMapper.DAY_ORDER:
-            if day not in day_slots:
-                closed_days.append(day)
+        for day_name, day_data in schedule.items():
+            osm_day = OSMDayMapper.normalize_day(day_name)
+            if not osm_day:
+                continue
+            if not day_data.get("source_found", True):
+                continue
+            if not day_data.get("ouvert", False) and not day_data.get("creneaux", []):
+                closed_days.append(osm_day)
+
         if closed_days:
             day_ranges = OSMDayMapper.compress_day_ranges(closed_days)
-            osm_parts.append(f"{day_ranges} off")
+            if day_ranges:
+                osm_parts.append(f"{day_ranges} off")
 
         return "; ".join(osm_parts)
 
@@ -497,7 +506,7 @@ class JsonToOsmConverter:
                 break
 
         # Si tout est fermé, retourne une fermeture définitive
-        if all_periods_closed and has_any_period:
+        if all_periods_closed and has_any_period and not any("jours_feries" in p for p in periods):
             logger.info("Établissement définitivement fermé")
             return ConversionResult(osm_periods={"general": "off"})
 

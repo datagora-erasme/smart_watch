@@ -94,4 +94,6 @@ def get_vacances_scolaires(
         logger.warning("Aucune période de vacances trouvée")
 
     # On retourne le dataframe Polars trié par date de début et de fin
+    if df.is_empty():
+        return None
     return df.sort(["start_date", "end_date"])

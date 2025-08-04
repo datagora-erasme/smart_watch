@@ -277,7 +277,11 @@ class MarkdownCleaner:
         Returns:
             str: Le texte sans les lignes de formatage.
         """
-        return self._RE_FORMATTING_LINES.sub("", text) if text else ""
+        if not text:
+            return ""
+        lines = text.split('\n')
+        cleaned_lines = [line for line in lines if not self._RE_FORMATTING_LINES.match(line)]
+        return "\n".join(cleaned_lines)
 
     @handle_errors(
         category=ErrorCategory.CONVERSION, severity=ErrorSeverity.LOW, reraise=True

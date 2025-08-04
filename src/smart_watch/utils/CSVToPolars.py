@@ -175,7 +175,7 @@ class CSVToPolars:
                     separator=self.separator,
                     truncate_ragged_lines=True,
                 ).filter(~pl.all_horizontal(pl.all().is_null()))
-            except pl.errors.NoDataError:
+            except pl.exceptions.NoDataError:
                 logger.warning(f"Le fichier CSV {file_path.name} est vide.")
                 return pl.DataFrame()
 
