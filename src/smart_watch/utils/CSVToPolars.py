@@ -168,12 +168,16 @@ class CSVToPolars:
             logger.info(f"Lecture CSV: {file_path.name}")
 
             # Lecture avec Polars
-            df = pl.read_csv(
-                file_path,
-                has_header=self.has_header,
-                separator=self.separator,
-                truncate_ragged_lines=True,
-            ).filter(~pl.all_horizontal(pl.all().is_null()))  # Virer les lignes vides
+            try:
+                df = pl.read_csv(
+                    file_path,
+                    has_header=self.has_header,
+                    separator=self.separator,
+                    truncate_ragged_lines=True,
+                ).filter(~pl.all_horizontal(pl.all().is_null()))
+            except pl.errors.NoDataError:
+                logger.warning(f"Le fichier CSV {file_path.name} est vide.")
+                return pl.DataFrame()
 
             return df
 
