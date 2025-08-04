@@ -5,7 +5,6 @@ from pathlib import Path
 from typing import Optional
 
 from ..config.base_config import BaseConfig
-from ..config.database_config import DatabaseConfigManager
 from ..config.email_config import EmailConfigManager
 from ..config.llm_config import LLMConfigManager
 from ..config.markdown_filtering_config import MarkdownFilteringConfigManager
@@ -83,6 +82,8 @@ class ConfigManager:
             _managers (dict): références aux gestionnaires de configuration pour la validation.
         """
         # Initialiser les gestionnaires modulaires
+        from ..config.database_config import DatabaseConfigManager
+
         llm_manager = LLMConfigManager(self.env_file)
         database_manager = DatabaseConfigManager(self.env_file)
         email_manager = EmailConfigManager(self.env_file)

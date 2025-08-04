@@ -8,7 +8,6 @@ from playwright.sync_api import (
     sync_playwright,
 )
 
-from ..utils import convert_html_to_markdown
 from .ErrorHandler import ErrorCategory, ErrorHandler, ErrorSeverity, handle_errors
 from .Logger import create_logger
 
@@ -156,6 +155,8 @@ def retrieve_url(
             )
             row_dict["html"] = html_content
             if sortie == "markdown":
+                from ..utils.HtmlToMarkdown import convert_html_to_markdown
+
                 row_dict["markdown"] = convert_html_to_markdown(
                     html=html_content, identifiant=identifiant
                 )
