@@ -40,6 +40,8 @@ class StatItem:
         Returns:
             str: la valeur formatée avec son unité ou juste la valeur.
         """
+        if self.value is None:
+            return "N/A"
         formatted = self.format_str.format(self.value)
         return f"{formatted} {self.unit}" if self.unit else formatted
 
@@ -83,7 +85,7 @@ class StatsSection:
             key (str): la clé de l'élément de statistique.
 
         Returns:
-            str: la valeur formatée de l'élément de statistique, ou "N
+            str: la valeur formatée de l'élément de statistique, ou "N/A"
         """
         return self.items.get(key, StatItem("N/A", "")).formatted_value()
 

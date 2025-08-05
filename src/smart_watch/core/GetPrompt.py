@@ -23,9 +23,9 @@ def get_prompt(row: dict, json_schema: Optional[dict] = None) -> list:
         list: liste des messages pour le LLM.
     """
     identifiant = row.get("identifiant", "N/A")
-    logger.debug(
-        f"*{identifiant}* Construction prompt pour '{row.get('nom', 'inconnu')}'"
-    )
+    nom_lieu = row.get("nom", "inconnu")
+
+    logger.debug(f"*{identifiant}* Construction du prompt pour '{nom_lieu}'")
 
     system_prompt = f"""Tu es un expert en extraction d'horaires d'ouverture à partir de texte.
 Ton objectif est d'analyser le contenu Markdown fourni, et d'extraire les horaires en respectant rigoureusement la structure JSON fournie.

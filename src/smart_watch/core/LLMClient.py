@@ -1,4 +1,3 @@
-import os
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, Union
@@ -98,12 +97,18 @@ class BaseLLMClient(ABC):
 
     @abstractmethod
     def call_llm(
-        self, messages: List[Union[Dict, LLMMessage]], **kwargs
+        self,
+        messages: List[Union[Dict, LLMMessage]],
+        index: int = 0,
+        total: int = 0,
+        **kwargs,
     ) -> LLMResponse:
         """Méthode abstraite pour effectuer un appel au LLM avec mesure d'émissions.
 
         Args:
             messages (List[Union[Dict, LLMMessage]]): liste de messages à envoyer au LLM.
+            index (int): index de l'appel dans une liste, utilisé pour le logging.
+            total (int): nombre total d'appels à traiter, utilisé pour le logging.
 
         Returns:
             LLMResponse: réponse du LLM enrichie avec les émissions de CO2.
@@ -194,24 +199,26 @@ class OpenAICompatibleClient(BaseLLMClient):
 
     def __init__(
         self,
+        api_key: str,
         model: str,
         base_url: str,
         temperature: float = 0.1,
         timeout: int = 30,
-        api_key: Optional[str] = None,
+        seed: Optional[int] = None,  # Ajouter le paramètre seed
     ):
         """Initialise le client pour les API compatibles OpenAI.
 
         Args:
+            api_key (str): la clé API pour l'authentification.
             model (str): le nom du modèle LLM.
             base_url (str): l'URL de base de l'API.
             temperature (float): la température pour la génération de texte.
             timeout (int): le délai d'attente pour les requêtes API.
-            api_key (Optional[str]): la clé API pour l'authentification.
+            seed (Optional[int]): graine aléatoire pour la génération (optionnel).
 
         """
-        api_key = api_key or os.environ.get("LLM_API_KEY_OPENAI")
         super().__init__(model, temperature, timeout, api_key, base_url)
+        self.seed = seed  # Stocker le seed
 
     @handle_errors(
         category=ErrorCategory.LLM,
@@ -225,41 +232,55 @@ class OpenAICompatibleClient(BaseLLMClient):
         self,
         messages: List[Union[Dict, LLMMessage]],
         response_format: Optional[Dict[str, Any]] = None,
+        index: int = 0,
+        total: int = 0,
     ) -> LLMResponse:
         """Effectue un appel au LLM.
 
         Args:
             messages (List[Union[Dict, LLMMessage]]): liste de messages à envoyer au LLM.
             response_format (Optional[Dict[str, Any]]): format de réponse structuré (si nécessaire).
+            index (int): index de l'appel dans une liste, utilisé pour le logging.
+            total (int): nombre total d'appels à traiter, utilisé pour le logging.
 
         Returns:
             LLMResponse: réponse du LLM enrichie avec les émissions de CO2.
         """
         formatted_messages = self._normalize_messages(messages)
+        log_message_prefix = ""
+        if total > 0:
+            log_message_prefix = f"Appel LLM {index}/{total} "
         logger.debug(
-            f"Appel LLM compatible OpenAI {self.model}: {len(formatted_messages)} messages"
+            f"{log_message_prefix}Compatible OpenAI {self.model}: {len(formatted_messages)} messages"
         )
-
-        payload = {
-            "model": self.model,
-            "messages": formatted_messages,
-            "temperature": self.temperature,
-        }
-        if response_format:
-            payload["response_format"] = response_format
-
-        url = f"{self.base_url}/chat/completions"
-
-        # Créer un tracker à la volée pour une mesure isolée
-        tracker = EmissionsTracker(
-            measure_power_secs=1,
-            tracking_mode="machine",
-            log_level="error",
-            save_to_file=False,
-        )
-        tracker.start()
-
+        tracker = None  # Initialiser le tracker
         try:
+            # Construire le payload de base
+            payload = {
+                "model": self.model,
+                "messages": formatted_messages,
+                "temperature": self.temperature,
+            }
+
+            # Ajouter le seed s'il est défini
+            if self.seed is not None:
+                payload["seed"] = self.seed
+
+            # Ajouter le format de réponse si spécifié
+            if response_format:
+                payload["response_format"] = response_format
+
+            url = f"{self.base_url}/chat/completions"
+
+            # Créer un tracker à la volée pour une mesure isolée
+            tracker = EmissionsTracker(
+                measure_power_secs=1,
+                tracking_mode="machine",
+                log_level="error",
+                save_to_file=False,
+            )
+            tracker.start()
+
             response = self.session.post(url, json=payload, timeout=self.timeout)
 
             # Log de la réponse en cas d'erreur avant de lever une exception
@@ -280,13 +301,16 @@ class OpenAICompatibleClient(BaseLLMClient):
             return LLMResponse(content=result, co2_emissions=emissions)
 
         except requests.exceptions.Timeout:
-            tracker.stop()
+            if tracker:
+                tracker.stop()
             raise Exception(f"Timeout après {self.timeout} secondes")
         except requests.exceptions.ConnectionError:
-            tracker.stop()
+            if tracker:
+                tracker.stop()
             raise Exception("Erreur de connexion à l'API")
         except requests.exceptions.HTTPError as e:
-            tracker.stop()
+            if tracker:
+                tracker.stop()
             if e.response.status_code == 429:
                 raise Exception("Limite de taux API atteinte")
             elif e.response.status_code == 401:
@@ -294,10 +318,12 @@ class OpenAICompatibleClient(BaseLLMClient):
             else:
                 raise Exception(f"Erreur HTTP {e.response.status_code}")
         except (KeyError, IndexError):
-            tracker.stop()
+            if tracker:
+                tracker.stop()
             raise Exception("Format de réponse API invalide")
         except Exception as e:
-            tracker.stop()
+            if tracker:
+                tracker.stop()
             # Log de l'exception détaillée pour un meilleur débogage
             logger.error(
                 f"Exception détaillée lors de l'appel au LLM compatible OpenAI: {e}"
@@ -310,75 +336,74 @@ class MistralAPIClient(BaseLLMClient):
 
     def __init__(
         self,
-        model: str = "mistral-large-latest",
+        api_key: str,
+        model: str,
         temperature: float = 0.1,
-        random_seed: int = 1,
         timeout: int = 30,
-        api_key: Optional[str] = None,
+        seed: Optional[int] = None,
     ):
-        """Initialise le client pour l'API Mistral.
-
-        Args:
-            model (str): le nom du modèle Mistral à utiliser.
-            temperature (float): la température pour la génération de texte.
-            random_seed (int): graine aléatoire pour la génération.
-            timeout (int): le délai d'attente pour les requêtes API.
-            api_key (Optional[str]): la clé API pour l'authentification.
-        """
-        api_key = api_key or os.environ.get("LLM_API_KEY_MISTRAL")
-        if not api_key:
-            raise ValueError("Clé API Mistral requise (LLM_API_KEY_MISTRAL)")
-
+        # Initialiser la classe de base avec une URL fixe pour Mistral
         super().__init__(
-            model, temperature, timeout, api_key, "https://api.mistral.ai/v1"
+            model=model,
+            temperature=temperature,
+            timeout=timeout,
+            api_key=api_key,
+            base_url="https://api.mistral.ai/v1",
         )
-        self.random_seed = random_seed
+        self.seed = seed
 
     @handle_errors(
         category=ErrorCategory.LLM,
         severity=ErrorSeverity.MEDIUM,
-        user_message="Erreur lors de l'appel au LLM Mistral",
-        default_return=LLMResponse(content="Erreur API Mistral", co2_emissions=0.0),
+        user_message="Erreur lors de l'appel à l'API Mistral",
+        default_return=LLMResponse(
+            content="Erreur API Mistral indisponible", co2_emissions=0.0
+        ),
     )
     def call_llm(
         self,
         messages: List[Union[Dict, LLMMessage]],
         tool_params: Optional[Dict[str, Any]] = None,
+        index: int = 0,
+        total: int = 0,
     ) -> LLMResponse:
-        """Effectue un appel au LLM Mistral.
-
-        Args:
-            messages (List[Union[Dict, LLMMessage]]): liste de messages à envoyer au LLM.
-            tool_params (Optional[Dict[str, Any]]): paramètres pour les outils (si nécessaire).
-
-        Returns:
-            LLMResponse: réponse du LLM enrichie avec les émissions de CO2.
-        """
+        """Effectue un appel vers l'API Mistral."""
         formatted_messages = self._normalize_messages(messages)
-        logger.debug(f"Appel Mistral {self.model}: {len(formatted_messages)} messages")
-
-        payload = {
-            "model": self.model,
-            "messages": formatted_messages,
-            "temperature": self.temperature,
-            "random_seed": self.random_seed,
-        }
-        if tool_params:
-            payload.update(tool_params)
-
-        url = f"{self.base_url}/chat/completions"
-
-        # Créer un tracker à la volée pour une mesure isolée
-        tracker = EmissionsTracker(
-            measure_power_secs=1,
-            tracking_mode="machine",
-            log_level="error",
-            save_to_file=False,
+        log_message_prefix = ""
+        if total > 0:
+            log_message_prefix = f"Appel LLM {index}/{total} "
+        logger.debug(
+            f"{log_message_prefix}Mistral {self.model}: {len(formatted_messages)} messages"
         )
-        tracker.start()
-
+        tracker = None  # Initialiser le tracker
         try:
-            response = self.session.post(url, json=payload, timeout=self.timeout)
+            # Préparer les paramètres de base
+            params = {
+                "model": self.model,
+                "messages": messages,
+                "temperature": self.temperature,
+            }
+
+            # Ajouter le seed s'il est défini
+            if self.seed is not None:
+                params["random_seed"] = self.seed  # Mistral utilise "random_seed"
+
+            # Ajouter les outils si spécifiés
+            if tool_params:
+                params.update(tool_params)
+
+            url = f"{self.base_url}/chat/completions"
+
+            # Créer un tracker à la volée pour une mesure isolée
+            tracker = EmissionsTracker(
+                measure_power_secs=1,
+                tracking_mode="machine",
+                log_level="error",
+                save_to_file=False,
+            )
+            tracker.start()
+
+            response = self.session.post(url, json=params, timeout=self.timeout)
 
             # Log de la réponse en cas d'erreur avant de lever une exception
             if response.status_code != 200:
@@ -404,7 +429,8 @@ class MistralAPIClient(BaseLLMClient):
             return LLMResponse(content=result, co2_emissions=emissions)
 
         except (requests.exceptions.RequestException, KeyError, IndexError) as e:
-            tracker.stop()
+            if tracker:
+                tracker.stop()
             # Log de l'exception détaillée pour un meilleur débogage
             logger.error(f"Exception détaillée lors de l'appel Mistral: {e}")
             # Laisse le décorateur @handle_errors gérer l'exception
@@ -483,10 +509,7 @@ def get_structured_response_format(
     Returns:
         Dict[str, Any]: format de réponse pour l'API
     """
-    return {
-        "type": "json_schema",
-        "json_schema": {"name": name, "strict": True, "schema": schema},
-    }
+    return {"type": "json_object", "json_schema": schema}
 
 
 def get_mistral_tool_format(

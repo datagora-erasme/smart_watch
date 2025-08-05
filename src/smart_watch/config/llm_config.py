@@ -22,6 +22,7 @@ class LLMConfig:
         api_key (Optional[str]): la clé API pour accéder au service du LLM.
         base_url (Optional[str]): l'URL de base pour les appels API, principalement pour les fournisseurs compatibles OpenAI.
         temperature (float): la température pour la génération de texte, contrôle le caractère aléatoire.
+        seed (Optional[int]): la graine pour la génération aléatoire, utile pour la reproductibilité.
         timeout (int): le délai d'attente en secondes pour les requêtes API.
     """
 
@@ -31,6 +32,7 @@ class LLMConfig:
     base_url: Optional[str] = None
     temperature: float = 0
     timeout: int = 30
+    seed: Optional[int] = None
 
 
 class LLMConfigManager(BaseConfig):
@@ -86,6 +88,9 @@ class LLMConfigManager(BaseConfig):
                 base_url=llm_base_url_openai,
                 temperature=float(self.get_env_var("LLM_TEMPERATURE", "0")),
                 timeout=int(self.get_env_var("LLM_TIMEOUT", "30")),
+                seed=int(self.get_env_var("LLM_SEED"))
+                if self.get_env_var("LLM_SEED")
+                else None,
             )
         elif llm_api_key_mistral:
             return LLMConfig(
@@ -94,12 +99,18 @@ class LLMConfigManager(BaseConfig):
                 api_key=llm_api_key_mistral,
                 temperature=float(self.get_env_var("LLM_TEMPERATURE", "0")),
                 timeout=int(self.get_env_var("LLM_TIMEOUT", "30")),
+                seed=int(self.get_env_var("LLM_SEED"))
+                if self.get_env_var("LLM_SEED")
+                else None,
             )
         elif embed_modele_local:
             return LLMConfig(
                 fournisseur="LOCAL",
                 modele=embed_modele_local,
-                api_key=None,  # Pas de clé API pour le modèle local
+                api_key=None,  # Pas de clé API nécessaire pour un modèle local
+                seed=int(self.get_env_var("LLM_SEED"))
+                if self.get_env_var("LLM_SEED")
+                else None,
             )
         else:
             raise ValueError(
@@ -162,6 +173,12 @@ class LLMConfigManager(BaseConfig):
         if self.config.timeout <= 0:
             validation_errors.append(
                 f"LLM_TIMEOUT doit être positif (valeur actuelle: {self.config.timeout})"
+            )
+
+        # Validation du seed
+        if self.config.seed is not None and not isinstance(self.config.seed, int):
+            validation_errors.append(
+                f"LLM_SEED doit être un entier (valeur actuelle: {self.config.seed})"
             )
 
         # Vérifier l'URL de base pour OpenAI

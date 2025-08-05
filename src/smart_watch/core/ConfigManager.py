@@ -146,6 +146,9 @@ class ConfigManager:
         logger.info(f"LLM : {self.llm.fournisseur} - {self.llm.modele}")
         if self.llm.base_url:
             logger.info(f"  URL : {self.llm.base_url}")
+        logger.info(f"  Température : {self.llm.temperature}")
+        if self.llm.seed is not None:
+            logger.info(f"  Seed : {self.llm.seed}")
 
         logger.info("---")
         logger.info(f"Embeddings : {self.markdown_filtering.embed_fournisseur}")
