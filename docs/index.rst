@@ -63,7 +63,7 @@ Modules
 
 .. toctree::
    :maxdepth: 1
-   :caption: Reporting
+   :caption: Modules Reporting
    
    source/modules/reporting/index
 
