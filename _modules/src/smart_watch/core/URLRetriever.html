@@ -1,0 +1,339 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.smart_watch.core.URLRetriever &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.jpg"/>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=d2e4462e"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/translations.js?v=e6b791cb"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/introduction.html">Présentation du projet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/introduction.html#sommaire">Sommaire</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/docker.html">Utilisation avec Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/configuration.html">Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture technique</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/main.html">Orchestrateur</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/diagramme.html">Pipeline de traitement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/bdd.html">Base de données</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/stack.html">Stack technique</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/config/index.html">Modules Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/core/index.html">Modules Core</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/processing/index.html">Modules Processing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/utils/index.html">Modules Utils</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Reporting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html">Modules Reporting</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Code du module</a></li>
+      <li class="breadcrumb-item active">src.smart_watch.core.URLRetriever</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Code source de src.smart_watch.core.URLRetriever</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">playwright.sync_api</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Error</span> <span class="k">as</span> <span class="n">PlaywrightError</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">playwright.sync_api</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="ne">TimeoutError</span> <span class="k">as</span> <span class="n">PlaywrightTimeoutError</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">playwright.sync_api</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">sync_playwright</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.ErrorHandler</span><span class="w"> </span><span class="kn">import</span> <span class="n">ErrorCategory</span><span class="p">,</span> <span class="n">ErrorHandler</span><span class="p">,</span> <span class="n">ErrorSeverity</span><span class="p">,</span> <span class="n">handle_errors</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.Logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_logger</span>
+
+<span class="c1"># Initialize logger for this module</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">create_logger</span><span class="p">(</span>
+    <span class="n">module_name</span><span class="o">=</span><span class="s2">&quot;URLRetriever&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Initialisation du gestionnaire d&#39;erreurs pour ce module</span>
+<span class="n">error_handler</span> <span class="o">=</span> <span class="n">ErrorHandler</span><span class="p">()</span>
+
+<span class="n">HEADERS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;User-Agent&quot;</span><span class="p">:</span> <span class="s2">&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Accept&quot;</span><span class="p">:</span> <span class="s2">&quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Accept-Language&quot;</span><span class="p">:</span> <span class="s2">&quot;fr-FR,fr;q=0.7&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="retrieve_url">
+<a class="viewcode-back" href="../../../../source/modules/core/URLRetriever.html#src.smart_watch.core.URLRetriever.retrieve_url">[docs]</a>
+<span class="nd">@handle_errors</span><span class="p">(</span>
+    <span class="n">category</span><span class="o">=</span><span class="n">ErrorCategory</span><span class="o">.</span><span class="n">NETWORK</span><span class="p">,</span>
+    <span class="n">severity</span><span class="o">=</span><span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">MEDIUM</span><span class="p">,</span>
+    <span class="n">user_message</span><span class="o">=</span><span class="s2">&quot;Erreur lors de la récupération de l&#39;URL&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">retrieve_url</span><span class="p">(</span>
+    <span class="n">row</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="n">sortie</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;html&quot;</span><span class="p">,</span>
+    <span class="n">encoding_errors</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;ignore&quot;</span><span class="p">,</span>
+    <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">total</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Récupère le contenu d&#39;une URL et le retourne sous forme de dictionnaire.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        row (dict): dictionnaire contenant les informations de l&#39;URL et d&#39;autres métadonnées.</span>
+<span class="sd">        sortie (str): format de sortie souhaité, par défaut &quot;html&quot;.</span>
+<span class="sd">        encoding_errors (str): stratégie de gestion des erreurs d&#39;encodage, par défaut &quot;ignore&quot;.</span>
+<span class="sd">        config (dict, optional): configuration supplémentaire, non utilisée dans cette fonction.</span>
+<span class="sd">        index (int): index de l&#39;URL dans une liste, utilisé pour le logging.</span>
+<span class="sd">        total (int): nombre total d&#39;URLs à traiter, utilisé pour le logging.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: dictionnaire contenant :</span>
+<span class="sd">            - toutes les clés d&#39;entrée du paramètre `row`</span>
+<span class="sd">            - &#39;statut&#39; (str) : état de la récupération (&#39;ok&#39;, &#39;warning&#39;, &#39;critical&#39;)</span>
+<span class="sd">            - &#39;message&#39; (str) : message d&#39;erreur ou d&#39;information</span>
+<span class="sd">            - &#39;code_http&#39; (int) : code HTTP de la réponse (0 si non disponible)</span>
+<span class="sd">            - &#39;html&#39; (str) : contenu HTML récupéré (si succès)</span>
+<span class="sd">            - &#39;markdown&#39; (str) : contenu converti en markdown (si sortie == &quot;markdown&quot; et succès)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">row_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">identifiant</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;identifiant&quot;</span><span class="p">,</span> <span class="s2">&quot;N/A&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">url</span><span class="p">:</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="n">error_handler</span><span class="o">.</span><span class="n">create_error_context</span><span class="p">(</span>
+            <span class="n">module</span><span class="o">=</span><span class="s2">&quot;URLRetriever&quot;</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;retrieve_url&quot;</span><span class="p">,</span>
+            <span class="n">operation</span><span class="o">=</span><span class="s2">&quot;Validation URL&quot;</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;row_keys&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="s2">&quot;identifiant&quot;</span><span class="p">:</span> <span class="n">identifiant</span><span class="p">},</span>
+            <span class="n">user_message</span><span class="o">=</span><span class="s2">&quot;Aucune URL fournie pour la récupération&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">error_handler</span><span class="o">.</span><span class="n">handle_error</span><span class="p">(</span>
+            <span class="n">exception</span><span class="o">=</span><span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;URL manquante&quot;</span><span class="p">),</span>
+            <span class="n">context</span><span class="o">=</span><span class="n">context</span><span class="p">,</span>
+            <span class="n">category</span><span class="o">=</span><span class="n">ErrorCategory</span><span class="o">.</span><span class="n">VALIDATION</span><span class="p">,</span>
+            <span class="n">severity</span><span class="o">=</span><span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">HIGH</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">row_dict</span><span class="p">[</span><span class="s2">&quot;statut&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;critical&quot;</span>
+        <span class="n">row_dict</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Aucune URL n&#39;a été fournie&quot;</span>
+        <span class="n">row_dict</span><span class="p">[</span><span class="s2">&quot;code_http&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="n">row_dict</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">total</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">identifiant</span><span class="si">}</span><span class="s2">* URL </span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">total</span><span class="si">}</span><span class="s2"> en cours : </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">identifiant</span><span class="si">}</span><span class="s2">* Récupération URL avec Playwright: </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Stratégies SSL/TLS progressives avec Playwright</span>
+        <span class="c1"># &#39;low_security&#39; et &#39;full_mitigation&#39; sont gérés par &#39;ignore_https_errors=True&#39;</span>
+        <span class="n">ssl_strategies</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="s2">&quot;no_verify&quot;</span><span class="p">]</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">html_content</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="k">with</span> <span class="n">sync_playwright</span><span class="p">()</span> <span class="k">as</span> <span class="n">p</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">strategy</span> <span class="ow">in</span> <span class="n">ssl_strategies</span><span class="p">:</span>
+                <span class="n">browser</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">browser</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">chromium</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
+                    <span class="n">ignore_https</span> <span class="o">=</span> <span class="n">strategy</span> <span class="o">==</span> <span class="s2">&quot;no_verify&quot;</span>
+                    <span class="n">context</span> <span class="o">=</span> <span class="n">browser</span><span class="o">.</span><span class="n">new_context</span><span class="p">(</span><span class="n">ignore_https_errors</span><span class="o">=</span><span class="n">ignore_https</span><span class="p">)</span>
+                    <span class="n">page</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">new_page</span><span class="p">()</span>
+                    <span class="n">page</span><span class="o">.</span><span class="n">set_extra_http_headers</span><span class="p">(</span><span class="n">HEADERS</span><span class="p">)</span>
+
+                    <span class="c1"># Utilisation de &#39;networkidle&#39; pour attendre la fin des requêtes réseau,</span>
+                    <span class="c1"># ce qui est plus fiable pour les pages avec chargement dynamique.</span>
+                    <span class="n">response</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">goto</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">30000</span><span class="p">,</span> <span class="n">wait_until</span><span class="o">=</span><span class="s2">&quot;networkidle&quot;</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">response</span><span class="p">:</span>
+                        <span class="n">html_content</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">content</span><span class="p">()</span>
+                        <span class="k">if</span> <span class="n">strategy</span> <span class="o">!=</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
+                            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">identifiant</span><span class="si">}</span><span class="s2">* Succès avec la stratégie Playwright &#39;</span><span class="si">{</span><span class="n">strategy</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+                            <span class="p">)</span>
+                        <span class="k">break</span>  <span class="c1"># Success, exit the loop</span>
+
+                <span class="k">except</span> <span class="n">PlaywrightError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="n">error_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="s2">&quot;ssl&quot;</span> <span class="ow">in</span> <span class="n">error_str</span> <span class="ow">or</span> <span class="s2">&quot;certificate&quot;</span> <span class="ow">in</span> <span class="n">error_str</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">identifiant</span><span class="si">}</span><span class="s2">* Échec avec la stratégie &#39;</span><span class="si">{</span><span class="n">strategy</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="p">)</span>
+                        <span class="k">if</span> <span class="n">strategy</span> <span class="o">==</span> <span class="n">ssl_strategies</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+                            <span class="k">raise</span>  <span class="c1"># Re-raise if it&#39;s the last strategy</span>
+                    <span class="k">elif</span> <span class="s2">&quot;net::err_too_many_redirects&quot;</span> <span class="ow">in</span> <span class="n">error_str</span><span class="p">:</span>
+                        <span class="n">row_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                            <span class="n">statut</span><span class="o">=</span><span class="s2">&quot;warning&quot;</span><span class="p">,</span>
+                            <span class="n">message</span><span class="o">=</span><span class="s2">&quot;too many redirects&quot;</span><span class="p">,</span>
+                            <span class="n">code_http</span><span class="o">=</span><span class="mi">310</span><span class="p">,</span>
+                        <span class="p">)</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">identifiant</span><span class="si">}</span><span class="s2">* Trop de redirections: </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">row_dict</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">raise</span>  <span class="c1"># Re-raise other Playwright errors</span>
+                <span class="k">finally</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">browser</span><span class="p">:</span>
+                        <span class="n">browser</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">response</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;La réponse de Playwright est nulle après toutes les tentatives.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+            <span class="n">row_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                <span class="n">statut</span><span class="o">=</span><span class="s2">&quot;warning&quot;</span><span class="p">,</span>
+                <span class="n">code_http</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+                <span class="n">message</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;HTTP error </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">identifiant</span><span class="si">}</span><span class="s2">* Erreur HTTP </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="si">}</span><span class="s2"> pour </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">identifiant</span><span class="si">}</span><span class="s2">* Contenu récupéré : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">html_content</span><span class="p">)</span><span class="si">}</span><span class="s2"> caractères&quot;</span>
+            <span class="p">)</span>
+            <span class="n">row_dict</span><span class="p">[</span><span class="s2">&quot;html&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">html_content</span>
+            <span class="k">if</span> <span class="n">sortie</span> <span class="o">==</span> <span class="s2">&quot;markdown&quot;</span><span class="p">:</span>
+                <span class="kn">from</span><span class="w"> </span><span class="nn">..utils.HtmlToMarkdown</span><span class="w"> </span><span class="kn">import</span> <span class="n">convert_html_to_markdown</span>
+
+                <span class="n">row_dict</span><span class="p">[</span><span class="s2">&quot;markdown&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">convert_html_to_markdown</span><span class="p">(</span>
+                    <span class="n">html</span><span class="o">=</span><span class="n">html_content</span><span class="p">,</span> <span class="n">identifiant</span><span class="o">=</span><span class="n">identifiant</span>
+                <span class="p">)</span>
+
+            <span class="n">row_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">statut</span><span class="o">=</span><span class="s2">&quot;ok&quot;</span><span class="p">,</span> <span class="n">code_http</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">identifiant</span><span class="si">}</span><span class="s2">* Récupération réussie : </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="n">PlaywrightTimeoutError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">error_handler</span><span class="o">.</span><span class="n">handle_error</span><span class="p">(</span>
+            <span class="n">exception</span><span class="o">=</span><span class="n">e</span><span class="p">,</span>
+            <span class="n">context</span><span class="o">=</span><span class="n">error_handler</span><span class="o">.</span><span class="n">create_error_context</span><span class="p">(</span>
+                <span class="n">module</span><span class="o">=</span><span class="s2">&quot;URLRetriever&quot;</span><span class="p">,</span>
+                <span class="n">function</span><span class="o">=</span><span class="s2">&quot;retrieve_url&quot;</span><span class="p">,</span>
+                <span class="n">operation</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Timeout pour </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span> <span class="s2">&quot;timeout&quot;</span><span class="p">:</span> <span class="mi">30000</span><span class="p">,</span> <span class="s2">&quot;identifiant&quot;</span><span class="p">:</span> <span class="n">identifiant</span><span class="p">},</span>
+            <span class="p">),</span>
+            <span class="n">category</span><span class="o">=</span><span class="n">ErrorCategory</span><span class="o">.</span><span class="n">NETWORK</span><span class="p">,</span>
+            <span class="n">severity</span><span class="o">=</span><span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">MEDIUM</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">row_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">statut</span><span class="o">=</span><span class="s2">&quot;warning&quot;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Timeout&quot;</span><span class="p">,</span> <span class="n">code_http</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="n">PlaywrightError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">error_handler</span><span class="o">.</span><span class="n">handle_error</span><span class="p">(</span>
+            <span class="n">exception</span><span class="o">=</span><span class="n">e</span><span class="p">,</span>
+            <span class="n">context</span><span class="o">=</span><span class="n">error_handler</span><span class="o">.</span><span class="n">create_error_context</span><span class="p">(</span>
+                <span class="n">module</span><span class="o">=</span><span class="s2">&quot;URLRetriever&quot;</span><span class="p">,</span>
+                <span class="n">function</span><span class="o">=</span><span class="s2">&quot;retrieve_url&quot;</span><span class="p">,</span>
+                <span class="n">operation</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Erreur Playwright pour </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span> <span class="s2">&quot;identifiant&quot;</span><span class="p">:</span> <span class="n">identifiant</span><span class="p">},</span>
+            <span class="p">),</span>
+            <span class="n">category</span><span class="o">=</span><span class="n">ErrorCategory</span><span class="o">.</span><span class="n">NETWORK</span><span class="p">,</span>
+            <span class="n">severity</span><span class="o">=</span><span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">HIGH</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">row_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">statut</span><span class="o">=</span><span class="s2">&quot;critical&quot;</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="n">code_http</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">row_dict</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

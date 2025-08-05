@@ -1,0 +1,292 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>main &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.jpg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d2e4462e"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=e6b791cb"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Recherche" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guide/introduction.html">Présentation du projet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/introduction.html#sommaire">Sommaire</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/docker.html">Utilisation avec Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/configuration.html">Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture technique</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/main.html">Orchestrateur</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/diagramme.html">Pipeline de traitement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/bdd.html">Base de données</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/stack.html">Stack technique</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/config/index.html">Modules Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/core/index.html">Modules Core</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/processing/index.html">Modules Processing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/utils/index.html">Modules Utils</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Reporting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/reporting/index.html">Modules Reporting</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Code du module</a></li>
+      <li class="breadcrumb-item active">main</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Code source de main</h1><div class="highlight"><pre>
+<span></span><span class="c1"># SmartWatch est un programme permettant l&#39;extraction d&#39;horaires d&#39;ouverture par LLM depuis des sites web,</span>
+<span class="c1"># et leur comparaison avec des données de référence issues de data.grandlyon.com.</span>
+<span class="c1">#</span>
+<span class="c1"># Chaque module de ce projet est documenté sur sa page,</span>
+<span class="c1"># accessible par un lien indiqué au début de chaque fichier source :</span>
+<span class="c1">#</span>
+<span class="c1"># https://datagora-erasme.github.io/smart_watch/index.html</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.smart_watch.core.ConfigManager</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigManager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.smart_watch.core.ErrorHandler</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ErrorCategory</span><span class="p">,</span>
+    <span class="n">ErrorSeverity</span><span class="p">,</span>
+    <span class="n">handle_errors</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.smart_watch.core.Logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_logger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.smart_watch.core.StatsManager</span><span class="w"> </span><span class="kn">import</span> <span class="n">StatsManager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.smart_watch.processing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ComparisonProcessor</span><span class="p">,</span>
+    <span class="n">DatabaseProcessor</span><span class="p">,</span>
+    <span class="n">LLMProcessor</span><span class="p">,</span>
+    <span class="n">MarkdownProcessor</span><span class="p">,</span>
+    <span class="n">SetupProcessor</span><span class="p">,</span>
+    <span class="n">URLProcessor</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.smart_watch.reporting</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReportManager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.smart_watch.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">MarkdownCleaner</span>
+
+
+<div class="viewcode-block" id="HoraireExtractor">
+<a class="viewcode-back" href="../source/main.html#main.HoraireExtractor">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">HoraireExtractor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Classe principale pour l&#39;extraction et le traitement d&#39;horaires.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="HoraireExtractor.__init__">
+<a class="viewcode-back" href="../source/main.html#main.HoraireExtractor.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialise l&#39;extracteur&quot;&quot;&quot;</span>
+        <span class="c1"># A. Charger de la configuration</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">ConfigManager</span><span class="p">()</span>
+
+        <span class="c1"># Vérification de la configuration</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">validate</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Configuration invalide&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Initialisation du logger</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">create_logger</span><span class="p">(</span><span class="n">module_name</span><span class="o">=</span><span class="s2">&quot;Main&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Affichage de la configuration</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">display_summary</span><span class="p">()</span>
+
+        <span class="c1"># B. Instancier les processeurs principaux avec la configuration</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db_processor</span> <span class="o">=</span> <span class="n">DatabaseProcessor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setup_processor</span> <span class="o">=</span> <span class="n">SetupProcessor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url_processor</span> <span class="o">=</span> <span class="n">URLProcessor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">markdown_cleaner</span> <span class="o">=</span> <span class="n">MarkdownCleaner</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">markdown_processor</span> <span class="o">=</span> <span class="n">MarkdownProcessor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">llm_processor</span> <span class="o">=</span> <span class="n">LLMProcessor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">comparison_processor</span> <span class="o">=</span> <span class="n">ComparisonProcessor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">report_manager</span> <span class="o">=</span> <span class="n">ReportManager</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats_manager</span> <span class="o">=</span> <span class="n">StatsManager</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;HoraireExtractor initialisé&quot;</span><span class="p">)</span></div>
+
+
+    <span class="c1"># C. Exécuter le pipeline</span>
+<div class="viewcode-block" id="HoraireExtractor.run">
+<a class="viewcode-back" href="../source/main.html#main.HoraireExtractor.run">[docs]</a>
+    <span class="nd">@handle_errors</span><span class="p">(</span>
+        <span class="n">category</span><span class="o">=</span><span class="n">ErrorCategory</span><span class="o">.</span><span class="n">CONFIGURATION</span><span class="p">,</span>
+        <span class="n">severity</span><span class="o">=</span><span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">HIGH</span><span class="p">,</span>
+        <span class="n">user_message</span><span class="o">=</span><span class="s2">&quot;Erreur lors de l&#39;exécution du pipeline&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Exécute le pipeline d&#39;extraction complet&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">section</span><span class="p">(</span><span class="s2">&quot;DÉBUT PIPELINE EXTRACTION HORAIRES&quot;</span><span class="p">)</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># 1. Création de la base de données</span>
+            <span class="n">db_manager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_processor</span><span class="o">.</span><span class="n">create_database</span><span class="p">()</span>
+
+            <span class="c1"># Vérifier que le manager de BDD a bien été créé</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">db_manager</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span>
+                    <span class="s2">&quot;Le gestionnaire de base de données n&#39;a pas pu être initialisé. Arrêt du pipeline.&quot;</span>
+                <span class="p">)</span>
+                <span class="k">return</span>
+
+            <span class="c1"># 2. Chargement des données, préparation de l&#39;exécution</span>
+            <span class="n">execution_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">setup_processor</span><span class="o">.</span><span class="n">setup_execution</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db_processor</span><span class="p">)</span>
+
+            <span class="c1"># Traitement - Utiliser db_processor partout pour la cohérence</span>
+            <span class="c1"># 3. Extraction des URLs</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">url_processor</span><span class="o">.</span><span class="n">process_urls</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db_processor</span><span class="p">,</span> <span class="n">execution_id</span><span class="p">)</span>
+
+            <span class="c1"># 4. Nettoyage du contenu Markdown brut</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">markdown_cleaner</span><span class="o">.</span><span class="n">process_markdown_cleaning</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">db_processor</span><span class="p">,</span> <span class="n">execution_id</span>
+            <span class="p">)</span>
+
+            <span class="c1"># 5. Filtrage sémantique du Markdown (par embeddings)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">markdown_processor</span><span class="o">.</span><span class="n">process_markdown_filtering</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">db_processor</span><span class="p">,</span> <span class="n">execution_id</span>
+            <span class="p">)</span>
+
+            <span class="c1"># 6. Extraction des horaires via LLM</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">llm_processor</span><span class="o">.</span><span class="n">process_llm_extractions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db_processor</span><span class="p">,</span> <span class="n">execution_id</span><span class="p">)</span>
+
+            <span class="c1"># 7. Comparaison des horaires extraits</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">comparison_processor</span><span class="o">.</span><span class="n">process_comparisons</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db_processor</span><span class="p">)</span>
+
+            <span class="c1"># 8. Génération et envoi du rapport</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">report_manager</span><span class="o">.</span><span class="n">generate_and_send_report</span><span class="p">(</span><span class="n">execution_id</span><span class="p">)</span>
+
+            <span class="c1"># Log interne au programme : Affichage des statistiques</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stats_manager</span><span class="o">.</span><span class="n">display_stats</span><span class="p">()</span>
+
+            <span class="c1"># Log interne au programme : Résumé final</span>
+            <span class="n">processing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pipeline terminé en </span><span class="si">{</span><span class="n">processing_time</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">section</span><span class="p">(</span><span class="s2">&quot;FIN PIPELINE EXTRACTION HORAIRES&quot;</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">processing_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pipeline échoué après </span><span class="si">{</span><span class="n">processing_time</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">s: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../source/main.html#main.main">[docs]</a>
+<span class="nd">@handle_errors</span><span class="p">(</span>
+    <span class="n">category</span><span class="o">=</span><span class="n">ErrorCategory</span><span class="o">.</span><span class="n">UNKNOWN</span><span class="p">,</span>
+    <span class="n">severity</span><span class="o">=</span><span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">CRITICAL</span><span class="p">,</span>
+    <span class="n">user_message</span><span class="o">=</span><span class="s2">&quot;Erreur dans le programme principal&quot;</span><span class="p">,</span>
+    <span class="n">reraise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Point d&#39;entrée principal.&quot;&quot;&quot;</span>
+    <span class="n">extractor</span> <span class="o">=</span> <span class="n">HoraireExtractor</span><span class="p">()</span>
+
+    <span class="c1"># C. Exécuter le pipeline</span>
+    <span class="n">extractor</span><span class="o">.</span><span class="n">run</span><span class="p">()</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
