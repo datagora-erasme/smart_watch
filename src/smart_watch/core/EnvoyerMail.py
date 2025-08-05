@@ -1,6 +1,7 @@
 import os
 import smtplib
 import ssl
+import time
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -25,13 +26,13 @@ class EmailSender:
             config (ConfigManager): instance de ConfigManager contenant les paramètres de configuration.
         """
         if not config.email:
-            # Cette erreur ne devrait jamais se produire si la validation en amont est correcte.
-            # Elle sert de garde-fou et informe l'analyseur de code Pylance.
             raise ValueError(
                 "EmailSender a été initialisé sans configuration email valide."
             )
         self.config = config.email
         self.logger = create_logger(self.__class__.__name__)
+        self.max_retries = 10  # Nombre maximum de tentatives
+        self.retry_delay = 300  # Délai en secondes entre les tentatives
 
     def send_email(
         self, subject: str, body: str, attachments: Optional[List[str]] = None
@@ -80,17 +81,31 @@ class EmailSender:
 
         email_string = message.as_string()
 
-        try:
-            self.logger.info(
-                f"Envoi email: {self.config.emetteur} → {len(self.config.recepteurs)} destinataires"
-            )
-            if self.config.smtp_port == 465:
-                self._send_ssl(email_string)
-            else:
-                self._send_starttls(email_string)
-        except Exception as e:
-            self.logger.error(f"Échec envoi email: {e}")
-            raise
+        for attempt in range(self.max_retries):
+            try:
+                self.logger.info(
+                    f"Tentative {attempt + 1}/{self.max_retries} d'envoi de l'email: "
+                    f"{self.config.emetteur} → {len(self.config.recepteurs)} destinataires"
+                )
+                if self.config.smtp_port == 465:
+                    self._send_ssl(email_string)
+                else:
+                    self._send_starttls(email_string)
+                return  # Sortir de la fonction si l'envoi réussit
+            except (smtplib.SMTPException, OSError) as e:
+                self.logger.warning(
+                    f"Échec de la tentative {attempt + 1}/{self.max_retries} d'envoi de l'email: {e}"
+                )
+                if attempt < self.max_retries - 1:
+                    self.logger.info(
+                        f"Nouvelle tentative dans {self.retry_delay} secondes..."
+                    )
+                    time.sleep(self.retry_delay)
+                else:
+                    self.logger.error(
+                        "Échec de l'envoi de l'email après plusieurs tentatives."
+                    )
+                    raise  # Propage l'exception après la dernière tentative
 
     def _send_ssl(self, email_string: str):
         """
@@ -107,7 +122,10 @@ class EmailSender:
         context = ssl._create_unverified_context()
         self.logger.debug(f"Connexion SMTP SSL/TLS port {self.config.smtp_port}")
         with smtplib.SMTP_SSL(
-            self.config.smtp_server, self.config.smtp_port, context=context
+            self.config.smtp_server,
+            self.config.smtp_port,
+            context=context,
+            timeout=30,
         ) as server:
             if self.config.smtp_login and self.config.smtp_password:
                 server.login(self.config.smtp_login, self.config.smtp_password)
@@ -125,9 +143,9 @@ class EmailSender:
             email_string (str): contenu de l'email à envoyer.
         """
         self.logger.debug(f"Connexion SMTP STARTTLS port {self.config.smtp_port}")
-        with smtplib.SMTP(self.config.smtp_server, self.config.smtp_port) as server:
-            # NOTE: Utilisation d'un contexte non vérifié pour contourner les erreurs de certificat SSL.
-            #
+        with smtplib.SMTP(
+            self.config.smtp_server, self.config.smtp_port, timeout=30
+        ) as server:
             server.starttls()
             if self.config.smtp_login and self.config.smtp_password:
                 server.login(self.config.smtp_login, self.config.smtp_password)
