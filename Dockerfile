@@ -1,7 +1,29 @@
-FROM python:3.13-slim
+# ubuntu au lieu de python:3.13-slim pour compatibilité avec Playwright
+FROM ubuntu:20.04
 
-# Installer les dépendances système nécessaires
-RUN apt-get update && apt-get install -y gcc libpq-dev curl && rm -rf /var/lib/apt/lists/*
+# Éviter les prompts interactifs
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Installer Python 3.13 et les dépendances système nécessaires
+RUN apt-get update && apt-get install -y \
+    software-properties-common \
+    && add-apt-repository ppa:deadsnakes/ppa \
+    && apt-get update && apt-get install -y \
+    python3.13 \
+    python3.13-dev \
+    python3.13-distutils \
+    python3-pip \
+    gcc \
+    libpq-dev \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Créer des liens symboliques pour python et python3
+RUN ln -sf /usr/bin/python3.13 /usr/bin/python3 && \
+    ln -sf /usr/bin/python3.13 /usr/bin/python
+
+# Mettre à jour pip pour Python 3.13
+RUN python3.13 -m pip install --upgrade pip
 
 # Définir le répertoire de travail
 WORKDIR /app
@@ -13,7 +35,7 @@ COPY uv.lock ./
 COPY pyproject.toml ./
 
 # Installer uv
-RUN pip install uv
+RUN python3.13 -m pip install uv
 
 # Installer les dépendances avec uv
 RUN uv sync --no-cache
