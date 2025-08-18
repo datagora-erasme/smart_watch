@@ -1,5 +1,5 @@
 # ubuntu au lieu de python:3.13-slim pour compatibilité avec Playwright
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 # Éviter les prompts interactifs
 ENV DEBIAN_FRONTEND=noninteractive
@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
     && apt-get update && apt-get install -y \
     python3.13 \
     python3.13-dev \
-    python3.13-distutils \
+    python3.13-venv \
     python3-pip \
     gcc \
     libpq-dev \
@@ -22,8 +22,8 @@ RUN apt-get update && apt-get install -y \
 RUN ln -sf /usr/bin/python3.13 /usr/bin/python3 && \
     ln -sf /usr/bin/python3.13 /usr/bin/python
 
-# Mettre à jour pip pour Python 3.13
-RUN python3.13 -m pip install --upgrade pip
+# Installer pip pour Python 3.13
+RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3.13
 
 # Définir le répertoire de travail
 WORKDIR /app
@@ -43,7 +43,7 @@ RUN uv sync --no-cache
 # Ajouter le venv au PATH
 ENV PATH="/app/.venv/bin:$PATH"
 
-# Installer les navigateurs Playwright
+# Installer les navigateurs Playwright (maintenant compatible avec Ubuntu 20.04)
 RUN python -m playwright install-deps && python -m playwright install
 
 # Copier le reste du code source
