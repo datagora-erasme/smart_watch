@@ -383,7 +383,7 @@ def _group_by_status(donnees_urls: list) -> list:
         },
         "access_error": {
             "nom": "Erreurs d'accès",
-            "emoji": "🔒",
+            "emoji": "⛔",
             "type": "error",
             "description": "URLs inaccessibles, codes d'erreur HTTP, problèmes de connexion ou contenu indisponible",
         },
