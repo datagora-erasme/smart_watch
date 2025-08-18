@@ -242,7 +242,12 @@ class DatabaseProcessor:
             int: Identifiant unique de l'exécution créée.
         """
         try:
-            nouvelle_execution = Executions(date_execution=datetime.now())
+            nouvelle_execution = Executions(
+                date_execution=datetime.now(),
+                llm_fournisseur=self.config.llm.fournisseur,
+                llm_modele=self.config.llm.modele,
+                llm_url=self.config.llm.base_url,
+            )
             session.add(nouvelle_execution)
 
             # Essayer flush + refresh d'abord
