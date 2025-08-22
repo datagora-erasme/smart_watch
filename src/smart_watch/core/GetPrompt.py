@@ -1,6 +1,9 @@
+# Documentation:
+# https://datagora-erasme.github.io/smart_watch/source/modules/core/GetPrompt.html
+
 import json
 from datetime import datetime
-from typing import Optional
+from typing import Any, Dict, List, Optional
 
 from .Logger import create_logger
 
@@ -10,17 +13,21 @@ logger = create_logger(
 )
 
 
-def get_prompt(row: dict, json_schema: Optional[dict] = None) -> list:
+def get_prompt(
+    row: Dict[str, Any], json_schema: Optional[Dict[str, Any]] = None
+) -> List[Dict[str, str]]:
     """
     Construit le prompt pour l'extraction d'horaires d'ouverture.
+
     Le schéma JSON est injecté dans le prompt pour guider le LLM.
 
     Args:
-        row (dict): dictionnaire contenant les informations du lieu.
-        json_schema (Optional[dict]): le schéma JSON à suivre pour la réponse.
+        row (Dict[str, Any]): Dictionnaire contenant les informations du lieu.
+        json_schema (Optional[Dict[str, Any]]): Le schéma JSON à suivre pour
+            la réponse.
 
     Returns:
-        list: liste des messages pour le LLM.
+        List[Dict[str, str]]: Liste des messages pour le LLM.
     """
     identifiant = row.get("identifiant", "N/A")
     nom_lieu = row.get("nom", "inconnu")

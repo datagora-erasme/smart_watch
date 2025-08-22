@@ -1,3 +1,6 @@
+# Documentation:
+# https://datagora-erasme.github.io/smart_watch/source/modules/core/EnvoyerMail.html
+
 import os
 import smtplib
 import ssl
@@ -10,7 +13,8 @@ from typing import List, Optional
 from .ConfigManager import ConfigManager
 from .Logger import create_logger
 
-logger = create_logger(__name__)
+# Initialize logger for this module
+logger = create_logger(module_name="EmailSender")
 
 
 class EmailSender:
@@ -18,12 +22,20 @@ class EmailSender:
 
     def __init__(self, config: ConfigManager):
         """
-        Initialise l'EmailSender avec la configuration du gestionnaire de configuration.
-
-        Cette classe utilise les paramètres de configuration pour envoyer des emails, y compris les destinataires, l'émetteur, le serveur SMTP et les informations d'authentification.
+        Initialise l'EmailSender avec la configuration.
 
         Args:
-            config (ConfigManager): instance de ConfigManager contenant les paramètres de configuration.
+            config (ConfigManager): Instance de ConfigManager contenant les
+                paramètres de configuration.
+
+        Attributes:
+            config: Configuration email extraite de l'instance ConfigManager.
+            logger: Instance de logger pour cette classe.
+            max_retries (int): Nombre maximum de tentatives d'envoi.
+            retry_delay (int): Délai en secondes entre les tentatives.
+
+        Raises:
+            ValueError: Si la configuration email n'est pas valide.
         """
         if not config.email:
             raise ValueError(
@@ -36,26 +48,24 @@ class EmailSender:
 
     def send_email(
         self, subject: str, body: str, attachments: Optional[List[str]] = None
-    ):
+    ) -> None:
         """
         Envoie un email avec support pour pièces jointes multiples.
 
-        L'envoi se fait avec _send_ssl ou _send_starttls en fonction du port configuré :
+        L'envoi se fait avec _send_ssl ou _send_starttls en fonction du port
+        configuré :
             - Port 465 : SSL/TLS
             - Port 587 : STARTTLS
 
         Args:
-            subject (str): sujet de l'email.
-            body (str): corps de l'email (HTML).
-            attachments (Optional[List[str]]): liste des chemins vers les fichiers à joindre.
+            subject (str): Sujet de l'email.
+            body (str): Corps de l'email (HTML).
+            attachments (Optional[List[str]]): Liste des chemins vers les
+                fichiers à joindre.
         """
-
         message = MIMEMultipart()
         message["From"] = self.config.emetteur
-
-        # Joindre tous les destinataires dans le header "To"
         message["To"] = ", ".join(self.config.recepteurs)
-
         message["Subject"] = subject
         message.attach(MIMEText(body, "html"))
 
@@ -91,7 +101,7 @@ class EmailSender:
                     self._send_ssl(email_string)
                 else:
                     self._send_starttls(email_string)
-                return  # Sortir de la fonction si l'envoi réussit
+                return
             except (smtplib.SMTPException, OSError) as e:
                 self.logger.warning(
                     f"Échec de la tentative {attempt + 1}/{self.max_retries} d'envoi de l'email: {e}"
@@ -105,17 +115,20 @@ class EmailSender:
                     self.logger.error(
                         "Échec de l'envoi de l'email après plusieurs tentatives."
                     )
-                    raise  # Propage l'exception après la dernière tentative
+                    raise
 
-    def _send_ssl(self, email_string: str):
+    def _send_ssl(self, email_string: str) -> None:
         """
-        Envoie l'email via une connexion SSL/TLS. Utilise le port 465 pour la connexion SSL.
+        Envoie l'email via une connexion SSL/TLS.
+
+        Utilise le port 465 pour la connexion SSL.
 
         Args:
-            email_string (str): contenu de l'email à envoyer.
+            email_string (str): Contenu de l'email à envoyer.
 
         Warning:
-            Cette méthode utilise une connexion SSL/TLS non vérifiée pour contourner les erreurs de certificat SSL. Ceci est INSECURISÉ car bien que l'on connaisse le serveur dans notre cas, on ne peut être certain du réseau par contre.
+            Cette méthode utilise une connexion SSL/TLS non vérifiée pour
+            contourner les erreurs de certificat SSL. Ceci est INSECURISÉ.
         """
         # NOTE: Utilisation d'un contexte non vérifié pour contourner les erreurs de certificat SSL.
         # Ceci est INSECURISÉ et ne devrait être utilisé que si vous faites confiance au réseau et au serveur.
@@ -129,18 +142,19 @@ class EmailSender:
         ) as server:
             if self.config.smtp_login and self.config.smtp_password:
                 server.login(self.config.smtp_login, self.config.smtp_password)
-            # Utiliser la liste des destinataires pour l'envoi effectif
             server.sendmail(self.config.emetteur, self.config.recepteurs, email_string)
             self.logger.info(
                 f"Email envoyé avec succès (SSL/TLS) à {len(self.config.recepteurs)} destinataires"
             )
 
-    def _send_starttls(self, email_string: str):
+    def _send_starttls(self, email_string: str) -> None:
         """
-        Envoie l'email via une connexion STARTTLS. Utilise le port 587 pour STARTTLS.
+        Envoie l'email via une connexion STARTTLS.
+
+        Utilise le port 587 pour STARTTLS.
 
         Args:
-            email_string (str): contenu de l'email à envoyer.
+            email_string (str): Contenu de l'email à envoyer.
         """
         self.logger.debug(f"Connexion SMTP STARTTLS port {self.config.smtp_port}")
         with smtplib.SMTP(
@@ -149,7 +163,6 @@ class EmailSender:
             server.starttls()
             if self.config.smtp_login and self.config.smtp_password:
                 server.login(self.config.smtp_login, self.config.smtp_password)
-            # Utiliser la liste des destinataires pour l'envoi effectif
             server.sendmail(self.config.emetteur, self.config.recepteurs, email_string)
             self.logger.info(
                 f"Email envoyé avec succès (STARTTLS) à {len(self.config.recepteurs)} destinataires"

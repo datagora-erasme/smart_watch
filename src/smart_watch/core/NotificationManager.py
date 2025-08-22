@@ -1,7 +1,9 @@
+# Documentation: https://datagora-erasme.github.io/smart_watch/source/modules/core/NotificationManager.html
+
 import os
 import zipfile
 from datetime import datetime
-from typing import Dict
+from typing import Any, Dict
 
 from ..reporting.GenererRapportHTML import generer_rapport_html
 from .ConfigManager import ConfigManager
@@ -18,27 +20,30 @@ class NotificationManager:
         config_manager: ConfigManager,
         db_manager: DatabaseManager,
         logger: SmartWatchLogger,
-    ):
-        """Initialise le NotificationManager avec les gestionnaires de configuration, base de données et journalisation.
+    ) -> None:
+        """Initialise le NotificationManager.
 
         Args:
-            config_manager (ConfigManager): gestionnaire de configuration de l'application.
-            db_manager (DatabaseManager): gestionnaire de la base de données.
-            logger (SmartWatchLogger): instance de journalisation pour enregistrer les événements.
+            config_manager (ConfigManager): Gestionnaire de configuration de l'application.
+            db_manager (DatabaseManager): Gestionnaire de la base de données.
+            logger (SmartWatchLogger): Instance de journalisation pour enregistrer les événements.
 
-        Raises:
-            ValueError: si les paramètres fournis sont invalides.
+        Attributes:
+            config_manager (ConfigManager): Le gestionnaire de configuration.
+            db_manager (DatabaseManager): Le gestionnaire de base de données.
+            logger (SmartWatchLogger): Le logger.
+            email_sender (EmailSender): L'expéditeur d'email.
         """
         self.config_manager = config_manager
         self.db_manager = db_manager
         self.logger = logger
         self.email_sender = EmailSender(config_manager)
 
-    def send_report_email(self, stats: Dict):
+    def send_report_email(self, stats: Dict[str, Any]) -> None:
         """Génère le rapport, compresse les logs et envoie l'email.
 
         Args:
-            stats (Dict): statistiques à inclure dans le rapport.
+            stats (Dict[str, Any]): Statistiques à inclure dans le rapport.
         """
         report_path = self._generate_report()
         zip_log_path = self._zip_log_file()
@@ -73,7 +78,7 @@ class NotificationManager:
         """Génère le rapport HTML.
 
         Returns:
-            str: chemin du fichier HTML généré, ou une chaîne vide en cas d'erreur.
+            str: Chemin du fichier HTML généré, ou une chaîne vide en cas d'erreur.
         """
         try:
             # Utiliser la fonction generer_rapport_html du module GenererRapportHTML
@@ -99,7 +104,7 @@ class NotificationManager:
         """Compresse le fichier de log et retourne le chemin du fichier zip.
 
         Returns:
-            str: chemin du fichier zip créé, ou une chaîne vide en cas d'erreur
+            str: Chemin du fichier zip créé, ou une chaîne vide en cas d'erreur.
         """
         log_file_path = str(self.logger.log_file)
         if not os.path.exists(log_file_path):

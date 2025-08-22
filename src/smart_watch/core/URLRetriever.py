@@ -1,12 +1,10 @@
-from playwright.sync_api import (
-    Error as PlaywrightError,
-)
-from playwright.sync_api import (
-    TimeoutError as PlaywrightTimeoutError,
-)
-from playwright.sync_api import (
-    sync_playwright,
-)
+# Documentation: https://datagora-erasme.github.io/smart_watch/source/modules/core/URLRetriever.html
+
+from typing import Any, Dict, Optional
+
+from playwright.sync_api import Error as PlaywrightError
+from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
+from playwright.sync_api import sync_playwright
 
 from .ErrorHandler import ErrorCategory, ErrorHandler, ErrorSeverity, handle_errors
 from .Logger import create_logger
@@ -19,7 +17,7 @@ logger = create_logger(
 # Initialisation du gestionnaire d'erreurs pour ce module
 error_handler = ErrorHandler()
 
-HEADERS = {
+HEADERS: Dict[str, str] = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36",
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
     "Accept-Language": "fr-FR,fr;q=0.7",
@@ -32,25 +30,25 @@ HEADERS = {
     user_message="Erreur lors de la récupération de l'URL",
 )
 def retrieve_url(
-    row: dict,
+    row: Dict[str, Any],
     sortie: str = "html",
     encoding_errors: str = "ignore",
-    config=None,
+    config: Optional[Dict[str, Any]] = None,
     index: int = 0,
     total: int = 0,
-) -> dict:
+) -> Dict[str, Any]:
     """Récupère le contenu d'une URL et le retourne sous forme de dictionnaire.
 
     Args:
-        row (dict): dictionnaire contenant les informations de l'URL et d'autres métadonnées.
-        sortie (str): format de sortie souhaité, par défaut "html".
-        encoding_errors (str): stratégie de gestion des erreurs d'encodage, par défaut "ignore".
-        config (dict, optional): configuration supplémentaire, non utilisée dans cette fonction.
-        index (int): index de l'URL dans une liste, utilisé pour le logging.
-        total (int): nombre total d'URLs à traiter, utilisé pour le logging.
+        row (Dict[str, Any]): Dictionnaire contenant les informations de l'URL et d'autres métadonnées.
+        sortie (str): Format de sortie souhaité, par défaut "html".
+        encoding_errors (str): Stratégie de gestion des erreurs d'encodage, par défaut "ignore".
+        config (Optional[Dict[str, Any]]): Configuration supplémentaire, non utilisée dans cette fonction.
+        index (int): Index de l'URL dans une liste, utilisé pour le logging.
+        total (int): Nombre total d'URLs à traiter, utilisé pour le logging.
 
     Returns:
-        dict: dictionnaire contenant :
+        Dict[str, Any]: Dictionnaire contenant :
             - toutes les clés d'entrée du paramètre `row`
             - 'statut' (str) : état de la récupération ('ok', 'warning', 'critical')
             - 'message' (str) : message d'erreur ou d'information
@@ -58,9 +56,9 @@ def retrieve_url(
             - 'html' (str) : contenu HTML récupéré (si succès)
             - 'markdown' (str) : contenu converti en markdown (si sortie == "markdown" et succès)
     """
-    row_dict = dict(row)
-    url = row.get("url", "")
-    identifiant = row.get("identifiant", "N/A")
+    row_dict: Dict[str, Any] = dict(row)
+    url: str = row.get("url", "")
+    identifiant: str = row.get("identifiant", "N/A")
 
     if not url:
         context = error_handler.create_error_context(

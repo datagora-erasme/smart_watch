@@ -1,3 +1,5 @@
+# Documentation: https://datagora-erasme.github.io/smart_watch/source/modules/core/LLMClient.html
+
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, Union
@@ -16,19 +18,27 @@ logger = create_logger(
 
 @dataclass
 class LLMResponse:
-    """Réponse enrichie d'un appel LLM avec mesure de consommation."""
+    """Réponse enrichie d'un appel LLM avec mesure de consommation.
 
-    content: Union[
-        str, List[Any]
-    ]  # Accepte du texte ou une liste (pour les embeddings)
-    co2_emissions: float  # En kg CO2
+    Attributes:
+        content (Union[str, List[Any]]): contenu de la réponse, texte ou liste (pour les embeddings).
+        co2_emissions (float): émissions de CO2 en kg.
+    """
+
+    content: Union[str, List[Any]]
+    co2_emissions: float
 
 
 @dataclass
 class LLMMessage:
-    """Représente un message dans une conversation avec le LLM."""
+    """Représente un message dans une conversation avec le LLM.
 
-    role: str  # "user", "assistant", "system"
+    Attributes:
+        role (str): rôle du message ("user", "assistant", "system").
+        content (str): contenu textuel du message.
+    """
+
+    role: str
     content: str
 
 
@@ -42,7 +52,7 @@ class BaseLLMClient(ABC):
         timeout: int,
         api_key: Optional[str],
         base_url: Optional[str],
-    ):
+    ) -> None:
         """Initialise le client LLM avec les paramètres de base.
 
         Args:
@@ -51,6 +61,15 @@ class BaseLLMClient(ABC):
             timeout (int): le délai d'attente pour les requêtes API, en secondes.
             api_key (Optional[str]): clé API pour l'authentification.
             base_url (Optional[str]): URL de base de l'API LLM.
+
+        Attributes:
+            model (str): nom du modèle LLM.
+            temperature (float): température pour la génération.
+            timeout (int): délai d'attente pour les requêtes.
+            api_key (Optional[str]): clé API.
+            base_url (Optional[str]): URL de base de l'API.
+            session (requests.Session): session HTTP pour les requêtes.
+            error_handler (ErrorHandler): gestionnaire d'erreurs.
         """
         self.model = model
         self.temperature = temperature
@@ -77,15 +96,15 @@ class BaseLLMClient(ABC):
         return session
 
     def _normalize_messages(
-        self, messages: List[Union[Dict, LLMMessage]]
-    ) -> List[Dict]:
+        self, messages: List[Union[Dict[str, str], LLMMessage]]
+    ) -> List[Dict[str, str]]:
         """Convertit les objets LLMMessage en dictionnaires pour l'appel API.
 
         Args:
-            messages (List[Union[Dict, LLMMessage]]): liste de messages à normaliser.
+            messages (List[Union[Dict[str, str], LLMMessage]]): liste de messages à normaliser.
 
         Returns:
-            List[Dict]: liste de messages normalisés au format dictionnaire.
+            List[Dict[str, str]]: liste de messages normalisés au format dictionnaire.
         """
 
         return [
@@ -98,17 +117,18 @@ class BaseLLMClient(ABC):
     @abstractmethod
     def call_llm(
         self,
-        messages: List[Union[Dict, LLMMessage]],
+        messages: List[Union[Dict[str, str], LLMMessage]],
         index: int = 0,
         total: int = 0,
-        **kwargs,
+        **kwargs: Any,
     ) -> LLMResponse:
         """Méthode abstraite pour effectuer un appel au LLM avec mesure d'émissions.
 
         Args:
-            messages (List[Union[Dict, LLMMessage]]): liste de messages à envoyer au LLM.
+            messages (List[Union[Dict[str, str], LLMMessage]]): liste de messages à envoyer au LLM.
             index (int): index de l'appel dans une liste, utilisé pour le logging.
             total (int): nombre total d'appels à traiter, utilisé pour le logging.
+            **kwargs (Any): arguments supplémentaires pour l'appel LLM.
 
         Returns:
             LLMResponse: réponse du LLM enrichie avec les émissions de CO2.
@@ -120,7 +140,7 @@ class BaseLLMClient(ABC):
         content: str,
         role: str = "user",
         system_prompt: Optional[str] = None,
-        **kwargs,
+        **kwargs: Any,
     ) -> LLMResponse:
         """Envoie un message simple au LLM.
 
@@ -128,7 +148,7 @@ class BaseLLMClient(ABC):
             content (str): le contenu du message à envoyer.
             role (str): le rôle de l'expéditeur du message ("user", "assistant", "system").
             system_prompt (Optional[str]): un prompt système optionnel pour initialiser la conversation.
-            **kwargs: paramètres supplémentaires pour l'appel LLM.
+            **kwargs (Any): paramètres supplémentaires pour l'appel LLM.
 
         Returns:
             LLMResponse: réponse du LLM enrichie avec les émissions de CO2.
@@ -140,9 +160,17 @@ class BaseLLMClient(ABC):
         return self.call_llm(messages, **kwargs)
 
     def conversation(
-        self, messages: List[Union[Dict, LLMMessage]], **kwargs
+        self, messages: List[Union[Dict[str, str], LLMMessage]], **kwargs: Any
     ) -> LLMResponse:
-        """Raccourci pour `call_llm`."""
+        """Raccourci pour `call_llm`.
+
+        Args:
+            messages (List[Union[Dict[str, str], LLMMessage]]): liste de messages.
+            **kwargs (Any): arguments supplémentaires.
+
+        Returns:
+            LLMResponse: réponse du LLM.
+        """
         return self.call_llm(messages, **kwargs)
 
     def call_embeddings(self, texts: List[str]) -> LLMResponse:
@@ -204,8 +232,8 @@ class OpenAICompatibleClient(BaseLLMClient):
         base_url: str,
         temperature: float = 0.1,
         timeout: int = 30,
-        seed: Optional[int] = None,  # Ajouter le paramètre seed
-    ):
+        seed: Optional[int] = None,
+    ) -> None:
         """Initialise le client pour les API compatibles OpenAI.
 
         Args:
@@ -215,7 +243,6 @@ class OpenAICompatibleClient(BaseLLMClient):
             temperature (float): la température pour la génération de texte.
             timeout (int): le délai d'attente pour les requêtes API.
             seed (Optional[int]): graine aléatoire pour la génération (optionnel).
-
         """
         super().__init__(model, temperature, timeout, api_key, base_url)
         self.seed = seed  # Stocker le seed
@@ -230,7 +257,7 @@ class OpenAICompatibleClient(BaseLLMClient):
     )
     def call_llm(
         self,
-        messages: List[Union[Dict, LLMMessage]],
+        messages: List[Union[Dict[str, str], LLMMessage]],
         response_format: Optional[Dict[str, Any]] = None,
         index: int = 0,
         total: int = 0,
@@ -238,7 +265,7 @@ class OpenAICompatibleClient(BaseLLMClient):
         """Effectue un appel au LLM.
 
         Args:
-            messages (List[Union[Dict, LLMMessage]]): liste de messages à envoyer au LLM.
+            messages (List[Union[Dict[str, str], LLMMessage]]): liste de messages à envoyer au LLM.
             response_format (Optional[Dict[str, Any]]): format de réponse structuré (si nécessaire).
             index (int): index de l'appel dans une liste, utilisé pour le logging.
             total (int): nombre total d'appels à traiter, utilisé pour le logging.
@@ -341,7 +368,16 @@ class MistralAPIClient(BaseLLMClient):
         temperature: float = 0.1,
         timeout: int = 30,
         seed: Optional[int] = None,
-    ):
+    ) -> None:
+        """Initialise le client pour l'API Mistral.
+
+        Args:
+            api_key (str): la clé API pour l'authentification.
+            model (str): le nom du modèle LLM.
+            temperature (float): la température pour la génération de texte.
+            timeout (int): le délai d'attente pour les requêtes API.
+            seed (Optional[int]): graine aléatoire pour la génération (optionnel).
+        """
         # Initialiser la classe de base avec une URL fixe pour Mistral
         super().__init__(
             model=model,
@@ -362,12 +398,22 @@ class MistralAPIClient(BaseLLMClient):
     )
     def call_llm(
         self,
-        messages: List[Union[Dict, LLMMessage]],
+        messages: List[Union[Dict[str, str], LLMMessage]],
         tool_params: Optional[Dict[str, Any]] = None,
         index: int = 0,
         total: int = 0,
     ) -> LLMResponse:
-        """Effectue un appel vers l'API Mistral."""
+        """Effectue un appel vers l'API Mistral.
+
+        Args:
+            messages (List[Union[Dict[str, str], LLMMessage]]): liste des messages à envoyer.
+            tool_params (Optional[Dict[str, Any]]): paramètres pour l'utilisation d'outils.
+            index (int): index de l'appel pour le logging.
+            total (int): nombre total d'appels pour le logging.
+
+        Returns:
+            LLMResponse: réponse du LLM enrichie avec les émissions de CO2.
+        """
         formatted_messages = self._normalize_messages(messages)
         log_message_prefix = ""
         if total > 0:
@@ -443,8 +489,7 @@ class MistralAPIClient(BaseLLMClient):
         default_return=LLMResponse(content="Erreur API Mistral", co2_emissions=0.0),
     )
     def call_embeddings(self, texts: List[str]) -> LLMResponse:
-        """
-        Appel d'embeddings via API Mistral avec mesure d'émissions.
+        """Appel d'embeddings via API Mistral avec mesure d'émissions.
 
         Args:
             texts (List[str]): liste de textes pour lesquels générer des embeddings.
@@ -453,7 +498,7 @@ class MistralAPIClient(BaseLLMClient):
             LLMResponse: réponse contenant les embeddings et les émissions de CO2.
 
         Note:
-            Utilise l'API embeddings de Mistral en transitionnant à travers le endpoint OpenAI compatible car Mistral expose leurs embeddings via une API compatible OpenAI.
+            Utilise l'API embeddings de Mistral qui est compatible avec l'API OpenAI.
         """
         # Créer un tracker à la volée pour une mesure isolée
         tracker = EmissionsTracker(
@@ -499,15 +544,14 @@ class MistralAPIClient(BaseLLMClient):
 def get_structured_response_format(
     schema: Dict[str, Any], name: str = "response"
 ) -> Dict[str, Any]:
-    """
-    Formate un schéma pour les structured outputs OpenAI.
+    """Formate un schéma pour les structured outputs OpenAI.
 
     Args:
         schema (Dict[str, Any]): le schéma JSON que la réponse doit suivre.
         name (str): le nom de la réponse.
 
     Returns:
-        Dict[str, Any]: format de réponse pour l'API
+        Dict[str, Any]: format de réponse pour l'API.
     """
     return {"type": "json_object", "json_schema": schema}
 
@@ -515,15 +559,16 @@ def get_structured_response_format(
 def get_mistral_tool_format(
     schema: Dict[str, Any], function_name: str = "extract_info"
 ) -> Dict[str, Any]:
-    """
-    Crée le dictionnaire pour le tool calling avec Mistral, forçant une réponse structurée.
+    """Crée le dictionnaire pour le tool calling avec Mistral.
+
+    Cette fonction force une réponse structurée.
 
     Args:
         schema (Dict[str, Any]): le schéma JSON que la réponse doit suivre.
         function_name (str): le nom de la fonction à appeler.
 
     Returns:
-        Dict[str, Any]: format de réponse pour l'API Mistral avec tool calling
+        Dict[str, Any]: format de réponse pour l'API Mistral avec tool calling.
     """
     return {
         "tools": [

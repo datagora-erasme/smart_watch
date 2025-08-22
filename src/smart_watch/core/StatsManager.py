@@ -1,14 +1,11 @@
-"""
-Gestionnaire de statistiques basé sur les requêtes SQL.
-Refactorisation avec libellés et unités pour un affichage flexible.
-"""
+# Documentation: https://datagora-erasme.github.io/smart_watch/source/modules/core/StatsManager.html
 
 from datetime import datetime
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from .ConfigManager import ConfigManager
 from .DatabaseManager import DatabaseManager
-from .Logger import create_logger
+from .Logger import SmartWatchLogger, create_logger
 
 logger = create_logger("StatsManager")
 
@@ -16,15 +13,26 @@ logger = create_logger("StatsManager")
 class StatItem:
     """Représente un élément de statistique avec sa valeur, son libellé et son unité."""
 
-    def __init__(self, value: Any, label: str, unit: str = "", format_str: str = "{}"):
-        """
-        Initialise un élément de statistique.
+    def __init__(
+        self,
+        value: Any,
+        label: str,
+        unit: str = "",
+        format_str: str = "{}",
+    ) -> None:
+        """Initialise un élément de statistique.
 
         Args:
-            value (Any): la valeur de la statistique.
-            label (str): le libellé de la statistique.
-            unit (str): l'unité de la statistique.
-            format_str (str): le format de la valeur, par défaut "{}".
+            value (Any): La valeur de la statistique.
+            label (str): Le libellé de la statistique.
+            unit (str): L'unité de la statistique.
+            format_str (str): Le format de la valeur, par défaut "{}".
+
+        Attributes:
+            value (Any): La valeur.
+            label (str): Le libellé.
+            unit (str): L'unité.
+            format_str (str): La chaîne de formatage.
         """
         self.value = value
         self.label = label
@@ -38,7 +46,7 @@ class StatItem:
         Si la valeur est None, retourne "N/A".
 
         Returns:
-            str: la valeur formatée avec son unité ou juste la valeur.
+            str: La valeur formatée avec son unité ou juste la valeur.
         """
         if self.value is None:
             return "N/A"
@@ -49,7 +57,7 @@ class StatItem:
         """Retourne une représentation en chaîne de l'élément de statistique.
 
         Returns:
-            str: la représentation de l'élément de statistique.
+            str: La représentation de l'élément de statistique.
         """
         return f"{self.label}: {self.formatted_value()}"
 
@@ -57,12 +65,16 @@ class StatItem:
 class StatsSection:
     """Représente une section de statistiques."""
 
-    def __init__(self, title: str, items: Dict[str, StatItem]):
-        """
-        Initialise une section de statistiques.
+    def __init__(self, title: str, items: Dict[str, StatItem]) -> None:
+        """Initialise une section de statistiques.
+
         Args:
-            title (str): le titre de la section.
-            items (Dict[str, StatItem]): les éléments de statistique dans la section.
+            title (str): Le titre de la section.
+            items (Dict[str, StatItem]): Les éléments de statistique dans la section.
+
+        Attributes:
+            title (str): Le titre.
+            items (Dict[str, StatItem]): Les éléments.
         """
         self.title = title
         self.items = items
@@ -71,10 +83,10 @@ class StatsSection:
         """Récupère la valeur d'un élément de statistique.
 
         Args:
-            key (str): la clé de l'élément de statistique.
+            key (str): La clé de l'élément de statistique.
 
         Returns:
-            Any: la valeur de l'élément de statistique, ou "N/A"
+            Any: La valeur de l'élément de statistique, ou "N/A".
         """
         return self.items.get(key, StatItem("N/A", "")).value
 
@@ -82,10 +94,10 @@ class StatsSection:
         """Récupère la valeur formatée d'un élément de statistique.
 
         Args:
-            key (str): la clé de l'élément de statistique.
+            key (str): La clé de l'élément de statistique.
 
         Returns:
-            str: la valeur formatée de l'élément de statistique, ou "N/A"
+            str: La valeur formatée de l'élément de statistique, ou "N/A".
         """
         return self.items.get(key, StatItem("N/A", "")).formatted_value()
 
@@ -93,23 +105,27 @@ class StatsSection:
 class StatsManager:
     """Gestionnaire de statistiques basé sur les requêtes SQL."""
 
-    def __init__(self, config: ConfigManager, logger):
-        """
-        Initialise le gestionnaire de statistiques.
+    def __init__(self, config: ConfigManager, logger: SmartWatchLogger) -> None:
+        """Initialise le gestionnaire de statistiques.
+
         Args:
-            config (ConfigManager): instance de gestionnaire de configuration.
-            logger: instance de logger pour les messages.
+            config (ConfigManager): Instance de gestionnaire de configuration.
+            logger (SmartWatchLogger): Instance de logger pour les messages.
+
+        Attributes:
+            config (ConfigManager): Le gestionnaire de configuration.
+            logger (SmartWatchLogger): Le logger.
+            db_manager (DatabaseManager): Le gestionnaire de base de données.
         """
         self.config = config
         self.logger = logger
         self.db_manager = DatabaseManager(db_file=config.database.db_file)
 
     def get_pipeline_stats(self) -> Dict[str, StatsSection]:
-        """
-        Génère les statistiques du pipeline avec libellés et unités.
+        """Génère les statistiques du pipeline avec libellés et unités.
 
         Returns:
-            Dict[str, StatsSection]: dictionnaire des sections de statistiques.
+            Dict[str, StatsSection]: Dictionnaire des sections de statistiques.
         """
         logger.info("Génération des statistiques globales depuis la base de données...")
 
@@ -126,10 +142,6 @@ class StatsManager:
         """Crée une section de statistiques pour l'en-tête de l'exécution.
 
         Returns:
-            StatsSection: Un objet StatsSection contenant :
-                          - L'ID d'exécution ('global').
-                          - L'horodatage actuel de la génération des statistiques.
-        """
         return StatsSection(
             "En-tête",
             {
