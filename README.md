@@ -96,7 +96,7 @@
 - [ core.Logger ] : utilisé par tous les modules pour la journalisation.
 - [ core.ErrorHandler ] : utilisé pour une gestion centralisée des erreurs.
 - [ core.DatabaseManager ] : utilisé pour lire et écrire les résultats dans la base de données SQLite.
-- [ codecarbon ] : mesure les émissions de CO2 des appels aux LLM (embeddings et query).
+- [ codecarbon ] : mesure les émissions de CO2 des appels aux LLM.
 ```
 ### Modèles de rapports et des structures de données
 ```
