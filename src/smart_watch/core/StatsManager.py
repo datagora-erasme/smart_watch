@@ -1,7 +1,7 @@
 # Documentation: https://datagora-erasme.github.io/smart_watch/source/modules/core/StatsManager.html
 
 from datetime import datetime
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 from .ConfigManager import ConfigManager
 from .DatabaseManager import DatabaseManager
@@ -20,19 +20,20 @@ class StatItem:
         unit: str = "",
         format_str: str = "{}",
     ) -> None:
-        """Initialise un élément de statistique.
+        """
+        Initialise un élément de statistique.
 
         Args:
             value (Any): La valeur de la statistique.
-            label (str): Le libellé de la statistique.
-            unit (str): L'unité de la statistique.
-            format_str (str): Le format de la valeur, par défaut "{}".
+            label (str): Le libellé descriptif de la statistique.
+            unit (str, optionnel): L'unité de mesure de la statistique. Par défaut "".
+            format_str (str, optionnel): La chaîne de formatage pour la valeur. Par défaut "{}".
 
         Attributes:
-            value (Any): La valeur.
-            label (str): Le libellé.
-            unit (str): L'unité.
-            format_str (str): La chaîne de formatage.
+            value (Any): La valeur brute de la statistique.
+            label (str): Le libellé de la statistique.
+            unit (str): L'unité de la statistique.
+            format_str (str): La chaîne de formatage pour l'affichage.
         """
         self.value = value
         self.label = label
@@ -40,13 +41,14 @@ class StatItem:
         self.format_str = format_str
 
     def formatted_value(self) -> str:
-        """Retourne la valeur formatée avec son unité.
+        """
+        Retourne la valeur de la statistique formatée pour l'affichage.
 
-        Si l'unité est vide, retourne juste la valeur formatée.
-        Si la valeur est None, retourne "N/A".
+        La valeur est formatée en utilisant `format_str` et l'unité est ajoutée si elle est définie.
+        Si la valeur est `None`, la méthode retourne "N/A".
 
         Returns:
-            str: La valeur formatée avec son unité ou juste la valeur.
+            str: La valeur formatée, incluant l'unité si disponible.
         """
         if self.value is None:
             return "N/A"
@@ -54,10 +56,13 @@ class StatItem:
         return f"{formatted} {self.unit}" if self.unit else formatted
 
     def __str__(self) -> str:
-        """Retourne une représentation en chaîne de l'élément de statistique.
+        """
+        Retourne une représentation textuelle de l'élément de statistique.
+
+        Le format est "Libellé: Valeur formatée".
 
         Returns:
-            str: La représentation de l'élément de statistique.
+            str: La représentation de l'élément sous forme de chaîne de caractères.
         """
         return f"{self.label}: {self.formatted_value()}"
 
@@ -66,38 +71,41 @@ class StatsSection:
     """Représente une section de statistiques."""
 
     def __init__(self, title: str, items: Dict[str, StatItem]) -> None:
-        """Initialise une section de statistiques.
+        """
+        Initialise une section de statistiques, qui regroupe plusieurs `StatItem`.
 
         Args:
-            title (str): Le titre de la section.
-            items (Dict[str, StatItem]): Les éléments de statistique dans la section.
+            title (str): Le titre de la section (ex: "URLs", "LLM").
+            items (Dict[str, StatItem]): Un dictionnaire d'éléments de statistique.
 
         Attributes:
-            title (str): Le titre.
-            items (Dict[str, StatItem]): Les éléments.
+            title (str): Le titre de la section.
+            items (Dict[str, StatItem]): Les éléments de statistique de la section.
         """
         self.title = title
         self.items = items
 
     def get_item_value(self, key: str) -> Any:
-        """Récupère la valeur d'un élément de statistique.
+        """
+        Récupère la valeur brute d'un élément de statistique par sa clé.
 
         Args:
-            key (str): La clé de l'élément de statistique.
+            key (str): La clé de l'élément de statistique à récupérer.
 
         Returns:
-            Any: La valeur de l'élément de statistique, ou "N/A".
+            Any: La valeur brute de l'élément, ou "N/A" si la clé n'existe pas.
         """
         return self.items.get(key, StatItem("N/A", "")).value
 
     def get_formatted_value(self, key: str) -> str:
-        """Récupère la valeur formatée d'un élément de statistique.
+        """
+        Récupère la valeur formatée d'un élément de statistique par sa clé.
 
         Args:
-            key (str): La clé de l'élément de statistique.
+            key (str): La clé de l'élément de statistique à récupérer.
 
         Returns:
-            str: La valeur formatée de l'élément de statistique, ou "N/A".
+            str: La valeur formatée de l'élément, ou "N/A" si la clé n'existe pas.
         """
         return self.items.get(key, StatItem("N/A", "")).formatted_value()
 
@@ -106,26 +114,32 @@ class StatsManager:
     """Gestionnaire de statistiques basé sur les requêtes SQL."""
 
     def __init__(self, config: ConfigManager, logger: SmartWatchLogger) -> None:
-        """Initialise le gestionnaire de statistiques.
+        """
+        Initialise le gestionnaire de statistiques.
 
         Args:
-            config (ConfigManager): Instance de gestionnaire de configuration.
-            logger (SmartWatchLogger): Instance de logger pour les messages.
+            config (ConfigManager): L'instance du gestionnaire de configuration.
+            logger (SmartWatchLogger): L'instance du logger pour l'enregistrement des messages.
 
         Attributes:
             config (ConfigManager): Le gestionnaire de configuration.
             logger (SmartWatchLogger): Le logger.
-            db_manager (DatabaseManager): Le gestionnaire de base de données.
+            db_manager (DatabaseManager): Le gestionnaire de base de données pour exécuter les requêtes.
         """
         self.config = config
         self.logger = logger
         self.db_manager = DatabaseManager(db_file=config.database.db_file)
 
     def get_pipeline_stats(self) -> Dict[str, StatsSection]:
-        """Génère les statistiques du pipeline avec libellés et unités.
+        """
+        Génère un rapport complet des statistiques du pipeline.
+
+        Cette méthode agrège les statistiques de chaque étape du pipeline (URLs, Markdown, LLM, etc.)
+        en appelant les méthodes dédiées pour chaque section.
 
         Returns:
-            Dict[str, StatsSection]: Dictionnaire des sections de statistiques.
+            Dict[str, StatsSection]: Un dictionnaire où chaque clé est le nom d'une section
+                                     et la valeur est un objet `StatsSection` contenant les statistiques.
         """
         logger.info("Génération des statistiques globales depuis la base de données...")
 
@@ -139,9 +153,17 @@ class StatsManager:
         }
 
     def _get_header_stats(self) -> StatsSection:
-        """Crée une section de statistiques pour l'en-tête de l'exécution.
+        """
+        Crée la section de statistiques pour l'en-tête du rapport.
+
+        Cette section contient des informations générales sur l'exécution, comme son ID et l'horodatage.
 
         Returns:
+            StatsSection: Un objet `StatsSection` contenant les statistiques de l'en-tête.
+                          Les clés disponibles sont :
+                          - `execution_id`
+                          - `timestamp`
+        """
         return StatsSection(
             "En-tête",
             {
@@ -151,15 +173,22 @@ class StatsManager:
         )
 
     def _get_url_stats(self) -> StatsSection:
-        """Calcule et retourne les statistiques sur le traitement des URLs.
+        """
+        Calcule et retourne les statistiques sur le traitement des URLs.
+
+        Interroge la base de données pour obtenir des métriques telles que le nombre total d'URLs,
+        les succès, les échecs, le taux de réussite, la taille moyenne du contenu, et les types d'erreurs.
 
         Returns:
-            StatsSection: Un objet StatsSection contenant les statistiques suivantes :
-                          - Le nombre total d'URLs traitées.
-                          - Le nombre de succès et d'échecs.
-                          - Le taux de réussite.
-                          - La taille moyenne du contenu.
-                          - Le nombre d'erreurs HTTP et de timeouts.
+            StatsSection: Un objet `StatsSection` contenant les statistiques des URLs.
+                          Les clés disponibles sont :
+                          - `total`
+                          - `successful`
+                          - `failed`
+                          - `success_rate`
+                          - `avg_content_length`
+                          - `http_errors`
+                          - `timeout_errors`
         """
         try:
             query = """
@@ -219,13 +248,20 @@ class StatsManager:
         )
 
     def _get_markdown_stats(self) -> StatsSection:
-        """Calcule et retourne les statistiques sur le traitement des fichiers Markdown.
+        """
+        Calcule et retourne les statistiques sur le traitement des contenus Markdown.
+
+        Fournit des informations sur le nombre de documents traités, nettoyés et filtrés,
+        la taille moyenne après filtrage, et le volume de caractères supprimés.
 
         Returns:
-            StatsSection: Un objet StatsSection contenant les statistiques suivantes :
-                          - Le nombre de documents traités, nettoyés et filtrés.
-                          - La taille moyenne du contenu après filtrage.
-                          - Le nombre total de caractères supprimés pendant le nettoyage.
+            StatsSection: Un objet `StatsSection` contenant les statistiques Markdown.
+                          Les clés disponibles sont :
+                          - `processed`
+                          - `cleaned`
+                          - `filtered`
+                          - `avg_filtered_length`
+                          - `chars_cleaned`
         """
         try:
             query = """
@@ -277,14 +313,22 @@ class StatsManager:
         )
 
     def _get_llm_stats(self) -> StatsSection:
-        """Calcule et retourne les statistiques sur les extractions faites par le LLM.
+        """
+        Calcule et retourne les statistiques sur les extractions du LLM.
+
+        Analyse les performances du LLM, incluant le nombre d'extractions tentées, réussies (JSON et OSM),
+        et échouées, le taux de réussite, la taille moyenne des extractions et les émissions de CO2.
 
         Returns:
-            StatsSection: Un objet StatsSection contenant les statistiques suivantes :
-                          - Le nombre d'extractions tentées, réussies (JSON et OSM), et échouées.
-                          - Le taux de réussite.
-                          - La taille moyenne des horaires extraits.
-                          - Les émissions totales de CO2.
+            StatsSection: Un objet `StatsSection` contenant les statistiques du LLM.
+                          Les clés disponibles sont :
+                          - `attempted`
+                          - `successful_json`
+                          - `successful_osm`
+                          - `failed`
+                          - `success_rate`
+                          - `avg_schedule_length`
+                          - `total_co2_emissions`
         """
         try:
             query = """
@@ -362,14 +406,20 @@ class StatsManager:
         )
 
     def _get_comparison_stats(self) -> StatsSection:
-        """Calcule et retourne les statistiques sur la comparaison des horaires.
+        """
+        Calcule et retourne les statistiques sur la comparaison des horaires.
+
+        Évalue la précision des extractions en comparant les horaires générés avec les données de référence,
+        en comptabilisant les correspondances identiques, différentes et les cas non comparés.
 
         Returns:
-            StatsSection: Un objet StatsSection contenant les statistiques suivantes :
-                          - Le nombre total de comparaisons.
-                          - Le nombre d'horaires identiques ou différents.
-                          - Le nombre de cas non comparés.
-                          - Le taux de précision global.
+            StatsSection: Un objet `StatsSection` contenant les statistiques de comparaison.
+                          Les clés disponibles sont :
+                          - `total`
+                          - `identical`
+                          - `different`
+                          - `not_compared`
+                          - `accuracy_rate`
         """
         try:
             query = """
@@ -418,16 +468,22 @@ class StatsManager:
         )
 
     def _get_global_stats(self) -> StatsSection:
-        """Calcule et retourne les statistiques globales sur l'ensemble de l'exécution.
+        """
+        Calcule et retourne les statistiques globales de l'exécution.
+
+        Récapitule les informations clés de l'ensemble du pipeline, telles que le nombre total
+        d'enregistrements, les erreurs, la date, le modèle LLM utilisé et les émissions de CO2.
 
         Returns:
-            StatsSection: Un objet StatsSection contenant les informations récapitulatives suivantes :
-                          - L'ID d'exécution.
-                          - Le nombre total d'enregistrements.
-                          - Le nombre d'enregistrements avec erreurs.
-                          - La date d'exécution.
-                          - Le modèle et le fournisseur LLM utilisés.
-                          - Les émissions totales de CO2 pour l'ensemble du processus.
+            StatsSection: Un objet `StatsSection` contenant les statistiques globales.
+                          Les clés disponibles sont :
+                          - `execution_id`
+                          - `total_records`
+                          - `records_with_errors`
+                          - `execution_date`
+                          - `llm_model`
+                          - `llm_provider`
+                          - `total_co2_emissions`
         """
         try:
             # Statistiques d'exécution
@@ -515,7 +571,12 @@ class StatsManager:
             )
 
     def display_stats(self):
-        """Affiche les statistiques de manière formatée en itérant sur les sections."""
+        """
+        Affiche les statistiques complètes du pipeline dans le logger.
+
+        Cette méthode récupère toutes les sections de statistiques et les affiche de manière
+        formatée et lisible dans les logs.
+        """
         stats = self.get_pipeline_stats()
 
         logger.info("=== STATISTIQUES DU PIPELINE ===")
@@ -538,12 +599,16 @@ class StatsManager:
 
     def generate_custom_text(self, template: str) -> str:
         """
-        Génère un texte personnalisé en remplaçant les variables dans le template.
+        Génère un texte personnalisé à partir d'un template et des statistiques.
+
+        Remplace les placeholders dans la chaîne de template (ex: `{urls.total}`) par les valeurs
+        de statistiques correspondantes.
+
         Args:
-            template (str): le template avec des variables au format {section.item}.
+            template (str): La chaîne de template contenant des placeholders.
 
         Returns:
-            str: le texte généré avec les variables remplacées par les valeurs des statistiques.
+            str: Le texte généré avec les valeurs des statistiques insérées.
         """
         stats = self.get_pipeline_stats()
 
@@ -569,10 +634,13 @@ class StatsManager:
 
     def get_stats_for_api(self) -> Dict[str, Any]:
         """
-        Retourne les statistiques dans un format adapté pour une API.
+        Formate les statistiques pour une utilisation via une API.
+
+        Convertit les objets `StatsSection` et `StatItem` en un dictionnaire sérialisable (JSON),
+        facilitant ainsi leur exposition via un endpoint d'API.
 
         Returns:
-            Dict[str, Any]: dictionnaire des statistiques avec les sections et leurs éléments.
+            Dict[str, Any]: Un dictionnaire contenant toutes les statistiques formatées pour l'API.
         """
         stats = self.get_pipeline_stats()
 
