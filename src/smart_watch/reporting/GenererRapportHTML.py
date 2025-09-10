@@ -416,6 +416,12 @@ def _group_by_status(donnees_urls: list) -> list:
         if not url_accessible:
             # Problème d'accessibilité : codes HTTP non-200, URL invalide, etc.
             url["statut"] = "access_error"
+        elif comparison_result == 0 and "définitivement fermé" in url.get(
+            "differences_horaires", ""
+        ):
+            # Cas spécifique : un des deux est fermé, l'autre ouvert.
+            # Doit être classé comme une différence d'horaires, même si l'extraction OSM a échoué.
+            url["statut"] = "schedule_diff"
         elif not has_osm_hours:
             # URL accessible mais échec extraction/conversion
             url["statut"] = "extraction_error"
