@@ -139,6 +139,16 @@ Le modèle JSON sera automatiquement passé en argument du prompt et assure norm
         ```
         Pour activer l'environnement par la suite : `source .venv/bin/activate` (ou `.venv\Scripts\activate` sur Windows).
 
+3.  **Installez les navigateurs Playwright :**
+    ```sh
+    python -m playwright install
+    ```
+    Sur Linux, si des dépendances système sont manquantes, exécutez d'abord :
+    ```sh
+    python -m playwright install-deps
+    ```
+    Sur Windows, la commande `install` suffit généralement.
+
 ## Configuration
 
 1.  Créez un fichier `.env` à la racine du projet en vous basant sur le modèle [`env.model`](.env.model).

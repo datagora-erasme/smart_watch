@@ -90,6 +90,20 @@ Avant de commencer, assurez-vous d'avoir :
 
            source .venv/bin/activate
 
+3.  **Installez les navigateurs Playwright :**
+
+    .. code-block:: bash
+
+       python -m playwright install
+
+    Sur Linux, si des dépendances système sont manquantes, exécutez d'abord :
+
+    .. code-block:: bash
+
+       python -m playwright install-deps
+
+    Sur Windows, la commande `install` suffit généralement.
+
 Si vous préférez l'option conteneurisée, vous pouvez suivre les instructions de la page :doc:`docker` pour exécuter l'application dans un conteneur Docker.
 
 Une fois ces étapes terminées, votre environnement est prêt. Vous pouvez passer à la section :doc:`configuration` pour configurer l'application.
