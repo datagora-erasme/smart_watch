@@ -3,8 +3,7 @@
 
 from typing import Optional
 
-import bs4
-from html_to_markdown import convert_to_markdown
+from inscriptis import get_text
 
 from ..core.ErrorHandler import ErrorCategory, ErrorSeverity, handle_errors
 from ..core.Logger import create_logger
@@ -25,7 +24,7 @@ def convert_html_to_markdown(html: str, identifiant: Optional[str] = None) -> st
     """
     Convertit une chaîne HTML en Markdown.
 
-    Utilise BeautifulSoup pour un parsing robuste avant la conversion,
+    Utilise inscriptis pour un parsing robuste avant la conversion,
     ce qui permet de nettoyer le HTML et de gérer les balises mal formées.
 
     Args:
@@ -38,15 +37,11 @@ def convert_html_to_markdown(html: str, identifiant: Optional[str] = None) -> st
     log_prefix = f"*{identifiant}* " if identifiant else ""
     if not html:
         return ""
-    logger.debug(f"{log_prefix}Conversion HTML vers Markdown avec BeautifulSoup + lxml")
+    logger.debug(f"{log_prefix}Conversion HTML vers Markdown avec inscriptis")
     len_avant = len(html)
 
-    # Utiliser BeautifulSoup pour parser et nettoyer le HTML
-    # N'extraire que le texte, et remplacer les balises HTML par des espaces
-    # pour éviter les problèmes de formatage
-    soup = bs4.BeautifulSoup(html, "lxml").get_text(separator=" ")
-
-    cleaned_text = str(soup)
+    # Utiliser inscriptis pour extraire le texte brut
+    cleaned_text = get_text(html)
     len_apres = len(cleaned_text)
 
     if len_avant > 0:
@@ -58,5 +53,5 @@ def convert_html_to_markdown(html: str, identifiant: Optional[str] = None) -> st
     else:
         logger.info(f"{log_prefix}Pas de contenu HTML à nettoyer (0 caractère).")
 
-    # Convertir l'objet Soup en Markdown
-    return convert_to_markdown(cleaned_text)
+    # Retourner le texte nettoyé (équivalent à du Markdown brut)
+    return cleaned_text

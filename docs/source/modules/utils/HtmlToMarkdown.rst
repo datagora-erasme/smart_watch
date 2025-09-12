@@ -6,7 +6,7 @@ Le module HtmlToMarkdown convertit du contenu HTML au format Markdown, en ne ren
 Fonctionnalités
 ---------------
 
-- Conversion avec BeautifulSoup et moteur lxml
+- Conversion avec inscriptis
 - Extraction du texte brut (pas d'images ou liens)
 
 .. admonition:: Usage

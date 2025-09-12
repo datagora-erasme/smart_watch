@@ -10,13 +10,13 @@ from smart_watch.utils.HtmlToMarkdown import convert_html_to_markdown
 
 def test_convert_html_to_markdown_simple():
     html = "<h1>Titre</h1><p>Ceci est un paragraphe.</p>"
-    markdown = "Titre Ceci est un paragraphe."
+    markdown = "Titre\n\nCeci est un paragraphe."
     assert convert_html_to_markdown(html).strip() == markdown
 
 
 def test_convert_html_to_markdown_with_links():
     html = '<p>Visitez <a href="https://www.example.com">notre site</a>.</p>'
-    markdown = "Visitez notre site ."
+    markdown = "Visitez notre site."
     assert convert_html_to_markdown(html).strip() == markdown
 
 
@@ -34,5 +34,5 @@ def test_convert_html_to_markdown_nested_tags():
 
 def test_convert_html_to_markdown_special_characters():
     html = "<p>Caractères spéciaux : & < ></p>"
-    markdown = "Caractères spéciaux : \\& \\< \\>"
+    markdown = "Caractères spéciaux : & < >"
     assert convert_html_to_markdown(html).strip() == markdown

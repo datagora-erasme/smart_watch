@@ -1,7 +1,7 @@
 codecarbon
 connectorx
 dotenv
-html_to_markdown
+inscriptis
 jinja2
 lxml
 matplotlib
