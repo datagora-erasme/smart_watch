@@ -54,7 +54,43 @@ class ComparisonProcessor:
                     "differences": f"Erreur parsing JSON LLM: {str(e)}",
                 }
 
-            # Effectuer la comparaison directe entre les deux JSON
+            # Gérer le cas où le LLM n'a pas trouvé de source d'information.
+            # C'est la vérification prioritaire.
+            extraction_info = horaires_llm_json.get("extraction_info", {})
+            if not extraction_info.get("source_found", True):
+                comment = extraction_info.get(
+                    "notes", "Aucune source d'horaires trouvée par le LLM."
+                )
+                return {
+                    "identique": None,  # Sera classé comme "Comparaison impossible/Erreur"
+                    "differences": f"Comparaison impossible: {comment}",  # C'est l'info qui sera affichée
+                }
+
+            # Vérifier l'état global de fermeture selon les deux sources
+            try:
+                is_gl_closed = comparator._is_permanently_closed(horaires_gl_json)
+                is_llm_closed = comparator._is_permanently_closed(horaires_llm_json)
+            except Exception as e:
+                return {
+                    "identique": None,
+                    "differences": f"Erreur vérification fermeture: {str(e)}",
+                }
+
+            # Cas où les deux sources indiquent une fermeture
+            if is_gl_closed and is_llm_closed:
+                return {
+                    "identique": True,
+                    "differences": "Fermeture confirmée par les deux sources",
+                }
+
+            # Cas où un seul indique une fermeture
+            if is_gl_closed != is_llm_closed:
+                return {
+                    "identique": False,
+                    "differences": f"Écart fermeture: {'data.grandlyon.com' if is_gl_closed else 'LLM'} indique fermé",
+                }
+
+            # Effectuer la comparaison détaillée si nécessaire
             try:
                 comparison_result = comparator.compare_schedules(
                     horaires_gl_json, horaires_llm_json
@@ -131,8 +167,8 @@ class ComparisonProcessor:
                 try:
                     comparison_result = self._compare_single(comparator, resultat, lieu)
 
-                    # Utiliser la méthode du DatabaseProcessor
-                    if comparison_result.get("identique") is not None:
+                    # On vérifie simplement que le résultat est un dictionnaire valide
+                    if isinstance(comparison_result, dict):
                         # Essayer différents noms d'attributs pour l'ID
                         resultat_id = (
                             getattr(resultat, "id_resultats_extraction", None)
@@ -157,7 +193,7 @@ class ComparisonProcessor:
                             )
                     else:
                         self.logger.warning(
-                            f"*{lieu_id}* Comparaison échouée pour '{lieu_nom}': {comparison_result.get('differences', 'Erreur inconnue')} - Base non modifiée"
+                            f"*{lieu_id}* Comparaison a retourné un résultat invalide pour '{lieu_nom}' - Base non modifiée"
                         )
 
                 except Exception as e:
