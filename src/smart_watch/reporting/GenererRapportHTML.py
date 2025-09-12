@@ -116,9 +116,10 @@ def generer_rapport_html(
     # Traitement des données
     _process_data(donnees_urls)
 
-    # Calcul des statistiques
-    stats_globales = _calculate_global_stats(donnees_urls)
-    statuts_disponibles = _group_by_status(donnees_urls)
+    # Classification et calcul des statistiques
+    stats_globales, statuts_disponibles = _group_by_status_and_calculate_stats(
+        donnees_urls
+    )
     types_lieu_stats = _calculate_type_stats(donnees_urls)
     codes_http_stats = _calculate_http_stats(donnees_urls)
 
@@ -296,11 +297,13 @@ def _create_comparison_field(url: dict) -> None:
         # Ajouter les erreurs si disponibles
         if erreurs_resume:
             url["comparaison_horaires"] = f"Non comparé - {erreurs_resume}"
+        elif differences_horaires:
+            url["comparaison_horaires"] = differences_horaires
         else:
             url["comparaison_horaires"] = "Non comparé"
-    elif horaires_identiques is True:
+    elif horaires_identiques == 1:
         url["comparaison_horaires"] = "IDENTIQUE - Aucune différence détectée"
-    elif horaires_identiques is False:
+    elif horaires_identiques == 0:
         url["comparaison_horaires"] = f"DIFFÉRENT - {differences_horaires}"
     else:
         url["comparaison_horaires"] = (
@@ -334,34 +337,12 @@ def _set_default_fields(url: dict) -> None:
         url.setdefault(field, default_value)
 
 
-def _calculate_global_stats(donnees_urls: list) -> dict:
-    """Calcule les statistiques globales."""
-    total_urls = len(donnees_urls)
-
-    # Statistiques de comparaison
-    comparisons_done = len(
-        [u for u in donnees_urls if u.get("horaires_identiques") is not None]
-    )
-    comparisons_identical = len(
-        [u for u in donnees_urls if u.get("horaires_identiques") is True]
-    )
-    comparisons_different = len(
-        [u for u in donnees_urls if u.get("horaires_identiques") is False]
-    )
-    comparisons_not_done = total_urls - comparisons_done
-
-    return {
-        "total_urls": total_urls,
-        "comparisons_done": comparisons_done,
-        "comparisons_identical": comparisons_identical,
-        "comparisons_different": comparisons_different,
-        "comparisons_not_done": comparisons_not_done,
-    }
-
-
-def _group_by_status(donnees_urls: list) -> list:
-    """Groupe les URLs par statut avec 4 catégories distinctes."""
-    # Configuration des statuts avec 4 catégories
+def _group_by_status_and_calculate_stats(donnees_urls: list) -> tuple[dict, list]:
+    """
+    Groupe les URLs par statut et calcule les statistiques globales en une seule passe.
+    Ceci garantit la cohérence entre les catégories et les comptes.
+    """
+    # Configuration des statuts
     statuts_config = {
         "success": {
             "nom": "Succès",
@@ -379,7 +360,7 @@ def _group_by_status(donnees_urls: list) -> list:
             "nom": "Erreurs de comparaison",
             "emoji": "❓",
             "type": "error",
-            "description": "Comparaison impossible ou non effectuée",
+            "description": "Comparaison impossible ou non effectuée (ex: format de données incompatible)",
         },
         "access_error": {
             "nom": "Erreurs d'accès",
@@ -391,51 +372,50 @@ def _group_by_status(donnees_urls: list) -> list:
             "nom": "Erreurs d'extraction",
             "emoji": "❌",
             "type": "error",
-            "description": "URLs accessibles mais échec de l'extraction LLM ou de la conversion OSM",
+            "description": "URLs accessibles mais échec de l'extraction LLM (source non trouvée) ou de la conversion OSM",
         },
     }
 
-    # Classification selon les nouveaux critères
+    # Classification et comptage
     for url in donnees_urls:
         # Critère 1: Vérifier l'accessibilité de l'URL
         url_accessible = url.get("statut") == "ok" and url.get("code_http", 0) in range(
             200, 300
         )
 
-        # Critère 2: Vérifier la présence d'horaires LLM OSM extraits
+        # Critère 2: Vérifier si la source a été trouvée par le LLM
+        llm_json = url.get("llm_horaires_json", {})
+        source_found = (
+            llm_json.get("extraction_info", {}).get("source_found", True)
+            if isinstance(llm_json, dict)
+            else True
+        )
+
+        # Critère 3: Vérifier la présence d'horaires LLM OSM extraits
         has_osm_hours = (
             url.get("llm_horaires_osm")
             and url["llm_horaires_osm"].strip()
             and not url["llm_horaires_osm"].startswith("Erreur")
         )
 
-        # Critère 3: Vérifier le résultat de la comparaison
+        # Critère 4: Vérifier le résultat de la comparaison
         comparison_result = url.get("horaires_identiques")
 
         # Classification hiérarchique
         if not url_accessible:
-            # Problème d'accessibilité : codes HTTP non-200, URL invalide, etc.
             url["statut"] = "access_error"
-        elif comparison_result == 0 and "définitivement fermé" in url.get(
-            "differences_horaires", ""
-        ):
-            # Cas spécifique : un des deux est fermé, l'autre ouvert.
-            # Doit être classé comme une différence d'horaires, même si l'extraction OSM a échoué.
-            url["statut"] = "schedule_diff"
+        elif not source_found:
+            url["statut"] = "extraction_error"
         elif not has_osm_hours:
-            # URL accessible mais échec extraction/conversion
             url["statut"] = "extraction_error"
         elif comparison_result == 1:
-            # URL accessible, extraction réussie, horaires identiques
             url["statut"] = "success"
         elif comparison_result == 0:
-            # URL accessible, extraction réussie, mais horaires différents
             url["statut"] = "schedule_diff"
-        else:
-            # URL accessible, extraction réussie, mais comparaison impossible/non effectuée
+        else:  # comparison_result is None or other
             url["statut"] = "compare_error"
 
-    # Regrouper par statut dans l'ordre de priorité
+    # Regroupement et calcul des statistiques
     statuts_disponibles = []
     ordre_statuts = [
         "success",
@@ -444,11 +424,20 @@ def _group_by_status(donnees_urls: list) -> list:
         "extraction_error",
         "access_error",
     ]
+    stats = {
+        "total_urls": len(donnees_urls),
+        "comparisons_done": 0,
+        "comparisons_identical": 0,
+        "comparisons_different": 0,
+        "comparisons_not_done": 0,
+    }
 
     for statut_code in ordre_statuts:
         config = statuts_config[statut_code]
         urls_du_statut = [u for u in donnees_urls if u["statut"] == statut_code]
-        if urls_du_statut:
+        count = len(urls_du_statut)
+
+        if count > 0:
             statuts_disponibles.append(
                 {
                     "code": statut_code,
@@ -456,12 +445,22 @@ def _group_by_status(donnees_urls: list) -> list:
                     "emoji": config["emoji"],
                     "type": config["type"],
                     "description": config["description"],
-                    "count": len(urls_du_statut),
+                    "count": count,
                     "urls": urls_du_statut,
                 }
             )
+        # Mise à jour des statistiques globales basées sur la classification
+        if statut_code == "success":
+            stats["comparisons_identical"] += count
+        elif statut_code == "schedule_diff":
+            stats["comparisons_different"] += count
 
-    return statuts_disponibles
+    stats["comparisons_done"] = (
+        stats["comparisons_identical"] + stats["comparisons_different"]
+    )
+    stats["comparisons_not_done"] = stats["total_urls"] - stats["comparisons_done"]
+
+    return stats, statuts_disponibles
 
 
 def _calculate_type_stats(donnees_urls: list) -> list:
