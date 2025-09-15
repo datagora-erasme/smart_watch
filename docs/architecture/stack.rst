@@ -28,8 +28,8 @@ Traitement de données
 Web scraping et traitement HTML
 -------------------------------
 
-`BeautifulSoup4 <https://www.crummy.com/software/BeautifulSoup/>`__
-    Parseur HTML/XML pour extraire le contenu des pages web de manière robuste.
+`Inscriptis <https://github.com/weblyzard/inscriptis>`__
+    Une bibliothèque Python de conversion HTML vers texte, avec un client en ligne de commande et un service Web.
 
 `Requests <https://requests.readthedocs.io/>`__
     Bibliothèque HTTP pour récupérer le contenu des pages web.

@@ -172,14 +172,14 @@
       </data>
     </node>
     <node id="n12">
-      <data key="d3" xml:space="preserve"><![CDATA[HtmlToMarkdown (BeautifulSoup + lxml)]]></data>
+      <data key="d3" xml:space="preserve"><![CDATA[HtmlToMarkdown (Inscriptis)]]></data>
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="102.61149444303777" width="131.65771632403624" x="1165.0858243776645" y="327.99528651208107"/>
           <y:Fill color="#FFCC00" transparent="false"/>
           <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Open Sans Semibold" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="36.68359375" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="108.96484375" x="11.34643628701815" xml:space="preserve" y="32.963950346518914">HtmlToMarkdown
-(bs4 + lxml)</y:NodeLabel>
+(Inscriptis)</y:NodeLabel>
           <y:Shape type="rectangle"/>
         </y:ShapeNode>
       </data>
@@ -431,7 +431,7 @@ Jours fériés</y:NodeLabel>
       </data>
     </node>
     <node id="n30">
-      <data key="d3" xml:space="preserve"><![CDATA[HtmlToMarkdown (BeautifulSoup + lxml)]]></data>
+      <data key="d3" xml:space="preserve"><![CDATA[HtmlToMarkdown (Inscriptis)]]></data>
       <data key="d6">
         <y:ShapeNode>
           <y:Geometry height="102.61149444303777" width="131.65771632403624" x="20.000110091950134" y="327.99528651208107"/>

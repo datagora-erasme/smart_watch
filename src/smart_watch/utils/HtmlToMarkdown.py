@@ -37,7 +37,7 @@ def convert_html_to_markdown(html: str, identifiant: Optional[str] = None) -> st
     log_prefix = f"*{identifiant}* " if identifiant else ""
     if not html:
         return ""
-    logger.debug(f"{log_prefix}Conversion HTML vers Markdown avec inscriptis")
+    logger.debug(f"{log_prefix}Conversion HTML vers Markdown avec Inscriptis")
     len_avant = len(html)
 
     # Utiliser inscriptis pour extraire le texte brut
