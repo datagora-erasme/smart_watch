@@ -2,7 +2,6 @@ version: '3.8'
 
 services:
   smart_watch_app:
-    image: erasme/smart_watch:latest
     build:
       context: .
       dockerfile: Dockerfile
@@ -10,4 +9,3 @@ services:
 
     env_file:
       - .env
-
