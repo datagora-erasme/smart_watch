@@ -40,6 +40,7 @@ Filtrage sémantique du Markdown
 Ces paramètres contrôlent la manière dont le contenu HTML (converti en Markdown) est filtré par embeddings pour n'en garder que les parties pertinentes.
 
 *   ``SIMILARITY_THRESHOLD``: Seuil de similarité (entre 0.0 et 1.0) pour qu'une phrase soit considérée comme pertinente. (Défaut: 0.5)
+*   ``SENTENCIZER``: (Optionnel) Active le découpage du texte en phrases avec NLTK. Si cette variable est décommentée et a pour valeur "NLTK", elle désactive les variables ``CHUNK_SIZE`` et ``CHUNK_OVERLAP``. ``CONTEXT_WINDOW_SIZE`` reste cependant actif pour inclure les phrases environnantes.
 *   ``CHUNK_SIZE``: Taille des chunks de texte pour le découpage du Markdown. (Défaut: 100)
 *   ``CHUNK_OVERLAP``: Nombre de phrases qui se chevauchent entre les chunks. Cela permet de conserver le contexte entre les phrases. (Défaut: 15)
 *   ``CONTEXT_WINDOW_SIZE``: Nombre de chunks de contexte à inclure avant et après une phrase pertinente. Cela permet de conserver le contexte autour des phrases extraites. (Défaut: 1)

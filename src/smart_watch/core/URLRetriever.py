@@ -24,9 +24,9 @@ HEADERS: Dict[str, str] = {
     "Accept-Language": "fr-FR,fr;q=0.7",
 }
 
-MAX_RETRIES = 1
+MAX_RETRIES = 3
 RETRY_DELAY_SECONDS = 5
-PAGE_TIMEOUT = 30000  # 30 secondes
+PAGE_TIMEOUT = 20000  # 20 secondes
 
 
 @handle_errors(

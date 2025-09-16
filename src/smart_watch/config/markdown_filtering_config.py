@@ -24,6 +24,7 @@ class MarkdownFilteringConfig:
         min_content_length (Optional[int]): la longueur minimale du contenu pour être traité.
         reference_phrases (Optional[List[str]]): les phrases de référence pour la comparaison de similarité.
         context_window_size (int): la taille de la fenêtre de contexte pour l'analyse.
+        sentencizer (Optional[str]): le sentencizer à utiliser pour le découpage du texte.
     """
 
     def __init__(self, config_data: Dict[str, Any]) -> None:
@@ -59,6 +60,7 @@ class MarkdownFilteringConfig:
             "reference_phrases"
         )
         self.context_window_size: int = config_data.get("context_window_size", 1)
+        self.sentencizer: Optional[str] = config_data.get("sentencizer")
 
     def _determine_embed_provider(self, config_data: Dict[str, Any]) -> str:
         """Détermine le fournisseur d'embeddings à partir de la configuration.
@@ -120,13 +122,14 @@ class MarkdownFilteringConfigManager(BaseConfig):
                 "similarity_threshold": float(
                     self.get_env_var("SIMILARITY_THRESHOLD", "0.0")
                 ),
-                "chunk_size": int(self.get_env_var("CHUNK_SIZE", "0")),
-                "chunk_overlap": int(self.get_env_var("CHUNK_OVERLAP", "0")),
+                "chunk_size": int(self.get_env_var("CHUNK_SIZE", "100")),
+                "chunk_overlap": int(self.get_env_var("CHUNK_OVERLAP", "15")),
                 "min_content_length": int(self.get_env_var("MIN_CONTENT_LENGTH", "0")),
                 "reference_phrases": reference_phrases,
                 "context_window_size": int(
                     self.get_env_var("CONTEXT_WINDOW_SIZE", "1")
                 ),
+                "sentencizer": self.get_env_var("SENTENCIZER"),
             }
         )
 
@@ -171,24 +174,25 @@ class MarkdownFilteringConfigManager(BaseConfig):
                 f"Le seuil de similarité ({self.config.similarity_threshold}) doit être compris entre 0.0 et 1.0."
             )
 
-        if self.config.chunk_size is None or self.config.chunk_size <= 0:
-            validation_errors.append(
-                f"La taille des chunks ({self.config.chunk_size}) doit être un entier positif."
-            )
+        if not self.config.sentencizer:
+            if self.config.chunk_size is None or self.config.chunk_size <= 0:
+                validation_errors.append(
+                    f"La taille des chunks ({self.config.chunk_size}) doit être un entier positif."
+                )
 
-        if self.config.chunk_overlap is None or self.config.chunk_overlap < 0:
-            validation_errors.append(
-                f"Le chevauchement des chunks ({self.config.chunk_overlap}) doit être un entier positif ou nul."
-            )
+            if self.config.chunk_overlap is None or self.config.chunk_overlap < 0:
+                validation_errors.append(
+                    f"Le chevauchement des chunks ({self.config.chunk_overlap}) doit être un entier positif ou nul."
+                )
 
-        if (
-            self.config.chunk_overlap is not None
-            and self.config.chunk_size is not None
-            and self.config.chunk_overlap >= self.config.chunk_size
-        ):
-            validation_errors.append(
-                "Le chevauchement des chunks doit être inférieur à leur taille."
-            )
+            if (
+                self.config.chunk_overlap is not None
+                and self.config.chunk_size is not None
+                and self.config.chunk_overlap >= self.config.chunk_size
+            ):
+                validation_errors.append(
+                    "Le chevauchement des chunks doit être inférieur à leur taille."
+                )
 
         if not self.config.reference_phrases:
             validation_errors.append(

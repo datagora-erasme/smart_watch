@@ -5,8 +5,10 @@ inscriptis
 jinja2
 lxml
 matplotlib
+nltk
 pandas
 playwright
+playwright-stealth
 polars
 pyarrow
 pytest

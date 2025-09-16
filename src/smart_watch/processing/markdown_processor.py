@@ -3,10 +3,12 @@ Processeur pour filtrer le contenu markdown et extraire les sections pertinentes
 Utilise des embeddings sémantiques pour identifier les sections les plus pertinentes.
 """
 
+import os
 from typing import List, Optional, Tuple
 
+import nltk
 import numpy as np
-from sentence_transformers import SentenceTransformer
+from fastembed import TextEmbedding
 from sklearn.metrics.pairwise import cosine_similarity
 
 from ..core.ConfigManager import ConfigManager
@@ -41,6 +43,15 @@ class MarkdownProcessor:
         # Phrases de référence pour identifier les sections d'horaires (depuis la config)
         self.reference_phrases = self.config.markdown_filtering.reference_phrases
 
+        if self.config.markdown_filtering.sentencizer == "NLTK":
+            try:
+                nltk.data.find("tokenizers/punkt")
+                self.logger.info("NLTK 'punkt' tokenizer is already downloaded.")
+            except LookupError:
+                self.logger.info("Downloading NLTK 'punkt' tokenizer...")
+                nltk.download("punkt")
+                self.logger.info("NLTK 'punkt' tokenizer downloaded successfully.")
+
     def _init_embedding_client(self):
         """Initialise le client approprié pour les embeddings selon la configuration."""
         embed_config = self.config.markdown_filtering
@@ -48,11 +59,15 @@ class MarkdownProcessor:
         if embed_config.embed_fournisseur == "LOCAL":
             if embed_config.embed_modele:
                 try:
-                    self.local_embed_model = SentenceTransformer(
-                        embed_config.embed_modele
+                    # Calcul dynamique du nombre de threads
+                    cpu_count = os.cpu_count() or 1
+                    threads = max(1, cpu_count // 4)
+
+                    self.local_embed_model = TextEmbedding(
+                        model_name=embed_config.embed_modele, threads=threads
                     )
                     self.logger.info(
-                        f"Modèle d'embedding local chargé: {embed_config.embed_modele}"
+                        f"Modèle d'embedding local chargé: {embed_config.embed_modele} avec {threads} threads."
                     )
                     self.embed_client = None
                 except Exception as e:
@@ -95,13 +110,11 @@ class MarkdownProcessor:
         """Obtient les embeddings pour une liste de textes."""
         if self.local_embed_model:
             try:
-                embeddings = self.local_embed_model.encode(
-                    texts, show_progress_bar=False
-                )
+                embeddings = list(self.local_embed_model.embed(texts))
                 self.logger.info(
                     f"{len(texts)} embeddings calculés avec le modèle local."
                 )
-                return np.array(embeddings), 0.0  # Pas d'émissions CO2 pour le local
+                return np.array(embeddings), 0.0
             except Exception as e:
                 self.logger.error(f"Erreur calcul embeddings locaux: {e}")
                 raise
@@ -183,6 +196,8 @@ class MarkdownProcessor:
             execution_id (int): ID de l'exécution
         """
         # Récupérer les résultats avec markdown nettoyé
+        if self.reference_embeddings is None:
+            self._calculate_reference_embeddings()
         pending_results = db_processor.get_results_with_cleaned_markdown(execution_id)
 
         for result in pending_results:
@@ -220,44 +235,7 @@ class MarkdownProcessor:
         Returns:
             Tuple[str, float]: (contenu filtré, émissions CO2 du processus)
         """
-        try:
-            # Votre logique de filtrage par embeddings ici
-            # Exemple simple - remplacez par votre vraie logique
-
-            # Recherche de mots-clés liés aux horaires
-            keywords = [
-                "horaire",
-                "ouvert",
-                "fermé",
-                "heure",
-                "lundi",
-                "mardi",
-                "mercredi",
-                "jeudi",
-                "vendredi",
-                "samedi",
-                "dimanche",
-                "h",
-                "heures",
-            ]
-
-            lines = markdown_content.split("\n")
-            filtered_lines = []
-
-            for line in lines:
-                if any(keyword.lower() in line.lower() for keyword in keywords):
-                    filtered_lines.append(line)
-
-            filtered_content = "\n".join(filtered_lines)
-
-            # Émissions CO2 estimées (remplacez par votre calcul réel)
-            co2_emissions = 0.001  # Exemple : 1g de CO2
-
-            return filtered_content, co2_emissions
-
-        except Exception as e:
-            self.logger.error(f"Erreur filtrage markdown: {e}")
-            return markdown_content, 0.0  # Retourne le contenu original en cas d'erreur
+        return self._filter_single_markdown(markdown_content)
 
     def _filter_single_markdown(self, markdown_content: str) -> Tuple[str, float]:
         """Filtre un contenu markdown et retourne le contenu filtré et les émissions CO2."""
@@ -273,10 +251,8 @@ class MarkdownProcessor:
 
         try:
             text = markdown_content.strip()
-            if md_config.chunk_size is None or md_config.chunk_overlap is None:
-                return markdown_content, co2_for_this_document
             chunks = self._split_into_chunks(
-                text, md_config.chunk_size, md_config.chunk_overlap
+                text, md_config.chunk_size or 0, md_config.chunk_overlap or 0
             )
             if not chunks:
                 return markdown_content, co2_for_this_document
@@ -290,11 +266,13 @@ class MarkdownProcessor:
             similarites = cosine_similarity(self.reference_embeddings, embed_chunks)
             similarites_max = similarites.max(axis=0)
 
+            context_window = md_config.context_window_size
+
             relevant_indices = set()
             for i, score in enumerate(similarites_max):
                 if score >= md_config.similarity_threshold:
-                    start_idx = max(0, i - md_config.context_window_size)
-                    end_idx = min(len(chunks), i + md_config.context_window_size + 1)
+                    start_idx = max(0, i - context_window)
+                    end_idx = min(len(chunks), i + context_window + 1)
                     relevant_indices.update(range(start_idx, end_idx))
 
             if not relevant_indices:
@@ -311,19 +289,39 @@ class MarkdownProcessor:
     def _split_into_chunks(
         self, text: str, chunk_size: int, chunk_overlap: int
     ) -> List[str]:
-        """Découpe le texte en segments selon la ponctuation et les retours à la ligne."""
-        import re
+        """Découpe le texte en segments."""
+        md_config = self.config.markdown_filtering
+        if md_config.sentencizer == "NLTK":
+            self.logger.debug("Découpage du texte avec NLTK sentencizer.")
+            return nltk.sent_tokenize(text, language="french")
 
-        # Divise le texte par la ponctuation de fin de phrase.
-        sentences = re.split(r"(?<=[.!?])\s+", text)
+        self.logger.debug(
+            f"Découpage du texte avec chunk_size={chunk_size} et chunk_overlap={chunk_overlap}."
+        )
+        if chunk_size <= 0:
+            self.logger.warning("chunk_size doit être positif. Retour du texte entier.")
+            return [text] if text.strip() else []
 
-        # Divise chaque "phrase" par les sauts de ligne.
-        final_chunks = []
-        for sentence in sentences:
-            lines = sentence.split("\n")
-            for line in lines:
-                stripped_line = line.strip()
-                if stripped_line:  # Ajoute uniquement les lignes non vides.
-                    final_chunks.append(stripped_line)
+        words = text.split()
+        if not words:
+            return []
 
-        return final_chunks
+        chunks = []
+        current_pos = 0
+        while current_pos < len(words):
+            end_pos = current_pos + chunk_size
+            chunk_words = words[current_pos:end_pos]
+            chunks.append(" ".join(chunk_words))
+
+            # Si le chevauchement est plus grand ou égal à la taille du chunk,
+            # on avance d'un seul mot pour éviter une boucle infinie.
+            step = chunk_size - chunk_overlap
+            if step <= 0:
+                self.logger.warning(
+                    f"chunk_overlap ({chunk_overlap}) >= chunk_size ({chunk_size}). Avancement d'un mot pour éviter une boucle infinie."
+                )
+                step = 1
+
+            current_pos += step
+
+        return chunks
