@@ -385,34 +385,37 @@ def _group_by_status_and_calculate_stats(donnees_urls: list) -> tuple[dict, list
 
         # Critère 2: Vérifier si la source a été trouvée par le LLM
         llm_json = url.get("llm_horaires_json", {})
-        source_found = (
-            llm_json.get("extraction_info", {}).get("source_found", True)
-            if isinstance(llm_json, dict)
-            else True
-        )
+        source_found_llm = True
+        if isinstance(llm_json, dict):
+            source_found_llm = llm_json.get("extraction_info", {}).get(
+                "source_found", True
+            )
 
-        # Critère 3: Vérifier la présence d'horaires LLM OSM extraits
+        # Critère 3: Vérifier la présence d'horaires de référence
+        has_reference_hours = url.get("horaires_data_gl") and not url.get(
+            "horaires_data_gl", ""
+        ).startswith("Erreur")
+
+        # Critère 4: Vérifier la présence d'horaires LLM OSM extraits
         has_osm_hours = (
             url.get("llm_horaires_osm")
             and url["llm_horaires_osm"].strip()
             and not url["llm_horaires_osm"].startswith("Erreur")
         )
 
-        # Critère 4: Vérifier le résultat de la comparaison
+        # Critère 5: Vérifier le résultat de la comparaison
         comparison_result = url.get("horaires_identiques")
 
         # Classification hiérarchique
-        if not url_accessible:
-            url["statut"] = "access_error"
-        elif not source_found:
-            url["statut"] = "extraction_error"
-        elif not has_osm_hours:
-            url["statut"] = "extraction_error"
-        elif comparison_result == 1:
+        if comparison_result == 1:
             url["statut"] = "success"
         elif comparison_result == 0:
             url["statut"] = "schedule_diff"
-        else:  # comparison_result is None or other
+        elif not url_accessible:
+            url["statut"] = "access_error"
+        elif not source_found_llm or not has_osm_hours or not has_reference_hours:
+            url["statut"] = "extraction_error"
+        else:  # comparison_result is None et les autres conditions sont fausses
             url["statut"] = "compare_error"
 
     # Regroupement et calcul des statistiques

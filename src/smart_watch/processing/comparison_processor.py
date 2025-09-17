@@ -37,7 +37,6 @@ class ComparisonProcessor:
                         "identique": None,
                         "differences": f"Erreur dans les données GL: {lieu.horaires_data_gl_json}",
                     }
-
                 horaires_gl_json = json.loads(lieu.horaires_data_gl_json)
             except json.JSONDecodeError as e:
                 return {
@@ -66,49 +65,17 @@ class ComparisonProcessor:
                     "differences": f"Comparaison impossible: {comment}",  # C'est l'info qui sera affichée
                 }
 
-            # Vérifier l'état global de fermeture selon les deux sources
-            try:
-                is_gl_closed = comparator._is_permanently_closed(horaires_gl_json)
-                is_llm_closed = comparator._is_permanently_closed(horaires_llm_json)
-            except Exception as e:
-                return {
-                    "identique": None,
-                    "differences": f"Erreur vérification fermeture: {str(e)}",
-                }
-
-            # Cas où les deux sources indiquent une fermeture
-            if is_gl_closed and is_llm_closed:
-                return {
-                    "identique": True,
-                    "differences": "Fermeture confirmée par les deux sources",
-                }
-
-            # Cas où un seul indique une fermeture
-            if is_gl_closed != is_llm_closed:
-                return {
-                    "identique": False,
-                    "differences": f"Écart fermeture: {'data.grandlyon.com' if is_gl_closed else 'LLM'} indique fermé",
-                }
-
-            # Effectuer la comparaison détaillée si nécessaire
+            # Effectuer la comparaison détaillée
             try:
                 comparison_result = comparator.compare_schedules(
                     horaires_gl_json, horaires_llm_json
                 )
 
                 # Préparer les résultats structurés
-                if comparison_result.identical:
-                    return {
-                        "identique": True,  # True = identiques
-                        "differences": "",  # Pas de différences
-                    }
-                else:
-                    differences_text = comparison_result.differences
-
-                    return {
-                        "identique": False,  # False = différents
-                        "differences": differences_text,
-                    }
+                return {
+                    "identique": comparison_result.identical,
+                    "differences": comparison_result.differences,
+                }
 
             except Exception as e:
                 return {
@@ -117,6 +84,7 @@ class ComparisonProcessor:
                 }
 
         except Exception as e:
+            # Erreur générale non prévue
             return {
                 "identique": None,
                 "differences": f"Erreur générale: {str(e)}",
