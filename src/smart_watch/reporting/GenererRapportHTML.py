@@ -258,10 +258,56 @@ def _process_data(donnees_urls: list) -> None:
             # S'assurer que les champs requis existent avec des valeurs par défaut
             _set_default_fields(url)
 
+            # NOUVELLE FONCTION : Enrichir le message avec les détails d'erreur
+            _enrich_error_message(url)
+
         except Exception as e:
             logger.warning(
                 f"*{url.get('identifiant', 'inconnu')}* Erreur traitement données pour '{url.get('nom', 'inconnu')}' : {e}"
             )
+
+
+def _enrich_error_message(url: dict) -> None:
+    """Enrichit le message d'erreur avec les détails pertinents selon le type d'erreur."""
+    statut = url.get("statut", "")
+    current_message = url.get("message", "")
+    erreurs_pipeline = url.get("erreurs_pipeline", "")
+
+    # Pour les erreurs d'accès, utiliser le message spécifique
+    if statut == "access_error":
+        if current_message and current_message not in ["", "-"]:
+            # Le message est déjà informatif (ex: "URL non fournie", "Domaine non résolu")
+            pass
+        elif erreurs_pipeline:
+            # Utiliser le premier niveau d'erreur de la pipeline
+            url["message"] = (
+                erreurs_pipeline.split("\n")[0]
+                if "\n" in erreurs_pipeline
+                else erreurs_pipeline
+            )
+        else:
+            url["message"] = "Accès impossible"
+
+    # Pour les erreurs d'extraction, combiner le message et la première erreur
+    elif statut == "extraction_error":
+        if erreurs_pipeline and not current_message.startswith("Erreur"):
+            # Extraire la première erreur significative
+            first_error = (
+                erreurs_pipeline.split(" | ")[0]
+                if " | " in erreurs_pipeline
+                else erreurs_pipeline
+            )
+            if first_error and len(first_error) < 100:  # Éviter les messages trop longs
+                url["message"] = first_error
+            else:
+                url["message"] = "Extraction échouée"
+        elif not current_message or current_message in ["", "-"]:
+            url["message"] = "Extraction échouée"
+
+    # Pour les erreurs de comparaison
+    elif statut == "compare_error":
+        if not current_message or current_message in ["", "-"]:
+            url["message"] = "Comparaison impossible"
 
 
 def _process_error_chain(url: dict) -> None:

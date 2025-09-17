@@ -491,8 +491,8 @@
                             <th class="col-comparison">Comparaison</th>
                             {% elif statut.code == 'schedule_diff' %}
                             <th class="col-comparison">Différences détectées</th>
-                            {% elif statut.code == 'extraction_error' %}
-                            <th class="col-comparison">Erreur extraction</th>
+                            {% else %}
+                            <th class="col-comparison">Détails erreur</th>
                             {% endif %}
                             <th onclick="sortTable(this, 'number')">CO2 (g)</th>
                         </tr>
@@ -514,8 +514,18 @@
                                     class="badge {% if url.code_http >= 200 and url.code_http < 300 %}success{% else %}error{% endif %}">{{
                                     url.code_http }}</span>
                             </td>
-                            <td class="col-details" {% if statut.code=='access_error' %}
-                                style="color: #dc3545; font-weight: 500;" {% endif %}>{{ url.message or '-' }}</td>
+                            <td class="col-details" {% if statut.code in ['access_error', 'extraction_error', 'compare_error'] %}
+                                style="color: #dc3545; font-weight: 500;" {% endif %}>
+                                {% if statut.code == 'access_error' %}
+                                    {{ url.message or 'Erreur d\'accès non spécifiée' }}
+                                {% elif statut.code == 'extraction_error' %}
+                                    {{ url.message or 'Erreur d\'extraction non spécifiée' }}
+                                {% elif statut.code == 'compare_error' %}
+                                    {{ url.message or 'Erreur de comparaison non spécifiée' }}
+                                {% else %}
+                                    {{ url.message or '-' }}
+                                {% endif %}
+                            </td>
                             <td class="col-gl">
                                 {% if url.horaires_data_gl %}
                                 <div class="preview data">{{ url.horaires_data_gl[:60] }}{% if url.horaires_data_gl|length
@@ -530,11 +540,12 @@
                                 {{ view_button('Horaires LLM OSM - ' ~ url.identifiant, url.llm_horaires_osm) }}
                                 {% else %}-{% endif %}
                             </td>
-                            {% if statut.code != 'access_error' %}
+                            {% if statut.code == 'success' %}
                             <td class="col-comparison">
-                                {% if statut.code == 'success' %}
                                 <span style="color: #28a745; font-weight: 500;">✓ Identiques</span>
-                                {% elif statut.code == 'schedule_diff' %}
+                            </td>
+                            {% elif statut.code == 'schedule_diff' %}
+                            <td class="col-comparison">
                                 {% if url.differences_horaires %}
                                 <div class="preview comparison">{{ url.differences_horaires[:80] }}{% if
                                     url.differences_horaires|length > 80 %}...{% endif %}</div>
@@ -543,24 +554,31 @@
                                 {% else %}
                                 <span style="color: #ffc107; font-weight: 500;">⚠️ Différences détectées</span>
                                 {% endif %}
+                            </td>
+                            {% else %}
+                            <!-- Colonne unique pour les détails d'erreur complets -->
+                            <td class="col-comparison">
+                                {% if statut.code == 'access_error' %}
+                                    {% set error_content = url.erreurs_pipeline or url.erreurs_resume %}
                                 {% elif statut.code == 'extraction_error' %}
-                                {% if url.erreurs_resume %}
-                                <div class="preview comparison" style="background:#fff3cd;border-color:#ffeaa7;">{{
-                                    url.erreurs_resume[:80] }}{% if url.erreurs_resume|length > 80 %}...{% endif %}
-                                </div>
-                                {{ view_button('Chaîne d\'erreurs - ' ~ url.identifiant, url.erreurs_pipeline, '🔍
-                                Erreurs') }}
+                                    {% set error_content = url.erreurs_pipeline or url.erreurs_resume %}
+                                {% elif statut.code == 'compare_error' %}
+                                    {% set error_content = url.erreurs_pipeline %}
                                 {% else %}
-                                <span style="color: #dc3545; font-weight: 500;">❌ Extraction échouée</span>
+                                    {% set error_content = url.erreurs_pipeline or url.erreurs_resume or url.message %}
                                 {% endif %}
-                                {% if url.comparaison_horaires and url.comparaison_horaires != url.erreurs_resume %}
-                                <br>{{ view_button('Détails comparaison - ' ~ url.identifiant, url.comparaison_horaires,
-                                '📋 Détails') }}
-                                {% endif %}
+                                
+                                {% if error_content %}
+                                <div class="preview comparison" style="background:#f8d7da;border-color:#f5c6cb;">
+                                    {{ error_content[:80] }}{% if error_content|length > 80 %}...{% endif %}
+                                </div>
+                                {{ view_button('Détails complets - ' ~ url.identifiant, error_content, '🔍 Voir détails') }}
+                                {% else %}
+                                <span class="text-muted">Aucun détail disponible</span>
                                 {% endif %}
                             </td>
-                            <td>{{ "%.3f"|format(url.llm_consommation_requete or 0) }}</td>
                             {% endif %}
+                            <td>{{ "%.3f"|format(url.llm_consommation_requete or 0) }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>

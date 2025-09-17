@@ -171,6 +171,16 @@ def retrieve_url(
         else ErrorSeverity.HIGH
     )
 
+    # Gestion des erreurs spécifiques
+    if "ERR_NAME_NOT_RESOLVED" in str(last_error):
+        return {
+            "statut": "erreur",
+            "message": "Domaine non résolu (DNS)",
+            "code_http": 0,
+            "markdown_brut": "",
+            "erreurs_pipeline": f"Impossible de résoudre le domaine: {url}",
+        }
+
     error_handler.handle_error(
         exception=last_error or RuntimeError("Échec de la récupération de l'URL"),
         context=error_handler.create_error_context(
