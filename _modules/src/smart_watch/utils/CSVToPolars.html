@@ -1,0 +1,422 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.smart_watch.utils.CSVToPolars &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.jpg"/>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=d2e4462e"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/translations.js?v=e6b791cb"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/introduction.html">Présentation du projet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/introduction.html#sommaire">Sommaire</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/docker.html">Utilisation avec Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/configuration.html">Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture technique</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/main.html">Orchestrateur</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/diagramme.html">Pipeline de traitement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/bdd.html">Base de données</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/stack.html">Stack technique</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/config/index.html">Modules Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/core/index.html">Modules Core</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/processing/index.html">Modules Processing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/utils/index.html">Modules Utils</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Reporting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html">Modules Reporting</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Code du module</a></li>
+      <li class="breadcrumb-item active">src.smart_watch.utils.CSVToPolars</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Code source de src.smart_watch.utils.CSVToPolars</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Documentation :</span>
+<span class="c1"># https://datagora-erasme.github.io/smart_watch/source/modules/utils/CSVToPolars.html</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">csv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tempfile</span><span class="w"> </span><span class="kn">import</span> <span class="n">NamedTemporaryFile</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">polars</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pl</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..core.ErrorHandler</span><span class="w"> </span><span class="kn">import</span> <span class="n">ErrorCategory</span><span class="p">,</span> <span class="n">ErrorSeverity</span><span class="p">,</span> <span class="n">handle_errors</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..core.Logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_logger</span>
+
+<span class="c1"># Initialize logger for this module</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">create_logger</span><span class="p">(</span>
+    <span class="n">module_name</span><span class="o">=</span><span class="s2">&quot;CSVToPolars&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="CSVToPolars">
+<a class="viewcode-back" href="../../../../source/modules/utils/CSVToPolars.html#src.smart_watch.utils.CSVToPolars.CSVToPolars">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CSVToPolars</span><span class="p">:</span>
+<div class="viewcode-block" id="CSVToPolars.__init__">
+<a class="viewcode-back" href="../../../../source/modules/utils/CSVToPolars.html#src.smart_watch.utils.CSVToPolars.CSVToPolars.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">source</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">separator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+        <span class="n">has_header</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialise une instance de la classe pour charger et traiter un fichier CSV avec Polars.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            source (str, obligatoire): Chemin vers le fichier CSV à charger.</span>
+<span class="sd">            separator (str, optionnel): Séparateur utilisé dans le fichier CSV. Par défaut &quot;auto&quot; pour une détection automatique.</span>
+<span class="sd">            has_header (bool, optionnel): Indique si le fichier CSV contient une ligne d&#39;en-tête. True par défaut.</span>
+
+<span class="sd">        Attributes:</span>
+<span class="sd">            source (str): Chemin du fichier source CSV.</span>
+<span class="sd">            separator (str): Séparateur utilisé pour lire le CSV.</span>
+<span class="sd">            df (pl.DataFrame | None): DataFrame Polars résultant du chargement du CSV.</span>
+<span class="sd">            has_header (bool): Indique la présence d&#39;une ligne d&#39;en-tête dans le CSV.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">source</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">separator</span> <span class="o">=</span> <span class="n">separator</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="kc">None</span>  <span class="c1"># indique que l’attribut df peut être soit un objet pl.DataFrame, soit None. &quot;= None&quot; initialise self.df à None au départ.</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">has_header</span> <span class="o">=</span> <span class="n">has_header</span></div>
+
+
+<div class="viewcode-block" id="CSVToPolars._is_url">
+<a class="viewcode-back" href="../../../../source/modules/utils/CSVToPolars.html#src.smart_watch.utils.CSVToPolars.CSVToPolars._is_url">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_is_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Vérifie si la source fournie est une URL.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            source (str): La chaîne de caractères à vérifier.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True si la source commence par &#39;http://&#39; ou &#39;https://&#39;, sinon False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">source</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s2">&quot;http://&quot;</span><span class="p">,</span> <span class="s2">&quot;https://&quot;</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="CSVToPolars._detect_separator">
+<a class="viewcode-back" href="../../../../source/modules/utils/CSVToPolars.html#src.smart_watch.utils.CSVToPolars.CSVToPolars._detect_separator">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_detect_separator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Détecte le séparateur de colonnes dans un échantillon de texte CSV.</span>
+
+<span class="sd">        Utilise la classe `csv.Sniffer` pour analyser l&#39;échantillon et déterminer le séparateur utilisé.</span>
+<span class="sd">        Si la détection échoue, le séparateur par défaut &#39;;&#39; est utilisé.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            sample (str): Un échantillon de texte représentant le contenu d&#39;un fichier CSV.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Le séparateur détecté ou &#39;;&#39; si la détection échoue.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">sniffer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">Sniffer</span><span class="p">()</span>
+            <span class="n">dialect</span> <span class="o">=</span> <span class="n">sniffer</span><span class="o">.</span><span class="n">sniff</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Séparateur détecté: &#39;</span><span class="si">{</span><span class="n">dialect</span><span class="o">.</span><span class="n">delimiter</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">dialect</span><span class="o">.</span><span class="n">delimiter</span>
+        <span class="k">except</span> <span class="n">csv</span><span class="o">.</span><span class="n">Error</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Impossible de détecter le séparateur, utilisation de &#39;;&#39;&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s2">&quot;;&quot;</span></div>
+
+
+<div class="viewcode-block" id="CSVToPolars._download_to_temp_file">
+<a class="viewcode-back" href="../../../../source/modules/utils/CSVToPolars.html#src.smart_watch.utils.CSVToPolars.CSVToPolars._download_to_temp_file">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_download_to_temp_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Télécharge un fichier CSV depuis une URL et le sauvegarde dans un fichier temporaire.</span>
+
+<span class="sd">        Cette méthode effectue une requête HTTP GET vers l&#39;URL spécifiée, vérifie le succès de la réponse,</span>
+<span class="sd">        puis écrit le contenu du fichier CSV dans un fichier temporaire sur le disque. Le chemin vers ce</span>
+<span class="sd">        fichier temporaire est ensuite retourné.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            url (str): L&#39;URL du fichier CSV à télécharger.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Path: Le chemin vers le fichier temporaire contenant le CSV téléchargé.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            Exception: Si une erreur survient lors du téléchargement ou de la sauvegarde du fichier.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Téléchargement CSV depuis: </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+
+            <span class="c1"># Créer un fichier temporaire</span>
+            <span class="n">temp_file</span> <span class="o">=</span> <span class="n">NamedTemporaryFile</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;wb&quot;</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.csv&quot;</span><span class="p">,</span> <span class="n">delete</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">temp_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+            <span class="n">temp_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+            <span class="n">temp_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">temp_file</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;CSV téléchargé vers fichier temporaire: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span><span class="si">}</span><span class="s2"> bytes&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">temp_path</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur téléchargement CSV: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span></div>
+
+
+<div class="viewcode-block" id="CSVToPolars._process_local_file">
+<a class="viewcode-back" href="../../../../source/modules/utils/CSVToPolars.html#src.smart_watch.utils.CSVToPolars.CSVToPolars._process_local_file">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_process_local_file</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">cleanup_temp</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Traite un fichier CSV local et le convertit en DataFrame Polars. Est appelé par _load_from_url et _load_from_path.</span>
+
+<span class="sd">        Cette méthode détecte automatiquement le séparateur si nécessaire, lit le fichier CSV en utilisant Polars,</span>
+<span class="sd">        et effectue si nécessaire un nettoyage du fichier temporaire après traitement.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            file_path (Path): Chemin vers le fichier CSV à traiter.</span>
+<span class="sd">            cleanup_temp (bool, optionnel): Indique si le fichier temporaire doit être supprimé après traitement.</span>
+<span class="sd">                Défaut à False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            pl.DataFrame: DataFrame Polars contenant les données du fichier CSV.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            - Le séparateur est détecté automatiquement si `self.separator` vaut &quot;auto&quot;.</span>
+<span class="sd">            - Les lignes entièrement vides sont filtrées du DataFrame résultant.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Détection automatique du séparateur si nécessaire</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">separator</span> <span class="o">==</span> <span class="s2">&quot;auto&quot;</span><span class="p">:</span>
+                <span class="k">with</span> <span class="n">file_path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_header</span><span class="p">:</span>
+                        <span class="c1"># Si en-tête, on détecte sur elle uniquement</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="n">sample</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+                        <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+                            <span class="n">sample</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># Si pas d&#39;en-tête, on détecte sur un échantillon de 50 lignes max</span>
+                        <span class="n">sample_lines</span> <span class="o">=</span> <span class="p">[]</span>
+                        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">50</span><span class="p">):</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">sample_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+                            <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+                                <span class="k">break</span>
+                        <span class="n">sample</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sample_lines</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">sample</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">separator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_detect_separator</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                        <span class="s2">&quot;Fichier CSV vide ou échantillon vide, impossible de détecter le séparateur.&quot;</span>
+                    <span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">separator</span> <span class="o">=</span> <span class="s2">&quot;;&quot;</span>  <span class="c1"># Valeur par défaut</span>
+
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Lecture CSV: </span><span class="si">{</span><span class="n">file_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Lecture avec Polars</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+                    <span class="n">file_path</span><span class="p">,</span>
+                    <span class="n">has_header</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">has_header</span><span class="p">,</span>
+                    <span class="n">separator</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">separator</span><span class="p">,</span>
+                    <span class="n">truncate_ragged_lines</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="o">~</span><span class="n">pl</span><span class="o">.</span><span class="n">all_horizontal</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">is_null</span><span class="p">()))</span>
+            <span class="k">except</span> <span class="n">pl</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">NoDataError</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Le fichier CSV </span><span class="si">{</span><span class="n">file_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> est vide.&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+
+            <span class="k">return</span> <span class="n">df</span>
+
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="c1"># Nettoyage du fichier temporaire si nécessaire</span>
+            <span class="k">if</span> <span class="n">cleanup_temp</span> <span class="ow">and</span> <span class="n">file_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                <span class="n">file_path</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fichier temporaire supprimé: </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CSVToPolars._load_from_url">
+<a class="viewcode-back" href="../../../../source/modules/utils/CSVToPolars.html#src.smart_watch.utils.CSVToPolars.CSVToPolars._load_from_url">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_load_from_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Charge un fichier CSV depuis une URL et le convertit en DataFrame Polars.</span>
+
+<span class="sd">        Cette méthode télécharge le fichier CSV depuis l&#39;URL spécifiée dans `self.source`,</span>
+<span class="sd">        le sauvegarde dans un fichier temporaire, puis le traite pour le convertir en un DataFrame Polars.</span>
+<span class="sd">        Le fichier temporaire est supprimé après le traitement.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            pl.DataFrame: Le DataFrame Polars résultant du fichier CSV téléchargé.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">temp_file_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_download_to_temp_file</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_local_file</span><span class="p">(</span><span class="n">temp_file_path</span><span class="p">,</span> <span class="n">cleanup_temp</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CSVToPolars._load_from_path">
+<a class="viewcode-back" href="../../../../source/modules/utils/CSVToPolars.html#src.smart_watch.utils.CSVToPolars.CSVToPolars._load_from_path">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_load_from_path</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Charge un fichier CSV local et le convertit en DataFrame Polars.</span>
+
+<span class="sd">        Cette méthode vérifie l&#39;existence du fichier CSV à partir du chemin spécifié dans `self.source`.</span>
+<span class="sd">        Si le fichier existe, il est traité et converti en DataFrame Polars via la méthode `_process_local_file`.</span>
+<span class="sd">        Si le fichier n&#39;est pas trouvé, une exception `FileNotFoundError` est levée.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            pl.DataFrame: Le contenu du fichier CSV sous forme de DataFrame Polars.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            FileNotFoundError: Si le fichier CSV local n&#39;est pas trouvé au chemin spécifié.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">file_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fichier CSV local non trouvé: </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_local_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">cleanup_temp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CSVToPolars.load_csv">
+<a class="viewcode-back" href="../../../../source/modules/utils/CSVToPolars.html#src.smart_watch.utils.CSVToPolars.CSVToPolars.load_csv">[docs]</a>
+    <span class="nd">@handle_errors</span><span class="p">(</span>
+        <span class="n">category</span><span class="o">=</span><span class="n">ErrorCategory</span><span class="o">.</span><span class="n">FILE_IO</span><span class="p">,</span>
+        <span class="n">severity</span><span class="o">=</span><span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">HIGH</span><span class="p">,</span>
+        <span class="n">user_message</span><span class="o">=</span><span class="s2">&quot;Impossible de charger ou traiter le fichier CSV source.&quot;</span><span class="p">,</span>
+        <span class="n">reraise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Charge un fichier CSV en tant que DataFrame Polars.</span>
+
+<span class="sd">        Cette méthode vérifie si la source du fichier CSV est une URL ou un chemin local,</span>
+<span class="sd">        puis charge le fichier en conséquence. Elle lève une exception si aucune source n&#39;est spécifiée.</span>
+<span class="sd">        Un message d&#39;information est enregistré après le chargement du fichier.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            pl.DataFrame: Le DataFrame Polars contenant les données du fichier CSV.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: Si aucune source de fichier CSV n&#39;a été spécifiée.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Aucune source de fichier CSV n&#39;a été spécifiée.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">source</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_from_url</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_load_from_path</span><span class="p">()</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;CSV chargé avec succès: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="p">)</span><span class="si">}</span><span class="s2"> lignes, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span><span class="si">}</span><span class="s2"> colonnes&quot;</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">df</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
