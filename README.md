@@ -29,7 +29,7 @@
 
 *   **Collecte de données** : charge les URLs des établissements à analyser depuis un fichier CSV.
 *   **Conversion des données** : converti les pages web en Markdown et nettoie ce dernier pour ne garder que l'essentiel
-*   **Filtrage de contenu intelligent** : utilise des embeddings (via `nomic-embed`) pour identifier et extraire uniquement les sections de page web relatives aux horaires, optimisant ainsi les appels aux LLM.
+*   **Filtrage de contenu intelligent** : utilise des embeddings (via `jina-embeddings-v3`) pour identifier et extraire uniquement les sections de page web relatives aux horaires, optimisant ainsi les appels aux LLM.
 *   **Extraction par LLM** : interroge des LLM (compatibles OpenAI ou Mistral) pour extraire les horaires dans un format structuré customisé (JSON).
 *   **Suivi de la consommation carbone** : mesure les émissions de CO2 des appels aux LLM (extraction et embeddings) grâce à `codecarbon` et les affiche dans les rapports.
 *   **Comparaison automatisée** : compare les horaires extraits par le LLM avec des données de référence (depuis data.grandlyon.com) pour détecter les divergences.
