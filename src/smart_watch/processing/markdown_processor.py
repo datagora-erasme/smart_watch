@@ -9,7 +9,6 @@ from typing import List, Optional, Tuple
 import nltk
 import numpy as np
 from fastembed import TextEmbedding
-from sklearn.metrics.pairwise import cosine_similarity
 
 from ..core.ConfigManager import ConfigManager
 from ..core.ErrorHandler import ErrorCategory, ErrorSeverity, handle_errors
@@ -106,13 +105,20 @@ class MarkdownProcessor:
         reraise=False,
         default_return=(None, 0.0),
     )
-    def _get_embeddings(self, texts: List[str]) -> Tuple[np.ndarray, float]:
+    def _get_embeddings(
+        self, texts: List[str], counter: Optional[Tuple[int, int]] = None
+    ) -> Tuple[np.ndarray, float]:
         """Obtient les embeddings pour une liste de textes."""
+        counter_str = (
+            f"Lieu {counter[0]}/{counter[1]} | " if counter else ""
+        )  # Crée le préfixe pour le log
+
         if self.local_embed_model:
             try:
+                model_name = self.config.markdown_filtering.embed_modele
                 embeddings = list(self.local_embed_model.embed(texts))
                 self.logger.info(
-                    f"{len(texts)} embeddings calculés avec le modèle local."
+                    f"{counter_str}{len(texts)} embeddings calculés avec le modèle local: {model_name}."
                 )
                 return np.array(embeddings), 0.0
             except Exception as e:
@@ -125,7 +131,7 @@ class MarkdownProcessor:
                     embeddings = np.array(response.content)
                     self.total_co2_emissions += response.co2_emissions
                     self.logger.info(
-                        f"{len(texts)} embeddings calculés avec le modèle {self.embed_client.model}."
+                        f"{counter_str}{len(texts)} embeddings calculés avec le modèle {self.embed_client.model}."
                     )
                     return embeddings, response.co2_emissions
                 else:
@@ -199,13 +205,15 @@ class MarkdownProcessor:
         if self.reference_embeddings is None:
             self._calculate_reference_embeddings()
         pending_results = db_processor.get_results_with_cleaned_markdown(execution_id)
+        total_results = len(pending_results)
 
-        for result in pending_results:
+        for i, result in enumerate(pending_results):
             try:
                 # Filtrer le markdown
                 markdown_content = getattr(result, "markdown_nettoye", "") or ""
+                counter = (i + 1, total_results)
                 filtered_markdown, co2_emissions = self.filter_markdown(
-                    markdown_content
+                    markdown_content, counter
                 )
 
                 # Extraire l'ID de manière sécurisée
@@ -225,19 +233,24 @@ class MarkdownProcessor:
                 self.logger.error(f"Erreur lors du filtrage markdown: {e}")
                 continue
 
-    def filter_markdown(self, markdown_content: str) -> Tuple[str, float]:
+    def filter_markdown(
+        self, markdown_content: str, counter: Optional[Tuple[int, int]] = None
+    ) -> Tuple[str, float]:
         """
         Filtre le contenu markdown en gardant seulement les parties pertinentes pour les horaires.
 
         Args:
             markdown_content (str): Contenu markdown à filtrer
+            counter (Optional[Tuple[int, int]]): Compteur pour le suivi des logs.
 
         Returns:
             Tuple[str, float]: (contenu filtré, émissions CO2 du processus)
         """
-        return self._filter_single_markdown(markdown_content)
+        return self._filter_single_markdown(markdown_content, counter)
 
-    def _filter_single_markdown(self, markdown_content: str) -> Tuple[str, float]:
+    def _filter_single_markdown(
+        self, markdown_content: str, counter: Optional[Tuple[int, int]] = None
+    ) -> Tuple[str, float]:
         """Filtre un contenu markdown et retourne le contenu filtré et les émissions CO2."""
         md_config = self.config.markdown_filtering
         co2_for_this_document = 0.0
@@ -257,13 +270,14 @@ class MarkdownProcessor:
             if not chunks:
                 return markdown_content, co2_for_this_document
 
-            embed_chunks, co2_chunks = self._get_embeddings(chunks)
+            embed_chunks, co2_chunks = self._get_embeddings(chunks, counter=counter)
             co2_for_this_document += co2_chunks
 
             if embed_chunks is None or self.reference_embeddings is None:
                 return markdown_content, co2_for_this_document
 
-            similarites = cosine_similarity(self.reference_embeddings, embed_chunks)
+            # Calcul de similarité par produit scalaire
+            similarites = self.reference_embeddings @ embed_chunks.T
             similarites_max = similarites.max(axis=0)
 
             context_window = md_config.context_window_size
