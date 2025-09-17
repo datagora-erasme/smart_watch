@@ -78,6 +78,29 @@ class URLProcessor:
         self, row_data: Dict, resultat_id: int, index: int, total: int
     ) -> Dict:
         """Traite une URL individuelle."""
+        # Vérifier si l'URL est fournie
+        url = row_data.get("url") or ""
+        url = url.strip()
+
+        if not url:
+            return {
+                "statut": "erreur",
+                "message": "URL non fournie",
+                "code_http": 0,
+                "markdown_brut": "",
+                "erreurs_pipeline": "URL manquante dans le fichier CSV source",
+            }
+
+        # Si l'URL ne commence pas par http/https
+        if not url.startswith(("http://", "https://")):
+            return {
+                "statut": "erreur",
+                "message": "Format d'URL invalide",
+                "code_http": 0,
+                "markdown_brut": "",
+                "erreurs_pipeline": f"URL invalide: {url}",
+            }
+
         return retrieve_url(
             row_data,
             sortie="markdown",
