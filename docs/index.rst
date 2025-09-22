@@ -74,4 +74,4 @@ Indices et tables
 * :ref:`modindex`
 
 .. note::
-   **Version actuelle :** 2025-07 | **Licence :** GNU GPL v3.0
+   **Version actuelle :** 2025-09 | **Licence :** MIT
