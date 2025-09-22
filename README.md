@@ -222,4 +222,4 @@ Si vous souhaitez améliorer ce projet, veuillez suivre les étapes ci-dessous :
 
 ## Licence
 
-Ce projet est sous licence MIT. Voir le fichier [LICENCE](LICENCE)
+Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE)
