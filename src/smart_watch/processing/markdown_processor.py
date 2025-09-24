@@ -1,22 +1,26 @@
 # Documentation:
 # https://datagora-erasme.github.io/smart_watch/source/modules/processing/markdown_processor.html
 
-import os
 import re
 from typing import Any, Dict, List, Optional, Tuple
 
-import nltk
 import numpy as np
-from fastembed import TextEmbedding
 
+from ..config.llm_config import LLMConfig
 from ..config.markdown_filtering_config import MarkdownFilteringConfig
 from ..core.ConfigManager import ConfigManager
-from ..core.ErrorHandler import ErrorCategory, ErrorSeverity, handle_errors
-from ..core.LLMClient import LLMResponse, MistralAPIClient, OpenAICompatibleClient
+from ..core.ErrorHandler import (
+    ErrorCategory,
+    ErrorHandler,
+    ErrorSeverity,
+    handle_errors,
+)
+from ..core.LLMClient import EmbeddingModel
 from ..core.Logger import SmartWatchLogger, create_logger
 from ..processing.database_processor import DatabaseProcessor
 
 logger: SmartWatchLogger = create_logger(module_name="MarkdownProcessor")
+error_handler = ErrorHandler()
 
 
 class MarkdownProcessor:
@@ -28,89 +32,25 @@ class MarkdownProcessor:
     """
 
     def __init__(
-        self, config_manager: ConfigManager, logger_instance: SmartWatchLogger
+        self,
+        config_manager: ConfigManager,
+        logger_instance: SmartWatchLogger,
     ):
         """
         Initialise le processeur de markdown.
 
         Args:
-            config_manager (ConfigManager) : le gestionnaire de configuration de l'application.
-            logger_instance (SmartWatchLogger) : l'instance de logger à utiliser.
+            config_manager (ConfigManager): Le gestionnaire de configuration global.
+            logger_instance (SmartWatchLogger): L'instance de logger à utiliser.
         """
         self.config: MarkdownFilteringConfig = config_manager.markdown_filtering
-        self.reference_embeddings: Optional[np.ndarray] = None
-        self.local_embed_model: Optional[TextEmbedding] = None
-        self.embed_client: Optional[MistralAPIClient | OpenAICompatibleClient] = None
+        self.llm_config: LLMConfig = config_manager.llm
         self.logger: SmartWatchLogger = logger_instance
 
-        try:
-            self._init_embedding_client()
-            self.logger.info(
-                f"Client embeddings initialisé avec le fournisseur: {self.config.embed_fournisseur}"
-            )
-        except Exception as e:
-            self.logger.error(
-                f"Erreur lors de l'initialisation du client embeddings: {e}"
-            )
-            self.embed_client = None
+        # Création interne du modèle d'embedding pour rester cohérent avec main.py
+        self.embedding_model = EmbeddingModel(self.config, self.logger)
 
-        if self.config.sentencizer == "NLTK":
-            self._init_nltk()
-
-    def _init_nltk(self) -> None:
-        """
-        Initialise le tokenizer NLTK ('punkt') s'il n'est pas déjà disponible.
-        """
-        try:
-            nltk.data.find("tokenizers/punkt")
-            self.logger.info("Le tokenizer 'punkt' de NLTK est déjà téléchargé.")
-        except LookupError:
-            self.logger.info("Téléchargement du tokenizer 'punkt' de NLTK...")
-            nltk.download("punkt")
-            self.logger.info("Tokenizer 'punkt' de NLTK téléchargé avec succès.")
-
-    def _init_embedding_client(self) -> None:
-        """
-        Initialise le client pour la génération d'embeddings (local, Mistral, ou OpenAI).
-
-        Raises:
-            ValueError : si la configuration pour le fournisseur d'embedding est incomplète.
-        """
-        embed_config = self.config
-
-        if embed_config.embed_fournisseur == "LOCAL":
-            if embed_config.embed_modele:
-                try:
-                    cpu_count = os.cpu_count() or 1
-                    threads = max(1, cpu_count // 4)
-                    self.local_embed_model = TextEmbedding(
-                        model_name=embed_config.embed_modele, threads=threads
-                    )
-                    self.logger.info(
-                        f"Modèle d'embedding local chargé: {embed_config.embed_modele} avec {threads} threads."
-                    )
-                except Exception as e:
-                    self.logger.error(f"Erreur chargement modèle local: {e}")
-                    raise
-        elif embed_config.embed_fournisseur == "MISTRAL":
-            if embed_config.embed_api_key and embed_config.embed_modele:
-                self.embed_client = MistralAPIClient(
-                    api_key=embed_config.embed_api_key,
-                    model=embed_config.embed_modele,
-                    timeout=30,
-                )
-        elif embed_config.embed_fournisseur == "OPENAI":
-            if (
-                embed_config.embed_api_key
-                and embed_config.embed_modele
-                and embed_config.embed_base_url
-            ):
-                self.embed_client = OpenAICompatibleClient(
-                    api_key=embed_config.embed_api_key,
-                    model=embed_config.embed_modele,
-                    base_url=embed_config.embed_base_url,
-                    timeout=30,
-                )
+        self.reference_embeddings: Optional[np.ndarray] = None
 
     @handle_errors(
         category=ErrorCategory.EMBEDDINGS,
@@ -138,25 +78,19 @@ class MarkdownProcessor:
         if not valid_texts:
             return None, 0.0
 
-        if self.local_embed_model:
-            try:
-                embeddings = list(self.local_embed_model.embed(valid_texts))
-                return np.array(embeddings), 0.0
-            except Exception as e:
-                self.logger.error(f"Erreur calcul embeddings locaux: {e}")
-                raise
-        elif self.embed_client:
-            try:
-                response: LLMResponse = self.embed_client.call_embeddings(valid_texts)
-                if isinstance(response.content, list):
-                    return np.array(response.content), response.co2_emissions
-                else:
-                    raise ValueError("Format de réponse embeddings inattendu")
-            except Exception as e:
-                self.logger.error(f"Erreur lors du calcul des embeddings: {e}")
-                raise
-        else:
-            raise ValueError("Aucun client d'embedding n'est initialisé.")
+        # Utiliser directement le client embedding_model qui gère déjà la logique
+        try:
+            embeddings, co2 = self.embedding_model.get_text_embedding(
+                valid_texts, with_co2=True
+            )
+            if isinstance(embeddings, list):
+                return np.array(embeddings), co2
+            return embeddings, co2  # Peut déjà être un np.array
+        except Exception as e:
+            self.logger.error(
+                f"Erreur lors du calcul des embeddings via EmbeddingModel: {e}"
+            )
+            raise
 
     def _calculate_reference_embeddings(self) -> None:
         """
@@ -170,7 +104,10 @@ class MarkdownProcessor:
                 raise ValueError("Aucune phrase de référence configurée")
             self.logger.debug("Calcul des embeddings pour les phrases de référence.")
             embeddings, _ = self._get_embeddings(self.config.reference_phrases)
-            self.reference_embeddings = embeddings
+            if embeddings is not None:
+                self.reference_embeddings = embeddings
+            else:
+                raise ValueError("Impossible de calculer les embeddings de référence.")
 
     def process_markdown_filtering(
         self, db_processor: DatabaseProcessor, execution_id: int
@@ -411,32 +348,14 @@ class MarkdownProcessor:
             return [], total_co2
 
         for i, chunk_embedding in enumerate(chunk_embeddings):
-            max_similarity = max(
-                self._cosine_similarity(chunk_embedding, ref_embedding)
+            max_dot_product = max(
+                np.dot(chunk_embedding, ref_embedding)
                 for ref_embedding in self.reference_embeddings
             )
             similarity_threshold = self.config.similarity_threshold or 0.0
-            if max_similarity >= similarity_threshold:
+            if max_dot_product >= similarity_threshold:
                 relevant_chunks.append(chunks[i])
         return relevant_chunks, total_co2
-
-    def _cosine_similarity(self, vec1: np.ndarray, vec2: np.ndarray) -> float:
-        """
-        Calcule la similarité cosinus entre deux vecteurs NumPy.
-
-        Args:
-            vec1 (np.ndarray) : le premier vecteur.
-            vec2 (np.ndarray) : le second vecteur.
-
-        Returns:
-            float : la similarité cosinus (entre -1 et 1).
-        """
-        dot_product = np.dot(vec1, vec2)
-        norm_vec1 = np.linalg.norm(vec1)
-        norm_vec2 = np.linalg.norm(vec2)
-        if norm_vec1 == 0 or norm_vec2 == 0:
-            return 0.0
-        return dot_product / (norm_vec1 * norm_vec2)
 
     def _merge_ranges(
         self, ranges: List[Tuple[int, int]], gap: int = 1

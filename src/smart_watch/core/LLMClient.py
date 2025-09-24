@@ -1,14 +1,18 @@
 # Documentation: https://datagora-erasme.github.io/smart_watch/source/modules/core/LLMClient.html
 
+import os
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
+import numpy as np
 import requests
 from codecarbon import EmissionsTracker
+from fastembed import TextEmbedding
 
+from ..config.markdown_filtering_config import MarkdownFilteringConfig
 from .ErrorHandler import ErrorCategory, ErrorHandler, ErrorSeverity, handle_errors
-from .Logger import create_logger
+from .Logger import SmartWatchLogger, create_logger
 
 # Initialize logger for this module
 logger = create_logger(
@@ -583,3 +587,79 @@ def get_mistral_tool_format(
         ],
         "tool_choice": "any",  # Force le modèle à appeler l'outil
     }
+
+
+class EmbeddingModel:
+    """
+    Classe d'abstraction pour gérer la génération d'embeddings,
+    qu'elle soit locale ou via une API distante.
+    """
+
+    def __init__(self, md_config: MarkdownFilteringConfig, logger: SmartWatchLogger):
+        self.config = md_config
+        self.logger = logger
+        self.client: Any = None  # Pour accepter TextEmbedding ou BaseLLMClient
+
+        provider = self.config.embed_fournisseur
+        model_name = self.config.embed_modele
+
+        self.logger.debug(
+            f"Initialisation de EmbeddingModel avec le fournisseur: {provider}"
+        )
+
+        if provider == "LOCAL":
+            try:
+                if not model_name:
+                    raise ValueError(
+                        "Le nom du modèle local (EMBED_MODELE_LOCAL) est manquant."
+                    )
+                cpu_count = os.cpu_count() or 1
+                threads = max(1, cpu_count // 4)
+                self.client = TextEmbedding(model_name=model_name, threads=threads)
+                self.logger.info(f"Modèle d'embedding local chargé: {model_name}")
+            except Exception as e:
+                self.logger.error(f"Erreur lors du chargement du modèle local: {e}")
+                raise
+        elif provider in ["MISTRAL", "OPENAI", "OLLAMA"]:
+            api_key = self.config.embed_api_key
+            if not api_key:
+                raise ValueError(
+                    f"La clé API (EMBED_API_KEY) est manquante pour le fournisseur {provider}."
+                )
+            if not model_name:
+                raise ValueError(
+                    f"Le nom du modèle (EMBED_MODELE) est manquant pour le fournisseur {provider}."
+                )
+
+            if provider == "MISTRAL":
+                self.client = MistralAPIClient(api_key=api_key, model=model_name)
+            elif provider in ["OPENAI", "OLLAMA"]:
+                base_url = self.config.embed_base_url
+                if not base_url:
+                    raise ValueError(
+                        f"L'URL de base (EMBED_BASE_URL) est manquante pour le fournisseur {provider}."
+                    )
+                self.client = OpenAICompatibleClient(
+                    api_key=api_key,
+                    model=model_name,
+                    base_url=base_url,
+                )
+        else:
+            raise ValueError(f"Fournisseur d'embedding non supporté: {provider}")
+
+    def get_text_embedding(
+        self, texts: List[str], with_co2: bool = False
+    ) -> Tuple[Optional[np.ndarray], float]:
+        """Génère les embeddings pour une liste de textes."""
+        if not self.client:
+            raise ValueError("Client d'embedding non initialisé.")
+
+        if self.config.embed_fournisseur == "LOCAL":
+            embeddings = list(self.client.embed(texts))
+            return np.array(embeddings), 0.0
+        else:
+            # Les clients API retournent un LLMResponse
+            response: LLMResponse = self.client.call_embeddings(texts)
+            if isinstance(response.content, list):
+                return np.array(response.content), response.co2_emissions
+            return None, 0.0
