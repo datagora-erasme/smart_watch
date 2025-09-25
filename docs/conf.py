@@ -13,7 +13,7 @@ sys.path.insert(0, os.path.abspath(".."))
 project = "SmartWatch"
 copyright = "2025, Béranger THOMAS, ERASME, Métropole de Lyon"
 author = "Béranger THOMAS"
-release = "2025-06"
+release = "2025-09"
 
 # -- General configuration ---------------------------------------------------
 extensions = [
