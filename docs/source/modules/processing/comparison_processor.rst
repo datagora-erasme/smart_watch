@@ -20,7 +20,7 @@ Fonctionnalités
 Modules
 -------
 
-.. automodule:: src.smart_watch.processing.comparison_processor
+.. automodule:: src.smart_watch.processing.comparisonprocessor
    :members:
    :undoc-members:
    :private-members:

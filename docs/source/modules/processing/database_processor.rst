@@ -19,7 +19,7 @@ Fonctionnalités
 Modules
 -------
 
-.. automodule:: src.smart_watch.processing.database_processor
+.. automodule:: src.smart_watch.processing.databaseprocessor
    :members:
    :undoc-members:
    :private-members:

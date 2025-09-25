@@ -18,7 +18,7 @@ Fonctionnalités
 Modules
 -------
 
-.. automodule:: src.smart_watch.processing.url_processor
+.. automodule:: src.smart_watch.processing.urlprocessor
    :members:
    :undoc-members:
    :private-members:
