@@ -33,5 +33,5 @@ Cette documentation détaille les divers modules du projet Smart Watch, leurs in
     * :doc:`Configuration <../source/modules/config/index>`
     * :doc:`Core <../source/modules/core/index>`
     * :doc:`Processing <../source/modules/processing/index>`
-    * :doc:`Utils <../source/modules/utils/index>`
     * :doc:`Reporting <../source/modules/reporting/index>`
+    * :doc:`Utils <../source/modules/utils/index>`
