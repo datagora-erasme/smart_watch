@@ -1,6 +1,5 @@
-"""
-Core module for the SmartWatch application.
-"""
+# Modules centraux de SmartWatch.
+# Documentation : https://datagora-erasme.github.io/smart_watch/source/modules/core/index.html
 
 from .ComparateurHoraires import (
     ComparisonResult,

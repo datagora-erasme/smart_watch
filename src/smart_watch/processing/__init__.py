@@ -1,7 +1,5 @@
-"""
-Module de traitement pour l'extraction d'horaires.
-Contient les processeurs modulaires pour chaque étape du pipeline.
-"""
+# Module de traitement pour le pipeline de SmartWatch.
+# Documentation : https://datagora-erasme.github.io/smart_watch/source/modules/processing/index.html
 
 from .comparison_processor import ComparisonProcessor
 from .database_processor import DatabaseProcessor

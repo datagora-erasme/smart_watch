@@ -57,15 +57,15 @@ Modules
 
 .. toctree::
    :maxdepth: 1
-   :caption: Modules Utils
-   
-   source/modules/utils/index
-
-.. toctree::
-   :maxdepth: 1
    :caption: Modules Reporting
 
    source/modules/reporting/index
+   
+.. toctree::
+   :maxdepth: 1
+   :caption: Modules Utils
+   
+   source/modules/utils/index
 
 Indices et tables
 ==================

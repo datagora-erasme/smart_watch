@@ -1,7 +1,5 @@
-"""
-Module de traitement pour l'extraction d'horaires.
-Contient les processeurs modulaires pour chaque étape du pipeline.
-"""
+# Module de traitement pour SmartWatch.
+# Documentation : https://datagora-erasme.github.io/smart_watch/source/modules/utils/index.html
 
 from .CSVToPolars import CSVToPolars
 from .CustomJsonToOSM import JsonToOsmConverter

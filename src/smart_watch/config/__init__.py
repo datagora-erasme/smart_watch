@@ -1,6 +1,5 @@
-"""
-Package de configuration modulaire pour smart_watch.
-"""
+# Package de configuration modulaire pour SmartWatch.
+# Documentation : https://datagora-erasme.github.io/smart_watch/source/modules/config/index.html
 
 from .database_config import DatabaseConfig
 from .email_config import EmailConfig

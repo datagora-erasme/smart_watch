@@ -1,4 +1,5 @@
 # Définition du schéma de la base de données
+# Documentation : https://datagora-erasme.github.io/smart_watch/architecture/bdd.html
 
 from sqlalchemy import Boolean, Column, DateTime, Float, ForeignKey, Integer, Text
 from sqlalchemy.ext.declarative import declarative_base
