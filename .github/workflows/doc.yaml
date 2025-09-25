@@ -26,11 +26,15 @@ jobs:
         pip install -r docs/requirements.txt
         pip install .
 
-    # 4. Générer la documentation
+    # 4. Forcer le nettoyage du répertoire de build précédent
+    - name: Nettoyer les anciennes constructions
+      run: rm -rf docs/_build
+
+    # 5. Générer la documentation
     - name: Générer la documentation Sphinx
       run: sphinx-build -b html docs/ docs/_build/html
 
-    # 5. Déployer sur la branche gh-pages
+    # 6. Déployer sur la branche gh-pages
     - name: Déployer sur GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
