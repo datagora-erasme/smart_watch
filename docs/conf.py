@@ -69,7 +69,6 @@ exclude_patterns = [
     "Thumbs.db",
     ".DS_Store",
     "**/__pycache__",
-    "../modules/**",
 ]
 
 language = "fr"
