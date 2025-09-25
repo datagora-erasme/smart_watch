@@ -1,0 +1,337 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Modules &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.jpg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d2e4462e"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=e6b791cb"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Recherche" href="../search.html" />
+    <link rel="next" title="Base de données" href="bdd.html" />
+    <link rel="prev" title="Pipeline de traitement" href="diagramme.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guide/introduction.html">Présentation du projet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/introduction.html#sommaire">Sommaire</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/docker.html">Utilisation avec Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/configuration.html">Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture technique</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../source/main.html">Orchestrateur</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diagramme.html">Pipeline de traitement</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#structure-du-projet">Structure du projet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#code-source-src-smart-watch">Code source (<code class="docutils literal notranslate"><span class="pre">src/smart_watch/</span></code>)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="bdd.html">Base de données</a></li>
+<li class="toctree-l1"><a class="reference internal" href="stack.html">Stack technique</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/config/index.html">Modules Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/core/index.html">Modules Core</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/processing/index.html">Modules Processing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/utils/index.html">Modules Utils</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Reporting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/reporting/index.html">Modules Reporting</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Module d'évaluation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/evaluation/index.html">Module d’évaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/evaluation/index.html#vue-d-ensemble">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/evaluation/index.html#workflow-d-evaluation">Workflow d’évaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/evaluation/index.html#metriques-et-comparaisons">Métriques et comparaisons</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Modules</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/architecture/modules.rst.txt" rel="nofollow"> Afficher la source de la page</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="modules">
+<h1>Modules<a class="headerlink" href="#modules" title="Lien vers cette rubrique"></a></h1>
+<p>SmartWatch est organisé en modules spécialisés qui collaborent pour former un pipeline de traitement complet.</p>
+<section id="structure-du-projet">
+<h2>Structure du projet<a class="headerlink" href="#structure-du-projet" title="Lien vers cette rubrique"></a></h2>
+<p>Le projet SmartWatch suit une architecture en couches organisée dans les répertoires suivants :</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>smart_watch/
+├── src/smart_watch/          # Code source principal
+│   ├── assets/               # Ressources (templates, images)
+│   ├── config/               # Modules de configuration
+│   ├── core/                 # Modules centraux
+│   ├── data_models/          # Modèles de données
+│   ├── evaluation/           # Système d&#39;évaluation
+│   ├── processing/           # Pipeline de traitement
+│   ├── reporting/            # Génération de rapports
+│   └── utils/                # Utilitaires
+├── data/                     # Données de production
+├── logs/                     # Fichiers de logs
+├── docs/                     # Documentation Sphinx
+└── tests/                    # Tests unitaires
+</pre></div>
+</div>
+</section>
+<section id="code-source-src-smart-watch">
+<h2>Code source (<code class="docutils literal notranslate"><span class="pre">src/smart_watch/</span></code>)<a class="headerlink" href="#code-source-src-smart-watch" title="Lien vers cette rubrique"></a></h2>
+<p>Chaque module enregistre ses résultats dans une base de données SQLite. Les tabes utilisées sont décrites dans la page suivante, <a class="reference internal" href="bdd.html"><span class="doc">Base de données</span></a>.
+Les librairies tierces utilisées sont listées dans le fichier <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> et documentées dans la section <a class="reference internal" href="stack.html"><span class="doc">Stack technique</span></a>.</p>
+<section id="assets-assets">
+<h3>Assets (<code class="docutils literal notranslate"><span class="pre">assets/</span></code>)<a class="headerlink" href="#assets-assets" title="Lien vers cette rubrique"></a></h3>
+<p>Ce module contient les ressources statiques telles que les modèles de rapport et les images.</p>
+<dl class="simple">
+<dt><strong>templates/ReportTemplate.html</strong></dt><dd><p>Template HTML pour rapports détaillés.</p>
+</dd>
+<dt><strong>templates/SimpleReportTemplate.html</strong></dt><dd><p>Template HTML pour corps d’emails.</p>
+</dd>
+<dt><strong>images/</strong></dt><dd><p>Logos et captures d’écran.</p>
+</dd>
+</dl>
+</section>
+<section id="configuration-config">
+<h3>Configuration (<code class="docutils literal notranslate"><span class="pre">config/</span></code>)<a class="headerlink" href="#configuration-config" title="Lien vers cette rubrique"></a></h3>
+<p>Ce module gère tous les aspects de la configuration de l’application.</p>
+<dl class="simple">
+<dt><a class="reference internal" href="../source/modules/config/base_config.html"><span class="doc">Base Configuration</span></a></dt><dd><p>Gère la configuration de base.</p>
+</dd>
+<dt><a class="reference internal" href="../source/modules/config/database_config.html"><span class="doc">Database Configuration</span></a></dt><dd><p>Configure les sources de données.</p>
+</dd>
+<dt><a class="reference internal" href="../source/modules/config/email_config.html"><span class="doc">Email Configuration</span></a></dt><dd><p>Configure l’envoi d’e-mails.</p>
+</dd>
+<dt><a class="reference internal" href="../source/modules/config/llm_config.html"><span class="doc">LLM Configuration</span></a></dt><dd><p>Configure les grands modèles linguistiques.</p>
+</dd>
+<dt><a class="reference internal" href="../source/modules/config/markdown_filtering_config.html"><span class="doc">Markdown Filtering Configuration</span></a></dt><dd><p>Configure le filtrage de contenu Markdown.</p>
+</dd>
+<dt><a class="reference internal" href="../source/modules/config/processing_config.html"><span class="doc">Processing Configuration</span></a></dt><dd><p>Gère les paramètres de traitement.</p>
+</dd>
+</dl>
+</section>
+<section id="core-core">
+<h3>Core (<code class="docutils literal notranslate"><span class="pre">core/</span></code>)<a class="headerlink" href="#core-core" title="Lien vers cette rubrique"></a></h3>
+<p>Ce module contient les composants fondamentaux et la logique métier de l’application.</p>
+<dl class="simple">
+<dt><a class="reference internal" href="../source/modules/core/ComparateurHoraires.html"><span class="doc">Comparateur d’Horaires</span></a></dt><dd><p>Compare les horaires extraits/référence.</p>
+</dd>
+<dt><a class="reference internal" href="../source/modules/core/ConfigManager.html"><span class="doc">Configuration Manager</span></a></dt><dd><p>Orchestre la configuration globale.</p>
+</dd>
+<dt><a class="reference internal" href="../source/modules/core/DatabaseManager.html"><span class="doc">Database Manager</span></a></dt><dd><p>Gère les connexions à la BDD.</p>
+</dd>
+<dt><a class="reference internal" href="../source/modules/core/EnvoyerMail.html"><span class="doc">Envoi d’Email</span></a></dt><dd><p>Envoie des emails avec pièces jointes.</p>
+</dd>
+<dt><a class="reference internal" href="../source/modules/core/ErrorHandler.html"><span class="doc">Error Handler</span></a></dt><dd><p>Centralise la gestion des erreurs.</p>
+</dd>
+<dt><a class="reference internal" href="../source/modules/core/GetPrompt.html"><span class="doc">Générateur de Prompt</span></a></dt><dd><p>Gère et crée les prompts.</p>
+</dd>
+<dt><a class="reference internal" href="../source/modules/core/LLMClient.html"><span class="doc">Client LLM</span></a></dt><dd><p>Client unifié pour les LLMs.</p>
+</dd>
+<dt><a class="reference internal" href="../source/modules/core/logger.html"><span class="doc">Logger</span></a></dt><dd><p>Système de journalisation flexible.</p>
+</dd>
+<dt><a class="reference internal" href="../source/modules/core/NotificationManager.html"><span class="doc">Gestionnaire de Notifications</span></a></dt><dd><p>Gère les notifications utilisateurs.</p>
+</dd>
+<dt><a class="reference internal" href="../source/modules/core/StatsManager.html"><span class="doc">Gestionnaire de Statistiques</span></a></dt><dd><p>Suit les statistiques d’application.</p>
+</dd>
+<dt><a class="reference internal" href="../source/modules/core/URLRetriever.html"><span class="doc">Récupérateur d’URL</span></a></dt><dd><p>Récupère le contenu des URLs.</p>
+</dd>
+</dl>
+</section>
+<section id="data-models-data-models">
+<h3>Data Models (<code class="docutils literal notranslate"><span class="pre">data_models/</span></code>)<a class="headerlink" href="#data-models-data-models" title="Lien vers cette rubrique"></a></h3>
+<p>Ce module définit la structure des données utilisées dans l’application.</p>
+<dl class="simple">
+<dt><strong>opening_hours_schema.json</strong></dt><dd><p>Schéma JSON pour horaires d’ouverture.</p>
+</dd>
+<dt><strong>schema_bdd</strong></dt><dd><p>Schémas SQLAlchemy pour la BDD.</p>
+</dd>
+</dl>
+</section>
+<section id="evaluation-evaluation">
+<h3>Evaluation (<code class="docutils literal notranslate"><span class="pre">evaluation/</span></code>)<a class="headerlink" href="#evaluation-evaluation" title="Lien vers cette rubrique"></a></h3>
+<p>Ce module est dédié à l’évaluation des performances du système.</p>
+<p>En cours de développement.</p>
+</section>
+<section id="processing-processing">
+<h3>Processing (<code class="docutils literal notranslate"><span class="pre">processing/</span></code>)<a class="headerlink" href="#processing-processing" title="Lien vers cette rubrique"></a></h3>
+<p>Ce module correspond au pipeline de traitement des données, de la récupération à l’analyse.</p>
+<dl class="simple">
+<dt><a class="reference internal" href="../source/modules/processing/comparison_processor.html"><span class="doc">Comparison Processor</span></a></dt><dd><p>Analyse les différences d’horaires.</p>
+</dd>
+<dt><a class="reference internal" href="../source/modules/processing/database_processor.html"><span class="doc">Database Processor</span></a></dt><dd><p>Gère la base de données.</p>
+</dd>
+<dt><a class="reference internal" href="../source/modules/processing/llm_processor.html"><span class="doc">LLM Processor</span></a></dt><dd><p>Extrait les horaires via LLM.</p>
+</dd>
+<dt><a class="reference internal" href="../source/modules/processing/markdown_processor.html"><span class="doc">Markdown Processor</span></a></dt><dd><p>Filtre le Markdown par sémantique.</p>
+</dd>
+<dt><a class="reference internal" href="../source/modules/processing/setup_processor.html"><span class="doc">Setup Processor</span></a></dt><dd><p>Initialise les exécutions du pipeline.</p>
+</dd>
+<dt><a class="reference internal" href="../source/modules/processing/url_processor.html"><span class="doc">URL Processor</span></a></dt><dd><p>Récupère le contenu des URLs.</p>
+</dd>
+</dl>
+</section>
+<section id="reporting-reporting">
+<h3>Reporting (<code class="docutils literal notranslate"><span class="pre">reporting/</span></code>)<a class="headerlink" href="#reporting-reporting" title="Lien vers cette rubrique"></a></h3>
+<p>Ce module est responsable de la génération et de la distribution des rapports.</p>
+<dl class="simple">
+<dt><a class="reference internal" href="../source/modules/reporting/html_generator.html"><span class="doc">HTML Generator</span></a></dt><dd><p>Génère des rapports HTML interactifs.</p>
+</dd>
+<dt><a class="reference internal" href="../source/modules/reporting/report_manager.html"><span class="doc">Report Manager</span></a></dt><dd><p>Orchestre la génération des rapports.</p>
+</dd>
+</dl>
+</section>
+<section id="utils-utils">
+<h3>Utils (<code class="docutils literal notranslate"><span class="pre">utils/</span></code>)<a class="headerlink" href="#utils-utils" title="Lien vers cette rubrique"></a></h3>
+<p>Ce module fournit des fonctions et des classes utilitaires réutilisables.</p>
+<dl class="simple">
+<dt><a class="reference internal" href="../source/modules/utils/CSVToPolars.html"><span class="doc">CSV to Polars</span></a></dt><dd><p>Charge les fichiers CSV.</p>
+</dd>
+<dt><a class="reference internal" href="../source/modules/utils/CustomJsonToOSM.html"><span class="doc">CustomJsonToOSM</span></a></dt><dd><p>Convertit JSON vers format OSM.</p>
+</dd>
+<dt><a class="reference internal" href="../source/modules/utils/HtmlToMarkdown.html"><span class="doc">HTML to Markdown</span></a></dt><dd><p>Convertit du HTML en Markdown.</p>
+</dd>
+<dt><a class="reference internal" href="../source/modules/utils/JoursFeries.html"><span class="doc">Jours Fériés</span></a></dt><dd><p>Récupère les jours fériés.</p>
+</dd>
+<dt><a class="reference internal" href="../source/modules/utils/MarkdownCleaner.html"><span class="doc">Markdown Cleaner</span></a></dt><dd><p>Nettoie le contenu Markdown.</p>
+</dd>
+<dt><a class="reference internal" href="../source/modules/utils/OSMToCustomJson.html"><span class="doc">OSMToCustomJson</span></a></dt><dd><p>Convertit OSM vers format JSON.</p>
+</dd>
+<dt><a class="reference internal" href="../source/modules/utils/VacancesScolaires.html"><span class="doc">Vacances Scolaires</span></a></dt><dd><p>Récupère les vacances scolaires.</p>
+</dd>
+</dl>
+</section>
+<section id="data-data">
+<h3>Data (<code class="docutils literal notranslate"><span class="pre">data/</span></code>)<a class="headerlink" href="#data-data" title="Lien vers cette rubrique"></a></h3>
+<p>Ce répertoire contient les bases de données utilisées par l’application pour stocker les données de production et d’évaluation.</p>
+<dl class="simple">
+<dt><strong>SmartWatch.db</strong></dt><dd><p>Base de données principale (lieux, exécutions et résultats d’extraction).</p>
+</dd>
+<dt><strong>evaluation.db</strong></dt><dd><p>Base de données pour l’évaluation des performances.</p>
+</dd>
+</dl>
+</section>
+<section id="logs-logs">
+<h3>Logs (<code class="docutils literal notranslate"><span class="pre">logs/</span></code>)<a class="headerlink" href="#logs-logs" title="Lien vers cette rubrique"></a></h3>
+<p>Ce répertoire archive les journaux d’événements générés par l’application.</p>
+<dl class="simple">
+<dt><strong>SmartWatch.log</strong></dt><dd><p>Journal principal des traces d’exécution.</p>
+</dd>
+</dl>
+</section>
+<section id="documentation-docs">
+<h3>Documentation (<code class="docutils literal notranslate"><span class="pre">docs/</span></code>)<a class="headerlink" href="#documentation-docs" title="Lien vers cette rubrique"></a></h3>
+<p>Ce répertoire rassemble toute la documentation du projet, y compris les guides et les spécifications techniques.</p>
+<dl class="simple">
+<dt><strong>Architecture</strong></dt><dd><p>Description de l’architecture et des modules.</p>
+</dd>
+<dt><strong>Guides utilisateur</strong></dt><dd><p>Guides d’installation et d’utilisation.</p>
+</dd>
+<dt><strong>Source</strong></dt><dd><p>Documentation technique générée depuis le code.</p>
+</dd>
+</dl>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pied de page">
+        <a href="diagramme.html" class="btn btn-neutral float-left" title="Pipeline de traitement" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Précédent</a>
+        <a href="bdd.html" class="btn btn-neutral float-right" title="Base de données" accesskey="n" rel="next">Suivant <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

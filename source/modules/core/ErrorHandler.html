@@ -1,0 +1,1041 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Error Handler &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.jpg"/>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=d2e4462e"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/translations.js?v=e6b791cb"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../search.html" />
+    <link rel="next" title="Générateur de Prompt" href="GetPrompt.html" />
+    <link rel="prev" title="Envoi d’Email" href="EnvoyerMail.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/introduction.html">Présentation du projet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/introduction.html#sommaire">Sommaire</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/docker.html">Utilisation avec Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/configuration.html">Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture technique</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../main.html">Orchestrateur</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/diagramme.html">Pipeline de traitement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/bdd.html">Base de données</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/stack.html">Stack technique</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html">Modules Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Modules Core</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#modules">Modules</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../processing/index.html">Modules Processing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../utils/index.html">Modules Utils</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Reporting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html">Modules Reporting</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Module d'évaluation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../evaluation/index.html">Module d’évaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../evaluation/index.html#vue-d-ensemble">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../evaluation/index.html#workflow-d-evaluation">Workflow d’évaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../evaluation/index.html#metriques-et-comparaisons">Métriques et comparaisons</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Modules Core</a></li>
+      <li class="breadcrumb-item active">Error Handler</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/source/modules/core/ErrorHandler.rst.txt" rel="nofollow"> Afficher la source de la page</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="error-handler">
+<h1>Error Handler<a class="headerlink" href="#error-handler" title="Lien vers cette rubrique"></a></h1>
+<p>Le module <code class="docutils literal notranslate"><span class="pre">ErrorHandler</span></code> fournit un système centralisé pour la gestion et la traçabilité des erreurs dans l’application.</p>
+<div class="admonition-usage admonition">
+<p class="admonition-title">Usage</p>
+<p><code class="docutils literal notranslate"><span class="pre">ErrorHandler</span></code> est utilisé dans toute l’application pour garantir une gestion cohérente des exceptions.</p>
+</div>
+<section id="fonctionnalites">
+<h2>Fonctionnalités<a class="headerlink" href="#fonctionnalites" title="Lien vers cette rubrique"></a></h2>
+<ul class="simple">
+<li><p>Fournit un décorateur <code class="docutils literal notranslate"><span class="pre">&#64;handle_errors</span></code> pour une intégration simplifiée dans le code.</p></li>
+<li><p>Catégorise les erreurs par type (Configuration, Réseau, LLM, etc.) et par niveau de gravité.</p></li>
+<li><p>Enregistre les erreurs avec un contexte détaillé pour faciliter le débogage.</p></li>
+<li><p>Suggère des solutions pour les erreurs courantes.</p></li>
+</ul>
+</section>
+<section id="module-src.smart_watch.core.ErrorHandler">
+<span id="modules"></span><h2>Modules<a class="headerlink" href="#module-src.smart_watch.core.ErrorHandler" title="Lien vers cette rubrique"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorSeverity">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.smart_watch.core.ErrorHandler.</span></span><span class="sig-name descname"><span class="pre">ErrorSeverity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ErrorHandler.html#ErrorSeverity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorSeverity" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.Enum" title="(disponible dans Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></a></p>
+<p>Enumération représentant le niveau de gravité d’une erreur.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorSeverity.LOW">
+<span class="sig-name descname"><span class="pre">LOW</span></span><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorSeverity.LOW" title="Lien vers cette définition"></a></dt>
+<dd><p>erreur mineure, le traitement peut continuer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorSeverity.MEDIUM">
+<span class="sig-name descname"><span class="pre">MEDIUM</span></span><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorSeverity.MEDIUM" title="Lien vers cette définition"></a></dt>
+<dd><p>erreur modérée, le traitement peut continuer avec une dégradation des fonctionnalités.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorSeverity.HIGH">
+<span class="sig-name descname"><span class="pre">HIGH</span></span><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorSeverity.HIGH" title="Lien vers cette définition"></a></dt>
+<dd><p>erreur grave, il est recommandé d’arrêter le traitement.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorSeverity.CRITICAL">
+<span class="sig-name descname"><span class="pre">CRITICAL</span></span><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorSeverity.CRITICAL" title="Lien vers cette définition"></a></dt>
+<dd><p>erreur critique, le traitement ne peut pas continuer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">LOW</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'low'</span></em><a class="headerlink" href="#id0" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">MEDIUM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'medium'</span></em><a class="headerlink" href="#id1" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">HIGH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'high'</span></em><a class="headerlink" href="#id2" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">CRITICAL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'critical'</span></em><a class="headerlink" href="#id3" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorCategory">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.smart_watch.core.ErrorHandler.</span></span><span class="sig-name descname"><span class="pre">ErrorCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ErrorHandler.html#ErrorCategory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorCategory" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.Enum" title="(disponible dans Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></a></p>
+<p>Enumération d’erreurs utilisées pour classifier les exceptions dans l’application.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorCategory.CONFIGURATION">
+<span class="sig-name descname"><span class="pre">CONFIGURATION</span></span><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorCategory.CONFIGURATION" title="Lien vers cette définition"></a></dt>
+<dd><p>erreur liée à la configuration de l’application.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorCategory.DATABASE">
+<span class="sig-name descname"><span class="pre">DATABASE</span></span><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorCategory.DATABASE" title="Lien vers cette définition"></a></dt>
+<dd><p>erreur en lien avec la base de données.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorCategory.NETWORK">
+<span class="sig-name descname"><span class="pre">NETWORK</span></span><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorCategory.NETWORK" title="Lien vers cette définition"></a></dt>
+<dd><p>erreur de connexion ou de communication réseau.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorCategory.LLM">
+<span class="sig-name descname"><span class="pre">LLM</span></span><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorCategory.LLM" title="Lien vers cette définition"></a></dt>
+<dd><p>erreur liée au modèle de langage (LLM).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorCategory.FILE_IO">
+<span class="sig-name descname"><span class="pre">FILE_IO</span></span><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorCategory.FILE_IO" title="Lien vers cette définition"></a></dt>
+<dd><p>erreur lors des opérations d’entrée/sortie sur les fichiers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorCategory.VALIDATION">
+<span class="sig-name descname"><span class="pre">VALIDATION</span></span><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorCategory.VALIDATION" title="Lien vers cette définition"></a></dt>
+<dd><p>erreur de validation des données ou des paramètres.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorCategory.CONVERSION">
+<span class="sig-name descname"><span class="pre">CONVERSION</span></span><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorCategory.CONVERSION" title="Lien vers cette définition"></a></dt>
+<dd><p>erreur lors de la conversion de données ou de formats.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorCategory.PARSING">
+<span class="sig-name descname"><span class="pre">PARSING</span></span><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorCategory.PARSING" title="Lien vers cette définition"></a></dt>
+<dd><p>erreur lors de l’analyse ou du parsing de données.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorCategory.EMAIL">
+<span class="sig-name descname"><span class="pre">EMAIL</span></span><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorCategory.EMAIL" title="Lien vers cette définition"></a></dt>
+<dd><p>erreur lors de l’envoi ou de la réception d’emails.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorCategory.EMBEDDINGS">
+<span class="sig-name descname"><span class="pre">EMBEDDINGS</span></span><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorCategory.EMBEDDINGS" title="Lien vers cette définition"></a></dt>
+<dd><p>erreur lors de l’utilisation des embeddings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorCategory.UNKNOWN">
+<span class="sig-name descname"><span class="pre">UNKNOWN</span></span><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorCategory.UNKNOWN" title="Lien vers cette définition"></a></dt>
+<dd><p>erreur non catégorisée.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">CONFIGURATION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'configuration'</span></em><a class="headerlink" href="#id4" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id5">
+<span class="sig-name descname"><span class="pre">DATABASE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'database'</span></em><a class="headerlink" href="#id5" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id6">
+<span class="sig-name descname"><span class="pre">NETWORK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'network'</span></em><a class="headerlink" href="#id6" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id7">
+<span class="sig-name descname"><span class="pre">LLM</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'llm'</span></em><a class="headerlink" href="#id7" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id8">
+<span class="sig-name descname"><span class="pre">FILE_IO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'file_io'</span></em><a class="headerlink" href="#id8" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id9">
+<span class="sig-name descname"><span class="pre">VALIDATION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'validation'</span></em><a class="headerlink" href="#id9" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id10">
+<span class="sig-name descname"><span class="pre">CONVERSION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'conversion'</span></em><a class="headerlink" href="#id10" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id11">
+<span class="sig-name descname"><span class="pre">PARSING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'parsing'</span></em><a class="headerlink" href="#id11" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id12">
+<span class="sig-name descname"><span class="pre">EMAIL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'email'</span></em><a class="headerlink" href="#id12" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id13">
+<span class="sig-name descname"><span class="pre">EMBEDDINGS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'embeddings'</span></em><a class="headerlink" href="#id13" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id14">
+<span class="sig-name descname"><span class="pre">UNKNOWN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'unknown'</span></em><a class="headerlink" href="#id14" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorContext">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.smart_watch.core.ErrorHandler.</span></span><span class="sig-name descname"><span class="pre">ErrorContext</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">operation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(disponible dans Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ErrorHandler.html#ErrorContext"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorContext" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(disponible dans Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Classe représentant le contexte d’une erreur survenue dans l’application.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorContext.module">
+<span class="sig-name descname"><span class="pre">module</span></span><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorContext.module" title="Lien vers cette définition"></a></dt>
+<dd><p>nom du module où l’erreur s’est produite.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorContext.function">
+<span class="sig-name descname"><span class="pre">function</span></span><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorContext.function" title="Lien vers cette définition"></a></dt>
+<dd><p>nom de la fonction où l’erreur s’est produite.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorContext.operation">
+<span class="sig-name descname"><span class="pre">operation</span></span><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorContext.operation" title="Lien vers cette définition"></a></dt>
+<dd><p>description de l’opération en cours lors de l’erreur.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorContext.data">
+<span class="sig-name descname"><span class="pre">data</span></span><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorContext.data" title="Lien vers cette définition"></a></dt>
+<dd><p>données supplémentaires liées à l’erreur.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a>, Any]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorContext.user_message">
+<span class="sig-name descname"><span class="pre">user_message</span></span><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorContext.user_message" title="Lien vers cette définition"></a></dt>
+<dd><p>message destiné à l’utilisateur concernant l’erreur.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id15">
+<span class="sig-name descname"><span class="pre">module</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#id15" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id16">
+<span class="sig-name descname"><span class="pre">function</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#id16" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id17">
+<span class="sig-name descname"><span class="pre">operation</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#id17" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id18">
+<span class="sig-name descname"><span class="pre">data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(disponible dans Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#id18" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id19">
+<span class="sig-name descname"><span class="pre">user_message</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#id19" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorContext.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">operation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(disponible dans Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorContext.__init__" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.HandledError">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.smart_watch.core.ErrorHandler.</span></span><span class="sig-name descname"><span class="pre">HandledError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">category</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#src.smart_watch.core.ErrorHandler.ErrorCategory" title="src.smart_watch.core.ErrorHandler.ErrorCategory"><span class="pre">ErrorCategory</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">severity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#src.smart_watch.core.ErrorHandler.ErrorSeverity" title="src.smart_watch.core.ErrorHandler.ErrorSeverity"><span class="pre">ErrorSeverity</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">exception</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(disponible dans Python v3.13)"><span class="pre">Exception</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#src.smart_watch.core.ErrorHandler.ErrorContext" title="src.smart_watch.core.ErrorHandler.ErrorContext"><span class="pre">ErrorContext</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestamp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">traceback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolved</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(disponible dans Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solution_attempted</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ErrorHandler.html#HandledError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.HandledError" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(disponible dans Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Classe représentant une erreur gérée.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.HandledError.category">
+<span class="sig-name descname"><span class="pre">category</span></span><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.HandledError.category" title="Lien vers cette définition"></a></dt>
+<dd><p>catégorie de l’erreur.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#src.smart_watch.core.ErrorHandler.ErrorCategory" title="src.smart_watch.core.ErrorHandler.ErrorCategory">ErrorCategory</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.HandledError.severity">
+<span class="sig-name descname"><span class="pre">severity</span></span><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.HandledError.severity" title="Lien vers cette définition"></a></dt>
+<dd><p>niveau de sévérité.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#src.smart_watch.core.ErrorHandler.ErrorSeverity" title="src.smart_watch.core.ErrorHandler.ErrorSeverity">ErrorSeverity</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.HandledError.exception">
+<span class="sig-name descname"><span class="pre">exception</span></span><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.HandledError.exception" title="Lien vers cette définition"></a></dt>
+<dd><p>exception associée à l’erreur.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(disponible dans Python v3.13)">Exception</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.HandledError.context">
+<span class="sig-name descname"><span class="pre">context</span></span><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.HandledError.context" title="Lien vers cette définition"></a></dt>
+<dd><p>contexte dans lequel l’erreur s’est produite.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#src.smart_watch.core.ErrorHandler.ErrorContext" title="src.smart_watch.core.ErrorHandler.ErrorContext">ErrorContext</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.HandledError.timestamp">
+<span class="sig-name descname"><span class="pre">timestamp</span></span><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.HandledError.timestamp" title="Lien vers cette définition"></a></dt>
+<dd><p>date et heure de l’occurrence de l’erreur.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.HandledError.traceback">
+<span class="sig-name descname"><span class="pre">traceback</span></span><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.HandledError.traceback" title="Lien vers cette définition"></a></dt>
+<dd><p>trace complète de l’erreur.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.HandledError.resolved">
+<span class="sig-name descname"><span class="pre">resolved</span></span><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.HandledError.resolved" title="Lien vers cette définition"></a></dt>
+<dd><p>indique si l’erreur a été résolue.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(disponible dans Python v3.13)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.HandledError.solution_attempted">
+<span class="sig-name descname"><span class="pre">solution_attempted</span></span><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.HandledError.solution_attempted" title="Lien vers cette définition"></a></dt>
+<dd><p>description de la solution tentée, si applicable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id20">
+<span class="sig-name descname"><span class="pre">category</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#src.smart_watch.core.ErrorHandler.ErrorCategory" title="src.smart_watch.core.ErrorHandler.ErrorCategory"><span class="pre">ErrorCategory</span></a></em><a class="headerlink" href="#id20" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id21">
+<span class="sig-name descname"><span class="pre">severity</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#src.smart_watch.core.ErrorHandler.ErrorSeverity" title="src.smart_watch.core.ErrorHandler.ErrorSeverity"><span class="pre">ErrorSeverity</span></a></em><a class="headerlink" href="#id21" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id22">
+<span class="sig-name descname"><span class="pre">exception</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(disponible dans Python v3.13)"><span class="pre">Exception</span></a></em><a class="headerlink" href="#id22" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id23">
+<span class="sig-name descname"><span class="pre">context</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#src.smart_watch.core.ErrorHandler.ErrorContext" title="src.smart_watch.core.ErrorHandler.ErrorContext"><span class="pre">ErrorContext</span></a></em><a class="headerlink" href="#id23" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id24">
+<span class="sig-name descname"><span class="pre">timestamp</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#id24" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id25">
+<span class="sig-name descname"><span class="pre">traceback</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></em><a class="headerlink" href="#id25" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id26">
+<span class="sig-name descname"><span class="pre">resolved</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(disponible dans Python v3.13)"><span class="pre">bool</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#id26" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id27">
+<span class="sig-name descname"><span class="pre">solution_attempted</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#id27" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.HandledError.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">category</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#src.smart_watch.core.ErrorHandler.ErrorCategory" title="src.smart_watch.core.ErrorHandler.ErrorCategory"><span class="pre">ErrorCategory</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">severity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#src.smart_watch.core.ErrorHandler.ErrorSeverity" title="src.smart_watch.core.ErrorHandler.ErrorSeverity"><span class="pre">ErrorSeverity</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">exception</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(disponible dans Python v3.13)"><span class="pre">Exception</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#src.smart_watch.core.ErrorHandler.ErrorContext" title="src.smart_watch.core.ErrorHandler.ErrorContext"><span class="pre">ErrorContext</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestamp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">traceback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolved</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(disponible dans Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solution_attempted</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.HandledError.__init__" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorHandler">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.smart_watch.core.ErrorHandler.</span></span><span class="sig-name descname"><span class="pre">ErrorHandler</span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ErrorHandler.html#ErrorHandler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorHandler" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(disponible dans Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Gestionnaire centralisé des erreurs.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorHandler.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ErrorHandler.html#ErrorHandler.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorHandler.__init__" title="Lien vers cette définition"></a></dt>
+<dd><p>Initialise le gestionnaire d’erreurs.</p>
+<p>Ce constructeur configure le logger pour le module ErrorHandler, initialise le registre des erreurs traitées, et prépare les gestionnaires spécialisés pour chaque catégorie d’erreur.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorHandler.logger">
+<span class="sig-name descname"><span class="pre">logger</span></span><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorHandler.logger" title="Lien vers cette définition"></a></dt>
+<dd><p>logger dédié au module ErrorHandler.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorHandler.error_registry">
+<span class="sig-name descname"><span class="pre">error_registry</span></span><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorHandler.error_registry" title="Lien vers cette définition"></a></dt>
+<dd><p>liste des erreurs traitées par le gestionnaire.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorHandler.category_handlers">
+<span class="sig-name descname"><span class="pre">category_handlers</span></span><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorHandler.category_handlers" title="Lien vers cette définition"></a></dt>
+<dd><p>dictionnaire associant chaque catégorie d’erreur à sa méthode de gestion spécialisée.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorHandler.handle_error">
+<span class="sig-name descname"><span class="pre">handle_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exception</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(disponible dans Python v3.13)"><span class="pre">Exception</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#src.smart_watch.core.ErrorHandler.ErrorContext" title="src.smart_watch.core.ErrorHandler.ErrorContext"><span class="pre">ErrorContext</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">severity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#src.smart_watch.core.ErrorHandler.ErrorSeverity" title="src.smart_watch.core.ErrorHandler.ErrorSeverity"><span class="pre">ErrorSeverity</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">category</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#src.smart_watch.core.ErrorHandler.ErrorCategory" title="src.smart_watch.core.ErrorHandler.ErrorCategory"><span class="pre">ErrorCategory</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">reraise</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(disponible dans Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_return</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(disponible dans Python v3.13)"><span class="pre">Any</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(disponible dans Python v3.13)"><span class="pre">Any</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ErrorHandler.html#ErrorHandler.handle_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorHandler.handle_error" title="Lien vers cette définition"></a></dt>
+<dd><p>Traite une exception de manière centralisée, en enregistrant l’erreur, en la journalisant, et en appliquant un traitement spécialisé selon la catégorie et la gravité.</p>
+<p>Peut relancer l’exception ou retourner une valeur par défaut.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>exception</strong> (<a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(disponible dans Python v3.13)"><em>Exception</em></a>) – l’exception à traiter.</p></li>
+<li><p><strong>context</strong> (<a class="reference internal" href="#src.smart_watch.core.ErrorHandler.ErrorContext" title="src.smart_watch.core.ErrorHandler.ErrorContext"><em>ErrorContext</em></a>) – contexte additionnel lié à l’erreur.</p></li>
+<li><p><strong>severity</strong> (<a class="reference internal" href="#src.smart_watch.core.ErrorHandler.ErrorSeverity" title="src.smart_watch.core.ErrorHandler.ErrorSeverity"><em>ErrorSeverity</em></a>) – gravité de l’erreur.</p></li>
+<li><p><strong>category</strong> (<a class="reference internal" href="#src.smart_watch.core.ErrorHandler.ErrorCategory" title="src.smart_watch.core.ErrorHandler.ErrorCategory"><em>ErrorCategory</em></a>) – catégorie de l’erreur.</p></li>
+<li><p><strong>reraise</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(disponible dans Python v3.13)"><em>bool</em></a><em>, </em><em>optionnel</em>) – si True, relance l’exception après traitement. Par défaut à False.</p></li>
+<li><p><strong>default_return</strong> (<em>Any</em><em>, </em><em>optionnel</em>) – valeur à retourner si aucun résultat n’est produit par le traitement spécialisé.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>résultat du traitement spécialisé, ou la valeur par défaut si aucun résultat n’est produit.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+<dt class="field-even">Lève<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(disponible dans Python v3.13)"><strong>Exception</strong></a> – relance l’exception d’origine si <cite>reraise</cite> est True.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorHandler._log_error">
+<span class="sig-name descname"><span class="pre">_log_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handled_error</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#src.smart_watch.core.ErrorHandler.HandledError" title="src.smart_watch.core.ErrorHandler.HandledError"><span class="pre">HandledError</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ErrorHandler.html#ErrorHandler._log_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorHandler._log_error" title="Lien vers cette définition"></a></dt>
+<dd><p>Enregistre une erreur gérée dans le système de logs avec différents niveaux de gravité.</p>
+<p>Le traceback complet est géré par le décorateur pour éviter la duplication.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorHandler._apply_specialized_handling">
+<span class="sig-name descname"><span class="pre">_apply_specialized_handling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">handled_error</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#src.smart_watch.core.ErrorHandler.HandledError" title="src.smart_watch.core.ErrorHandler.HandledError"><span class="pre">HandledError</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(disponible dans Python v3.13)"><span class="pre">Any</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ErrorHandler.html#ErrorHandler._apply_specialized_handling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorHandler._apply_specialized_handling" title="Lien vers cette définition"></a></dt>
+<dd><p>Applique un traitement spécialisé à une erreur gérée selon sa catégorie.</p>
+<p>Cette méthode tente de récupérer un gestionnaire spécialisé pour la catégorie de l’erreur fournie. Si un gestionnaire est trouvé, il est exécuté avec l’erreur en paramètre. En cas d’exception lors de l’exécution du gestionnaire, une erreur est enregistrée dans le logger. Si aucun gestionnaire n’est disponible ou en cas d’échec, la méthode retourne None.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>handled_error</strong> (<a class="reference internal" href="#src.smart_watch.core.ErrorHandler.HandledError" title="src.smart_watch.core.ErrorHandler.HandledError"><em>HandledError</em></a>) – l’erreur à traiter, encapsulée dans un objet HandledError.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>le résultat du gestionnaire spécialisé si disponible et sans erreur, sinon None.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorHandler._handle_configuration_error">
+<span class="sig-name descname"><span class="pre">_handle_configuration_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#src.smart_watch.core.ErrorHandler.HandledError" title="src.smart_watch.core.ErrorHandler.HandledError"><span class="pre">HandledError</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(disponible dans Python v3.13)"><span class="pre">Any</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ErrorHandler.html#ErrorHandler._handle_configuration_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorHandler._handle_configuration_error" title="Lien vers cette définition"></a></dt>
+<dd><p>Gère les erreurs de configuration spécifiques et propose des solutions adaptées.</p>
+<p>Cette méthode analyse l’exception contenue dans l’objet <cite>HandledError</cite> et, selon le type d’erreur (KeyError ou ValueError), elle renseigne une tentative de solution et suggère des actions correctives via le logger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>error</strong> (<a class="reference internal" href="#src.smart_watch.core.ErrorHandler.HandledError" title="src.smart_watch.core.ErrorHandler.HandledError"><em>HandledError</em></a>) – l’objet d’erreur contenant l’exception à traiter.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>toujours None, cette méthode est utilisée pour ses effets de bord (journalisation et modification de l’objet d’erreur).</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorHandler._handle_database_error">
+<span class="sig-name descname"><span class="pre">_handle_database_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#src.smart_watch.core.ErrorHandler.HandledError" title="src.smart_watch.core.ErrorHandler.HandledError"><span class="pre">HandledError</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(disponible dans Python v3.13)"><span class="pre">Any</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ErrorHandler.html#ErrorHandler._handle_database_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorHandler._handle_database_error" title="Lien vers cette définition"></a></dt>
+<dd><p>Gère les erreurs spécifiques liées à la base de données et propose des solutions.</p>
+<p>Cette méthode analyse le message d’exception pour détecter des erreurs courantes telles que l’absence de table ou le verrouillage de la base de données. Elle consigne une solution adaptée dans le logger et met à jour l’attribut <cite>solution_attempted</cite> de l’objet d’erreur.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>error</strong> (<a class="reference internal" href="#src.smart_watch.core.ErrorHandler.HandledError" title="src.smart_watch.core.ErrorHandler.HandledError"><em>HandledError</em></a>) – l’objet représentant l’erreur interceptée, contenant l’exception et les informations associées.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>toujours None, cette méthode est utilisée pour ses effets de bord (journalisation et mise à jour de l’erreur).</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorHandler._handle_network_error">
+<span class="sig-name descname"><span class="pre">_handle_network_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#src.smart_watch.core.ErrorHandler.HandledError" title="src.smart_watch.core.ErrorHandler.HandledError"><span class="pre">HandledError</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(disponible dans Python v3.13)"><span class="pre">Any</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ErrorHandler.html#ErrorHandler._handle_network_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorHandler._handle_network_error" title="Lien vers cette définition"></a></dt>
+<dd><p>Gère les erreurs liées au réseau en analysant le type d’exception et en proposant une solution.</p>
+<p>Cette méthode vérifie si l’erreur est une erreur de connexion ou un timeout réseau, puis met à jour la tentative de solution dans l’objet <cite>HandledError</cite> et enregistre une suggestion dans le logger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>error</strong> (<a class="reference internal" href="#src.smart_watch.core.ErrorHandler.HandledError" title="src.smart_watch.core.ErrorHandler.HandledError"><em>HandledError</em></a>) – l’objet contenant l’exception à traiter et les informations associées.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>toujours None, cette méthode ne retourne pas de valeur utile.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorHandler._handle_llm_error">
+<span class="sig-name descname"><span class="pre">_handle_llm_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#src.smart_watch.core.ErrorHandler.HandledError" title="src.smart_watch.core.ErrorHandler.HandledError"><span class="pre">HandledError</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(disponible dans Python v3.13)"><span class="pre">Any</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ErrorHandler.html#ErrorHandler._handle_llm_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorHandler._handle_llm_error" title="Lien vers cette définition"></a></dt>
+<dd><p>Traite les erreurs liées au LLM et propose des solutions ou messages adaptés.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>error</strong> (<a class="reference internal" href="#src.smart_watch.core.ErrorHandler.HandledError" title="src.smart_watch.core.ErrorHandler.HandledError"><em>HandledError</em></a>) – l’erreur interceptée contenant l’exception à analyser.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>retourne un message d’erreur spécifique si un timeout est détecté, sinon None.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Modifie l’attribut <cite>solution_attempted</cite> de l’objet error selon le type d’erreur détecté.</p></li>
+<li><p>Loggue une solution adaptée via le logger pour les erreurs de clé API ou de limite de taux.</p></li>
+<li><p>Retourne un message d’erreur pour les timeouts afin de permettre la poursuite du traitement.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorHandler._handle_file_io_error">
+<span class="sig-name descname"><span class="pre">_handle_file_io_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#src.smart_watch.core.ErrorHandler.HandledError" title="src.smart_watch.core.ErrorHandler.HandledError"><span class="pre">HandledError</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(disponible dans Python v3.13)"><span class="pre">Any</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ErrorHandler.html#ErrorHandler._handle_file_io_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorHandler._handle_file_io_error" title="Lien vers cette définition"></a></dt>
+<dd><p>Gère les erreurs liées aux opérations d’entrée/sortie de fichiers.</p>
+<p>Cette méthode analyse l’exception contenue dans l’objet <cite>HandledError</cite> et adapte le message de solution proposée selon le type d’erreur rencontré :
+- Si le fichier est introuvable (<cite>FileNotFoundError</cite>), elle précise le nom du fichier manquant.
+- Si les permissions sont insuffisantes (<cite>PermissionError</cite>), elle indique ce problème.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>error</strong> (<a class="reference internal" href="#src.smart_watch.core.ErrorHandler.HandledError" title="src.smart_watch.core.ErrorHandler.HandledError"><em>HandledError</em></a>) – l’objet contenant l’exception à traiter.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>toujours <cite>None</cite>, cette méthode modifie l’objet d’erreur en place.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorHandler._handle_parsing_error">
+<span class="sig-name descname"><span class="pre">_handle_parsing_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#src.smart_watch.core.ErrorHandler.HandledError" title="src.smart_watch.core.ErrorHandler.HandledError"><span class="pre">HandledError</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(disponible dans Python v3.13)"><span class="pre">Any</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ErrorHandler.html#ErrorHandler._handle_parsing_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorHandler._handle_parsing_error" title="Lien vers cette définition"></a></dt>
+<dd><p>Gère les erreurs de parsing des données d’entrée.</p>
+<p>Cette méthode modifie l’attribut <cite>solution_attempted</cite> de l’erreur pour indiquer qu’une erreur de parsing a eu lieu, enregistre une information dans le logger pour suggérer de vérifier le format des données d’entrée, puis retourne <cite>None</cite> afin que la valeur par défaut définie par le décorateur soit utilisée.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>error</strong> (<a class="reference internal" href="#src.smart_watch.core.ErrorHandler.HandledError" title="src.smart_watch.core.ErrorHandler.HandledError"><em>HandledError</em></a>) – l’objet représentant l’erreur de parsing rencontrée.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>toujours <cite>None</cite>, pour permettre l’utilisation d’une valeur par défaut.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorHandler._handle_validation_error">
+<span class="sig-name descname"><span class="pre">_handle_validation_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#src.smart_watch.core.ErrorHandler.HandledError" title="src.smart_watch.core.ErrorHandler.HandledError"><span class="pre">HandledError</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(disponible dans Python v3.13)"><span class="pre">Any</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ErrorHandler.html#ErrorHandler._handle_validation_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorHandler._handle_validation_error" title="Lien vers cette définition"></a></dt>
+<dd><p>Traite une erreur de validation et retourne une réponse structurée.</p>
+<p>Cette méthode modifie l’attribut <cite>solution_attempted</cite> de l’objet <cite>error</cite> pour indiquer qu’une tentative de solution a été effectuée, puis retourne un dictionnaire contenant un message d’erreur et les détails de l’exception.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>error</strong> (<a class="reference internal" href="#src.smart_watch.core.ErrorHandler.HandledError" title="src.smart_watch.core.ErrorHandler.HandledError"><em>HandledError</em></a>) – l’objet représentant l’erreur de validation à traiter.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>un dictionnaire avec les clés “error” et “details” décrivant l’échec de la validation.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorHandler._handle_email_error">
+<span class="sig-name descname"><span class="pre">_handle_email_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#src.smart_watch.core.ErrorHandler.HandledError" title="src.smart_watch.core.ErrorHandler.HandledError"><span class="pre">HandledError</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(disponible dans Python v3.13)"><span class="pre">Any</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ErrorHandler.html#ErrorHandler._handle_email_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorHandler._handle_email_error" title="Lien vers cette définition"></a></dt>
+<dd><p>Traite les erreurs liées à l’envoi d’emails et propose une solution adaptée.</p>
+<p>Cette méthode analyse le message d’exception associé à une erreur d’email, puis définit une tentative de solution en fonction du type d’erreur détectée (authentification ou connexion SMTP).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>error</strong> (<a class="reference internal" href="#src.smart_watch.core.ErrorHandler.HandledError" title="src.smart_watch.core.ErrorHandler.HandledError"><em>HandledError</em></a>) – l’objet représentant l’erreur à traiter, contenant l’exception d’origine.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>toujours None. La solution proposée est enregistrée dans l’attribut <cite>solution_attempted</cite> de l’objet error.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorHandler._handle_embeddings_error">
+<span class="sig-name descname"><span class="pre">_handle_embeddings_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#src.smart_watch.core.ErrorHandler.HandledError" title="src.smart_watch.core.ErrorHandler.HandledError"><span class="pre">HandledError</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(disponible dans Python v3.13)"><span class="pre">Any</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ErrorHandler.html#ErrorHandler._handle_embeddings_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorHandler._handle_embeddings_error" title="Lien vers cette définition"></a></dt>
+<dd><p>Gère les erreurs spécifiques aux embeddings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>error</strong> (<a class="reference internal" href="#src.smart_watch.core.ErrorHandler.HandledError" title="src.smart_watch.core.ErrorHandler.HandledError"><em>HandledError</em></a>) – l’objet d’erreur contenant l’exception à traiter.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>toujours None, cette méthode est utilisée pour ses effets de bord.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorHandler.create_error_context">
+<span class="sig-name descname"><span class="pre">create_error_context</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">operation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(disponible dans Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#src.smart_watch.core.ErrorHandler.ErrorContext" title="src.smart_watch.core.ErrorHandler.ErrorContext"><span class="pre">ErrorContext</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ErrorHandler.html#ErrorHandler.create_error_context"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorHandler.create_error_context" title="Lien vers cette définition"></a></dt>
+<dd><p>Crée un contexte d’erreur pour faciliter la gestion et le suivi des erreurs dans le module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>module</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><em>str</em></a>) – nom du module où l’erreur s’est produite.</p></li>
+<li><p><strong>function</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><em>str</em></a>) – nom de la fonction concernée par l’erreur.</p></li>
+<li><p><strong>operation</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><em>str</em></a>) – description de l’opération en cours lors de l’erreur.</p></li>
+<li><p><strong>data</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><em>str</em></a><em>, </em><em>Any</em><em>]</em><em>]</em>) – données supplémentaires liées à l’erreur (par défaut None).</p></li>
+<li><p><strong>user_message</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><em>str</em></a><em>]</em>) – message destiné à l’utilisateur pour expliquer l’erreur (par défaut None).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>objet contenant toutes les informations contextuelles sur l’erreur.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#src.smart_watch.core.ErrorHandler.ErrorContext" title="src.smart_watch.core.ErrorHandler.ErrorContext">ErrorContext</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorHandler.get_error_summary">
+<span class="sig-name descname"><span class="pre">get_error_summary</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(disponible dans Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ErrorHandler.html#ErrorHandler.get_error_summary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorHandler.get_error_summary" title="Lien vers cette définition"></a></dt>
+<dd><p>Résume les erreurs enregistrées dans le registre d’erreurs.</p>
+<p>Retourne un dictionnaire contenant le nombre total d’erreurs, la répartition par catégorie et par gravité, ainsi que les cinq dernières erreurs enregistrées avec leurs détails.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>Un dictionnaire avec les clés suivantes :</dt><dd><ul class="simple">
+<li><p> »total_errors » (int): Nombre total d’erreurs enregistrées.</p></li>
+<li><p> »by_category » (dict): Répartition des erreurs par catégorie.</p></li>
+<li><p> »by_severity » (dict): Répartition des erreurs par gravité.</p></li>
+<li><dl class="simple">
+<dt> »recent_errors » (list): Liste des cinq dernières erreurs, chacune sous forme de dictionnaire contenant :</dt><dd><ul>
+<li><p> »category » (str): Catégorie de l’erreur.</p></li>
+<li><p> »severity » (str): Gravité de l’erreur.</p></li>
+<li><p> »exception » (str): Description de l’exception.</p></li>
+<li><p> »module » (str): Module où l’erreur s’est produite.</p></li>
+<li><p> »timestamp » (Any): Date et heure de l’erreur.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a>, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.ErrorHandler.clear_error_registry">
+<span class="sig-name descname"><span class="pre">clear_error_registry</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ErrorHandler.html#ErrorHandler.clear_error_registry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.ErrorHandler.clear_error_registry" title="Lien vers cette définition"></a></dt>
+<dd><p>Efface tous les enregistrements d’erreurs du registre interne.</p>
+<p>Cette méthode vide le registre des erreurs, supprimant ainsi toutes les erreurs actuellement stockées.
+Elle peut être utilisée pour réinitialiser l’état des erreurs avant une nouvelle opération ou après un traitement.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Lève<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#AttributeError" title="(disponible dans Python v3.13)"><strong>AttributeError</strong></a> – si le registre d’erreurs n’est pas initialisé correctement.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.handle_errors">
+<span class="sig-prename descclassname"><span class="pre">src.smart_watch.core.ErrorHandler.</span></span><span class="sig-name descname"><span class="pre">handle_errors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">category</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#src.smart_watch.core.ErrorHandler.ErrorCategory" title="src.smart_watch.core.ErrorHandler.ErrorCategory"><span class="pre">ErrorCategory</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">severity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#src.smart_watch.core.ErrorHandler.ErrorSeverity" title="src.smart_watch.core.ErrorHandler.ErrorSeverity"><span class="pre">ErrorSeverity</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">reraise</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(disponible dans Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_return</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(disponible dans Python v3.13)"><span class="pre">Any</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(disponible dans Python v3.13)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(disponible dans Python v3.13)"><span class="pre">Callable</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(disponible dans Python v3.13)"><span class="pre">Callable</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ErrorHandler.html#handle_errors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.handle_errors" title="Lien vers cette définition"></a></dt>
+<dd><p>Décorateur pour gérer les erreurs lors de l’exécution d’une fonction, en utilisant un gestionnaire d’erreurs centralisé.</p>
+<p>Ce décorateur intercepte les exceptions levées par la fonction décorée, crée un contexte d’erreur, et délègue le traitement au gestionnaire d’erreurs approprié. Il permet de personnaliser la catégorie et la sévérité de l’erreur, d’afficher un message utilisateur, et de choisir si l’exception doit être relancée ou non.</p>
+<p>Le traceback complet est automatiquement capturé pour les erreurs de sévérité HIGH et CRITICAL.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>category</strong> (<a class="reference internal" href="#src.smart_watch.core.ErrorHandler.ErrorCategory" title="src.smart_watch.core.ErrorHandler.ErrorCategory"><em>ErrorCategory</em></a>) – catégorie de l’erreur à signaler.</p></li>
+<li><p><strong>severity</strong> (<a class="reference internal" href="#src.smart_watch.core.ErrorHandler.ErrorSeverity" title="src.smart_watch.core.ErrorHandler.ErrorSeverity"><em>ErrorSeverity</em></a>) – niveau de sévérité de l’erreur.</p></li>
+<li><p><strong>reraise</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(disponible dans Python v3.13)"><em>bool</em></a><em>, </em><em>optionnel</em>) – si True, relance l’exception après traitement. Sinon, retourne <cite>default_return</cite>. Par défaut à False.</p></li>
+<li><p><strong>default_return</strong> (<em>Any</em><em>, </em><em>optionnel</em>) – valeur à retourner en cas d’erreur si <cite>reraise</cite> est False. Par défaut à None.</p></li>
+<li><p><strong>user_message</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><em>str</em></a><em>, </em><em>optionnel</em>) – message personnalisé à afficher à l’utilisateur. Par défaut à None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>Le décorateur appliqué à la fonction cible.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Callable</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler._get_global_error_handler">
+<span class="sig-prename descclassname"><span class="pre">src.smart_watch.core.ErrorHandler.</span></span><span class="sig-name descname"><span class="pre">_get_global_error_handler</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#src.smart_watch.core.ErrorHandler.ErrorHandler" title="src.smart_watch.core.ErrorHandler.ErrorHandler"><span class="pre">ErrorHandler</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ErrorHandler.html#_get_global_error_handler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.ErrorHandler._get_global_error_handler" title="Lien vers cette définition"></a></dt>
+<dd><p>Retourne l’instance globale du gestionnaire d’erreurs.</p>
+<p>Cette fonction vérifie si une instance globale de <cite>ErrorHandler</cite> existe déjà. Si ce n’est pas le cas, elle en crée une nouvelle et la retourne. Cela permet de garantir qu’une seule instance du gestionnaire d’erreurs est utilisée dans toute l’application.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p>l’instance globale du gestionnaire d’erreurs.</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#src.smart_watch.core.ErrorHandler.ErrorHandler" title="src.smart_watch.core.ErrorHandler.ErrorHandler">ErrorHandler</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.smart_watch.core.ErrorHandler.get_error_handler">
+<span class="sig-prename descclassname"><span class="pre">src.smart_watch.core.ErrorHandler.</span></span><span class="sig-name descname"><span class="pre">get_error_handler</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#src.smart_watch.core.ErrorHandler.ErrorHandler" title="src.smart_watch.core.ErrorHandler.ErrorHandler"><span class="pre">ErrorHandler</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/ErrorHandler.html#get_error_handler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.ErrorHandler.get_error_handler" title="Lien vers cette définition"></a></dt>
+<dd><p>Récupère l’instance globale du gestionnaire d’erreurs.</p>
+<p>Cette fonction permet d’obtenir le gestionnaire d’erreurs utilisé globalement dans l’application. Elle est utile pour centraliser la gestion des exceptions et des erreurs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p>l’instance globale du gestionnaire d’erreurs.</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#src.smart_watch.core.ErrorHandler.ErrorHandler" title="src.smart_watch.core.ErrorHandler.ErrorHandler">ErrorHandler</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pied de page">
+        <a href="EnvoyerMail.html" class="btn btn-neutral float-left" title="Envoi d’Email" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Précédent</a>
+        <a href="GetPrompt.html" class="btn btn-neutral float-right" title="Générateur de Prompt" accesskey="n" rel="next">Suivant <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

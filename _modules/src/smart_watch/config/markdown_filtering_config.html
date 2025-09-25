@@ -1,0 +1,377 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.smart_watch.config.markdown_filtering_config &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.jpg"/>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=d2e4462e"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/translations.js?v=e6b791cb"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/introduction.html">Présentation du projet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/introduction.html#sommaire">Sommaire</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/docker.html">Utilisation avec Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/configuration.html">Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture technique</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/main.html">Orchestrateur</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/diagramme.html">Pipeline de traitement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/bdd.html">Base de données</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/stack.html">Stack technique</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/config/index.html">Modules Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/core/index.html">Modules Core</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/processing/index.html">Modules Processing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/utils/index.html">Modules Utils</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Reporting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html">Modules Reporting</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Module d'évaluation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/evaluation/index.html">Module d’évaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/evaluation/index.html#vue-d-ensemble">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/evaluation/index.html#workflow-d-evaluation">Workflow d’évaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/evaluation/index.html#metriques-et-comparaisons">Métriques et comparaisons</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Code du module</a></li>
+      <li class="breadcrumb-item active">src.smart_watch.config.markdown_filtering_config</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Code source de src.smart_watch.config.markdown_filtering_config</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Documentation</span>
+<span class="c1"># https://datagora-erasme.github.io/smart_watch/source/modules/config/markdown_filtering_config.html</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..core.ErrorHandler</span><span class="w"> </span><span class="kn">import</span> <span class="n">ErrorCategory</span><span class="p">,</span> <span class="n">ErrorSeverity</span><span class="p">,</span> <span class="n">handle_errors</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.base_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseConfig</span>
+
+
+<div class="viewcode-block" id="MarkdownFilteringConfig">
+<a class="viewcode-back" href="../../../../source/modules/config/markdown_filtering_config.html#src.smart_watch.config.markdown_filtering_config.MarkdownFilteringConfig">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MarkdownFilteringConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Encapsule la configuration pour le filtrage de contenu Markdown.</span>
+
+<span class="sd">    Cette classe stocke les paramètres spécifiques au filtrage sémantique de documents Markdown, y compris la configuration du fournisseur d&#39;embeddings et les seuils de similarité.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        embed_fournisseur (str): le fournisseur d&#39;embeddings à utiliser (&quot;OPENAI&quot;, &quot;MISTRAL&quot;, ou &quot;LOCAL&quot;).</span>
+<span class="sd">        embed_modele (Optional[str]): le modèle d&#39;embedding à utiliser.</span>
+<span class="sd">        embed_api_key (Optional[str]): la clé API pour le service d&#39;embedding.</span>
+<span class="sd">        embed_base_url (Optional[str]): l&#39;URL de base pour le service d&#39;embedding (spécifique à OpenAI).</span>
+<span class="sd">        similarity_threshold (Optional[float]): le seuil de similarité pour filtrer les contenus.</span>
+<span class="sd">        chunk_size (Optional[int]): la taille des morceaux (chunks) de texte.</span>
+<span class="sd">        chunk_overlap (Optional[int]): le chevauchement entre les morceaux de texte.</span>
+<span class="sd">        min_content_length (Optional[int]): la longueur minimale du contenu pour être traité.</span>
+<span class="sd">        reference_phrases (Optional[List[str]]): les phrases de référence pour la comparaison de similarité.</span>
+<span class="sd">        context_window_size (int): la taille de la fenêtre de contexte pour l&#39;analyse.</span>
+<span class="sd">        sentencizer (Optional[str]): le sentencizer à utiliser pour le découpage du texte.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="MarkdownFilteringConfig.__init__">
+<a class="viewcode-back" href="../../../../source/modules/config/markdown_filtering_config.html#src.smart_watch.config.markdown_filtering_config.MarkdownFilteringConfig.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialise l&#39;objet de configuration de filtrage Markdown.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            config_data (Dict[str, Any]): un dictionnaire contenant les données de configuration, chargées depuis des variables d&#39;environnement.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">embed_fournisseur</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_determine_embed_provider</span><span class="p">(</span><span class="n">config_data</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">embed_fournisseur</span> <span class="o">==</span> <span class="s2">&quot;OPENAI&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">embed_modele</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">config_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;embed_modele_openai&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">embed_api_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">config_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;embed_api_key_openai&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">embed_base_url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">config_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="s2">&quot;embed_base_url_openai&quot;</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">embed_fournisseur</span> <span class="o">==</span> <span class="s2">&quot;MISTRAL&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">embed_modele</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">config_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;embed_modele_mistral&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">embed_api_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">config_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;embed_api_key_mistral&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">embed_base_url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># LOCAL</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">embed_modele</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">config_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;embed_modele_local&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">embed_api_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">embed_base_url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">similarity_threshold</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">config_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">&quot;similarity_threshold&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chunk_size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">config_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;chunk_size&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chunk_overlap</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">config_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;chunk_overlap&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_content_length</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">config_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;min_content_length&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reference_phrases</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">config_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">&quot;reference_phrases&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">context_window_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">config_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;context_window_size&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sentencizer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">config_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;sentencizer&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MarkdownFilteringConfig._determine_embed_provider">
+<a class="viewcode-back" href="../../../../source/modules/config/markdown_filtering_config.html#src.smart_watch.config.markdown_filtering_config.MarkdownFilteringConfig._determine_embed_provider">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_determine_embed_provider</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Détermine le fournisseur d&#39;embeddings à partir de la configuration.</span>
+
+<span class="sd">        La sélection est basée sur la présence de clés API spécifiques dans l&#39;ordre suivant : OpenAI, Mistral, puis Local par défaut.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            config_data (Dict[str, Any]): le dictionnaire de configuration contenant les clés API.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: le nom du fournisseur d&#39;embeddings (&quot;OPENAI&quot;, &quot;MISTRAL&quot;, ou &quot;LOCAL&quot;).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">config_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;embed_api_key_openai&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s2">&quot;OPENAI&quot;</span>
+        <span class="k">if</span> <span class="n">config_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;embed_api_key_mistral&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s2">&quot;MISTRAL&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;LOCAL&quot;</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="MarkdownFilteringConfigManager">
+<a class="viewcode-back" href="../../../../source/modules/config/markdown_filtering_config.html#src.smart_watch.config.markdown_filtering_config.MarkdownFilteringConfigManager">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MarkdownFilteringConfigManager</span><span class="p">(</span><span class="n">BaseConfig</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gère le chargement et la validation de la configuration de filtrage Markdown.</span>
+
+<span class="sd">    Cette classe hérite de `BaseConfig` pour charger les variables d&#39;environnement et initialise un objet `MarkdownFilteringConfig` validé.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        config (MarkdownFilteringConfig): l&#39;objet de configuration contenant tous les paramètres de filtrage.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="MarkdownFilteringConfigManager.__init__">
+<a class="viewcode-back" href="../../../../source/modules/config/markdown_filtering_config.html#src.smart_watch.config.markdown_filtering_config.MarkdownFilteringConfigManager.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialise le gestionnaire de configuration.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            env_file (Optional[Path], optional): le chemin vers un fichier .env. Par défaut, None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env_file</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">:</span> <span class="n">MarkdownFilteringConfig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_markdown_filtering_config</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="MarkdownFilteringConfigManager._init_markdown_filtering_config">
+<a class="viewcode-back" href="../../../../source/modules/config/markdown_filtering_config.html#src.smart_watch.config.markdown_filtering_config.MarkdownFilteringConfigManager._init_markdown_filtering_config">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_init_markdown_filtering_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MarkdownFilteringConfig</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialise l&#39;objet de configuration à partir des variables d&#39;environnement.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            MarkdownFilteringConfig: un objet de configuration initialisé.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">reference_phrases_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_env_var</span><span class="p">(</span><span class="s2">&quot;REFERENCE_PHRASES&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">reference_phrases</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">phrase</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">phrase</span> <span class="ow">in</span> <span class="n">reference_phrases_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;;&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">phrase</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">MarkdownFilteringConfig</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;embed_api_key_openai&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_env_var</span><span class="p">(</span><span class="s2">&quot;EMBED_API_KEY_OPENAI&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;embed_base_url_openai&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_env_var</span><span class="p">(</span><span class="s2">&quot;EMBED_BASE_URL_OPENAI&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;embed_modele_openai&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_env_var</span><span class="p">(</span><span class="s2">&quot;EMBED_MODELE_OPENAI&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;embed_api_key_mistral&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_env_var</span><span class="p">(</span><span class="s2">&quot;EMBED_API_KEY_MISTRAL&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;embed_modele_mistral&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_env_var</span><span class="p">(</span><span class="s2">&quot;EMBED_MODELE_MISTRAL&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;embed_modele_local&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_env_var</span><span class="p">(</span><span class="s2">&quot;EMBED_MODELE_LOCAL&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;similarity_threshold&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">get_env_var</span><span class="p">(</span><span class="s2">&quot;SIMILARITY_THRESHOLD&quot;</span><span class="p">,</span> <span class="s2">&quot;0.0&quot;</span><span class="p">)</span>
+                <span class="p">),</span>
+                <span class="s2">&quot;chunk_size&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_env_var</span><span class="p">(</span><span class="s2">&quot;CHUNK_SIZE&quot;</span><span class="p">,</span> <span class="s2">&quot;100&quot;</span><span class="p">)),</span>
+                <span class="s2">&quot;chunk_overlap&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_env_var</span><span class="p">(</span><span class="s2">&quot;CHUNK_OVERLAP&quot;</span><span class="p">,</span> <span class="s2">&quot;15&quot;</span><span class="p">)),</span>
+                <span class="s2">&quot;min_content_length&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_env_var</span><span class="p">(</span><span class="s2">&quot;MIN_CONTENT_LENGTH&quot;</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">)),</span>
+                <span class="s2">&quot;reference_phrases&quot;</span><span class="p">:</span> <span class="n">reference_phrases</span><span class="p">,</span>
+                <span class="s2">&quot;context_window_size&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">get_env_var</span><span class="p">(</span><span class="s2">&quot;CONTEXT_WINDOW_SIZE&quot;</span><span class="p">,</span> <span class="s2">&quot;1&quot;</span><span class="p">)</span>
+                <span class="p">),</span>
+                <span class="s2">&quot;sentencizer&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_env_var</span><span class="p">(</span><span class="s2">&quot;SENTENCIZER&quot;</span><span class="p">),</span>
+            <span class="p">}</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MarkdownFilteringConfigManager.validate">
+<a class="viewcode-back" href="../../../../source/modules/config/markdown_filtering_config.html#src.smart_watch.config.markdown_filtering_config.MarkdownFilteringConfigManager.validate">[docs]</a>
+    <span class="nd">@handle_errors</span><span class="p">(</span>
+        <span class="n">category</span><span class="o">=</span><span class="n">ErrorCategory</span><span class="o">.</span><span class="n">CONFIGURATION</span><span class="p">,</span>
+        <span class="n">severity</span><span class="o">=</span><span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">MEDIUM</span><span class="p">,</span>
+        <span class="n">user_message</span><span class="o">=</span><span class="s2">&quot;Erreur lors de la validation de la configuration du filtrage Markdown.&quot;</span><span class="p">,</span>
+        <span class="n">reraise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Valide la configuration chargée.</span>
+
+<span class="sd">        Vérifie la cohérence des paramètres, comme la présence de clés API pour les fournisseurs distants et la validité des valeurs numériques.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True si la configuration est valide.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: si une ou plusieurs erreurs de validation sont détectées.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">validation_errors</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">embed_fournisseur</span> <span class="o">!=</span> <span class="s2">&quot;LOCAL&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">embed_api_key</span><span class="p">:</span>
+                <span class="n">validation_errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;La clé API pour le fournisseur &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">embed_fournisseur</span><span class="si">}</span><span class="s2">&#39; est manquante.&quot;</span>
+                <span class="p">)</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">embed_modele</span><span class="p">:</span>
+            <span class="n">validation_errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="s2">&quot;Le modèle d&#39;embedding local (EMBED_MODELE_LOCAL) doit être spécifié.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">embed_fournisseur</span> <span class="o">==</span> <span class="s2">&quot;OPENAI&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">embed_base_url</span><span class="p">:</span>
+            <span class="n">validation_errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="s2">&quot;L&#39;URL de base (EMBED_BASE_URL_OPENAI) est requise pour OpenAI.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">similarity_threshold</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span>
+            <span class="mf">0.0</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">similarity_threshold</span> <span class="o">&lt;=</span> <span class="mf">1.0</span>
+        <span class="p">):</span>
+            <span class="n">validation_errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Le seuil de similarité (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">similarity_threshold</span><span class="si">}</span><span class="s2">) doit être compris entre 0.0 et 1.0.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sentencizer</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">chunk_size</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">chunk_size</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">validation_errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;La taille des chunks (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">chunk_size</span><span class="si">}</span><span class="s2">) doit être un entier positif.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">chunk_overlap</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">chunk_overlap</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">validation_errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Le chevauchement des chunks (</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">chunk_overlap</span><span class="si">}</span><span class="s2">) doit être un entier positif ou nul.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">chunk_overlap</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">chunk_size</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">chunk_overlap</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">chunk_size</span>
+            <span class="p">):</span>
+                <span class="n">validation_errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="s2">&quot;Le chevauchement des chunks doit être inférieur à leur taille.&quot;</span>
+                <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">reference_phrases</span><span class="p">:</span>
+            <span class="n">validation_errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="s2">&quot;La liste des phrases de référence (REFERENCE_PHRASES) est vide.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">validation_errors</span><span class="p">:</span>
+            <span class="n">error_message</span> <span class="o">=</span> <span class="s2">&quot;Erreurs de validation de la configuration:</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;  - </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">validation_errors</span>
+            <span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">error_message</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

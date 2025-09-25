@@ -1,0 +1,367 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.smart_watch.config.llm_config &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.jpg"/>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=d2e4462e"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/translations.js?v=e6b791cb"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/introduction.html">Présentation du projet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/introduction.html#sommaire">Sommaire</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/docker.html">Utilisation avec Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/configuration.html">Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture technique</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/main.html">Orchestrateur</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/diagramme.html">Pipeline de traitement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/bdd.html">Base de données</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/stack.html">Stack technique</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/config/index.html">Modules Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/core/index.html">Modules Core</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/processing/index.html">Modules Processing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/utils/index.html">Modules Utils</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Reporting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html">Modules Reporting</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Module d'évaluation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/evaluation/index.html">Module d’évaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/evaluation/index.html#vue-d-ensemble">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/evaluation/index.html#workflow-d-evaluation">Workflow d’évaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/evaluation/index.html#metriques-et-comparaisons">Métriques et comparaisons</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Code du module</a></li>
+      <li class="breadcrumb-item active">src.smart_watch.config.llm_config</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Code source de src.smart_watch.config.llm_config</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Documentation</span>
+<span class="c1"># https://datagora-erasme.github.io/smart_watch/source/modules/config/llm_config.html</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..core.ErrorHandler</span><span class="w"> </span><span class="kn">import</span> <span class="n">ErrorCategory</span><span class="p">,</span> <span class="n">ErrorSeverity</span><span class="p">,</span> <span class="n">handle_errors</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.base_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseConfig</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="LLMConfig">
+<a class="viewcode-back" href="../../../../source/modules/config/llm_config.html#src.smart_watch.config.llm_config.LLMConfig">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LLMConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Représente la configuration pour un client LLM.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        fournisseur (str): le nom du fournisseur de LLM (&quot;OPENAI&quot;, &quot;MISTRAL&quot;, &quot;LOCAL&quot;).</span>
+<span class="sd">        modele (str): le nom du modèle de LLM à utiliser.</span>
+<span class="sd">        api_key (Optional[str]): la clé API pour accéder au service du LLM.</span>
+<span class="sd">        base_url (Optional[str]): l&#39;URL de base pour les appels API, principalement pour les fournisseurs compatibles OpenAI.</span>
+<span class="sd">        temperature (float): la température pour la génération de texte, contrôle le caractère aléatoire.</span>
+<span class="sd">        seed (Optional[int]): la graine pour la génération aléatoire, utile pour la reproductibilité.</span>
+<span class="sd">        timeout (int): le délai d&#39;attente en secondes pour les requêtes API.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">fournisseur</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">modele</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">api_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">base_url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span>
+    <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="LLMConfigManager">
+<a class="viewcode-back" href="../../../../source/modules/config/llm_config.html#src.smart_watch.config.llm_config.LLMConfigManager">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LLMConfigManager</span><span class="p">(</span><span class="n">BaseConfig</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gère la configuration du client LLM à partir des variables d&#39;environnement.</span>
+
+<span class="sd">    Cette classe lit les variables d&#39;environnement pour configurer le client LLM, en détectant automatiquement le fournisseur (OpenAI, Mistral, ou local) en fonction des clés API disponibles.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        config (LLMConfig): l&#39;objet de configuration LLM initialisé.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="LLMConfigManager.__init__">
+<a class="viewcode-back" href="../../../../source/modules/config/llm_config.html#src.smart_watch.config.llm_config.LLMConfigManager.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialise le gestionnaire de configuration LLM.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            env_file (Optional[Path], optional): Le chemin vers un fichier .env personnalisé. Si non fourni, utilise les variables d&#39;environnement système.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">env_file</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_llm_config</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># Gestion d&#39;erreur simplifiée pour éviter les problèmes d&#39;initialisation</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur initialisation config LLM: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="c1"># Configuration par défaut pour permettre au système de démarrer</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_default_config</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="LLMConfigManager._init_llm_config">
+<a class="viewcode-back" href="../../../../source/modules/config/llm_config.html#src.smart_watch.config.llm_config.LLMConfigManager._init_llm_config">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_init_llm_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LLMConfig</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialise la configuration LLM en détectant le fournisseur.</span>
+
+<span class="sd">        La méthode recherche les clés API pour OpenAI, puis Mistral, et enfin un modèle local. Le premier trouvé est utilisé pour la configuration.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            LLMConfig: l&#39;objet de configuration LLM initialisé.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: si aucune configuration de LLM (OpenAI, Mistral) ou de modèle d&#39;embedding local n&#39;est trouvée.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Tentative OpenAI/compatible</span>
+        <span class="n">llm_api_key_openai</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_env_var</span><span class="p">(</span><span class="s2">&quot;LLM_API_KEY_OPENAI&quot;</span><span class="p">)</span>
+        <span class="n">llm_base_url_openai</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_env_var</span><span class="p">(</span><span class="s2">&quot;LLM_BASE_URL_OPENAI&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Tentative Mistral</span>
+        <span class="n">llm_api_key_mistral</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_env_var</span><span class="p">(</span><span class="s2">&quot;LLM_API_KEY_MISTRAL&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Tentative modèle local</span>
+        <span class="n">embed_modele_local</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_env_var</span><span class="p">(</span><span class="s2">&quot;EMBED_MODELE_LOCAL&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">llm_api_key_openai</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">LLMConfig</span><span class="p">(</span>
+                <span class="n">fournisseur</span><span class="o">=</span><span class="s2">&quot;OPENAI&quot;</span><span class="p">,</span>
+                <span class="n">modele</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_env_var</span><span class="p">(</span><span class="s2">&quot;LLM_MODELE_OPENAI&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+                <span class="n">api_key</span><span class="o">=</span><span class="n">llm_api_key_openai</span><span class="p">,</span>
+                <span class="n">base_url</span><span class="o">=</span><span class="n">llm_base_url_openai</span><span class="p">,</span>
+                <span class="n">temperature</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_env_var</span><span class="p">(</span><span class="s2">&quot;LLM_TEMPERATURE&quot;</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">)),</span>
+                <span class="n">timeout</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_env_var</span><span class="p">(</span><span class="s2">&quot;LLM_TIMEOUT&quot;</span><span class="p">,</span> <span class="s2">&quot;30&quot;</span><span class="p">)),</span>
+                <span class="n">seed</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_env_var</span><span class="p">(</span><span class="s2">&quot;LLM_SEED&quot;</span><span class="p">))</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_env_var</span><span class="p">(</span><span class="s2">&quot;LLM_SEED&quot;</span><span class="p">)</span>
+                <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">llm_api_key_mistral</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">LLMConfig</span><span class="p">(</span>
+                <span class="n">fournisseur</span><span class="o">=</span><span class="s2">&quot;MISTRAL&quot;</span><span class="p">,</span>
+                <span class="n">modele</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_env_var</span><span class="p">(</span><span class="s2">&quot;LLM_MODELE_MISTRAL&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+                <span class="n">api_key</span><span class="o">=</span><span class="n">llm_api_key_mistral</span><span class="p">,</span>
+                <span class="n">temperature</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_env_var</span><span class="p">(</span><span class="s2">&quot;LLM_TEMPERATURE&quot;</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">)),</span>
+                <span class="n">timeout</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_env_var</span><span class="p">(</span><span class="s2">&quot;LLM_TIMEOUT&quot;</span><span class="p">,</span> <span class="s2">&quot;30&quot;</span><span class="p">)),</span>
+                <span class="n">seed</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_env_var</span><span class="p">(</span><span class="s2">&quot;LLM_SEED&quot;</span><span class="p">))</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_env_var</span><span class="p">(</span><span class="s2">&quot;LLM_SEED&quot;</span><span class="p">)</span>
+                <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">embed_modele_local</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">LLMConfig</span><span class="p">(</span>
+                <span class="n">fournisseur</span><span class="o">=</span><span class="s2">&quot;LOCAL&quot;</span><span class="p">,</span>
+                <span class="n">modele</span><span class="o">=</span><span class="n">embed_modele_local</span><span class="p">,</span>
+                <span class="n">api_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># Pas de clé API nécessaire pour un modèle local</span>
+                <span class="n">seed</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_env_var</span><span class="p">(</span><span class="s2">&quot;LLM_SEED&quot;</span><span class="p">))</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_env_var</span><span class="p">(</span><span class="s2">&quot;LLM_SEED&quot;</span><span class="p">)</span>
+                <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Aucune configuration LLM ou embedding local trouvée.&quot;</span>
+                <span class="s2">&quot;Veuillez définir LLM_API_KEY_OPENAI, LLM_API_KEY_MISTRAL, ou EMBED_MODELE_LOCAL.&quot;</span>
+            <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LLMConfigManager._get_default_config">
+<a class="viewcode-back" href="../../../../source/modules/config/llm_config.html#src.smart_watch.config.llm_config.LLMConfigManager._get_default_config">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_default_config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LLMConfig</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retourne une configuration LLM par défaut.</span>
+
+<span class="sd">        Cette configuration est utilisée comme solution de repli en cas d&#39;échec de l&#39;initialisation pour permettre au système de démarrer sans planter.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            LLMConfig: une configuration LLM locale par défaut.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">LLMConfig</span><span class="p">(</span>
+            <span class="n">fournisseur</span><span class="o">=</span><span class="s2">&quot;LOCAL&quot;</span><span class="p">,</span>
+            <span class="n">modele</span><span class="o">=</span><span class="s2">&quot;paraphrase-multilingual-mpnet-base-v2&quot;</span><span class="p">,</span>
+            <span class="n">api_key</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">base_url</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">temperature</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LLMConfigManager.validate">
+<a class="viewcode-back" href="../../../../source/modules/config/llm_config.html#src.smart_watch.config.llm_config.LLMConfigManager.validate">[docs]</a>
+    <span class="nd">@handle_errors</span><span class="p">(</span>
+        <span class="n">category</span><span class="o">=</span><span class="n">ErrorCategory</span><span class="o">.</span><span class="n">CONFIGURATION</span><span class="p">,</span>
+        <span class="n">severity</span><span class="o">=</span><span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">HIGH</span><span class="p">,</span>
+        <span class="n">user_message</span><span class="o">=</span><span class="s2">&quot;Erreur lors de la validation de la configuration LLM&quot;</span><span class="p">,</span>
+        <span class="n">reraise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Valide la configuration LLM chargée.</span>
+
+<span class="sd">        Vérifie que les paramètres essentiels sont présents et valides, comme la clé API pour les fournisseurs distants, le nom du modèle, et les valeurs de température et de timeout.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True si la configuration est valide.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: si la validation échoue, avec un message détaillant les erreurs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">validation_errors</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Si le fournisseur n&#39;est pas local, vérifier la clé API</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">fournisseur</span> <span class="o">!=</span> <span class="s2">&quot;LOCAL&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">api_key</span><span class="p">:</span>
+            <span class="n">validation_errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="s2">&quot;Clé API LLM manquante pour le fournisseur configuré&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Vérifier le modèle</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">modele</span><span class="p">:</span>
+            <span class="n">validation_errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Modèle LLM manquant&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Vérifier les paramètres numériques</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mf">0.0</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">temperature</span> <span class="o">&lt;=</span> <span class="mf">2.0</span><span class="p">):</span>
+            <span class="n">validation_errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;LLM_TEMPERATURE doit être entre 0.0 et 2.0 (valeur actuelle: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">temperature</span><span class="si">}</span><span class="s2">)&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">timeout</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">validation_errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;LLM_TIMEOUT doit être positif (valeur actuelle: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">timeout</span><span class="si">}</span><span class="s2">)&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Validation du seed</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="n">validation_errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;LLM_SEED doit être un entier (valeur actuelle: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">seed</span><span class="si">}</span><span class="s2">)&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Vérifier l&#39;URL de base pour OpenAI</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">fournisseur</span> <span class="o">==</span> <span class="s2">&quot;OPENAI&quot;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">base_url</span><span class="p">:</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">urllib.parse</span>
+
+            <span class="n">parsed</span> <span class="o">=</span> <span class="n">urllib</span><span class="o">.</span><span class="n">parse</span><span class="o">.</span><span class="n">urlparse</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">base_url</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">parsed</span><span class="o">.</span><span class="n">scheme</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">parsed</span><span class="o">.</span><span class="n">netloc</span><span class="p">:</span>
+                <span class="n">validation_errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;LLM_BASE_URL_OPENAI invalide: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">base_url</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+
+        <span class="c1"># Si des erreurs sont trouvées, lever une exception avec les détails</span>
+        <span class="k">if</span> <span class="n">validation_errors</span><span class="p">:</span>
+            <span class="n">error_message</span> <span class="o">=</span> <span class="s2">&quot;Validation échouée:</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;  - </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">validation_errors</span>
+            <span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">error_message</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

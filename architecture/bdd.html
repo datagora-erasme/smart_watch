@@ -1,0 +1,364 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Base de données &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.jpg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d2e4462e"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=e6b791cb"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Recherche" href="../search.html" />
+    <link rel="next" title="Stack technique" href="stack.html" />
+    <link rel="prev" title="Modules" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guide/introduction.html">Présentation du projet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/introduction.html#sommaire">Sommaire</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/docker.html">Utilisation avec Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/configuration.html">Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture technique</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../source/main.html">Orchestrateur</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diagramme.html">Pipeline de traitement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Modules</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Base de données</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#tables">Tables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#diagramme">Diagramme</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#detail-des-champs">Détail des champs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="stack.html">Stack technique</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/config/index.html">Modules Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/core/index.html">Modules Core</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/processing/index.html">Modules Processing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/utils/index.html">Modules Utils</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Reporting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/reporting/index.html">Modules Reporting</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Module d'évaluation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/evaluation/index.html">Module d’évaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/evaluation/index.html#vue-d-ensemble">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/evaluation/index.html#workflow-d-evaluation">Workflow d’évaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/evaluation/index.html#metriques-et-comparaisons">Métriques et comparaisons</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Base de données</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/architecture/bdd.rst.txt" rel="nofollow"> Afficher la source de la page</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="base-de-donnees">
+<h1>Base de données<a class="headerlink" href="#base-de-donnees" title="Lien vers cette rubrique"></a></h1>
+<section id="tables">
+<h2>Tables<a class="headerlink" href="#tables" title="Lien vers cette rubrique"></a></h2>
+<p>La base de données comporte trois tables :</p>
+<ol class="arabic simple">
+<li><p><strong>lieux</strong>: Contient les informations de référence sur chaque lieu (piscine, mairie, médiathèque) issues de data.grandlyon.com.</p></li>
+<li><p><strong>executions</strong>: Journalise chaque exécution du script principal. Elle permet de savoir quand le programme a tourné, avec quelle configuration de modèle de langage (LLM), et de suivre la consommation totale de CO2 pour chaque lot.</p></li>
+<li><p><strong>resultats_extraction</strong>: C’est la table transactionnelle principale. Elle fait le lien entre un lieu et une exécution spécifique. Pour chaque URL traitée lors d’une exécution, cette table stocke toutes les données du pipeline : le statut de l’URL, les différentes étapes du traitement du markdown (brut, nettoyé, filtré), la sortie du LLM (JSON et OSM), le résultat de la comparaison avec les données de référence, et les éventuelles erreurs.</p></li>
+</ol>
+</section>
+<section id="diagramme">
+<h2>Diagramme<a class="headerlink" href="#diagramme" title="Lien vers cette rubrique"></a></h2>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>+---------------------------+      +-------------------------------+      +------------------------------+
+|           lieux           |      |     resultats_extraction      |      |          executions          |
++---------------------------+ 1--* +-------------------------------+ *--1 +------------------------------+
+| identifiant (PK)          |      | id_resultats_extraction (PK)  |      | id_executions (PK)           |
+| nom                       |      | lieu_id (FK)                  |      | date_execution               |
+| type_lieu                 |      | id_execution (FK)             |      | llm_modele                   |
+| url                       |      | statut_url                    |      | llm_fournisseur              |
+| horaires_data_gl          |      | code_http                     |      | llm_url                      |
+| horaires_data_gl_json     |      | message_url                   |      | llm_consommation_execution   |
++---------------------------+      | markdown_brut                 |      +------------------------------+
+                                   | markdown_nettoye              |
+                                   | markdown_filtre               |
+                                   | prompt_message                |
+                                   | llm_consommation_requete      |
+                                   | llm_horaires_json             |
+                                   | llm_horaires_osm              |
+                                   | horaires_identiques           |
+                                   | differences_horaires          |
+                                   | erreurs_pipeline              |
+                                   +-------------------------------+
+</pre></div>
+</div>
+</section>
+<section id="detail-des-champs">
+<h2>Détail des champs<a class="headerlink" href="#detail-des-champs" title="Lien vers cette rubrique"></a></h2>
+<section id="table-lieux">
+<h3>Table <cite>lieux</cite><a class="headerlink" href="#table-lieux" title="Lien vers cette rubrique"></a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25.0%" />
+<col style="width: 15.0%" />
+<col style="width: 60.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Champ</p></th>
+<th class="head"><p>Type SQL</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>identifiant</strong> (PK)</p></td>
+<td><p>TEXT</p></td>
+<td><p>Identifiant unique du lieu (ex: « S1360 »), issu de data.grandlyon.com.</p></td>
+</tr>
+<tr class="row-odd"><td><p>nom</p></td>
+<td><p>TEXT</p></td>
+<td><p>Nom complet du lieu (ex: « Piscine Garibaldi »).</p></td>
+</tr>
+<tr class="row-even"><td><p>type_lieu</p></td>
+<td><p>TEXT</p></td>
+<td><p>Catégorie du lieu (ex: « piscine », « mairie »).</p></td>
+</tr>
+<tr class="row-odd"><td><p>url</p></td>
+<td><p>TEXT</p></td>
+<td><p>URL de la page web contenant les horaires à vérifier.</p></td>
+</tr>
+<tr class="row-even"><td><p>horaires_data_gl</p></td>
+<td><p>TEXT</p></td>
+<td><p>Horaires de référence au format OSM <cite>opening_hours</cite> issus de data.grandlyon.com.</p></td>
+</tr>
+<tr class="row-odd"><td><p>horaires_data_gl_json</p></td>
+<td><p>TEXT</p></td>
+<td><p>Version JSON des horaires de référence, convertis par SmartWatch.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="table-executions">
+<h3>Table <cite>executions</cite><a class="headerlink" href="#table-executions" title="Lien vers cette rubrique"></a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25.0%" />
+<col style="width: 15.0%" />
+<col style="width: 60.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Champ</p></th>
+<th class="head"><p>Type SQL</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>id_execution</strong> (PK auto-increment)</p></td>
+<td><p>INTEGER</p></td>
+<td><p>Identifiant unique de l’exécution.</p></td>
+</tr>
+<tr class="row-odd"><td><p>date_execution</p></td>
+<td><p>DATETIME</p></td>
+<td><p>Date et heure du début de l’exécution.</p></td>
+</tr>
+<tr class="row-even"><td><p>llm_modele</p></td>
+<td><p>TEXT</p></td>
+<td><p>Nom du modèle de langage utilisé (ex: « devstral »).</p></td>
+</tr>
+<tr class="row-odd"><td><p>llm_fournisseur</p></td>
+<td><p>TEXT</p></td>
+<td><p>Fournisseur du LLM (« OPENAI », « MISTRAL »).</p></td>
+</tr>
+<tr class="row-even"><td><p>llm_url</p></td>
+<td><p>TEXT</p></td>
+<td><p>URL de base de l’API du LLM.</p></td>
+</tr>
+<tr class="row-odd"><td><p>llm_consommation_execution</p></td>
+<td><p>FLOAT</p></td>
+<td><p>Estimation totale des émissions de CO2 (en kg) pour l’ensemble des appels LLM de cette exécution.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="table-resultats-extraction">
+<h3>Table <cite>resultats_extraction</cite><a class="headerlink" href="#table-resultats-extraction" title="Lien vers cette rubrique"></a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25.0%" />
+<col style="width: 15.0%" />
+<col style="width: 60.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Champ</p></th>
+<th class="head"><p>Type SQL</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>id_resultats_extraction</strong> (PK auto-increment)</p></td>
+<td><p>INTEGER</p></td>
+<td><p>Identifiant unique du résultat.</p></td>
+</tr>
+<tr class="row-odd"><td><p>lieu_id (FK)</p></td>
+<td><p>TEXT</p></td>
+<td><p>Clé étrangère liant ce résultat à un lieu dans la table <cite>lieux</cite>.</p></td>
+</tr>
+<tr class="row-even"><td><p>id_execution (FK)</p></td>
+<td><p>INTEGER</p></td>
+<td><p>Clé étrangère liant ce résultat à une exécution dans la table <cite>executions</cite>.</p></td>
+</tr>
+<tr class="row-odd"><td><p>statut_url</p></td>
+<td><p>TEXT</p></td>
+<td><p>Statut final du traitement de l’URL.</p></td>
+</tr>
+<tr class="row-even"><td><p>code_http</p></td>
+<td><p>INTEGER</p></td>
+<td><p>Code de statut HTTP retourné par la requête sur l’URL (ex: 200, 404).</p></td>
+</tr>
+<tr class="row-odd"><td><p>message_url</p></td>
+<td><p>TEXT</p></td>
+<td><p>Message d’erreur associé au statut de l’URL.</p></td>
+</tr>
+<tr class="row-even"><td><p>markdown_brut</p></td>
+<td><p>TEXT</p></td>
+<td><p>Contenu Markdown brut extrait de la page web.</p></td>
+</tr>
+<tr class="row-odd"><td><p>markdown_nettoye</p></td>
+<td><p>TEXT</p></td>
+<td><p>Markdown après une première passe de nettoyage (suppression des liens, etc.).</p></td>
+</tr>
+<tr class="row-even"><td><p>markdown_filtre</p></td>
+<td><p>TEXT</p></td>
+<td><p>Markdown après filtrage sémantique pour ne garder que les parties pertinentes.</p></td>
+</tr>
+<tr class="row-odd"><td><p>prompt_message</p></td>
+<td><p>TEXT</p></td>
+<td><p>Le prompt complet envoyé au LLM.</p></td>
+</tr>
+<tr class="row-even"><td><p>llm_consommation_requete</p></td>
+<td><p>FLOAT</p></td>
+<td><p>Estimation des émissions de CO2 (en kg) pour l’appel LLM de ce résultat.</p></td>
+</tr>
+<tr class="row-odd"><td><p>llm_horaires_json</p></td>
+<td><p>TEXT</p></td>
+<td><p>Les horaires extraits par le LLM, au format JSON.</p></td>
+</tr>
+<tr class="row-even"><td><p>llm_horaires_osm</p></td>
+<td><p>TEXT</p></td>
+<td><p>Les horaires extraits par le LLM, convertis au format OSM <cite>opening_hours</cite>.</p></td>
+</tr>
+<tr class="row-odd"><td><p>horaires_identiques</p></td>
+<td><p>BOOLEAN</p></td>
+<td><p><cite>True</cite> si les horaires extraits correspondent à ceux de référence, <cite>False</cite> sinon.</p></td>
+</tr>
+<tr class="row-even"><td><p>differences_horaires</p></td>
+<td><p>TEXT</p></td>
+<td><p>Description textuelle des différences trouvées lors de la comparaison.</p></td>
+</tr>
+<tr class="row-odd"><td><p>erreurs_pipeline</p></td>
+<td><p>TEXT</p></td>
+<td><p>Journal des erreurs survenues à différentes étapes du pipeline pour ce résultat.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pied de page">
+        <a href="modules.html" class="btn btn-neutral float-left" title="Modules" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Précédent</a>
+        <a href="stack.html" class="btn btn-neutral float-right" title="Stack technique" accesskey="n" rel="next">Suivant <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,254 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configuration &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.jpg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d2e4462e"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=e6b791cb"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Recherche" href="../search.html" />
+    <link rel="next" title="Orchestrateur" href="../source/main.html" />
+    <link rel="prev" title="Utilisation avec Docker" href="docker.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Présentation du projet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html#sommaire">Sommaire</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docker.html">Utilisation avec Docker</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#creation-du-fichier-env">Création du fichier .env</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#detail-des-variables">Détail des variables</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture technique</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/main.html">Orchestrateur</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/diagramme.html">Pipeline de traitement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/bdd.html">Base de données</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/stack.html">Stack technique</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/config/index.html">Modules Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/core/index.html">Modules Core</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/processing/index.html">Modules Processing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/utils/index.html">Modules Utils</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Reporting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/reporting/index.html">Modules Reporting</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Module d'évaluation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/evaluation/index.html">Module d’évaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/evaluation/index.html#vue-d-ensemble">Vue d’ensemble</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/evaluation/index.html#workflow-d-evaluation">Workflow d’évaluation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/evaluation/index.html#metriques-et-comparaisons">Métriques et comparaisons</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Configuration</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/guide/configuration.rst.txt" rel="nofollow"> Afficher la source de la page</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="configuration">
+<h1>Configuration<a class="headerlink" href="#configuration" title="Lien vers cette rubrique"></a></h1>
+<p>La configuration de <strong>SmartWatch</strong> s’effectue via un fichier <code class="docutils literal notranslate"><span class="pre">.env</span></code> situé à la racine du projet. Ce fichier centralise toutes les variables nécessaires au bon fonctionnement de l’application.</p>
+<section id="creation-du-fichier-env">
+<h2>Création du fichier .env<a class="headerlink" href="#creation-du-fichier-env" title="Lien vers cette rubrique"></a></h2>
+<p>La méthode recommandée est de copier le modèle fourni :</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cp<span class="w"> </span>.env.model<span class="w"> </span>.env
+</pre></div>
+</div>
+<p>Ensuite, ouvrez le fichier <code class="docutils literal notranslate"><span class="pre">.env</span></code> dans un éditeur de texte et modifiez les valeurs selon vos besoins.</p>
+</section>
+<section id="detail-des-variables">
+<h2>Détail des variables<a class="headerlink" href="#detail-des-variables" title="Lien vers cette rubrique"></a></h2>
+<p>Les variables sont regroupées par fonctionnalité.</p>
+<section id="fichiers-csv">
+<h3>Fichiers CSV<a class="headerlink" href="#fichiers-csv" title="Lien vers cette rubrique"></a></h3>
+<p>Ces URLs pointent vers les fichiers de données utilisés par l’application.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CSV_URL_HORAIRES</span></code>: (Requis) URL du fichier CSV principal listant les établissements à vérifier. Format attendu : <code class="docutils literal notranslate"><span class="pre">type_lieu;identifiant;nom;url</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CSV_URL_PISCINES</span></code>, <code class="docutils literal notranslate"><span class="pre">CSV_URL_MAIRIES</span></code>, <code class="docutils literal notranslate"><span class="pre">CSV_URL_MEDIATHEQUES</span></code>: (Requis) URLs vers les fichiers de référence de data.grandlyon.com pour la comparaison des données.</p></li>
+</ul>
+</section>
+<section id="parametres-de-traitement">
+<h3>Paramètres de traitement<a class="headerlink" href="#parametres-de-traitement" title="Lien vers cette rubrique"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">NB_THREADS_URL</span></code>: Nombre de threads pour télécharger le contenu des URLs en parallèle. (Défaut: 20)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LOG_LEVEL</span></code>: Niveau de verbosité des logs (DEBUG, INFO, WARNING, ERROR). (Défaut: DEBUG)</p></li>
+</ul>
+</section>
+<section id="filtrage-semantique-du-markdown">
+<h3>Filtrage sémantique du Markdown<a class="headerlink" href="#filtrage-semantique-du-markdown" title="Lien vers cette rubrique"></a></h3>
+<p>Ces paramètres contrôlent la manière dont le contenu HTML (converti en Markdown) est filtré par embeddings pour n’en garder que les parties pertinentes.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SIMILARITY_THRESHOLD</span></code>: Seuil de similarité (entre 0.0 et 1.0) pour qu’une phrase soit considérée comme pertinente. (Défaut: 0.5)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SENTENCIZER</span></code>: (Optionnel) Active le découpage du texte en phrases avec NLTK. Si cette variable est décommentée et a pour valeur « NLTK », elle désactive les variables <code class="docutils literal notranslate"><span class="pre">CHUNK_SIZE</span></code> et <code class="docutils literal notranslate"><span class="pre">CHUNK_OVERLAP</span></code>. <code class="docutils literal notranslate"><span class="pre">CONTEXT_WINDOW_SIZE</span></code> reste cependant actif pour inclure les phrases environnantes.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CHUNK_SIZE</span></code>: Taille des chunks de texte pour le découpage du Markdown. (Défaut: 100)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CHUNK_OVERLAP</span></code>: Nombre de phrases qui se chevauchent entre les chunks. Cela permet de conserver le contexte entre les phrases. (Défaut: 15)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CONTEXT_WINDOW_SIZE</span></code>: Nombre de chunks de contexte à inclure avant et après une phrase pertinente. Cela permet de conserver le contexte autour des phrases extraites. (Défaut: 1)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MIN_CONTENT_LENGTH</span></code>: Longueur minimale (en caractères) du Markdown pour que le filtrage soit appliqué. Cela permet d’éviter de traiter des contenus déjà suffisamment courts. (Défaut: 1000)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">REFERENCE_PHRASES</span></code>: Phrases de référence (séparées par <code class="docutils literal notranslate"><span class="pre">;;</span></code>) utilisées pour identifier les sections pertinentes du Markdown. Ces phrases servent de guide pour le filtrage sémantique.</p></li>
+</ul>
+</section>
+<section id="configuration-des-modeles-d-embeddings">
+<h3>Configuration des modèles d’embeddings<a class="headerlink" href="#configuration-des-modeles-d-embeddings" title="Lien vers cette rubrique"></a></h3>
+<p>Configurez ici le modèle à utiliser pour le filtrage sémantique du contenu. Vous pouvez utiliser soit une API compatible OpenAI, soit l’API Mistral, indépendamment du LLM principal.</p>
+<p><strong>Pour embeddings via API compatible OpenAI :</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">EMBED_API_KEY_OPENAI</span></code>: Votre clé d’API pour les embeddings.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EMBED_BASE_URL_OPENAI</span></code>: L’URL de base de l’API (ex: <code class="docutils literal notranslate"><span class="pre">http://localhost:1234/v1</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EMBED_MODELE_OPENAI</span></code>: Le nom/identifiant du modèle à utiliser (ex: <code class="docutils literal notranslate"><span class="pre">nomic-embed-text</span></code>).</p></li>
+</ul>
+<p><strong>Pour embeddings via API Mistral :</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">EMBED_API_KEY_MISTRAL</span></code>: Votre clé d’API Mistral pour les embeddings.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EMBED_MODELE_MISTRAL</span></code>: Le nom du modèle (ex: <code class="docutils literal notranslate"><span class="pre">nomic-embed-text</span></code>).</p></li>
+</ul>
+<p><strong>Pour embeddings locaux avec sentence-transformers :</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">EMBED_MODELE_LOCAL</span></code>: Le nom du modèle à utiliser (ex: <code class="docutils literal notranslate"><span class="pre">paraphrase-multilingual-MiniLM-L12-v2</span></code>).</p></li>
+</ul>
+</section>
+<section id="configuration-du-llm">
+<h3>Configuration du LLM<a class="headerlink" href="#configuration-du-llm" title="Lien vers cette rubrique"></a></h3>
+<p>Configurez ici le modèle de langage qui extraira les horaires.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">LLM_TIMEOUT</span></code>: Temps maximum d’attente (en secondes) pour une réponse du LLM. (Défaut: 600)</p></li>
+</ul>
+<p><strong>Pour un LLM compatible OpenAI (LM Studio, etc.) :</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">LLM_API_KEY_OPENAI</span></code>: Votre clé d’API.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LLM_BASE_URL_OPENAI</span></code>: L’URL de base de l’API (ex: <code class="docutils literal notranslate"><span class="pre">http://localhost:1234/v1</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LLM_MODELE_OPENAI</span></code>: Le nom/identifiant du modèle à utiliser.</p></li>
+</ul>
+<p><strong>Pour Mistral AI :</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">LLM_API_KEY_MISTRAL</span></code>: Votre clé d’API Mistral.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LLM_MODELE_MISTRAL</span></code>: Le nom du modèle (ex: <code class="docutils literal notranslate"><span class="pre">mistral-large-latest</span></code>).</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Vous devez définir la clé API pour <strong>un seul</strong> fournisseur LLM. Si les deux sont définies, la configuration OpenAI sera prioritaire (cf. <code class="xref py py-meth docutils literal notranslate"><span class="pre">smart_watch.processing.markdown_processor.MarkdownProcessor._init_embedding_client()</span></code>)</p>
+</div>
+</section>
+<section id="envoi-de-rapport-par-email">
+<h3>Envoi de rapport par email<a class="headerlink" href="#envoi-de-rapport-par-email" title="Lien vers cette rubrique"></a></h3>
+<p>Pour permettre l’envoi du rapport par email, complétez ces variables.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">MAIL_EMETTEUR</span></code>: Adresse email de l’expéditeur.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MAIL_RECEPTEUR</span></code>: Adresse(s) email du ou des destinataires (séparées par une virgule si plusieurs).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SMTP_SERVER</span></code>: Adresse du serveur SMTP.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SMTP_PORT</span></code>: Port du serveur SMTP (ex: 465 pour SSL, 587 pour TLS).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SMTP_LOGIN</span></code>: Votre nom d’utilisateur SMTP.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SMTP_PASSWORD</span></code>: Votre mot de passe SMTP.</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pied de page">
+        <a href="docker.html" class="btn btn-neutral float-left" title="Utilisation avec Docker" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Précédent</a>
+        <a href="../source/main.html" class="btn btn-neutral float-right" title="Orchestrateur" accesskey="n" rel="next">Suivant <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
