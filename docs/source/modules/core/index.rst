@@ -16,7 +16,7 @@ Modules
    ErrorHandler
    GetPrompt
    LLMClient
-   Logger
+   logger
    NotificationManager
    StatsManager
    URLRetriever

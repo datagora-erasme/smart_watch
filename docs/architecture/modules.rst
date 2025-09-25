@@ -92,7 +92,7 @@ Ce module contient les composants fondamentaux et la logique métier de l'applic
 :doc:`../source/modules/core/LLMClient`
     Client unifié pour les LLMs.
 
-:doc:`../source/modules/core/Logger`
+:doc:`../source/modules/core/logger`
     Système de journalisation flexible.
 
 :doc:`../source/modules/core/NotificationManager`

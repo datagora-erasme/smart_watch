@@ -7,9 +7,7 @@ import os
 import sys
 
 # Ajouter le chemin du projet pour que Sphinx puisse importer les modules
-# Depuis docs/, on remonte d'un niveau pour accéder à la racine du projet
 sys.path.insert(0, os.path.abspath(".."))
-sys.path.insert(0, os.path.abspath("../src"))
 
 # -- Project information -----------------------------------------------------
 project = "SmartWatch"
@@ -79,7 +77,6 @@ html_theme = "sphinx_rtd_theme"
 
 # Configuration sphinx_rtd_theme
 html_theme_options = {
-    "display_version": True,
     "prev_next_buttons_location": "bottom",
     "style_external_links": False,
     "vcs_pageview_mode": "",

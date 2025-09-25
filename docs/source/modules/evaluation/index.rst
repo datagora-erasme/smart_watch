@@ -5,10 +5,6 @@ Le module d'évaluation permet de tester et comparer différents LLM et paramèt
 
 .. toctree::
    :maxdepth: 2
-   
-   evaluation_manager
-   evaluation_database
-   evaluation_analyzer
 
 Vue d'ensemble
 ==============
