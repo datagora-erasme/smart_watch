@@ -1,31 +1,38 @@
+# .github/workflows/doc.yaml
+
 name: Déploiement documentation Sphinx
 
 on:
   push:
-    branches: [main]
+    branches: [ "main" ]
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
+    # 1. Récupère le code du dépôt
     - uses: actions/checkout@v4
 
+    # 2. Mettre en place l'environnement Python
     - name: Installer Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.13'
+        python-version: '3.11'
 
-    - name: Installer les dépendances pour la documentation
-      run: pip install -r docs/requirements.txt
+    # 3. Installer les dépendances
+    - name: Installer les dépendances
+      run: |
+        pip install -r docs/requirements.txt
+        pip install .
 
-    - name: Générer la documentation
-      run: sphinx-build -b html docs/ docs/_build/html
+    # 4. Générer la documentation
+    - name: Générer la documentation Sphinx
+      run: sphinx-build -b html docs/source/ docs/_build/html
 
+    # 5. Déployer sur la branche gh-pages
     - name: Déployer sur GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: docs/_build/html
-        publish_branch: gh-pages
-        force_orphan: true
