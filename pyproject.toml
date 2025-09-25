@@ -4,8 +4,7 @@ version = "1.0.0"
 description = "Le monitoring intelligent des horaires d'ouverture pour la Métropole de Lyon"
 readme = "README.md"
 requires-python = ">=3.13"
-homepage = "https://github.com/datagora-erasme/smart_watch"
-documentation = "https://datagora-erasme.github.io/smart_watch"
+
 dependencies = [
     "codecarbon>=3.0.2",
     "connectorx>=0.4.3",
@@ -28,6 +27,10 @@ dependencies = [
     "sphinx-rtd-theme>=3.0.2",
     "sqlalchemy>=2.0.41",
 ]
+
+[project.urls]
+Homepage = "https://github.com/datagora-erasme/smart_watch"
+Documentation = "https://datagora-erasme.github.io/smart_watch"
 
 [tool.ruff]
 line-length = 88
