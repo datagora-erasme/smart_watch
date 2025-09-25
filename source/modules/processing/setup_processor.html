@@ -87,13 +87,6 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../reporting/index.html">Modules Reporting</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Module d'évaluation</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../evaluation/index.html">Module d’évaluation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../evaluation/index.html#vue-d-ensemble">Vue d’ensemble</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../evaluation/index.html#workflow-d-evaluation">Workflow d’évaluation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../evaluation/index.html#metriques-et-comparaisons">Métriques et comparaisons</a></li>
-</ul>
 
         </div>
       </div>
@@ -143,8 +136,49 @@
 <p>Ce processeur est appelé une seule fois au début de chaque exécution du pipeline pour s’assurer que l’environnement est correctement configuré avant de commencer le traitement des URLs.</p>
 </div>
 </section>
-<section id="modules">
-<h2>Modules<a class="headerlink" href="#modules" title="Lien vers cette rubrique"></a></h2>
+<section id="module-src.smart_watch.processing.setup_processor">
+<span id="modules"></span><h2>Modules<a class="headerlink" href="#module-src.smart_watch.processing.setup_processor" title="Lien vers cette rubrique"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.smart_watch.processing.setup_processor.SetupProcessor">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.smart_watch.processing.setup_processor.</span></span><span class="sig-name descname"><span class="pre">SetupProcessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../core/ConfigManager.html#src.smart_watch.core.ConfigManager.ConfigManager" title="src.smart_watch.core.ConfigManager.ConfigManager"><span class="pre">ConfigManager</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../core/logger.html#src.smart_watch.core.Logger.SmartWatchLogger" title="src.smart_watch.core.Logger.SmartWatchLogger"><span class="pre">SmartWatchLogger</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/processing/setup_processor.html#SetupProcessor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.processing.setup_processor.SetupProcessor" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(disponible dans Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Gestionnaire de l’initialisation (chargement CSV et DB).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.processing.setup_processor.SetupProcessor.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../core/ConfigManager.html#src.smart_watch.core.ConfigManager.ConfigManager" title="src.smart_watch.core.ConfigManager.ConfigManager"><span class="pre">ConfigManager</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../core/logger.html#src.smart_watch.core.Logger.SmartWatchLogger" title="src.smart_watch.core.Logger.SmartWatchLogger"><span class="pre">SmartWatchLogger</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/processing/setup_processor.html#SetupProcessor.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.processing.setup_processor.SetupProcessor.__init__" title="Lien vers cette définition"></a></dt>
+<dd><p>Initialise le processeur avec la configuration et le logger spécifiés.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<a class="reference internal" href="../core/ConfigManager.html#src.smart_watch.core.ConfigManager.ConfigManager" title="src.smart_watch.core.ConfigManager.ConfigManager"><em>ConfigManager</em></a>) – Objet de configuration contenant les paramètres nécessaires, y compris la base de données.</p></li>
+<li><p><strong>logger</strong> (<em>Logger</em>) – Instance du logger pour la journalisation des événements.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.processing.setup_processor.SetupProcessor.setup_execution">
+<span class="sig-name descname"><span class="pre">setup_execution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_processor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="database_processor.html#src.smart_watch.processing.database_processor.DatabaseProcessor" title="src.smart_watch.processing.database_processor.DatabaseProcessor"><span class="pre">DatabaseProcessor</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/processing/setup_processor.html#SetupProcessor.setup_execution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.processing.setup_processor.SetupProcessor.setup_execution" title="Lien vers cette définition"></a></dt>
+<dd><p>Initialise la pipeline de configuration en chargeant le CSV depuis la configuration
+(variable CSV_URL_HORAIRES) et en initialisant la base de données avec les données chargées.</p>
+<dl class="simple">
+<dt>Étapes :</dt><dd><ul class="simple">
+<li><p>Charge le fichier CSV : CSV_URL_HORAIRES.</p></li>
+<li><p>Vérifie le succès du chargement du CSV.</p></li>
+<li><p>Initialise la base de données avec le DataFrame obtenu.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Lève<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(disponible dans Python v3.13)"><strong>ValueError</strong></a> – Si le chargement du CSV échoue.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 </section>
 

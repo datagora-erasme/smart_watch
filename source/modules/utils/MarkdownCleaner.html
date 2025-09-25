@@ -86,13 +86,6 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../reporting/index.html">Modules Reporting</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Module d'évaluation</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../evaluation/index.html">Module d’évaluation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../evaluation/index.html#vue-d-ensemble">Vue d’ensemble</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../evaluation/index.html#workflow-d-evaluation">Workflow d’évaluation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../evaluation/index.html#metriques-et-comparaisons">Métriques et comparaisons</a></li>
-</ul>
 
         </div>
       </div>
@@ -135,8 +128,271 @@
 <p>La classe <code class="docutils literal notranslate"><span class="pre">MarkdownCleaner</span></code> est utilisé dans le <a class="reference internal" href="../../../architecture/diagramme.html"><span class="doc">pipeline principal</span></a> de <code class="docutils literal notranslate"><span class="pre">main.py</span></code>. La fonction <code class="docutils literal notranslate"><span class="pre">process_markdown_cleaning</span></code> récupère les textes bruts depuis la colonne <code class="docutils literal notranslate"><span class="pre">markdown_brut</span></code> de la table <code class="docutils literal notranslate"><span class="pre">resultats_extraction</span></code> (cf <a class="reference internal" href="../../../architecture/bdd.html"><span class="doc">bdd</span></a>), les nettoie, et enregistre la version nettoyée dans la colonne <code class="docutils literal notranslate"><span class="pre">markdown_nettoye</span></code> de la même table.</p>
 </div>
 </section>
-<section id="modules">
-<h2>Modules<a class="headerlink" href="#modules" title="Lien vers cette rubrique"></a></h2>
+<section id="module-src.smart_watch.utils.MarkdownCleaner">
+<span id="modules"></span><h2>Modules<a class="headerlink" href="#module-src.smart_watch.utils.MarkdownCleaner" title="Lien vers cette rubrique"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.smart_watch.utils.MarkdownCleaner.CleaningStats">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.smart_watch.utils.MarkdownCleaner.</span></span><span class="sig-name descname"><span class="pre">CleaningStats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">texts_processed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">texts_successful</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chars_replaced</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/utils/MarkdownCleaner.html#CleaningStats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.utils.MarkdownCleaner.CleaningStats" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(disponible dans Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Dataclass pour stocker les statistiques de nettoyage du Markdown.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.utils.MarkdownCleaner.CleaningStats.texts_processed">
+<span class="sig-name descname"><span class="pre">texts_processed</span></span><a class="headerlink" href="#src.smart_watch.utils.MarkdownCleaner.CleaningStats.texts_processed" title="Lien vers cette définition"></a></dt>
+<dd><p>nombre total de textes traités.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.utils.MarkdownCleaner.CleaningStats.texts_successful">
+<span class="sig-name descname"><span class="pre">texts_successful</span></span><a class="headerlink" href="#src.smart_watch.utils.MarkdownCleaner.CleaningStats.texts_successful" title="Lien vers cette définition"></a></dt>
+<dd><p>nombre de textes nettoyés avec succès.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.utils.MarkdownCleaner.CleaningStats.chars_replaced">
+<span class="sig-name descname"><span class="pre">chars_replaced</span></span><a class="headerlink" href="#src.smart_watch.utils.MarkdownCleaner.CleaningStats.chars_replaced" title="Lien vers cette définition"></a></dt>
+<dd><p>nombre total de caractères remplacés.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">texts_processed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#id0" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">texts_successful</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#id1" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">chars_replaced</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#id2" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.utils.MarkdownCleaner.CleaningStats.get_summary">
+<span class="sig-name descname"><span class="pre">get_summary</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/utils/MarkdownCleaner.html#CleaningStats.get_summary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.utils.MarkdownCleaner.CleaningStats.get_summary" title="Lien vers cette définition"></a></dt>
+<dd><p>Retourne un résumé des statistiques de nettoyage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p>un dictionnaire contenant les statistiques.</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)">int</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.utils.MarkdownCleaner.CleaningStats.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">texts_processed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">texts_successful</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chars_replaced</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#src.smart_watch.utils.MarkdownCleaner.CleaningStats.__init__" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.smart_watch.utils.MarkdownCleaner.</span></span><span class="sig-name descname"><span class="pre">MarkdownCleaner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(disponible dans Python v3.13)"><span class="pre">Any</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../core/logger.html#src.smart_watch.core.Logger.SmartWatchLogger" title="src.smart_watch.core.Logger.SmartWatchLogger"><span class="pre">SmartWatchLogger</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/utils/MarkdownCleaner.html#MarkdownCleaner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(disponible dans Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Classe pour nettoyer et normaliser le contenu Markdown brut.</p>
+<p>Cette classe fournit un pipeline de nettoyage configurable pour préparer
+le texte Markdown à un traitement ultérieur, notamment par des modèles de langage.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner._RE_MARKDOWN_LINKS">
+<span class="sig-name descname"><span class="pre">_RE_MARKDOWN_LINKS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">re.compile('\\[([^\\]]*)\\]\\([^)]*(?:</span> <span class="pre">\\&quot;[^\\&quot;]*\\&quot;)?\\)')</span></em><a class="headerlink" href="#src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner._RE_MARKDOWN_LINKS" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner._RE_AUTO_LINKS">
+<span class="sig-name descname"><span class="pre">_RE_AUTO_LINKS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">re.compile('&lt;(https?://[^&gt;]+)&gt;')</span></em><a class="headerlink" href="#src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner._RE_AUTO_LINKS" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner._RE_IMAGE_LINKS">
+<span class="sig-name descname"><span class="pre">_RE_IMAGE_LINKS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">re.compile('\\[!\\[[^\\]]*\\]\\([^)]*\\)\\]\\([^)]*(?:</span> <span class="pre">\\&quot;[^\\&quot;]*\\&quot;)?\\)')</span></em><a class="headerlink" href="#src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner._RE_IMAGE_LINKS" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner._RE_STANDALONE_IMAGES">
+<span class="sig-name descname"><span class="pre">_RE_STANDALONE_IMAGES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">re.compile('!\\[[^\\]]*\\]\\([^)]*\\)')</span></em><a class="headerlink" href="#src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner._RE_STANDALONE_IMAGES" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner._RE_MULTI_NEWLINES">
+<span class="sig-name descname"><span class="pre">_RE_MULTI_NEWLINES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">re.compile('(\\r\\n|\\n|\\r){3,}')</span></em><a class="headerlink" href="#src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner._RE_MULTI_NEWLINES" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner._RE_FORMATTING_LINES">
+<span class="sig-name descname"><span class="pre">_RE_FORMATTING_LINES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">re.compile('^[\\s#\\-\\&quot;=_\\(\\[\\]\\)\\.]+$',</span> <span class="pre">re.MULTILINE)</span></em><a class="headerlink" href="#src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner._RE_FORMATTING_LINES" title="Lien vers cette définition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(disponible dans Python v3.13)"><span class="pre">Any</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../core/logger.html#src.smart_watch.core.Logger.SmartWatchLogger" title="src.smart_watch.core.Logger.SmartWatchLogger"><span class="pre">SmartWatchLogger</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/utils/MarkdownCleaner.html#MarkdownCleaner.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner.__init__" title="Lien vers cette définition"></a></dt>
+<dd><p>Initialise le MarkdownCleaner.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<em>Any</em>) – l’objet de configuration de l’application.</p></li>
+<li><p><strong>logger</strong> (<a class="reference internal" href="../core/logger.html#src.smart_watch.core.Logger.SmartWatchLogger" title="src.smart_watch.core.Logger.SmartWatchLogger"><em>SmartWatchLogger</em></a>) – l’instance du logger à utiliser.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner._get_pending_cleaning">
+<span class="sig-name descname"><span class="pre">_get_pending_cleaning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_manager</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../core/DatabaseManager.html#src.smart_watch.core.DatabaseManager.DatabaseManager" title="src.smart_watch.core.DatabaseManager.DatabaseManager"><span class="pre">DatabaseManager</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">execution_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Sequence" title="(disponible dans Python v3.13)"><span class="pre">Sequence</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.sqlalchemy.org/en/20/core/connections.html#sqlalchemy.engine.Row" title="(disponible dans SQLAlchemy v2.0)"><span class="pre">Row</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(disponible dans Python v3.13)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><span class="pre">ResultatsExtraction</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Lieux</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/utils/MarkdownCleaner.html#MarkdownCleaner._get_pending_cleaning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner._get_pending_cleaning" title="Lien vers cette définition"></a></dt>
+<dd><p>Récupère les enregistrements nécessitant un nettoyage du markdown.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>db_manager</strong> (<a class="reference internal" href="../core/DatabaseManager.html#src.smart_watch.core.DatabaseManager.DatabaseManager" title="src.smart_watch.core.DatabaseManager.DatabaseManager"><em>DatabaseManager</em></a>) – le gestionnaire de base de données.</p></li>
+<li><p><strong>execution_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><em>int</em></a>) – l’ID de l’exécution à traiter.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>une séquence de résultats à nettoyer.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Sequence[Row[Tuple[ResultatsExtraction, Lieux]]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner.process_markdown_cleaning">
+<span class="sig-name descname"><span class="pre">process_markdown_cleaning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_processor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../processing/database_processor.html#src.smart_watch.processing.database_processor.DatabaseProcessor" title="src.smart_watch.processing.database_processor.DatabaseProcessor"><span class="pre">DatabaseProcessor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">execution_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/utils/MarkdownCleaner.html#MarkdownCleaner.process_markdown_cleaning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner.process_markdown_cleaning" title="Lien vers cette définition"></a></dt>
+<dd><p>Nettoie le markdown brut pour tous les résultats d’une exécution donnée.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>db_processor</strong> (<a class="reference internal" href="../processing/database_processor.html#src.smart_watch.processing.database_processor.DatabaseProcessor" title="src.smart_watch.processing.database_processor.DatabaseProcessor"><em>DatabaseProcessor</em></a>) – le processeur de base de données.</p></li>
+<li><p><strong>execution_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><em>int</em></a>) – l’ID de l’exécution.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner.clean_markdown_content">
+<span class="sig-name descname"><span class="pre">clean_markdown_content</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/utils/MarkdownCleaner.html#MarkdownCleaner.clean_markdown_content"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner.clean_markdown_content" title="Lien vers cette définition"></a></dt>
+<dd><p>Applique un pipeline complet de nettoyage sur un contenu Markdown.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><em>str</em></a>) – le contenu Markdown à nettoyer.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>le contenu Markdown nettoyé et normalisé.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner._remove_markdown_links">
+<span class="sig-name descname"><span class="pre">_remove_markdown_links</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/utils/MarkdownCleaner.html#MarkdownCleaner._remove_markdown_links"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner._remove_markdown_links" title="Lien vers cette définition"></a></dt>
+<dd><p>Supprime tous les types de liens Markdown, en ne conservant que le texte visible.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><em>str</em></a>) – le texte contenant des liens Markdown.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>le texte sans les liens Markdown.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner._apply_char_replacements">
+<span class="sig-name descname"><span class="pre">_apply_char_replacements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/utils/MarkdownCleaner.html#MarkdownCleaner._apply_char_replacements"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner._apply_char_replacements" title="Lien vers cette définition"></a></dt>
+<dd><p>Applique les remplacements de caractères définis dans la configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><em>str</em></a>) – le texte à traiter.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>le texte avec les caractères remplacés.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner._clean_multiple_newlines">
+<span class="sig-name descname"><span class="pre">_clean_multiple_newlines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/utils/MarkdownCleaner.html#MarkdownCleaner._clean_multiple_newlines"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner._clean_multiple_newlines" title="Lien vers cette définition"></a></dt>
+<dd><p>Remplace les séquences de 3 sauts de ligne ou plus par exactement 2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><em>str</em></a>) – le texte à nettoyer.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>le texte avec des sauts de ligne normalisés.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner._remove_formatting_lines">
+<span class="sig-name descname"><span class="pre">_remove_formatting_lines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/utils/MarkdownCleaner.html#MarkdownCleaner._remove_formatting_lines"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner._remove_formatting_lines" title="Lien vers cette définition"></a></dt>
+<dd><p>Supprime les lignes composées uniquement de caractères de formatage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><em>str</em></a>) – le texte à nettoyer.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>le texte sans les lignes de formatage inutiles.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner._remove_consecutive_duplicate_lines">
+<span class="sig-name descname"><span class="pre">_remove_consecutive_duplicate_lines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/utils/MarkdownCleaner.html#MarkdownCleaner._remove_consecutive_duplicate_lines"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner._remove_consecutive_duplicate_lines" title="Lien vers cette définition"></a></dt>
+<dd><p>Supprime les lignes consécutives qui sont identiques après nettoyage des espaces.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><em>str</em></a>) – le texte à nettoyer.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>le texte sans les lignes dupliquées consécutives.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 </section>
 

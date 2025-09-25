@@ -1,0 +1,811 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.smart_watch.utils.CustomJsonToOSM &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.jpg"/>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=d2e4462e"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/translations.js?v=e6b791cb"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/introduction.html">Présentation du projet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/introduction.html#sommaire">Sommaire</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/docker.html">Utilisation avec Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/configuration.html">Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture technique</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/main.html">Orchestrateur</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/diagramme.html">Pipeline de traitement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/bdd.html">Base de données</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/stack.html">Stack technique</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/config/index.html">Modules Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/core/index.html">Modules Core</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/processing/index.html">Modules Processing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/utils/index.html">Modules Utils</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Reporting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html">Modules Reporting</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Code du module</a></li>
+      <li class="breadcrumb-item active">src.smart_watch.utils.CustomJsonToOSM</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Code source de src.smart_watch.utils.CustomJsonToOSM</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Convertisseur de données horaires d&#39;ouverture de JSON personnalisé vers OSM</span>
+<span class="c1"># https://datagora-erasme.github.io/smart_watch/source/modules/utils/CustomJsonToOSM.html</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">dateutil</span><span class="w"> </span><span class="kn">import</span> <span class="n">parser</span> <span class="k">as</span> <span class="n">date_parser</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">date_parser</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..core.ErrorHandler</span><span class="w"> </span><span class="kn">import</span> <span class="n">ErrorCategory</span><span class="p">,</span> <span class="n">ErrorSeverity</span><span class="p">,</span> <span class="n">handle_errors</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..core.Logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_logger</span>
+
+<span class="c1"># Initialize logger for this module</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">create_logger</span><span class="p">(</span>
+    <span class="n">module_name</span><span class="o">=</span><span class="s2">&quot;CustomJsonToOSM&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="ConversionResult">
+<a class="viewcode-back" href="../../../../source/modules/utils/CustomJsonToOSM.html#src.smart_watch.utils.CustomJsonToOSM.ConversionResult">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ConversionResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Conteneur pour les résultats de conversion avec métadonnées.&quot;&quot;&quot;</span>
+
+    <span class="n">osm_periods</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialise le résultat de conversion après la création de la dataclass.&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+
+
+<div class="viewcode-block" id="TimeSlot">
+<a class="viewcode-back" href="../../../../source/modules/utils/CustomJsonToOSM.html#src.smart_watch.utils.CustomJsonToOSM.TimeSlot">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TimeSlot</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Représente un créneau horaire avec validation.&quot;&quot;&quot;</span>
+
+    <span class="n">start</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">end</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">occurence</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Ajout du champ occurence</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Valide le format du créneau horaire après la création de la dataclass.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_time_format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Format d&#39;heure de début invalide : </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_validate_time_format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Format d&#39;heure de fin invalide : </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TimeSlot._validate_time_format">
+<a class="viewcode-back" href="../../../../source/modules/utils/CustomJsonToOSM.html#src.smart_watch.utils.CustomJsonToOSM.TimeSlot._validate_time_format">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate_time_format</span><span class="p">(</span><span class="n">time_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Valide le format d&#39;heure HH:MM.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">time_str</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">parts</span> <span class="o">=</span> <span class="n">time_str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="n">hour</span><span class="p">,</span> <span class="n">minute</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">hour</span> <span class="o">&lt;=</span> <span class="mi">23</span>
+                <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">minute</span> <span class="o">&lt;=</span> <span class="mi">59</span>
+                <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="mi">2</span>
+                <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="mi">2</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">IndexError</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="TimeSlot.to_osm_format">
+<a class="viewcode-back" href="../../../../source/modules/utils/CustomJsonToOSM.html#src.smart_watch.utils.CustomJsonToOSM.TimeSlot.to_osm_format">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_osm_format</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convertit en format de plage horaire OSM (sans jour).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="si">}</span><span class="s2">&quot;</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="OSMDayMapper">
+<a class="viewcode-back" href="../../../../source/modules/utils/CustomJsonToOSM.html#src.smart_watch.utils.CustomJsonToOSM.OSMDayMapper">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">OSMDayMapper</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gère le mappage et la validation des noms de jours.&quot;&quot;&quot;</span>
+
+    <span class="n">DAY_MAPPING</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;lundi&quot;</span><span class="p">:</span> <span class="s2">&quot;Mo&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;mardi&quot;</span><span class="p">:</span> <span class="s2">&quot;Tu&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;mercredi&quot;</span><span class="p">:</span> <span class="s2">&quot;We&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;jeudi&quot;</span><span class="p">:</span> <span class="s2">&quot;Th&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;vendredi&quot;</span><span class="p">:</span> <span class="s2">&quot;Fr&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;samedi&quot;</span><span class="p">:</span> <span class="s2">&quot;Sa&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;dimanche&quot;</span><span class="p">:</span> <span class="s2">&quot;Su&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="n">DAY_ORDER</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Mo&quot;</span><span class="p">,</span> <span class="s2">&quot;Tu&quot;</span><span class="p">,</span> <span class="s2">&quot;We&quot;</span><span class="p">,</span> <span class="s2">&quot;Th&quot;</span><span class="p">,</span> <span class="s2">&quot;Fr&quot;</span><span class="p">,</span> <span class="s2">&quot;Sa&quot;</span><span class="p">,</span> <span class="s2">&quot;Su&quot;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="OSMDayMapper.normalize_day">
+<a class="viewcode-back" href="../../../../source/modules/utils/CustomJsonToOSM.html#src.smart_watch.utils.CustomJsonToOSM.OSMDayMapper.normalize_day">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">normalize_day</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">day</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convertit un nom de jour en français au format OSM.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">DAY_MAPPING</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">day</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="OSMDayMapper.compress_day_ranges">
+<a class="viewcode-back" href="../../../../source/modules/utils/CustomJsonToOSM.html#src.smart_watch.utils.CustomJsonToOSM.OSMDayMapper.compress_day_ranges">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compress_day_ranges</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">days</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compresse les jours consécutifs en plages (Mo-Fr, Sa-Su, etc.).&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">days</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="n">day_indices</span> <span class="o">=</span> <span class="p">{</span><span class="n">day</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">day</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">DAY_ORDER</span><span class="p">)}</span>
+        <span class="n">days</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">days</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">d</span><span class="p">:</span> <span class="n">day_indices</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="mi">99</span><span class="p">))</span>
+
+        <span class="n">ranges</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">start_idx</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">while</span> <span class="n">start_idx</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">days</span><span class="p">):</span>
+            <span class="n">end_idx</span> <span class="o">=</span> <span class="n">start_idx</span>
+
+            <span class="c1"># Trouve les jours consécutifs</span>
+            <span class="k">while</span> <span class="p">(</span>
+                <span class="n">end_idx</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">days</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="n">day_indices</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">days</span><span class="p">[</span><span class="n">end_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="mi">99</span><span class="p">)</span>
+                <span class="o">==</span> <span class="n">day_indices</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">days</span><span class="p">[</span><span class="n">end_idx</span><span class="p">],</span> <span class="mi">99</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="p">):</span>
+                <span class="n">end_idx</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="c1"># Formate la plage</span>
+            <span class="k">if</span> <span class="n">start_idx</span> <span class="o">==</span> <span class="n">end_idx</span><span class="p">:</span>
+                <span class="n">ranges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">days</span><span class="p">[</span><span class="n">start_idx</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ranges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">days</span><span class="p">[</span><span class="n">start_idx</span><span class="p">]</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">days</span><span class="p">[</span><span class="n">end_idx</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="n">start_idx</span> <span class="o">=</span> <span class="n">end_idx</span> <span class="o">+</span> <span class="mi">1</span>
+
+        <span class="k">return</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ranges</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="DateParser">
+<a class="viewcode-back" href="../../../../source/modules/utils/CustomJsonToOSM.html#src.smart_watch.utils.CustomJsonToOSM.DateParser">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DateParser</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gère l&#39;analyse des dates avec prise en charge de plusieurs formats.&quot;&quot;&quot;</span>
+
+    <span class="n">MONTH_MAPPING</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;janvier&quot;</span><span class="p">:</span> <span class="s2">&quot;January&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;jan&quot;</span><span class="p">:</span> <span class="s2">&quot;Jan&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;février&quot;</span><span class="p">:</span> <span class="s2">&quot;February&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;fév&quot;</span><span class="p">:</span> <span class="s2">&quot;Feb&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;fevrier&quot;</span><span class="p">:</span> <span class="s2">&quot;February&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;fev&quot;</span><span class="p">:</span> <span class="s2">&quot;Feb&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;mars&quot;</span><span class="p">:</span> <span class="s2">&quot;March&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;mar&quot;</span><span class="p">:</span> <span class="s2">&quot;Mar&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;avril&quot;</span><span class="p">:</span> <span class="s2">&quot;April&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;avr&quot;</span><span class="p">:</span> <span class="s2">&quot;Apr&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;mai&quot;</span><span class="p">:</span> <span class="s2">&quot;May&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;juin&quot;</span><span class="p">:</span> <span class="s2">&quot;June&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;juillet&quot;</span><span class="p">:</span> <span class="s2">&quot;July&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;juil&quot;</span><span class="p">:</span> <span class="s2">&quot;Jul&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;août&quot;</span><span class="p">:</span> <span class="s2">&quot;August&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;aout&quot;</span><span class="p">:</span> <span class="s2">&quot;August&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;septembre&quot;</span><span class="p">:</span> <span class="s2">&quot;September&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sep&quot;</span><span class="p">:</span> <span class="s2">&quot;Sep&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sept&quot;</span><span class="p">:</span> <span class="s2">&quot;Sep&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;octobre&quot;</span><span class="p">:</span> <span class="s2">&quot;October&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;oct&quot;</span><span class="p">:</span> <span class="s2">&quot;Oct&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;novembre&quot;</span><span class="p">:</span> <span class="s2">&quot;November&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nov&quot;</span><span class="p">:</span> <span class="s2">&quot;Nov&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;décembre&quot;</span><span class="p">:</span> <span class="s2">&quot;December&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;déc&quot;</span><span class="p">:</span> <span class="s2">&quot;Dec&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;decembre&quot;</span><span class="p">:</span> <span class="s2">&quot;December&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;dec&quot;</span><span class="p">:</span> <span class="s2">&quot;Dec&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+<div class="viewcode-block" id="DateParser.parse_date_to_osm">
+<a class="viewcode-back" href="../../../../source/modules/utils/CustomJsonToOSM.html#src.smart_watch.utils.CustomJsonToOSM.DateParser.parse_date_to_osm">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parse_date_to_osm</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">date_desc</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Analyse une description de date au format OSM (YYYY MMM DD).&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">date_desc</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">date_desc</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Normalise les noms de mois en français</span>
+            <span class="n">normalized</span> <span class="o">=</span> <span class="n">date_desc</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">fr</span><span class="p">,</span> <span class="n">en</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">MONTH_MAPPING</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">normalized</span> <span class="o">=</span> <span class="n">normalized</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">fr</span><span class="p">,</span> <span class="n">en</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">date_parser</span><span class="p">:</span>
+                <span class="n">parsed_date</span> <span class="o">=</span> <span class="n">date_parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">normalized</span><span class="p">,</span> <span class="n">fuzzy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">parsed_date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y %b </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Analyse de base en cas de fallback</span>
+                <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_basic_date_parse</span><span class="p">(</span><span class="n">normalized</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="DateParser._basic_date_parse">
+<a class="viewcode-back" href="../../../../source/modules/utils/CustomJsonToOSM.html#src.smart_watch.utils.CustomJsonToOSM.DateParser._basic_date_parse">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_basic_date_parse</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">date_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Analyse de base des dates sans dateutil.&quot;&quot;&quot;</span>
+        <span class="c1"># Modèle simple YYYY-MM-DD</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+
+        <span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(\d</span><span class="si">{4}</span><span class="s2">)-(\d{1,2})-(\d{1,2})&quot;</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">date_str</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+            <span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">groups</span><span class="p">()</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">dt</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">year</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">month</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">day</span><span class="p">))</span>
+                <span class="k">return</span> <span class="n">dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y %b </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="k">pass</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="JsonToOsmConverter">
+<a class="viewcode-back" href="../../../../source/modules/utils/CustomJsonToOSM.html#src.smart_watch.utils.CustomJsonToOSM.JsonToOsmConverter">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">JsonToOsmConverter</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convertisseur d&#39;horaires d&#39;ouverture OpenStreetMap.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="JsonToOsmConverter.__init__">
+<a class="viewcode-back" href="../../../../source/modules/utils/CustomJsonToOSM.html#src.smart_watch.utils.CustomJsonToOSM.JsonToOsmConverter.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialise le convertisseur OSM.&quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Convertisseur OSM initialisé&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="JsonToOsmConverter._process_time_slots">
+<a class="viewcode-back" href="../../../../source/modules/utils/CustomJsonToOSM.html#src.smart_watch.utils.CustomJsonToOSM.JsonToOsmConverter._process_time_slots">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_process_time_slots</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">slots</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">TimeSlot</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Traite et valide les créneaux horaires.&quot;&quot;&quot;</span>
+        <span class="n">processed_slots</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">slot</span> <span class="ow">in</span> <span class="n">slots</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">slot</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="s2">&quot;debut&quot;</span> <span class="ow">in</span> <span class="n">slot</span> <span class="ow">and</span> <span class="s2">&quot;fin&quot;</span> <span class="ow">in</span> <span class="n">slot</span><span class="p">:</span>
+                    <span class="n">occurence</span> <span class="o">=</span> <span class="n">slot</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;occurence&quot;</span><span class="p">)</span>
+                    <span class="c1"># Si occurence est une liste, la garder, sinon None ou int</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">occurence</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                        <span class="n">occur</span> <span class="o">=</span> <span class="n">occurence</span>
+                    <span class="k">elif</span> <span class="n">occurence</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">occur</span> <span class="o">=</span> <span class="p">[</span><span class="n">occurence</span><span class="p">]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">occur</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="n">time_slot</span> <span class="o">=</span> <span class="n">TimeSlot</span><span class="p">(</span><span class="n">slot</span><span class="p">[</span><span class="s2">&quot;debut&quot;</span><span class="p">],</span> <span class="n">slot</span><span class="p">[</span><span class="s2">&quot;fin&quot;</span><span class="p">],</span> <span class="n">occurence</span><span class="o">=</span><span class="n">occur</span><span class="p">)</span>
+                    <span class="n">processed_slots</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">time_slot</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+        <span class="k">return</span> <span class="n">processed_slots</span></div>
+
+
+<div class="viewcode-block" id="JsonToOsmConverter._process_daily_hours">
+<a class="viewcode-back" href="../../../../source/modules/utils/CustomJsonToOSM.html#src.smart_watch.utils.CustomJsonToOSM.JsonToOsmConverter._process_daily_hours">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_process_daily_hours</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">day_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Traite les horaires pour un jour donné. Retourne une liste de dicts {occurence, slot_str}.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">day_data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">day_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;source_found&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="n">time_slots</span> <span class="o">=</span> <span class="n">day_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;creneaux&quot;</span><span class="p">,</span> <span class="p">[])</span>
+
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Priorité aux créneaux, même si ouvert=false</span>
+        <span class="k">if</span> <span class="n">time_slots</span><span class="p">:</span>
+            <span class="n">processed_slots</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_time_slots</span><span class="p">(</span><span class="n">time_slots</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">slot</span> <span class="ow">in</span> <span class="n">processed_slots</span><span class="p">:</span>
+                <span class="c1"># slot.occurence est soit None, soit une liste d&#39;entiers</span>
+                <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="p">{</span><span class="s2">&quot;occurence&quot;</span><span class="p">:</span> <span class="n">slot</span><span class="o">.</span><span class="n">occurence</span><span class="p">,</span> <span class="s2">&quot;slot_str&quot;</span><span class="p">:</span> <span class="n">slot</span><span class="o">.</span><span class="n">to_osm_format</span><span class="p">()}</span>
+                <span class="p">)</span>
+            <span class="k">return</span> <span class="n">results</span> <span class="k">if</span> <span class="n">results</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="c1"># Seulement si pas de créneaux, on regarde le statut ouvert</span>
+        <span class="n">is_open</span> <span class="o">=</span> <span class="n">day_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ouvert&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">is_open</span><span class="p">:</span>
+            <span class="c1"># Lieu ouvert mais sans créneaux spécifiques</span>
+            <span class="k">return</span> <span class="p">[{</span><span class="s2">&quot;occurence&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;slot_str&quot;</span><span class="p">:</span> <span class="s2">&quot;open&quot;</span><span class="p">}]</span>
+
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="JsonToOsmConverter._process_weekly_schedule">
+<a class="viewcode-back" href="../../../../source/modules/utils/CustomJsonToOSM.html#src.smart_watch.utils.CustomJsonToOSM.JsonToOsmConverter._process_weekly_schedule">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_process_weekly_schedule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">schedule</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Traite les données d&#39;horaires hebdomadaires avec gestion des occurences.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">schedule</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="c1"># Vérifie si tous les jours sont fermés (fermeture définitive)</span>
+        <span class="n">all_days_closed</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">has_any_source</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">for</span> <span class="n">day_name</span><span class="p">,</span> <span class="n">day_data</span> <span class="ow">in</span> <span class="n">schedule</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">osm_day</span> <span class="o">=</span> <span class="n">OSMDayMapper</span><span class="o">.</span><span class="n">normalize_day</span><span class="p">(</span><span class="n">day_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">osm_day</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">day_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;source_found&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
+                <span class="n">has_any_source</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">if</span> <span class="n">day_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ouvert&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> <span class="ow">or</span> <span class="n">day_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;creneaux&quot;</span><span class="p">,</span> <span class="p">[]):</span>
+                    <span class="n">all_days_closed</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="k">break</span>
+
+        <span class="c1"># Si tous les jours sont fermés et qu&#39;on a des sources, retourne &quot;off&quot;</span>
+        <span class="k">if</span> <span class="n">all_days_closed</span> <span class="ow">and</span> <span class="n">has_any_source</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;off&quot;</span>
+
+        <span class="c1"># Pour chaque jour, on collecte une liste de tuples (occurence, slot_str)</span>
+        <span class="n">day_slots</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">day_name</span><span class="p">,</span> <span class="n">day_data</span> <span class="ow">in</span> <span class="n">schedule</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">osm_day</span> <span class="o">=</span> <span class="n">OSMDayMapper</span><span class="o">.</span><span class="n">normalize_day</span><span class="p">(</span><span class="n">day_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">osm_day</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">day_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;source_found&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="n">slot_infos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_daily_hours</span><span class="p">(</span><span class="n">day_data</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">slot_infos</span><span class="p">:</span>
+                <span class="n">day_slots</span><span class="p">[</span><span class="n">osm_day</span><span class="p">]</span> <span class="o">=</span> <span class="n">slot_infos</span>
+
+        <span class="c1"># On va regrouper par (occurence, slot_str) pour tous les jours</span>
+        <span class="c1"># Structure : {(tuple_occurence, slot_str): [osm_day, ...]}</span>
+        <span class="n">slot_groups</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">osm_day</span><span class="p">,</span> <span class="n">slot_infos</span> <span class="ow">in</span> <span class="n">day_slots</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">slot_info</span> <span class="ow">in</span> <span class="n">slot_infos</span><span class="p">:</span>
+                <span class="n">occur</span> <span class="o">=</span> <span class="n">slot_info</span><span class="p">[</span><span class="s2">&quot;occurence&quot;</span><span class="p">]</span>
+                <span class="n">slot_str</span> <span class="o">=</span> <span class="n">slot_info</span><span class="p">[</span><span class="s2">&quot;slot_str&quot;</span><span class="p">]</span>
+                <span class="c1"># Pour la clé, tuple(occur) ou None</span>
+                <span class="n">occur_key</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="nb">tuple</span><span class="p">(</span><span class="n">occur</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">occur</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+                    <span class="k">else</span> <span class="p">(</span><span class="n">occur</span><span class="p">,)</span>
+                    <span class="k">if</span> <span class="n">occur</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                    <span class="k">else</span> <span class="kc">None</span>
+                <span class="p">)</span>
+                <span class="n">group_key</span> <span class="o">=</span> <span class="p">(</span><span class="n">occur_key</span><span class="p">,</span> <span class="n">slot_str</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">group_key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">slot_groups</span><span class="p">:</span>
+                    <span class="n">slot_groups</span><span class="p">[</span><span class="n">group_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">slot_groups</span><span class="p">[</span><span class="n">group_key</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">osm_day</span><span class="p">)</span>
+
+        <span class="c1"># Génération du format OSM</span>
+        <span class="n">osm_parts</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">occur_key</span><span class="p">,</span> <span class="n">slot_str</span><span class="p">),</span> <span class="n">days</span> <span class="ow">in</span> <span class="n">slot_groups</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">day_ranges</span> <span class="o">=</span> <span class="n">OSMDayMapper</span><span class="o">.</span><span class="n">compress_day_ranges</span><span class="p">(</span><span class="n">days</span><span class="p">)</span>
+            <span class="c1"># Ajout du [n] ou [n,m] si occurence</span>
+            <span class="k">if</span> <span class="n">occur_key</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">occur_key</span><span class="p">):</span>
+                <span class="n">occur_list</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">occur_key</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
+                <span class="n">occur_part</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">occur_list</span><span class="p">)</span><span class="si">}</span><span class="s2">]&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">occur_part</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="n">osm_parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">day_ranges</span><span class="si">}{</span><span class="n">occur_part</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">slot_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Gestion des jours fermés (off)</span>
+        <span class="n">closed_days</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">day_name</span><span class="p">,</span> <span class="n">day_data</span> <span class="ow">in</span> <span class="n">schedule</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">osm_day</span> <span class="o">=</span> <span class="n">OSMDayMapper</span><span class="o">.</span><span class="n">normalize_day</span><span class="p">(</span><span class="n">day_name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">osm_day</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">day_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;source_found&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">day_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ouvert&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">day_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;creneaux&quot;</span><span class="p">,</span> <span class="p">[]):</span>
+                <span class="n">closed_days</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">osm_day</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">closed_days</span><span class="p">:</span>
+            <span class="n">day_ranges</span> <span class="o">=</span> <span class="n">OSMDayMapper</span><span class="o">.</span><span class="n">compress_day_ranges</span><span class="p">(</span><span class="n">closed_days</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">day_ranges</span><span class="p">:</span>
+                <span class="n">osm_parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">day_ranges</span><span class="si">}</span><span class="s2"> off&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="s2">&quot;; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">osm_parts</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="JsonToOsmConverter._process_special_days">
+<a class="viewcode-back" href="../../../../source/modules/utils/CustomJsonToOSM.html#src.smart_watch.utils.CustomJsonToOSM.JsonToOsmConverter._process_special_days">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_process_special_days</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">special_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">period_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Traite les jours spéciaux (jours fériés, exceptions) en distinguant leur type.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">special_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;source_found&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="n">specific_schedules</span> <span class="o">=</span> <span class="n">special_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;horaires_specifiques&quot;</span><span class="p">,</span> <span class="p">{})</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">specific_schedules</span><span class="p">:</span>
+            <span class="n">mode</span> <span class="o">=</span> <span class="n">special_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mode&quot;</span><span class="p">,</span> <span class="s2">&quot;ferme&quot;</span><span class="p">)</span>
+            <span class="c1"># Pour les jours fériés, la condition par défaut est PH.</span>
+            <span class="c1"># Pour les jours spéciaux, il n&#39;y a pas de condition générale par défaut.</span>
+            <span class="n">condition</span> <span class="o">=</span> <span class="n">special_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;condition&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">condition</span> <span class="ow">and</span> <span class="n">period_key</span> <span class="o">==</span> <span class="s2">&quot;jours_feries&quot;</span><span class="p">:</span>
+                <span class="n">condition</span> <span class="o">=</span> <span class="s2">&quot;PH&quot;</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">condition</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
+            <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;ferme&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">condition</span><span class="si">}</span><span class="s2"> off&quot;</span>
+            <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;ouvert&quot;</span><span class="p">:</span>
+                <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">condition</span><span class="si">}</span><span class="s2"> open&quot;</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="c1"># Traite les dates spécifiques</span>
+        <span class="n">osm_parts</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">date_desc</span><span class="p">,</span> <span class="n">schedule_data</span> <span class="ow">in</span> <span class="n">specific_schedules</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">date_part</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                <span class="k">if</span> <span class="n">period_key</span> <span class="o">==</span> <span class="s2">&quot;jours_feries&quot;</span><span class="p">:</span>
+                    <span class="n">osm_date</span> <span class="o">=</span> <span class="n">DateParser</span><span class="o">.</span><span class="n">parse_date_to_osm</span><span class="p">(</span><span class="n">date_desc</span><span class="p">)</span>
+                    <span class="n">date_part</span> <span class="o">=</span> <span class="n">osm_date</span> <span class="k">if</span> <span class="n">osm_date</span> <span class="k">else</span> <span class="s2">&quot;PH&quot;</span>
+                <span class="k">elif</span> <span class="n">period_key</span> <span class="o">==</span> <span class="s2">&quot;jours_speciaux&quot;</span><span class="p">:</span>
+                    <span class="c1"># La description est la condition elle-même</span>
+                    <span class="n">date_part</span> <span class="o">=</span> <span class="n">date_desc</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">date_part</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+                <span class="c1"># Traite l&#39;horaire avec priorité aux créneaux</span>
+                <span class="n">schedule_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">schedule_data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">schedule_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;source_found&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
+                        <span class="k">continue</span>
+
+                    <span class="n">slots</span> <span class="o">=</span> <span class="n">schedule_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;creneaux&quot;</span><span class="p">,</span> <span class="p">[])</span>
+                    <span class="n">is_open</span> <span class="o">=</span> <span class="n">schedule_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ouvert&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+                    <span class="c1"># Priorité aux créneaux, même si ouvert=false</span>
+                    <span class="k">if</span> <span class="n">slots</span><span class="p">:</span>
+                        <span class="n">processed_slots</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_time_slots</span><span class="p">(</span><span class="n">slots</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">processed_slots</span><span class="p">:</span>
+                            <span class="n">schedule_str</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                                <span class="n">slot</span><span class="o">.</span><span class="n">to_osm_format</span><span class="p">()</span> <span class="k">for</span> <span class="n">slot</span> <span class="ow">in</span> <span class="n">processed_slots</span>
+                            <span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">is_open</span><span class="p">:</span>
+                        <span class="c1"># Ouvert mais sans créneaux spécifiques</span>
+                        <span class="n">schedule_str</span> <span class="o">=</span> <span class="s2">&quot;open&quot;</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># Fermé et sans créneaux</span>
+                        <span class="n">schedule_str</span> <span class="o">=</span> <span class="s2">&quot;off&quot;</span>
+
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">schedule_data</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">schedule_data</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;fermé&quot;</span><span class="p">,</span> <span class="s2">&quot;ferme&quot;</span><span class="p">,</span> <span class="s2">&quot;closed&quot;</span><span class="p">]:</span>
+                        <span class="n">schedule_str</span> <span class="o">=</span> <span class="s2">&quot;off&quot;</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># Conserve la chaîne telle quelle (ex: &quot;sur rdv&quot;)</span>
+                        <span class="n">schedule_str</span> <span class="o">=</span> <span class="n">schedule_data</span>
+
+                <span class="k">if</span> <span class="n">schedule_str</span><span class="p">:</span>
+                    <span class="n">osm_parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">date_part</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">schedule_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur traitement jour spécial </span><span class="si">{</span><span class="n">date_desc</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+        <span class="k">return</span> <span class="s2">&quot;; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">osm_parts</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="JsonToOsmConverter._has_valid_source_in_period">
+<a class="viewcode-back" href="../../../../source/modules/utils/CustomJsonToOSM.html#src.smart_watch.utils.CustomJsonToOSM.JsonToOsmConverter._has_valid_source_in_period">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_has_valid_source_in_period</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">period_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Vérifie si une période contient des données source valides.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">period_data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">period_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">&quot;source_found&quot;</span><span class="p">,</span> <span class="kc">False</span>
+        <span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># Vérifie les horaires hebdomadaires</span>
+        <span class="k">if</span> <span class="s2">&quot;horaires&quot;</span> <span class="ow">in</span> <span class="n">period_data</span><span class="p">:</span>
+            <span class="n">horaires</span> <span class="o">=</span> <span class="n">period_data</span><span class="p">[</span><span class="s2">&quot;horaires&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">horaires</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="k">return</span> <span class="nb">any</span><span class="p">(</span>
+                    <span class="n">day_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;source_found&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">day_data</span> <span class="ow">in</span> <span class="n">horaires</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">day_data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+                <span class="p">)</span>
+
+        <span class="c1"># Vérifie les horaires spécifiques</span>
+        <span class="k">if</span> <span class="s2">&quot;horaires_specifiques&quot;</span> <span class="ow">in</span> <span class="n">period_data</span><span class="p">:</span>
+            <span class="n">schedules</span> <span class="o">=</span> <span class="n">period_data</span><span class="p">[</span><span class="s2">&quot;horaires_specifiques&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">schedules</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="k">return</span> <span class="nb">any</span><span class="p">(</span>
+                    <span class="n">schedule</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;source_found&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">schedule</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+                    <span class="k">else</span> <span class="kc">True</span>
+                    <span class="k">for</span> <span class="n">schedule</span> <span class="ow">in</span> <span class="n">schedules</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+                <span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="JsonToOsmConverter.convert_to_osm">
+<a class="viewcode-back" href="../../../../source/modules/utils/CustomJsonToOSM.html#src.smart_watch.utils.CustomJsonToOSM.JsonToOsmConverter.convert_to_osm">[docs]</a>
+    <span class="nd">@handle_errors</span><span class="p">(</span>
+        <span class="n">category</span><span class="o">=</span><span class="n">ErrorCategory</span><span class="o">.</span><span class="n">CONVERSION</span><span class="p">,</span>
+        <span class="n">severity</span><span class="o">=</span><span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">MEDIUM</span><span class="p">,</span>
+        <span class="n">user_message</span><span class="o">=</span><span class="s2">&quot;Erreur lors de la conversion du JSON personnalisé au format OSM.&quot;</span><span class="p">,</span>
+        <span class="n">reraise</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">default_return</span><span class="o">=</span><span class="n">ConversionResult</span><span class="p">(</span><span class="n">osm_periods</span><span class="o">=</span><span class="p">{}),</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">convert_to_osm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ConversionResult</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Méthode principale de conversion.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data: Données JSON en entrée</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            ConversionResult avec les périodes OSM</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Début conversion vers OSM&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Vérifie d&#39;abord si l&#39;établissement est définitivement fermé</span>
+        <span class="n">horaires_data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;horaires_ouverture&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">periods</span> <span class="o">=</span> <span class="n">horaires_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;periodes&quot;</span><span class="p">,</span> <span class="p">{})</span>
+
+        <span class="c1"># Vérifie si toutes les périodes indiquent une fermeture</span>
+        <span class="n">all_periods_closed</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">has_any_period</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">for</span> <span class="n">period_key</span><span class="p">,</span> <span class="n">period_data</span> <span class="ow">in</span> <span class="n">periods</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">period_data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">period_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;source_found&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+                <span class="n">has_any_period</span> <span class="o">=</span> <span class="kc">True</span>
+
+                <span class="k">if</span> <span class="n">period_key</span> <span class="ow">in</span> <span class="p">[</span>
+                    <span class="s2">&quot;hors_vacances_scolaires&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;vacances_scolaires_ete&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;petites_vacances_scolaires&quot;</span><span class="p">,</span>
+                <span class="p">]:</span>
+                    <span class="n">schedule</span> <span class="o">=</span> <span class="n">period_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;horaires&quot;</span><span class="p">,</span> <span class="p">{})</span>
+                    <span class="k">if</span> <span class="n">schedule</span><span class="p">:</span>
+                        <span class="c1"># Vérifie si au moins un jour est ouvert</span>
+                        <span class="k">for</span> <span class="n">day_data</span> <span class="ow">in</span> <span class="n">schedule</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">day_data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
+                                <span class="n">day_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ouvert&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+                                <span class="ow">or</span> <span class="n">day_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;creneaux&quot;</span><span class="p">,</span> <span class="p">[])</span>
+                            <span class="p">):</span>
+                                <span class="n">all_periods_closed</span> <span class="o">=</span> <span class="kc">False</span>
+                                <span class="k">break</span>
+                <span class="k">elif</span> <span class="n">period_key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;jours_feries&quot;</span><span class="p">,</span> <span class="s2">&quot;jours_speciaux&quot;</span><span class="p">]:</span>
+                    <span class="n">specific_schedules</span> <span class="o">=</span> <span class="n">period_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;horaires_specifiques&quot;</span><span class="p">,</span> <span class="p">{})</span>
+                    <span class="k">if</span> <span class="n">specific_schedules</span><span class="p">:</span>
+                        <span class="n">all_periods_closed</span> <span class="o">=</span> <span class="kc">False</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">all_periods_closed</span><span class="p">:</span>
+                <span class="k">break</span>
+
+        <span class="c1"># Si tout est fermé, retourne une fermeture définitive</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">all_periods_closed</span>
+            <span class="ow">and</span> <span class="n">has_any_period</span>
+            <span class="ow">and</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="s2">&quot;jours_feries&quot;</span> <span class="ow">in</span> <span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">periods</span><span class="p">)</span>
+        <span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Établissement définitivement fermé&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">ConversionResult</span><span class="p">(</span><span class="n">osm_periods</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;general&quot;</span><span class="p">:</span> <span class="s2">&quot;off&quot;</span><span class="p">})</span>
+
+        <span class="c1"># Convertit par périodes normalement</span>
+        <span class="n">periods_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert_by_periods</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Conversion OSM réussie: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">periods_result</span><span class="p">)</span><span class="si">}</span><span class="s2"> périodes&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ConversionResult</span><span class="p">(</span><span class="n">osm_periods</span><span class="o">=</span><span class="n">periods_result</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="JsonToOsmConverter._convert_by_periods">
+<a class="viewcode-back" href="../../../../source/modules/utils/CustomJsonToOSM.html#src.smart_watch.utils.CustomJsonToOSM.JsonToOsmConverter._convert_by_periods">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_convert_by_periods</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convertit les données par périodes individuelles.&quot;&quot;&quot;</span>
+        <span class="n">periods_result</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="n">horaires_data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;horaires_ouverture&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">periods</span> <span class="o">=</span> <span class="n">horaires_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;periodes&quot;</span><span class="p">,</span> <span class="p">{})</span>
+
+        <span class="c1"># Traite chaque période</span>
+        <span class="k">for</span> <span class="n">period_key</span><span class="p">,</span> <span class="n">period_data</span> <span class="ow">in</span> <span class="n">periods</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">period_data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_valid_source_in_period</span><span class="p">(</span><span class="n">period_data</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">period_key</span> <span class="ow">in</span> <span class="p">[</span>
+                    <span class="s2">&quot;hors_vacances_scolaires&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;vacances_scolaires_ete&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;petites_vacances_scolaires&quot;</span><span class="p">,</span>
+                <span class="p">]:</span>
+                    <span class="c1"># Horaires hebdomadaires</span>
+                    <span class="n">schedule</span> <span class="o">=</span> <span class="n">period_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;horaires&quot;</span><span class="p">,</span> <span class="p">{})</span>
+                    <span class="k">if</span> <span class="n">schedule</span><span class="p">:</span>
+                        <span class="n">osm_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_weekly_schedule</span><span class="p">(</span><span class="n">schedule</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">osm_str</span><span class="p">:</span>
+                            <span class="n">periods_result</span><span class="p">[</span><span class="n">period_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">osm_str</span>
+
+                <span class="k">elif</span> <span class="n">period_key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;jours_feries&quot;</span><span class="p">,</span> <span class="s2">&quot;jours_speciaux&quot;</span><span class="p">]:</span>
+                    <span class="c1"># Jours spéciaux</span>
+                    <span class="n">osm_str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_special_days</span><span class="p">(</span><span class="n">period_data</span><span class="p">,</span> <span class="n">period_key</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">osm_str</span><span class="p">:</span>
+                        <span class="n">periods_result</span><span class="p">[</span><span class="n">period_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">osm_str</span>
+
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+        <span class="k">return</span> <span class="n">periods_result</span></div>
+
+
+<div class="viewcode-block" id="JsonToOsmConverter.convert_file">
+<a class="viewcode-back" href="../../../../source/modules/utils/CustomJsonToOSM.html#src.smart_watch.utils.CustomJsonToOSM.JsonToOsmConverter.convert_file">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">convert_file</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">input_file</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span>
+        <span class="n">output_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ConversionResult</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convertit un fichier JSON entier.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            input_file: Chemin du fichier JSON en entrée</span>
+<span class="sd">            output_file: Chemin optionnel du fichier de sortie</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dictionnaire des résultats de conversion par identifiant</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">input_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">input_file</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">input_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fichier d&#39;entrée introuvable: </span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fichier d&#39;entrée introuvable : </span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Conversion fichier JSON: </span><span class="si">{</span><span class="n">input_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+        <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+                <span class="n">metadata</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;horaires_ouverture&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;metadata&quot;</span><span class="p">,</span> <span class="p">{})</span>
+                <span class="n">identifier</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;identifiant&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;item_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">results</span><span class="p">[</span><span class="n">identifier</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_to_osm</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">metadata</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;horaires_ouverture&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;metadata&quot;</span><span class="p">,</span> <span class="p">{})</span>
+            <span class="n">identifier</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;identifiant&quot;</span><span class="p">,</span> <span class="s2">&quot;single_item&quot;</span><span class="p">)</span>
+            <span class="n">results</span><span class="p">[</span><span class="n">identifier</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_to_osm</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">output_file</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sauvegarde: </span><span class="si">{</span><span class="n">output_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Conversion terminée: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span><span class="si">}</span><span class="s2"> éléments&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">results</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -67,12 +67,6 @@ Modules
 
    source/modules/reporting/index
 
-.. toctree::
-   :maxdepth: 1
-   :caption: Module d'évaluation
-
-   source/modules/evaluation/index
-
 Indices et tables
 ==================
 

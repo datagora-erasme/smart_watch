@@ -86,13 +86,6 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../reporting/index.html">Modules Reporting</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Module d'évaluation</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../evaluation/index.html">Module d’évaluation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../evaluation/index.html#vue-d-ensemble">Vue d’ensemble</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../evaluation/index.html#workflow-d-evaluation">Workflow d’évaluation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../evaluation/index.html#metriques-et-comparaisons">Métriques et comparaisons</a></li>
-</ul>
 
         </div>
       </div>
@@ -135,8 +128,73 @@
 <li><p>Convertit automatiquement le contenu HTML récupéré en Markdown à l’aide du module <a class="reference internal" href="../utils/HtmlToMarkdown.html"><span class="doc">HtmlToMarkdown</span></a>.</p></li>
 </ul>
 </section>
-<section id="modules">
-<h2>Modules<a class="headerlink" href="#modules" title="Lien vers cette rubrique"></a></h2>
+<section id="module-src.smart_watch.core.URLRetriever">
+<span id="modules"></span><h2>Modules<a class="headerlink" href="#module-src.smart_watch.core.URLRetriever" title="Lien vers cette rubrique"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.smart_watch.core.URLRetriever._expand_all_accordions">
+<span class="sig-prename descclassname"><span class="pre">src.smart_watch.core.URLRetriever.</span></span><span class="sig-name descname"><span class="pre">_expand_all_accordions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">page</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Page</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">identifiant</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/URLRetriever.html#_expand_all_accordions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.URLRetriever._expand_all_accordions" title="Lien vers cette définition"></a></dt>
+<dd><p>Force l’affichage des contenus d’accordions identifiés sur une page Playwright.
+Cette fonction tente d’ouvrir et de rendre visibles les panneaux d’accordions
+en ciblant une liste modérée de sélecteurs courants (IDs, classes CSS et
+rôles ARIA). Pour chaque élément trouvé, elle applique via JavaScript des
+modifications de style (display, visibility, opacity, height, maxHeight,
+overflow), supprime certaines classes masquantes courantes et force
+l’attribut ARIA approprié afin de révéler le contenu. Les éléments déjà
+traités sont évités grâce à un suivi par identifiant. Les erreurs
+locales sur des éléments ou des sélecteurs sont consignées mais n’interrompent
+pas le déroulement global.
+:param page: Instance Playwright Page sur laquelle opérer (par ex.</p>
+<blockquote>
+<div><p>playwright.sync_api.Page). L’objet est utilisé pour localiser les
+éléments et exécuter le JavaScript d’altération du DOM.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>identifiant</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><em>str</em></a>) – Chaîne utilisée pour le contexte des logs afin de
+faciliter le traçage des actions et des erreurs.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>Aucun résultat n’est retourné. La fonction applique des effets
+secondaires sur la page et journalise le nombre d’éléments forcés à
+l’affichage.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Lève<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>Aucun</strong> – Les exceptions locales (par sélecteur ou par élément) sont capturées</p></li>
+<li><p><strong>et consignées. En pratique</strong><strong>, </strong><strong>la fonction ne propage pas d'exceptions</strong> – </p></li>
+<li><p><strong>issues des opérations sur les éléments du DOM.</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.smart_watch.core.URLRetriever.retrieve_url">
+<span class="sig-prename descclassname"><span class="pre">src.smart_watch.core.URLRetriever.</span></span><span class="sig-name descname"><span class="pre">retrieve_url</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(disponible dans Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sortie</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'html'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding_errors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'ignore'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(disponible dans Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(disponible dans Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/URLRetriever.html#retrieve_url"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.URLRetriever.retrieve_url" title="Lien vers cette définition"></a></dt>
+<dd><p>Récupère le contenu d’une URL avec des stratégies et tentatives multiples.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>row</strong> (<em>Dict</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – Dictionnaire contenant les informations de l’URL.</p></li>
+<li><p><strong>sortie</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><em>str</em></a>) – Format de sortie souhaité (« html » ou « markdown »).</p></li>
+<li><p><strong>encoding_errors</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><em>str</em></a>) – Gestion des erreurs d’encodage.</p></li>
+<li><p><strong>config</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><em>str</em></a><em>, </em><em>Any</em><em>]</em><em>]</em>) – Configuration supplémentaire.</p></li>
+<li><p><strong>index</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><em>int</em></a>) – Index de l’URL pour le logging.</p></li>
+<li><p><strong>total</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><em>int</em></a>) – Nombre total d’URLs pour le logging.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionnaire enrichi avec le statut et le contenu de la page.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a>, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 </section>
 

@@ -1,0 +1,482 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.smart_watch.core.URLRetriever &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.jpg"/>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=d2e4462e"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/translations.js?v=e6b791cb"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/introduction.html">Présentation du projet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/introduction.html#sommaire">Sommaire</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/docker.html">Utilisation avec Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/configuration.html">Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture technique</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/main.html">Orchestrateur</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/diagramme.html">Pipeline de traitement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/bdd.html">Base de données</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/stack.html">Stack technique</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/config/index.html">Modules Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/core/index.html">Modules Core</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/processing/index.html">Modules Processing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/utils/index.html">Modules Utils</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Reporting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html">Modules Reporting</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Code du module</a></li>
+      <li class="breadcrumb-item active">src.smart_watch.core.URLRetriever</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Code source de src.smart_watch.core.URLRetriever</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Récupérateur de contenu URL pour le projet smart_watch</span>
+<span class="c1"># Documentation: https://datagora-erasme.github.io/smart_watch/source/modules/core/URLRetriever.html</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">playwright.sync_api</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Error</span> <span class="k">as</span> <span class="n">PlaywrightError</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">playwright.sync_api</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Page</span><span class="p">,</span>
+    <span class="n">sync_playwright</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">playwright.sync_api</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="ne">TimeoutError</span> <span class="k">as</span> <span class="n">PlaywrightTimeoutError</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">playwright_stealth</span><span class="w"> </span><span class="kn">import</span> <span class="n">Stealth</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.ErrorHandler</span><span class="w"> </span><span class="kn">import</span> <span class="n">ErrorCategory</span><span class="p">,</span> <span class="n">ErrorHandler</span><span class="p">,</span> <span class="n">ErrorSeverity</span><span class="p">,</span> <span class="n">handle_errors</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.Logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_logger</span>
+
+<span class="c1"># Initialize logger for this module</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">create_logger</span><span class="p">(</span>
+    <span class="n">module_name</span><span class="o">=</span><span class="s2">&quot;URLRetriever&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Initialisation du gestionnaire d&#39;erreurs pour ce module</span>
+<span class="n">error_handler</span> <span class="o">=</span> <span class="n">ErrorHandler</span><span class="p">()</span>
+
+<span class="n">HEADERS</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;User-Agent&quot;</span><span class="p">:</span> <span class="s2">&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Accept&quot;</span><span class="p">:</span> <span class="s2">&quot;text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Accept-Language&quot;</span><span class="p">:</span> <span class="s2">&quot;fr-FR,fr;q=0.7&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">MAX_RETRIES</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">RETRY_DELAY_SECONDS</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">PAGE_TIMEOUT</span> <span class="o">=</span> <span class="mi">20000</span>  <span class="c1"># 20 secondes</span>
+
+
+<div class="viewcode-block" id="_expand_all_accordions">
+<a class="viewcode-back" href="../../../../source/modules/core/URLRetriever.html#src.smart_watch.core.URLRetriever._expand_all_accordions">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_expand_all_accordions</span><span class="p">(</span><span class="n">page</span><span class="p">:</span> <span class="n">Page</span><span class="p">,</span> <span class="n">identifiant</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Force l&#39;affichage des contenus d&#39;accordions identifiés sur une page Playwright.</span>
+<span class="sd">    Cette fonction tente d&#39;ouvrir et de rendre visibles les panneaux d&#39;accordions</span>
+<span class="sd">    en ciblant une liste modérée de sélecteurs courants (IDs, classes CSS et</span>
+<span class="sd">    rôles ARIA). Pour chaque élément trouvé, elle applique via JavaScript des</span>
+<span class="sd">    modifications de style (display, visibility, opacity, height, maxHeight,</span>
+<span class="sd">    overflow), supprime certaines classes masquantes courantes et force</span>
+<span class="sd">    l&#39;attribut ARIA approprié afin de révéler le contenu. Les éléments déjà</span>
+<span class="sd">    traités sont évités grâce à un suivi par identifiant. Les erreurs</span>
+<span class="sd">    locales sur des éléments ou des sélecteurs sont consignées mais n&#39;interrompent</span>
+<span class="sd">    pas le déroulement global.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        page (Page): Instance Playwright Page sur laquelle opérer (par ex.</span>
+<span class="sd">            playwright.sync_api.Page). L&#39;objet est utilisé pour localiser les</span>
+<span class="sd">            éléments et exécuter le JavaScript d&#39;altération du DOM.</span>
+<span class="sd">        identifiant (str): Chaîne utilisée pour le contexte des logs afin de</span>
+<span class="sd">            faciliter le traçage des actions et des erreurs.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        None: Aucun résultat n&#39;est retourné. La fonction applique des effets</span>
+<span class="sd">        secondaires sur la page et journalise le nombre d&#39;éléments forcés à</span>
+<span class="sd">        l&#39;affichage.</span>
+<span class="sd">    Raises:</span>
+<span class="sd">        Aucun: Les exceptions locales (par sélecteur ou par élément) sont capturées</span>
+<span class="sd">        et consignées. En pratique, la fonction ne propage pas d&#39;exceptions</span>
+<span class="sd">        issues des opérations sur les éléments du DOM.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">identifiant</span><span class="si">}</span><span class="s2">* Recherche et affichage forcé du contenu des accordions...&quot;</span>
+    <span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Liste ciblée de sélecteurs pour les contenus d&#39;accordions les plus courants</span>
+        <span class="n">accordion_content_selectors</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="c1"># --- Sélecteurs basés sur les IDs (les plus fiables) ---</span>
+            <span class="s1">&#39;[id*=&quot;accordion-item-content&quot;]&#39;</span><span class="p">,</span>  <span class="c1"># ACF/WordPress</span>
+            <span class="s1">&#39;[id*=&quot;accordion-content&quot;]&#39;</span><span class="p">,</span>  <span class="c1"># Pattern générique</span>
+            <span class="s1">&#39;[id*=&quot;collapse&quot;]&#39;</span><span class="p">,</span>  <span class="c1"># Bootstrap</span>
+            <span class="c1"># --- Sélecteurs basés sur les classes CSS (courants) ---</span>
+            <span class="s2">&quot;.accordion-item-content&quot;</span><span class="p">,</span>  <span class="c1"># Standard moderne</span>
+            <span class="s2">&quot;.accordion-content&quot;</span><span class="p">,</span>  <span class="c1"># Pattern simple</span>
+            <span class="s2">&quot;.accordion-body&quot;</span><span class="p">,</span>  <span class="c1"># Bootstrap 5</span>
+            <span class="s2">&quot;.collapse&quot;</span><span class="p">,</span>  <span class="c1"># Bootstrap (tous)</span>
+            <span class="s2">&quot;.panel-collapse&quot;</span><span class="p">,</span>  <span class="c1"># Bootstrap 3</span>
+            <span class="s2">&quot;.collapsible-content&quot;</span><span class="p">,</span>  <span class="c1"># Materialize CSS</span>
+            <span class="c1"># --- Sélecteurs ARIA ciblés ---</span>
+            <span class="s1">&#39;[role=&quot;tabpanel&quot;]&#39;</span><span class="p">,</span>  <span class="c1"># ARIA standard</span>
+            <span class="s1">&#39;[aria-labelledby*=&quot;accordion&quot;]&#39;</span><span class="p">,</span>  <span class="c1"># Référencé par accordion</span>
+        <span class="p">]</span>
+
+        <span class="n">total_revealed</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">processed_elements</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">set</span><span class="p">()</span>
+        <span class="p">)</span>  <span class="c1"># Pour éviter de traiter le même élément plusieurs fois</span>
+
+        <span class="k">for</span> <span class="n">selector</span> <span class="ow">in</span> <span class="n">accordion_content_selectors</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Trouver tous les éléments de contenu correspondants</span>
+                <span class="n">content_elements</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="n">selector</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+                <span class="n">count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">content_elements</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">identifiant</span><span class="si">}</span><span class="s2">* Trouvé </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2"> panneau(x) de contenu avec le sélecteur &#39;</span><span class="si">{</span><span class="n">selector</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+                    <span class="p">)</span>
+
+                    <span class="c1"># Forcer l&#39;affichage de chaque panneau via JavaScript</span>
+                    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">element</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">content_elements</span><span class="p">):</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="c1"># Obtenir un identifiant unique pour éviter les doublons</span>
+                            <span class="n">element_id</span> <span class="o">=</span> <span class="p">(</span>
+                                <span class="n">element</span><span class="o">.</span><span class="n">get_attribute</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">selector</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span>
+                            <span class="p">)</span>
+
+                            <span class="k">if</span> <span class="n">element_id</span> <span class="ow">in</span> <span class="n">processed_elements</span><span class="p">:</span>
+                                <span class="k">continue</span>  <span class="c1"># Skip si déjà traité</span>
+
+                            <span class="n">processed_elements</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">element_id</span><span class="p">)</span>
+
+                            <span class="n">element</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span>
+<span class="w">                                </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                                element =&gt; {</span>
+<span class="sd">                                    // Styles d&#39;affichage essentiels</span>
+<span class="sd">                                    element.style.display = &#39;block&#39;;</span>
+<span class="sd">                                    element.style.visibility = &#39;visible&#39;;</span>
+<span class="sd">                                    element.style.opacity = &#39;1&#39;;</span>
+<span class="sd">                                    element.style.height = &#39;auto&#39;;</span>
+<span class="sd">                                    element.style.maxHeight = &#39;none&#39;;</span>
+<span class="sd">                                    element.style.overflow = &#39;visible&#39;;</span>
+<span class="sd">                                    </span>
+<span class="sd">                                    // Supprimer les classes qui masquent le contenu</span>
+<span class="sd">                                    const hiddenClasses = [&#39;collapsed&#39;, &#39;hidden&#39;, &#39;hide&#39;];</span>
+<span class="sd">                                    hiddenClasses.forEach(cls =&gt; element.classList.remove(cls));</span>
+<span class="sd">                                    </span>
+<span class="sd">                                    // Forcer l&#39;attribut ARIA</span>
+<span class="sd">                                    element.setAttribute(&#39;aria-hidden&#39;, &#39;false&#39;);</span>
+<span class="sd">                                }</span>
+<span class="sd">                            &quot;&quot;&quot;</span><span class="p">,</span>
+                                <span class="n">timeout</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span>
+                            <span class="p">)</span>  <span class="c1"># Timeout 5 secondes</span>
+                            <span class="n">total_revealed</span> <span class="o">+=</span> <span class="mi">1</span>
+                        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">identifiant</span><span class="si">}</span><span class="s2">* Impossible de modifier l&#39;élément </span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span>
+                            <span class="p">)</span>
+
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">identifiant</span><span class="si">}</span><span class="s2">* Erreur avec le sélecteur &#39;</span><span class="si">{</span><span class="n">selector</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">total_revealed</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">identifiant</span><span class="si">}</span><span class="s2">* </span><span class="si">{</span><span class="n">total_revealed</span><span class="si">}</span><span class="s2"> panneau(x) de contenu ont été forcés à l&#39;affichage.&quot;</span>
+            <span class="p">)</span>
+            <span class="c1"># Attendre que les modifications CSS prennent effet</span>
+            <span class="n">page</span><span class="o">.</span><span class="n">wait_for_timeout</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">identifiant</span><span class="si">}</span><span class="s2">* Aucun panneau de contenu d&#39;accordions n&#39;a été trouvé pour l&#39;affichage forcé.&quot;</span>
+            <span class="p">)</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">identifiant</span><span class="si">}</span><span class="s2">* Échec de l&#39;affichage forcé: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="retrieve_url">
+<a class="viewcode-back" href="../../../../source/modules/core/URLRetriever.html#src.smart_watch.core.URLRetriever.retrieve_url">[docs]</a>
+<span class="nd">@handle_errors</span><span class="p">(</span>
+    <span class="n">category</span><span class="o">=</span><span class="n">ErrorCategory</span><span class="o">.</span><span class="n">NETWORK</span><span class="p">,</span>
+    <span class="n">severity</span><span class="o">=</span><span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">MEDIUM</span><span class="p">,</span>
+    <span class="n">user_message</span><span class="o">=</span><span class="s2">&quot;Erreur lors de la récupération de l&#39;URL&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">retrieve_url</span><span class="p">(</span>
+    <span class="n">row</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="n">sortie</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;html&quot;</span><span class="p">,</span>
+    <span class="n">encoding_errors</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;ignore&quot;</span><span class="p">,</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">total</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Récupère le contenu d&#39;une URL avec des stratégies et tentatives multiples.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        row (Dict[str, Any]): Dictionnaire contenant les informations de l&#39;URL.</span>
+<span class="sd">        sortie (str): Format de sortie souhaité (&quot;html&quot; ou &quot;markdown&quot;).</span>
+<span class="sd">        encoding_errors (str): Gestion des erreurs d&#39;encodage.</span>
+<span class="sd">        config (Optional[Dict[str, Any]]): Configuration supplémentaire.</span>
+<span class="sd">        index (int): Index de l&#39;URL pour le logging.</span>
+<span class="sd">        total (int): Nombre total d&#39;URLs pour le logging.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Dict[str, Any]: Dictionnaire enrichi avec le statut et le contenu de la page.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">row_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+    <span class="n">url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">identifiant</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;identifiant&quot;</span><span class="p">,</span> <span class="s2">&quot;N/A&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">url</span><span class="p">:</span>
+        <span class="c1"># ... (gestion de l&#39;URL manquante, inchangée)</span>
+        <span class="k">return</span> <span class="n">row_dict</span>
+
+    <span class="k">if</span> <span class="n">total</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">identifiant</span><span class="si">}</span><span class="s2">* URL </span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">total</span><span class="si">}</span><span class="s2"> en cours : </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">identifiant</span><span class="si">}</span><span class="s2">* Récupération URL avec Playwright: </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">last_error</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">attempt</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">MAX_RETRIES</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">Stealth</span><span class="p">()</span><span class="o">.</span><span class="n">use_sync</span><span class="p">(</span><span class="n">sync_playwright</span><span class="p">())</span> <span class="k">as</span> <span class="n">p</span><span class="p">:</span>
+                <span class="n">browser</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">chromium</span><span class="o">.</span><span class="n">launch</span><span class="p">(</span><span class="n">headless</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="c1"># Configuration du contexte pour paraître plus humain</span>
+                <span class="n">context</span> <span class="o">=</span> <span class="n">browser</span><span class="o">.</span><span class="n">new_context</span><span class="p">(</span>
+                    <span class="n">viewport</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="mi">1920</span><span class="p">,</span> <span class="s2">&quot;height&quot;</span><span class="p">:</span> <span class="mi">1080</span><span class="p">},</span>
+                    <span class="n">locale</span><span class="o">=</span><span class="s2">&quot;fr-FR&quot;</span><span class="p">,</span>
+                    <span class="n">ignore_https_errors</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># Première tentative avec SSL strict</span>
+                <span class="p">)</span>
+                <span class="n">page</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">new_page</span><span class="p">()</span>
+                <span class="n">page</span><span class="o">.</span><span class="n">set_extra_http_headers</span><span class="p">(</span><span class="n">HEADERS</span><span class="p">)</span>
+
+                <span class="c1"># Navigation vers l&#39;URL avec timeout</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">goto</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">PAGE_TIMEOUT</span><span class="p">,</span> <span class="n">wait_until</span><span class="o">=</span><span class="s2">&quot;load&quot;</span><span class="p">)</span>
+
+                <span class="c1"># Expansion des volets interactifs</span>
+                <span class="n">_expand_all_accordions</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">identifiant</span><span class="p">)</span>
+
+                <span class="n">html_content</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">content</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="n">response</span> <span class="ow">and</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">identifiant</span><span class="si">}</span><span class="s2">* Récupération réussie (tentative </span><span class="si">{</span><span class="n">attempt</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">MAX_RETRIES</span><span class="si">}</span><span class="s2">)&quot;</span>
+                    <span class="p">)</span>
+                    <span class="n">row_dict</span><span class="p">[</span><span class="s2">&quot;html&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">html_content</span>
+                    <span class="k">if</span> <span class="n">sortie</span> <span class="o">==</span> <span class="s2">&quot;markdown&quot;</span><span class="p">:</span>
+                        <span class="kn">from</span><span class="w"> </span><span class="nn">..utils.HtmlToMarkdown</span><span class="w"> </span><span class="kn">import</span> <span class="n">convert_html_to_markdown</span>
+
+                        <span class="n">row_dict</span><span class="p">[</span><span class="s2">&quot;markdown&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">convert_html_to_markdown</span><span class="p">(</span>
+                            <span class="n">html</span><span class="o">=</span><span class="n">html_content</span><span class="p">,</span> <span class="n">identifiant</span><span class="o">=</span><span class="n">identifiant</span>
+                        <span class="p">)</span>
+                    <span class="n">row_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">statut</span><span class="o">=</span><span class="s2">&quot;ok&quot;</span><span class="p">,</span> <span class="n">code_http</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">row_dict</span>
+                <span class="k">elif</span> <span class="n">response</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">identifiant</span><span class="si">}</span><span class="s2">* Erreur HTTP </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="si">}</span><span class="s2"> pour </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+                    <span class="n">row_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                        <span class="n">statut</span><span class="o">=</span><span class="s2">&quot;warning&quot;</span><span class="p">,</span>
+                        <span class="n">code_http</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+                        <span class="n">message</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;HTTP error </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="k">return</span> <span class="n">row_dict</span>
+
+        <span class="k">except</span> <span class="p">(</span><span class="n">PlaywrightTimeoutError</span><span class="p">,</span> <span class="n">PlaywrightError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">last_error</span> <span class="o">=</span> <span class="n">e</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">identifiant</span><span class="si">}</span><span class="s2">* Tentative </span><span class="si">{</span><span class="n">attempt</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">MAX_RETRIES</span><span class="si">}</span><span class="s2"> échouée pour </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">attempt</span> <span class="o">&lt;</span> <span class="n">MAX_RETRIES</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Nouvelle tentative dans </span><span class="si">{</span><span class="n">RETRY_DELAY_SECONDS</span><span class="si">}</span><span class="s2"> secondes...&quot;</span>
+                <span class="p">)</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">RETRY_DELAY_SECONDS</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Dernière tentative échouée, on essaie en ignorant les erreurs SSL</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">identifiant</span><span class="si">}</span><span class="s2">* Toutes les tentatives ont échoué. Dernière tentative en ignorant les erreurs SSL.&quot;</span>
+                <span class="p">)</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">with</span> <span class="n">Stealth</span><span class="p">()</span><span class="o">.</span><span class="n">use_sync</span><span class="p">(</span><span class="n">sync_playwright</span><span class="p">())</span> <span class="k">as</span> <span class="n">p_no_ssl</span><span class="p">:</span>
+                        <span class="n">browser_no_ssl</span> <span class="o">=</span> <span class="n">p_no_ssl</span><span class="o">.</span><span class="n">chromium</span><span class="o">.</span><span class="n">launch</span><span class="p">(</span><span class="n">headless</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                        <span class="n">context_no_ssl</span> <span class="o">=</span> <span class="n">browser_no_ssl</span><span class="o">.</span><span class="n">new_context</span><span class="p">(</span>
+                            <span class="n">ignore_https_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                            <span class="n">viewport</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="mi">1920</span><span class="p">,</span> <span class="s2">&quot;height&quot;</span><span class="p">:</span> <span class="mi">1080</span><span class="p">},</span>
+                            <span class="n">locale</span><span class="o">=</span><span class="s2">&quot;fr-FR&quot;</span><span class="p">,</span>
+                        <span class="p">)</span>
+                        <span class="n">page_no_ssl</span> <span class="o">=</span> <span class="n">context_no_ssl</span><span class="o">.</span><span class="n">new_page</span><span class="p">()</span>
+                        <span class="n">page_no_ssl</span><span class="o">.</span><span class="n">set_extra_http_headers</span><span class="p">(</span><span class="n">HEADERS</span><span class="p">)</span>
+
+                        <span class="c1"># Application de la même stratégie de navigation</span>
+                        <span class="n">page_no_ssl</span><span class="o">.</span><span class="n">goto</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">PAGE_TIMEOUT</span><span class="p">,</span> <span class="n">wait_until</span><span class="o">=</span><span class="s2">&quot;load&quot;</span><span class="p">)</span>
+
+                        <span class="c1"># Expansion des volets interactifs (fallback sans SSL)</span>
+                        <span class="n">_expand_all_accordions</span><span class="p">(</span><span class="n">page_no_ssl</span><span class="p">,</span> <span class="n">identifiant</span><span class="p">)</span>
+
+                        <span class="n">html_content</span> <span class="o">=</span> <span class="n">page_no_ssl</span><span class="o">.</span><span class="n">content</span><span class="p">()</span>
+
+                        <span class="c1"># Si on arrive ici, c&#39;est un succès</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">identifiant</span><span class="si">}</span><span class="s2">* Récupération réussie avec la stratégie &#39;ignore_https_errors&#39;.&quot;</span>
+                        <span class="p">)</span>
+                        <span class="n">row_dict</span><span class="p">[</span><span class="s2">&quot;html&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">html_content</span>
+                        <span class="n">row_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">statut</span><span class="o">=</span><span class="s2">&quot;ok&quot;</span><span class="p">,</span> <span class="n">code_http</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">row_dict</span>
+                <span class="k">except</span> <span class="p">(</span><span class="n">PlaywrightTimeoutError</span><span class="p">,</span> <span class="n">PlaywrightError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e_no_ssl</span><span class="p">:</span>
+                    <span class="n">last_error</span> <span class="o">=</span> <span class="n">e_no_ssl</span>
+
+    <span class="c1"># Si toutes les tentatives ont échoué</span>
+    <span class="n">error_message</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="nb">str</span><span class="p">(</span><span class="n">last_error</span><span class="p">)</span> <span class="k">if</span> <span class="n">last_error</span> <span class="k">else</span> <span class="s2">&quot;Toutes les tentatives ont échoué&quot;</span>
+    <span class="p">)</span>
+    <span class="n">error_category</span> <span class="o">=</span> <span class="n">ErrorCategory</span><span class="o">.</span><span class="n">NETWORK</span>
+    <span class="n">error_severity</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">MEDIUM</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">last_error</span><span class="p">,</span> <span class="n">PlaywrightTimeoutError</span><span class="p">)</span>
+        <span class="k">else</span> <span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">HIGH</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Gestion des erreurs spécifiques</span>
+    <span class="k">if</span> <span class="s2">&quot;ERR_NAME_NOT_RESOLVED&quot;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">last_error</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;statut&quot;</span><span class="p">:</span> <span class="s2">&quot;erreur&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Domaine non résolu (DNS)&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;code_http&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;markdown_brut&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;erreurs_pipeline&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Impossible de résoudre le domaine: </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+
+    <span class="n">error_handler</span><span class="o">.</span><span class="n">handle_error</span><span class="p">(</span>
+        <span class="n">exception</span><span class="o">=</span><span class="n">last_error</span> <span class="ow">or</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Échec de la récupération de l&#39;URL&quot;</span><span class="p">),</span>
+        <span class="n">context</span><span class="o">=</span><span class="n">error_handler</span><span class="o">.</span><span class="n">create_error_context</span><span class="p">(</span>
+            <span class="n">module</span><span class="o">=</span><span class="s2">&quot;URLRetriever&quot;</span><span class="p">,</span>
+            <span class="n">function</span><span class="o">=</span><span class="s2">&quot;retrieve_url&quot;</span><span class="p">,</span>
+            <span class="n">operation</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Échec final pour </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span> <span class="s2">&quot;identifiant&quot;</span><span class="p">:</span> <span class="n">identifiant</span><span class="p">,</span> <span class="s2">&quot;attempts&quot;</span><span class="p">:</span> <span class="n">MAX_RETRIES</span><span class="p">},</span>
+        <span class="p">),</span>
+        <span class="n">category</span><span class="o">=</span><span class="n">error_category</span><span class="p">,</span>
+        <span class="n">severity</span><span class="o">=</span><span class="n">error_severity</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">row_dict</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+        <span class="n">statut</span><span class="o">=</span><span class="s2">&quot;critical&quot;</span> <span class="k">if</span> <span class="n">error_severity</span> <span class="o">==</span> <span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">HIGH</span> <span class="k">else</span> <span class="s2">&quot;warning&quot;</span><span class="p">,</span>
+        <span class="n">message</span><span class="o">=</span><span class="n">error_message</span><span class="p">,</span>
+        <span class="n">code_http</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">row_dict</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -86,13 +86,6 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../reporting/index.html">Modules Reporting</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Module d'évaluation</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../evaluation/index.html">Module d’évaluation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../evaluation/index.html#vue-d-ensemble">Vue d’ensemble</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../evaluation/index.html#workflow-d-evaluation">Workflow d’évaluation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../evaluation/index.html#metriques-et-comparaisons">Métriques et comparaisons</a></li>
-</ul>
 
         </div>
       </div>
@@ -138,8 +131,219 @@
 </ul>
 </div>
 </section>
-<section id="modules">
-<h2>Modules<a class="headerlink" href="#modules" title="Lien vers cette rubrique"></a></h2>
+<section id="module-src.smart_watch.utils.CSVToPolars">
+<span id="modules"></span><h2>Modules<a class="headerlink" href="#module-src.smart_watch.utils.CSVToPolars" title="Lien vers cette rubrique"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.smart_watch.utils.CSVToPolars.CSVToPolars">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.smart_watch.utils.CSVToPolars.</span></span><span class="sig-name descname"><span class="pre">CSVToPolars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">separator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_header</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(disponible dans Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/utils/CSVToPolars.html#CSVToPolars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.utils.CSVToPolars.CSVToPolars" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(disponible dans Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.utils.CSVToPolars.CSVToPolars.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">separator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_header</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(disponible dans Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/utils/CSVToPolars.html#CSVToPolars.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.utils.CSVToPolars.CSVToPolars.__init__" title="Lien vers cette définition"></a></dt>
+<dd><p>Initialise une instance de la classe pour charger et traiter un fichier CSV avec Polars.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><em>str</em></a><em>, </em><em>obligatoire</em>) – Chemin vers le fichier CSV à charger.</p></li>
+<li><p><strong>separator</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><em>str</em></a><em>, </em><em>optionnel</em>) – Séparateur utilisé dans le fichier CSV. Par défaut « auto » pour une détection automatique.</p></li>
+<li><p><strong>has_header</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(disponible dans Python v3.13)"><em>bool</em></a><em>, </em><em>optionnel</em>) – Indique si le fichier CSV contient une ligne d’en-tête. True par défaut.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.utils.CSVToPolars.CSVToPolars.source">
+<span class="sig-name descname"><span class="pre">source</span></span><a class="headerlink" href="#src.smart_watch.utils.CSVToPolars.CSVToPolars.source" title="Lien vers cette définition"></a></dt>
+<dd><p>Chemin du fichier source CSV.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.utils.CSVToPolars.CSVToPolars.separator">
+<span class="sig-name descname"><span class="pre">separator</span></span><a class="headerlink" href="#src.smart_watch.utils.CSVToPolars.CSVToPolars.separator" title="Lien vers cette définition"></a></dt>
+<dd><p>Séparateur utilisé pour lire le CSV.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.utils.CSVToPolars.CSVToPolars.df">
+<span class="sig-name descname"><span class="pre">df</span></span><a class="headerlink" href="#src.smart_watch.utils.CSVToPolars.CSVToPolars.df" title="Lien vers cette définition"></a></dt>
+<dd><p>DataFrame Polars résultant du chargement du CSV.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pl.DataFrame | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.utils.CSVToPolars.CSVToPolars.has_header">
+<span class="sig-name descname"><span class="pre">has_header</span></span><a class="headerlink" href="#src.smart_watch.utils.CSVToPolars.CSVToPolars.has_header" title="Lien vers cette définition"></a></dt>
+<dd><p>Indique la présence d’une ligne d’en-tête dans le CSV.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(disponible dans Python v3.13)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.utils.CSVToPolars.CSVToPolars._is_url">
+<span class="sig-name descname"><span class="pre">_is_url</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(disponible dans Python v3.13)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/utils/CSVToPolars.html#CSVToPolars._is_url"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.utils.CSVToPolars.CSVToPolars._is_url" title="Lien vers cette définition"></a></dt>
+<dd><p>Vérifie si la source fournie est une URL.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>source</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><em>str</em></a>) – La chaîne de caractères à vérifier.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>True si la source commence par “<a class="reference external" href="http://">http://</a>” ou “<a class="reference external" href="https://">https://</a>”, sinon False.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(disponible dans Python v3.13)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.utils.CSVToPolars.CSVToPolars._detect_separator">
+<span class="sig-name descname"><span class="pre">_detect_separator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/utils/CSVToPolars.html#CSVToPolars._detect_separator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.utils.CSVToPolars.CSVToPolars._detect_separator" title="Lien vers cette définition"></a></dt>
+<dd><p>Détecte le séparateur de colonnes dans un échantillon de texte CSV.</p>
+<p>Utilise la classe <cite>csv.Sniffer</cite> pour analyser l’échantillon et déterminer le séparateur utilisé.
+Si la détection échoue, le séparateur par défaut “;” est utilisé.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sample</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><em>str</em></a>) – Un échantillon de texte représentant le contenu d’un fichier CSV.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>Le séparateur détecté ou “;” si la détection échoue.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.utils.CSVToPolars.CSVToPolars._download_to_temp_file">
+<span class="sig-name descname"><span class="pre">_download_to_temp_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(disponible dans Python v3.13)"><span class="pre">Path</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/utils/CSVToPolars.html#CSVToPolars._download_to_temp_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.utils.CSVToPolars.CSVToPolars._download_to_temp_file" title="Lien vers cette définition"></a></dt>
+<dd><p>Télécharge un fichier CSV depuis une URL et le sauvegarde dans un fichier temporaire.</p>
+<p>Cette méthode effectue une requête HTTP GET vers l’URL spécifiée, vérifie le succès de la réponse,
+puis écrit le contenu du fichier CSV dans un fichier temporaire sur le disque. Le chemin vers ce
+fichier temporaire est ensuite retourné.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>url</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><em>str</em></a>) – L’URL du fichier CSV à télécharger.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>Le chemin vers le fichier temporaire contenant le CSV téléchargé.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path</p>
+</dd>
+<dt class="field-even">Lève<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(disponible dans Python v3.13)"><strong>Exception</strong></a> – Si une erreur survient lors du téléchargement ou de la sauvegarde du fichier.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.utils.CSVToPolars.CSVToPolars._process_local_file">
+<span class="sig-name descname"><span class="pre">_process_local_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(disponible dans Python v3.13)"><span class="pre">Path</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cleanup_temp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(disponible dans Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/utils/CSVToPolars.html#CSVToPolars._process_local_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.utils.CSVToPolars.CSVToPolars._process_local_file" title="Lien vers cette définition"></a></dt>
+<dd><p>Traite un fichier CSV local et le convertit en DataFrame Polars. Est appelé par _load_from_url et _load_from_path.</p>
+<p>Cette méthode détecte automatiquement le séparateur si nécessaire, lit le fichier CSV en utilisant Polars,
+et effectue si nécessaire un nettoyage du fichier temporaire après traitement.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path</strong> (<em>Path</em>) – Chemin vers le fichier CSV à traiter.</p></li>
+<li><p><strong>cleanup_temp</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(disponible dans Python v3.13)"><em>bool</em></a><em>, </em><em>optionnel</em>) – Indique si le fichier temporaire doit être supprimé après traitement.
+Défaut à False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>DataFrame Polars contenant les données du fichier CSV.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pl.DataFrame</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Le séparateur est détecté automatiquement si <cite>self.separator</cite> vaut « auto ».</p></li>
+<li><p>Les lignes entièrement vides sont filtrées du DataFrame résultant.</p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.utils.CSVToPolars.CSVToPolars._load_from_url">
+<span class="sig-name descname"><span class="pre">_load_from_url</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/utils/CSVToPolars.html#CSVToPolars._load_from_url"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.utils.CSVToPolars.CSVToPolars._load_from_url" title="Lien vers cette définition"></a></dt>
+<dd><p>Charge un fichier CSV depuis une URL et le convertit en DataFrame Polars.</p>
+<p>Cette méthode télécharge le fichier CSV depuis l’URL spécifiée dans <cite>self.source</cite>,
+le sauvegarde dans un fichier temporaire, puis le traite pour le convertir en un DataFrame Polars.
+Le fichier temporaire est supprimé après le traitement.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Le DataFrame Polars résultant du fichier CSV téléchargé.</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p>pl.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.utils.CSVToPolars.CSVToPolars._load_from_path">
+<span class="sig-name descname"><span class="pre">_load_from_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/utils/CSVToPolars.html#CSVToPolars._load_from_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.utils.CSVToPolars.CSVToPolars._load_from_path" title="Lien vers cette définition"></a></dt>
+<dd><p>Charge un fichier CSV local et le convertit en DataFrame Polars.</p>
+<p>Cette méthode vérifie l’existence du fichier CSV à partir du chemin spécifié dans <cite>self.source</cite>.
+Si le fichier existe, il est traité et converti en DataFrame Polars via la méthode <cite>_process_local_file</cite>.
+Si le fichier n’est pas trouvé, une exception <cite>FileNotFoundError</cite> est levée.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Le contenu du fichier CSV sous forme de DataFrame Polars.</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p>pl.DataFrame</p>
+</dd>
+<dt class="field-odd">Lève<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#FileNotFoundError" title="(disponible dans Python v3.13)"><strong>FileNotFoundError</strong></a> – Si le fichier CSV local n’est pas trouvé au chemin spécifié.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.utils.CSVToPolars.CSVToPolars.load_csv">
+<span class="sig-name descname"><span class="pre">load_csv</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/utils/CSVToPolars.html#CSVToPolars.load_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.utils.CSVToPolars.CSVToPolars.load_csv" title="Lien vers cette définition"></a></dt>
+<dd><p>Charge un fichier CSV en tant que DataFrame Polars.</p>
+<p>Cette méthode vérifie si la source du fichier CSV est une URL ou un chemin local,
+puis charge le fichier en conséquence. Elle lève une exception si aucune source n’est spécifiée.
+Un message d’information est enregistré après le chargement du fichier.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Le DataFrame Polars contenant les données du fichier CSV.</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p>pl.DataFrame</p>
+</dd>
+<dt class="field-odd">Lève<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(disponible dans Python v3.13)"><strong>ValueError</strong></a> – Si aucune source de fichier CSV n’a été spécifiée.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 </section>
 

@@ -87,13 +87,6 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../reporting/index.html">Modules Reporting</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Module d'évaluation</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../evaluation/index.html">Module d’évaluation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../evaluation/index.html#vue-d-ensemble">Vue d’ensemble</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../evaluation/index.html#workflow-d-evaluation">Workflow d’évaluation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../evaluation/index.html#metriques-et-comparaisons">Métriques et comparaisons</a></li>
-</ul>
 
         </div>
       </div>
@@ -143,8 +136,80 @@
 <p>Ce processeur s’exécute après le filtrage du Markdown. Il constitue l’étape la plus coûteuse en temps et en ressources. Le résultat de son traitement (le JSON et l’OSM) est ensuite utilisé par le <a class="reference internal" href="comparison_processor.html"><span class="doc">ComparisonProcessor</span></a>.</p>
 </div>
 </section>
-<section id="modules">
-<h2>Modules<a class="headerlink" href="#modules" title="Lien vers cette rubrique"></a></h2>
+<section id="module-src.smart_watch.processing.llm_processor">
+<span id="modules"></span><h2>Modules<a class="headerlink" href="#module-src.smart_watch.processing.llm_processor" title="Lien vers cette rubrique"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.smart_watch.processing.llm_processor.LLMProcessor">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.smart_watch.processing.llm_processor.</span></span><span class="sig-name descname"><span class="pre">LLMProcessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../core/ConfigManager.html#src.smart_watch.core.ConfigManager.ConfigManager" title="src.smart_watch.core.ConfigManager.ConfigManager"><span class="pre">ConfigManager</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../core/logger.html#src.smart_watch.core.Logger.SmartWatchLogger" title="src.smart_watch.core.Logger.SmartWatchLogger"><span class="pre">SmartWatchLogger</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/processing/llm_processor.html#LLMProcessor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.processing.llm_processor.LLMProcessor" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(disponible dans Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Processeur pour les extractions LLM.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.processing.llm_processor.LLMProcessor.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../core/ConfigManager.html#src.smart_watch.core.ConfigManager.ConfigManager" title="src.smart_watch.core.ConfigManager.ConfigManager"><span class="pre">ConfigManager</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../core/logger.html#src.smart_watch.core.Logger.SmartWatchLogger" title="src.smart_watch.core.Logger.SmartWatchLogger"><span class="pre">SmartWatchLogger</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/processing/llm_processor.html#LLMProcessor.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.processing.llm_processor.LLMProcessor.__init__" title="Lien vers cette définition"></a></dt>
+<dd><p>Initialise le processeur LLM.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<a class="reference internal" href="../core/ConfigManager.html#src.smart_watch.core.ConfigManager.ConfigManager" title="src.smart_watch.core.ConfigManager.ConfigManager"><em>ConfigManager</em></a>) – L’objet de gestion de la configuration.</p></li>
+<li><p><strong>logger</strong> (<a class="reference internal" href="../core/logger.html#src.smart_watch.core.Logger.SmartWatchLogger" title="src.smart_watch.core.Logger.SmartWatchLogger"><em>SmartWatchLogger</em></a>) – L’objet logger pour l’enregistrement des messages.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.processing.llm_processor.LLMProcessor._init_llm_client">
+<span class="sig-name descname"><span class="pre">_init_llm_client</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/processing/llm_processor.html#LLMProcessor._init_llm_client"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.processing.llm_processor.LLMProcessor._init_llm_client" title="Lien vers cette définition"></a></dt>
+<dd><p>Initialise le client LLM selon la configuration.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.processing.llm_processor.LLMProcessor._load_schema">
+<span class="sig-name descname"><span class="pre">_load_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/processing/llm_processor.html#LLMProcessor._load_schema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.processing.llm_processor.LLMProcessor._load_schema" title="Lien vers cette définition"></a></dt>
+<dd><p>Charge le schéma JSON pour les structured outputs.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.processing.llm_processor.LLMProcessor._convert_to_osm">
+<span class="sig-name descname"><span class="pre">_convert_to_osm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">llm_result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">identifiant</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/processing/llm_processor.html#LLMProcessor._convert_to_osm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.processing.llm_processor.LLMProcessor._convert_to_osm" title="Lien vers cette définition"></a></dt>
+<dd><p>Convertit le résultat LLM au format OSM.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.processing.llm_processor.LLMProcessor._is_future_date">
+<span class="sig-name descname"><span class="pre">_is_future_date</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">today</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.date" title="(disponible dans Python v3.13)"><span class="pre">date</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(disponible dans Python v3.13)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/processing/llm_processor.html#LLMProcessor._is_future_date"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.processing.llm_processor.LLMProcessor._is_future_date" title="Lien vers cette définition"></a></dt>
+<dd><p>Vérifie si une chaîne est une date valide au format YYYY-MM-DD et si elle est dans le futur.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.processing.llm_processor.LLMProcessor._process_special_days">
+<span class="sig-name descname"><span class="pre">_process_special_days</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">llm_result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">lieu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Lieux</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/processing/llm_processor.html#LLMProcessor._process_special_days"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.processing.llm_processor.LLMProcessor._process_special_days" title="Lien vers cette définition"></a></dt>
+<dd><p>Nettoie les jours spéciaux passés du JSON LLM et l’enrichit avec les jours fériés
+pour les types de lieux spécifiques. Retourne toujours une chaîne JSON valide.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.processing.llm_processor.LLMProcessor._process_single_llm">
+<span class="sig-name descname"><span class="pre">_process_single_llm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">resultat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ResultatsExtraction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lieu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Lieux</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(disponible dans Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/processing/llm_processor.html#LLMProcessor._process_single_llm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.processing.llm_processor.LLMProcessor._process_single_llm" title="Lien vers cette définition"></a></dt>
+<dd><p>Traite une extraction LLM individuelle.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.processing.llm_processor.LLMProcessor.process_llm_extractions">
+<span class="sig-name descname"><span class="pre">process_llm_extractions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_processor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="database_processor.html#src.smart_watch.processing.database_processor.DatabaseProcessor" title="src.smart_watch.processing.database_processor.DatabaseProcessor"><span class="pre">DatabaseProcessor</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">execution_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/processing/llm_processor.html#LLMProcessor.process_llm_extractions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.processing.llm_processor.LLMProcessor.process_llm_extractions" title="Lien vers cette définition"></a></dt>
+<dd><p>Traite toutes les extractions LLM pour une exécution donnée.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>db_processor</strong> (<a class="reference internal" href="database_processor.html#src.smart_watch.processing.database_processor.DatabaseProcessor" title="src.smart_watch.processing.database_processor.DatabaseProcessor"><em>DatabaseProcessor</em></a>) – Processeur de base de données</p></li>
+<li><p><strong>execution_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(disponible dans Python v3.13)"><em>int</em></a>) – ID de l’exécution</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 </section>
 

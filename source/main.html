@@ -86,13 +86,6 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="modules/reporting/index.html">Modules Reporting</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Module d'évaluation</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="modules/evaluation/index.html">Module d’évaluation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules/evaluation/index.html#vue-d-ensemble">Vue d’ensemble</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules/evaluation/index.html#workflow-d-evaluation">Workflow d’évaluation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules/evaluation/index.html#metriques-et-comparaisons">Métriques et comparaisons</a></li>
-</ul>
 
         </div>
       </div>
@@ -126,8 +119,33 @@ Il orchestre l’ensemble du processus d’extraction, de traitement et de compa
 <h2>Principaux composants<a class="headerlink" href="#principaux-composants" title="Lien vers cette rubrique"></a></h2>
 <p>Le script est structuré autour de la classe <code class="docutils literal notranslate"><span class="pre">HoraireExtractor</span></code> qui encapsule la logique métier,
 et d’une fonction <code class="docutils literal notranslate"><span class="pre">main()</span></code> qui sert de point d’entrée.</p>
-<section id="modules">
-<h3>Modules<a class="headerlink" href="#modules" title="Lien vers cette rubrique"></a></h3>
+<section id="module-main">
+<span id="modules"></span><h3>Modules<a class="headerlink" href="#module-main" title="Lien vers cette rubrique"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="main.HoraireExtractor">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">HoraireExtractor</span></span><a class="reference internal" href="../_modules/main.html#HoraireExtractor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.HoraireExtractor" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(disponible dans Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Classe principale pour l’extraction et le traitement d’horaires.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="main.HoraireExtractor.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/main.html#HoraireExtractor.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.HoraireExtractor.__init__" title="Lien vers cette définition"></a></dt>
+<dd><p>Initialise l’extracteur</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="main.HoraireExtractor.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/main.html#HoraireExtractor.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.HoraireExtractor.run" title="Lien vers cette définition"></a></dt>
+<dd><p>Exécute le pipeline d’extraction complet</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="main.main">
+<span class="sig-prename descclassname"><span class="pre">main.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/main.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#main.main" title="Lien vers cette définition"></a></dt>
+<dd><p>Point d’entrée principal.</p>
+</dd></dl>
+
 <p>La logique métier est organisé dans un pipeline séquentiel, détaillé dans la page <a class="reference internal" href="../architecture/diagramme.html"><span class="doc">Pipeline de traitement</span></a>.</p>
 </section>
 </section>

@@ -1,0 +1,316 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.smart_watch.reporting.report_manager &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.jpg"/>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=d2e4462e"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/translations.js?v=e6b791cb"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/introduction.html">Présentation du projet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/introduction.html#sommaire">Sommaire</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/docker.html">Utilisation avec Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/configuration.html">Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture technique</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/main.html">Orchestrateur</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/diagramme.html">Pipeline de traitement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/bdd.html">Base de données</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/stack.html">Stack technique</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/config/index.html">Modules Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/core/index.html">Modules Core</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/processing/index.html">Modules Processing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/utils/index.html">Modules Utils</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Reporting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html">Modules Reporting</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Code du module</a></li>
+      <li class="breadcrumb-item active">src.smart_watch.reporting.report_manager</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Code source de src.smart_watch.reporting.report_manager</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Gestionnaire pour la génération et l&#39;envoi de rapports.</span>
+<span class="c1"># Documentation : https://datagora-erasme.github.io/smart_watch/source/modules/reporting/report_manager.html</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">zipfile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..core.ConfigManager</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigManager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..core.EnvoyerMail</span><span class="w"> </span><span class="kn">import</span> <span class="n">EmailSender</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..core.ErrorHandler</span><span class="w"> </span><span class="kn">import</span> <span class="n">ErrorCategory</span><span class="p">,</span> <span class="n">ErrorSeverity</span><span class="p">,</span> <span class="n">handle_errors</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..core.Logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">SmartWatchLogger</span><span class="p">,</span> <span class="n">create_logger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..reporting.GenererRapportHTML</span><span class="w"> </span><span class="kn">import</span> <span class="n">generer_rapport_html</span>
+
+<span class="c1"># Initialize logger for this module</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">create_logger</span><span class="p">(</span>
+    <span class="n">module_name</span><span class="o">=</span><span class="s2">&quot;ReportManager&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="ReportManager">
+<a class="viewcode-back" href="../../../../source/modules/reporting/report_manager.html#src.smart_watch.reporting.report_manager.ReportManager">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ReportManager</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gestionnaire pour la génération et l&#39;envoi de rapports.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ReportManager.__init__">
+<a class="viewcode-back" href="../../../../source/modules/reporting/report_manager.html#src.smart_watch.reporting.report_manager.ReportManager.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">ConfigManager</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">SmartWatchLogger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialise le gestionnaire de rapports avec la configuration et le logger.</span>
+
+<span class="sd">        Cette méthode configure les composants nécessaires pour générer et envoyer</span>
+<span class="sd">        les rapports : configuration du système et logger pour le suivi des opérations.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            config (ConfigManager): gestionnaire de configuration du système.</span>
+<span class="sd">            logger: instance de logger pour la journalisation des événements.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span></div>
+
+
+<div class="viewcode-block" id="ReportManager._create_logs_zip">
+<a class="viewcode-back" href="../../../../source/modules/reporting/report_manager.html#src.smart_watch.reporting.report_manager.ReportManager._create_logs_zip">[docs]</a>
+    <span class="nd">@handle_errors</span><span class="p">(</span>
+        <span class="n">category</span><span class="o">=</span><span class="n">ErrorCategory</span><span class="o">.</span><span class="n">FILE_IO</span><span class="p">,</span>
+        <span class="n">severity</span><span class="o">=</span><span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">MEDIUM</span><span class="p">,</span>
+        <span class="n">user_message</span><span class="o">=</span><span class="s2">&quot;Erreur lors de la création de l&#39;archive des logs.&quot;</span><span class="p">,</span>
+        <span class="n">default_return</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_logs_zip</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Crée un fichier zip contenant tous les logs et la base de données.&quot;&quot;&quot;</span>
+        <span class="c1"># Utiliser le chemin racine du projet depuis la configuration</span>
+        <span class="n">project_root</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">project_root</span>
+        <span class="n">logs_dir</span> <span class="o">=</span> <span class="n">project_root</span> <span class="o">/</span> <span class="s2">&quot;logs&quot;</span>
+        <span class="n">data_dir</span> <span class="o">=</span> <span class="n">project_root</span> <span class="o">/</span> <span class="s2">&quot;data&quot;</span>
+
+        <span class="c1"># Créer le nom du fichier zip avec timestamp</span>
+        <span class="n">timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">_%H%M%S&quot;</span><span class="p">)</span>
+        <span class="n">zip_path</span> <span class="o">=</span> <span class="n">logs_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;SmartWatch_logs_et_bdd_</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">.zip&quot;</span>
+
+        <span class="c1"># Créer le zip avec les fichiers log et la base de données</span>
+        <span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">zip_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZIP_DEFLATED</span><span class="p">)</span> <span class="k">as</span> <span class="n">zip_file</span><span class="p">:</span>
+            <span class="n">files_added</span> <span class="o">=</span> <span class="mi">0</span>
+
+            <span class="c1"># Ajouter le fichier log principal</span>
+            <span class="n">log_file</span> <span class="o">=</span> <span class="n">logs_dir</span> <span class="o">/</span> <span class="s2">&quot;SmartWatch.log&quot;</span>
+            <span class="k">if</span> <span class="n">log_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                <span class="n">zip_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">log_file</span><span class="p">,</span> <span class="n">log_file</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="n">files_added</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Log ajouté au zip: </span><span class="si">{</span><span class="n">log_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Fichier SmartWatch.log introuvable&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Ajouter la base de données</span>
+            <span class="n">db_file</span> <span class="o">=</span> <span class="n">data_dir</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">db_file</span><span class="o">.</span><span class="n">name</span>
+            <span class="k">if</span> <span class="n">db_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                <span class="n">zip_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">db_file</span><span class="p">,</span> <span class="n">db_file</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="n">files_added</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Base de données ajoutée au zip: </span><span class="si">{</span><span class="n">db_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Base de données </span><span class="si">{</span><span class="n">db_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> introuvable&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">files_added</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Zip créé: </span><span class="si">{</span><span class="n">zip_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">files_added</span><span class="si">}</span><span class="s2"> fichiers)&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">zip_path</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Aucun fichier trouvé pour le zip, archive non créée.&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">zip_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                <span class="n">zip_path</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>  <span class="c1"># Supprimer le zip vide</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="ReportManager.generate_and_send_report">
+<a class="viewcode-back" href="../../../../source/modules/reporting/report_manager.html#src.smart_watch.reporting.report_manager.ReportManager.generate_and_send_report">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_and_send_report</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">execution_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Génère et envoie le rapport par email.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">section</span><span class="p">(</span><span class="s2">&quot;GÉNÉRATION ET ENVOI RAPPORT&quot;</span><span class="p">)</span>
+
+        <span class="n">model_info</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;modele&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">llm</span><span class="o">.</span><span class="n">modele</span><span class="p">,</span>
+            <span class="s2">&quot;base_url&quot;</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">llm</span><span class="p">,</span> <span class="s2">&quot;base_url&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+            <span class="s2">&quot;fournisseur&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">llm</span><span class="o">.</span><span class="n">fournisseur</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="n">resume_html</span><span class="p">,</span> <span class="n">fichier_html</span> <span class="o">=</span> <span class="n">generer_rapport_html</span><span class="p">(</span>
+            <span class="n">db_file</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">db_file</span><span class="p">),</span>
+            <span class="n">titre_rapport</span><span class="o">=</span><span class="s2">&quot;Rapport de vérification des URLs&quot;</span><span class="p">,</span>
+            <span class="n">model_info</span><span class="o">=</span><span class="n">model_info</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Validation de la configuration email</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">email</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">email</span><span class="o">.</span><span class="n">emetteur</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Configuration email manquante - l&#39;envoi par email est obligatoire&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Envoi par email obligatoire</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_send_email_report</span><span class="p">(</span><span class="n">resume_html</span><span class="p">,</span> <span class="n">fichier_html</span><span class="p">,</span> <span class="n">execution_id</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ReportManager._send_email_report">
+<a class="viewcode-back" href="../../../../source/modules/reporting/report_manager.html#src.smart_watch.reporting.report_manager.ReportManager._send_email_report">[docs]</a>
+    <span class="nd">@handle_errors</span><span class="p">(</span>
+        <span class="n">category</span><span class="o">=</span><span class="n">ErrorCategory</span><span class="o">.</span><span class="n">EMAIL</span><span class="p">,</span>
+        <span class="n">severity</span><span class="o">=</span><span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">CRITICAL</span><span class="p">,</span>  <span class="c1"># Changé de HIGH à CRITICAL car obligatoire</span>
+        <span class="n">user_message</span><span class="o">=</span><span class="s2">&quot;Erreur lors de l&#39;envoi de l&#39;email de rapport.&quot;</span><span class="p">,</span>
+        <span class="n">reraise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="c1"># Ajouté pour faire remonter l&#39;erreur car critique</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_send_email_report</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">resume_html</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fichier_html</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">execution_id</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Envoie le rapport par email.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">section</span><span class="p">(</span><span class="s2">&quot;ENVOI EMAIL&quot;</span><span class="p">)</span>
+        <span class="n">logs_zip</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Créer le contenu de l&#39;email</span>
+            <span class="n">subject</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Rapport URLs Horaires - </span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%d</span><span class="s1">/%m/%Y&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+
+            <span class="c1"># Préparer les pièces jointes</span>
+            <span class="n">attachments</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="c1"># Ajouter le rapport HTML (obligatoire)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">fichier_html</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">fichier_html</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Fichier rapport HTML manquant ou introuvable&quot;</span><span class="p">)</span>
+
+            <span class="n">attachments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fichier_html</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Rapport HTML ajouté en pièce jointe: </span><span class="si">{</span><span class="n">Path</span><span class="p">(</span><span class="n">fichier_html</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Ajouter le zip des logs (optionnel)</span>
+            <span class="n">logs_zip</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_logs_zip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">logs_zip</span><span class="p">:</span>
+                <span class="n">attachments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">logs_zip</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Archive logs ajoutée en pièce jointe: </span><span class="si">{</span><span class="n">Path</span><span class="p">(</span><span class="n">logs_zip</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+
+            <span class="c1"># Utiliser EmailSender pour envoyer l&#39;email</span>
+            <span class="n">email_sender</span> <span class="o">=</span> <span class="n">EmailSender</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+            <span class="n">email_sender</span><span class="o">.</span><span class="n">send_email</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">resume_html</span><span class="p">,</span> <span class="n">attachments</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Email envoyé avec succès&quot;</span><span class="p">)</span>
+
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="c1"># Nettoyage des fichiers temporaires, même en cas d&#39;erreur</span>
+            <span class="k">if</span> <span class="n">fichier_html</span> <span class="ow">and</span> <span class="n">Path</span><span class="p">(</span><span class="n">fichier_html</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                <span class="n">Path</span><span class="p">(</span><span class="n">fichier_html</span><span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Fichier HTML temporaire supprimé&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">logs_zip</span> <span class="ow">and</span> <span class="n">Path</span><span class="p">(</span><span class="n">logs_zip</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                <span class="n">Path</span><span class="p">(</span><span class="n">logs_zip</span><span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Fichier zip logs temporaire supprimé&quot;</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

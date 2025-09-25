@@ -1,0 +1,410 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.smart_watch.core.DatabaseManager &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.jpg"/>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=d2e4462e"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/translations.js?v=e6b791cb"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/introduction.html">Présentation du projet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/introduction.html#sommaire">Sommaire</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/docker.html">Utilisation avec Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/configuration.html">Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture technique</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/main.html">Orchestrateur</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/diagramme.html">Pipeline de traitement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/bdd.html">Base de données</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/stack.html">Stack technique</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/config/index.html">Modules Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/core/index.html">Modules Core</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/processing/index.html">Modules Processing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/utils/index.html">Modules Utils</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Reporting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html">Modules Reporting</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Code du module</a></li>
+      <li class="breadcrumb-item active">src.smart_watch.core.DatabaseManager</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Code source de src.smart_watch.core.DatabaseManager</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Module de gestion de base de données SQLite.</span>
+<span class="c1"># Documentation : https://datagora-erasme.github.io/smart_watch/source/modules/core/DatabaseManager.html</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">sqlite3</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">polars</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pl</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_engine</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy.orm</span><span class="w"> </span><span class="kn">import</span> <span class="n">sessionmaker</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.Logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_logger</span>
+
+<span class="c1"># Initialize logger for this module</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">create_logger</span><span class="p">(</span>
+    <span class="n">module_name</span><span class="o">=</span><span class="s2">&quot;DatabaseManager&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="DatabaseManager">
+<a class="viewcode-back" href="../../../../source/modules/core/DatabaseManager.html#src.smart_watch.core.DatabaseManager.DatabaseManager">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DatabaseManager</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gestionnaire de base de données avec SQLAlchemy.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="DatabaseManager.__init__">
+<a class="viewcode-back" href="../../../../source/modules/core/DatabaseManager.html#src.smart_watch.core.DatabaseManager.DatabaseManager.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_file</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialise le gestionnaire de base de données.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            db_file (Union[str, Path]): chemin vers le fichier de base de données SQLite</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">db_file</span><span class="p">)</span>
+        <span class="c1"># Créer le dossier parent si nécessaire</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db_file</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Créer l&#39;engine SQLAlchemy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;sqlite:///</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">db_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">echo</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># Mettre à True pour voir les requêtes SQL</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Créer la session factory - correction de l&#39;annotation de type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Session</span> <span class="o">=</span> <span class="n">sessionmaker</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;DatabaseManager initialisé avec </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">db_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.get_session">
+<a class="viewcode-back" href="../../../../source/modules/core/DatabaseManager.html#src.smart_watch.core.DatabaseManager.DatabaseManager.get_session">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_session</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retourne une nouvelle session.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.close">
+<a class="viewcode-back" href="../../../../source/modules/core/DatabaseManager.html#src.smart_watch.core.DatabaseManager.DatabaseManager.close">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Ferme le moteur de base de données.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">dispose</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.table_exists">
+<a class="viewcode-back" href="../../../../source/modules/core/DatabaseManager.html#src.smart_watch.core.DatabaseManager.DatabaseManager.table_exists">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">table_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Vérifie si une table existe dans la base de données.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            table_name (str): nom de la table à vérifier</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True si la table existe, False sinon</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db_file</span><span class="p">)</span>
+            <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+            <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
+                <span class="s2">&quot;SELECT name FROM sqlite_master WHERE type=&#39;table&#39; AND name=?&quot;</span><span class="p">,</span>
+                <span class="p">(</span><span class="n">table_name</span><span class="p">,),</span>
+            <span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+            <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+            <span class="n">table_exists</span> <span class="o">=</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Table &#39;</span><span class="si">{</span><span class="n">table_name</span><span class="si">}</span><span class="s2">&#39; existe: </span><span class="si">{</span><span class="n">table_exists</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">table_exists</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur vérification table: </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.initialize">
+<a class="viewcode-back" href="../../../../source/modules/core/DatabaseManager.html#src.smart_watch.core.DatabaseManager.DatabaseManager.initialize">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">table_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">df_initial</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">if_exists</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;fail&quot;</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialise une table dans la base de données SQLite avec les données de base.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            table_name (str): nom de la table à initialiser</span>
+<span class="sd">            df_initial (pl.DataFrame): dataFrame initial</span>
+<span class="sd">            if_exists (str): comportement si la table existe (&quot;fail&quot;, &quot;replace&quot;, &quot;skip&quot;)</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            Exception: en cas d&#39;erreur lors de l&#39;initialisation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">table_exists</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_exists</span><span class="p">(</span><span class="n">table_name</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">table_exists</span><span class="p">:</span>
+                <span class="c1"># Table n&#39;existe pas, la créer</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Création de la table: </span><span class="si">{</span><span class="n">table_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">df_initial</span><span class="o">.</span><span class="n">write_database</span><span class="p">(</span>
+                    <span class="n">table_name</span><span class="o">=</span><span class="n">table_name</span><span class="p">,</span>
+                    <span class="n">connection</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;sqlite:///</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">db_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">if_table_exists</span><span class="o">=</span><span class="s2">&quot;replace&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Table &#39;</span><span class="si">{</span><span class="n">table_name</span><span class="si">}</span><span class="s2">&#39; créée: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df_initial</span><span class="p">)</span><span class="si">}</span><span class="s2"> enregistrements&quot;</span>
+                <span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">if_exists</span> <span class="o">==</span> <span class="s2">&quot;replace&quot;</span><span class="p">:</span>
+                <span class="c1"># Table existe, la remplacer</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Remplacement de la table: </span><span class="si">{</span><span class="n">table_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">df_initial</span><span class="o">.</span><span class="n">write_database</span><span class="p">(</span>
+                    <span class="n">table_name</span><span class="o">=</span><span class="n">table_name</span><span class="p">,</span>
+                    <span class="n">connection</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;sqlite:///</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">db_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">if_table_exists</span><span class="o">=</span><span class="s2">&quot;replace&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Table &#39;</span><span class="si">{</span><span class="n">table_name</span><span class="si">}</span><span class="s2">&#39; remplacée: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df_initial</span><span class="p">)</span><span class="si">}</span><span class="s2"> enregistrements&quot;</span>
+                <span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">if_exists</span> <span class="o">==</span> <span class="s2">&quot;skip&quot;</span><span class="p">:</span>
+                <span class="c1"># Table existe, l&#39;ignorer</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Table existante ignorée: </span><span class="si">{</span><span class="n">table_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># if_exists == &quot;fail&quot;</span>
+                <span class="c1"># Table existe, lever une erreur</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Table existe déjà: </span><span class="si">{</span><span class="n">table_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">FileExistsError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;La table &#39;</span><span class="si">{</span><span class="n">table_name</span><span class="si">}</span><span class="s2">&#39; existe déjà dans la base &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">db_file</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+                <span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur initialisation table &#39;</span><span class="si">{</span><span class="n">table_name</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.load_data">
+<a class="viewcode-back" href="../../../../source/modules/core/DatabaseManager.html#src.smart_watch.core.DatabaseManager.DatabaseManager.load_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Charge les données depuis une table de la base SQLite.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            table_name (str): nom de la table à charger</span>
+<span class="sd">            query (Optional[str]): requête SQL personnalisée</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            pl.DataFrame : dataFrame avec les données</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            Exception: en cas d&#39;erreur lors du chargement</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">query</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;SELECT * FROM </span><span class="si">{</span><span class="n">table_name</span><span class="si">}</span><span class="s2">&quot;</span>
+
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">read_database_uri</span><span class="p">(</span>
+                <span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">,</span>
+                <span class="n">uri</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;sqlite:///</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">db_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Données chargées de &#39;</span><span class="si">{</span><span class="n">table_name</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="si">}</span><span class="s2"> enregistrements&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">df</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur chargement données de &#39;</span><span class="si">{</span><span class="n">table_name</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.update_record">
+<a class="viewcode-back" href="../../../../source/modules/core/DatabaseManager.html#src.smart_watch.core.DatabaseManager.DatabaseManager.update_record">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_record</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">table_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">where_conditions</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">update_values</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Met à jour des enregistrements dans une table de la base SQLite.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            table_name (str): nom de la table à mettre à jour</span>
+<span class="sd">            where_conditions (Dict[str, Any]): conditions WHERE (colonne: valeur)</span>
+<span class="sd">            update_values (Dict[str, Any]): valeurs à mettre à jour (colonne: valeur)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: nombre d&#39;enregistrements mis à jour</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            Exception: en cas d&#39;erreur lors de la mise à jour</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Construire la requête UPDATE</span>
+            <span class="n">set_clause</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2"> = ?&quot;</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">update_values</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
+            <span class="n">where_clause</span> <span class="o">=</span> <span class="s2">&quot; AND &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2"> = ?&quot;</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">where_conditions</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
+            <span class="p">)</span>
+
+            <span class="n">query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;UPDATE </span><span class="si">{</span><span class="n">table_name</span><span class="si">}</span><span class="s2"> SET </span><span class="si">{</span><span class="n">set_clause</span><span class="si">}</span><span class="s2"> WHERE </span><span class="si">{</span><span class="n">where_clause</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">update_values</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">where_conditions</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+            <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db_file</span><span class="p">)</span>
+            <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+            <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+
+            <span class="n">rows_affected</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">rowcount</span>
+            <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+            <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Enregistrements mis à jour dans &#39;</span><span class="si">{</span><span class="n">table_name</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">rows_affected</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">rows_affected</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur mise à jour dans &#39;</span><span class="si">{</span><span class="n">table_name</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span></div>
+
+
+<div class="viewcode-block" id="DatabaseManager.execute_query">
+<a class="viewcode-back" href="../../../../source/modules/core/DatabaseManager.html#src.smart_watch.core.DatabaseManager.DatabaseManager.execute_query">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">execute_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Exécute une requête SQL personnalisée.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            query (str): requête SQL à exécuter</span>
+<span class="sd">            params (Optional[tuple]): paramètres pour la requête (optionnel)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List[tuple]: résultats de la requête</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Exécution requête: </span><span class="si">{</span><span class="n">query</span><span class="p">[:</span><span class="mi">50</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+
+            <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db_file</span><span class="p">)</span>
+            <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">params</span><span class="p">:</span>
+                <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+
+            <span class="n">results</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+            <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Résultats: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span><span class="si">}</span><span class="s2"> lignes&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">results</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur exécution requête: </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

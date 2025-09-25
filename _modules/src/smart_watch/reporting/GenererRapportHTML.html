@@ -1,0 +1,731 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.smart_watch.reporting.GenererRapportHTML &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.jpg"/>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=d2e4462e"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/translations.js?v=e6b791cb"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/introduction.html">Présentation du projet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/introduction.html#sommaire">Sommaire</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/docker.html">Utilisation avec Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/configuration.html">Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture technique</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/main.html">Orchestrateur</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/diagramme.html">Pipeline de traitement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/bdd.html">Base de données</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/stack.html">Stack technique</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/config/index.html">Modules Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/core/index.html">Modules Core</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/processing/index.html">Modules Processing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/utils/index.html">Modules Utils</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Reporting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html">Modules Reporting</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Code du module</a></li>
+      <li class="breadcrumb-item active">src.smart_watch.reporting.GenererRapportHTML</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Code source de src.smart_watch.reporting.GenererRapportHTML</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Générateur de rapport HTML pour l&#39;analyse des extractions d&#39;horaires.</span>
+<span class="c1"># Documentation : https://datagora-erasme.github.io/smart_watch/source/modules/reporting/html_generator.html</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">base64</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">jinja2</span><span class="w"> </span><span class="kn">import</span> <span class="n">Environment</span><span class="p">,</span> <span class="n">FileSystemLoader</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..core.DatabaseManager</span><span class="w"> </span><span class="kn">import</span> <span class="n">DatabaseManager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..core.ErrorHandler</span><span class="w"> </span><span class="kn">import</span> <span class="n">ErrorCategory</span><span class="p">,</span> <span class="n">ErrorSeverity</span><span class="p">,</span> <span class="n">handle_errors</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..core.Logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_logger</span>
+
+<span class="c1"># Initialize logger for this module</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">create_logger</span><span class="p">(</span>
+    <span class="n">module_name</span><span class="o">=</span><span class="s2">&quot;GenererRapportHTML&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="to_json">
+<a class="viewcode-back" href="../../../../source/modules/reporting/html_generator.html#src.smart_watch.reporting.GenererRapportHTML.to_json">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">to_json</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convertit une valeur en chaîne JSON encodée en base64.</span>
+
+<span class="sd">    Cette fonction prend une valeur de n&#39;importe quel type et la transforme en chaîne JSON,</span>
+<span class="sd">    puis l&#39;encode en base64 pour éviter les problèmes d&#39;échappement dans les templates HTML.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        value: La valeur à convertir et encoder</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: Chaîne JSON encodée en base64, ou None si la valeur d&#39;entrée est None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Si c&#39;est déjà une chaîne JSON valide, la retourner</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="c1"># Vérifier si c&#39;est un JSON valide</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="n">json_str</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Sinon, essayer de convertir en JSON avec ensure_ascii=False pour préserver les caractères UTF-8</span>
+            <span class="n">json_str</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="c1"># Encoder en base64 en s&#39;assurant que l&#39;UTF-8 est préservé</span>
+        <span class="k">return</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">json_str</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur conversion JSON pour template: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1"># En cas d&#39;erreur, convertir en chaîne puis encoder en base64</span>
+        <span class="n">json_str</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">base64</span><span class="o">.</span><span class="n">b64encode</span><span class="p">(</span><span class="n">json_str</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;ascii&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="generer_rapport_html">
+<a class="viewcode-back" href="../../../../source/modules/reporting/html_generator.html#src.smart_watch.reporting.GenererRapportHTML.generer_rapport_html">[docs]</a>
+<span class="nd">@handle_errors</span><span class="p">(</span>
+    <span class="n">category</span><span class="o">=</span><span class="n">ErrorCategory</span><span class="o">.</span><span class="n">UNKNOWN</span><span class="p">,</span>
+    <span class="n">severity</span><span class="o">=</span><span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">HIGH</span><span class="p">,</span>
+    <span class="n">user_message</span><span class="o">=</span><span class="s2">&quot;Erreur lors de la génération du rapport HTML&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">generer_rapport_html</span><span class="p">(</span>
+    <span class="n">db_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">titre_rapport</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">model_info</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Génère un rapport HTML complet à partir des données de la base SQLite.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        db_file: Chemin vers le fichier de base de données SQLite.</span>
+<span class="sd">        titre_rapport: Titre du rapport.</span>
+<span class="sd">        model_info: Informations sur le modèle utilisé.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Tuple contenant (résumé_html, chemin_fichier_html)</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        FileNotFoundError: Si le fichier de base de données n&#39;existe pas.</span>
+<span class="sd">        RuntimeError: Si les templates ne sont pas trouvés.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Génération rapport HTML depuis: </span><span class="si">{</span><span class="n">db_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Vérification de l&#39;existence de la base de données</span>
+    <span class="n">db_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">db_file</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">db_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Base de données non trouvée: </span><span class="si">{</span><span class="n">db_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Configuration du moteur de templates</span>
+    <span class="n">templates_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;assets&quot;</span> <span class="o">/</span> <span class="s2">&quot;templates&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">templates_dir</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Répertoire des templates non trouvé: </span><span class="si">{</span><span class="n">templates_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">env</span> <span class="o">=</span> <span class="n">Environment</span><span class="p">(</span><span class="n">loader</span><span class="o">=</span><span class="n">FileSystemLoader</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">templates_dir</span><span class="p">)))</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">filters</span><span class="p">[</span><span class="s2">&quot;tojson&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">to_json</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s2">&quot;ReportTemplate.html&quot;</span><span class="p">)</span>
+        <span class="n">simple_template</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s2">&quot;SimpleReportTemplate.html&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Templates chargés avec succès&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur chargement templates: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Extraction des données depuis la base de données</span>
+    <span class="n">db_manager</span> <span class="o">=</span> <span class="n">DatabaseManager</span><span class="p">(</span><span class="n">db_file</span><span class="o">=</span><span class="n">db_file</span><span class="p">)</span>
+    <span class="n">donnees_urls</span> <span class="o">=</span> <span class="n">_extract_data_from_database</span><span class="p">(</span><span class="n">db_manager</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Données extraites : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">donnees_urls</span><span class="p">)</span><span class="si">}</span><span class="s2"> enregistrements&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Extraire les données de l&#39;exécution</span>
+    <span class="n">execution_data</span> <span class="o">=</span> <span class="n">_extract_execution_data</span><span class="p">(</span><span class="n">db_manager</span><span class="p">)</span>
+
+    <span class="c1"># Traitement des données</span>
+    <span class="n">_process_data</span><span class="p">(</span><span class="n">donnees_urls</span><span class="p">)</span>
+
+    <span class="c1"># Classification et calcul des statistiques</span>
+    <span class="n">stats_globales</span><span class="p">,</span> <span class="n">statuts_disponibles</span> <span class="o">=</span> <span class="n">_group_by_status_and_calculate_stats</span><span class="p">(</span>
+        <span class="n">donnees_urls</span>
+    <span class="p">)</span>
+    <span class="n">types_lieu_stats</span> <span class="o">=</span> <span class="n">_calculate_type_stats</span><span class="p">(</span><span class="n">donnees_urls</span><span class="p">)</span>
+    <span class="n">codes_http_stats</span> <span class="o">=</span> <span class="n">_calculate_http_stats</span><span class="p">(</span><span class="n">donnees_urls</span><span class="p">)</span>
+
+    <span class="c1"># Préparation des données pour le template</span>
+    <span class="n">donnees_template</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;titre_rapport&quot;</span><span class="p">:</span> <span class="n">titre_rapport</span><span class="p">,</span>
+        <span class="s2">&quot;date_generation&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">/%m/%Y à %H:%M&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;stats_globales&quot;</span><span class="p">:</span> <span class="n">stats_globales</span><span class="p">,</span>
+        <span class="s2">&quot;statuts_disponibles&quot;</span><span class="p">:</span> <span class="n">statuts_disponibles</span><span class="p">,</span>
+        <span class="s2">&quot;types_lieu_stats&quot;</span><span class="p">:</span> <span class="n">types_lieu_stats</span><span class="p">,</span>
+        <span class="s2">&quot;codes_http_stats&quot;</span><span class="p">:</span> <span class="n">codes_http_stats</span><span class="p">,</span>
+        <span class="s2">&quot;model_info&quot;</span><span class="p">:</span> <span class="n">model_info</span><span class="p">,</span>
+        <span class="s2">&quot;execution_data&quot;</span><span class="p">:</span> <span class="n">execution_data</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Génération des rapports</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">resume_html</span> <span class="o">=</span> <span class="n">simple_template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="o">**</span><span class="n">donnees_template</span><span class="p">)</span>
+        <span class="n">html_content</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="o">**</span><span class="n">donnees_template</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Templates rendus avec succès&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur rendu template: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Sauvegarde du fichier</span>
+    <span class="n">fichier_rapport_html</span> <span class="o">=</span> <span class="n">_save_report</span><span class="p">(</span><span class="n">html_content</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Rapport généré avec succès: </span><span class="si">{</span><span class="n">fichier_rapport_html</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">resume_html</span><span class="p">,</span> <span class="n">fichier_rapport_html</span></div>
+
+
+
+<div class="viewcode-block" id="_extract_execution_data">
+<a class="viewcode-back" href="../../../../source/modules/reporting/html_generator.html#src.smart_watch.reporting.GenererRapportHTML._extract_execution_data">[docs]</a>
+<span class="nd">@handle_errors</span><span class="p">(</span>
+    <span class="n">category</span><span class="o">=</span><span class="n">ErrorCategory</span><span class="o">.</span><span class="n">DATABASE</span><span class="p">,</span>
+    <span class="n">severity</span><span class="o">=</span><span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">HIGH</span><span class="p">,</span>
+    <span class="n">user_message</span><span class="o">=</span><span class="s2">&quot;Erreur lors de l&#39;extraction des données d&#39;exécution.&quot;</span><span class="p">,</span>
+    <span class="n">default_return</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_extract_execution_data</span><span class="p">(</span><span class="n">db_manager</span><span class="p">:</span> <span class="n">DatabaseManager</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extrait les données agrégées de toutes les exécutions.&quot;&quot;&quot;</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    SELECT SUM(llm_consommation_execution) as llm_consommation_execution</span>
+<span class="s2">    FROM executions </span>
+<span class="s2">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Exécution de la requête : </span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">db_manager</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Données extraites : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span><span class="si">}</span><span class="s2"> enregistrements&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">results</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># results est une liste de tuples, on convertit en dict,</span>
+        <span class="c1"># et on multiplie par 1000 pour avoir la consommation en g et pas en kg</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;llm_consommation_execution&quot;</span><span class="p">:</span> <span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">}</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
+<div class="viewcode-block" id="_extract_data_from_database">
+<a class="viewcode-back" href="../../../../source/modules/reporting/html_generator.html#src.smart_watch.reporting.GenererRapportHTML._extract_data_from_database">[docs]</a>
+<span class="nd">@handle_errors</span><span class="p">(</span>
+    <span class="n">category</span><span class="o">=</span><span class="n">ErrorCategory</span><span class="o">.</span><span class="n">DATABASE</span><span class="p">,</span>
+    <span class="n">severity</span><span class="o">=</span><span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">HIGH</span><span class="p">,</span>
+    <span class="n">user_message</span><span class="o">=</span><span class="s2">&quot;Erreur lors de l&#39;extraction des données depuis la base.&quot;</span><span class="p">,</span>
+    <span class="n">default_return</span><span class="o">=</span><span class="p">[],</span>
+<span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_extract_data_from_database</span><span class="p">(</span><span class="n">db_manager</span><span class="p">:</span> <span class="n">DatabaseManager</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extrait les données depuis la base de données.&quot;&quot;&quot;</span>
+    <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    SELECT </span>
+<span class="s2">        l.type_lieu, </span>
+<span class="s2">        l.identifiant, </span>
+<span class="s2">        l.nom, </span>
+<span class="s2">        l.url, </span>
+<span class="s2">        l.horaires_data_gl,</span>
+<span class="s2">        r.statut_url AS statut, </span>
+<span class="s2">        r.message_url AS message, </span>
+<span class="s2">        r.markdown_brut,</span>
+<span class="s2">        r.markdown_nettoye,</span>
+<span class="s2">        r.markdown_filtre,</span>
+<span class="s2">        r.llm_horaires_json, </span>
+<span class="s2">        r.llm_horaires_osm, </span>
+<span class="s2">        r.code_http,</span>
+<span class="s2">        r.horaires_identiques,</span>
+<span class="s2">        r.differences_horaires,</span>
+<span class="s2">        r.erreurs_pipeline,</span>
+<span class="s2">        r.llm_consommation_requete</span>
+<span class="s2">    FROM resultats_extraction AS r </span>
+<span class="s2">    JOIN lieux AS l ON r.lieu_id = l.identifiant </span>
+<span class="s2">    ORDER BY l.identifiant</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Exécution de la requête : </span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">db_manager</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Données extraites : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span><span class="si">}</span><span class="s2"> enregistrements&quot;</span><span class="p">)</span>
+    <span class="c1"># Conversion en liste de dicts (en supposant que les colonnes sont fixes)</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;type_lieu&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;identifiant&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nom&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;url&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;horaires_data_gl&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;statut&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;message&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;markdown_brut&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;markdown_nettoye&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;markdown_filtre&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;llm_horaires_json&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;llm_horaires_osm&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;code_http&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;horaires_identiques&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;differences_horaires&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;erreurs_pipeline&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;llm_consommation_requete&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="k">return</span> <span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">columns</span><span class="p">,</span> <span class="n">row</span><span class="p">))</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="_process_data">
+<a class="viewcode-back" href="../../../../source/modules/reporting/html_generator.html#src.smart_watch.reporting.GenererRapportHTML._process_data">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_process_data</span><span class="p">(</span><span class="n">donnees_urls</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Traite et normalise les données extraites.&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">donnees_urls</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Multiplier la consommation par 1000 pour avoir des g et pas de kg</span>
+            <span class="k">if</span> <span class="n">url</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;llm_consommation_requete&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">url</span><span class="p">[</span><span class="s2">&quot;llm_consommation_requete&quot;</span><span class="p">]</span> <span class="o">*=</span> <span class="mi">1000</span>
+
+            <span class="c1"># Convertir llm_horaires_json en objet Python si c&#39;est une chaîne JSON</span>
+            <span class="k">if</span> <span class="s2">&quot;llm_horaires_json&quot;</span> <span class="ow">in</span> <span class="n">url</span> <span class="ow">and</span> <span class="n">url</span><span class="p">[</span><span class="s2">&quot;llm_horaires_json&quot;</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">url</span><span class="p">[</span><span class="s2">&quot;llm_horaires_json&quot;</span><span class="p">],</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">url</span><span class="p">[</span>
+                    <span class="s2">&quot;llm_horaires_json&quot;</span>
+                <span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Erreur&quot;</span><span class="p">):</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">url</span><span class="p">[</span><span class="s2">&quot;llm_horaires_json&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">url</span><span class="p">[</span><span class="s2">&quot;llm_horaires_json&quot;</span><span class="p">])</span>
+                    <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">url</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;identifiant&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;inconnu&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">* JSON invalide pour &#39;</span><span class="si">{</span><span class="n">url</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;nom&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;inconnu&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+                        <span class="p">)</span>
+
+            <span class="c1"># Créer le champ comparaison_horaires pour compatibilité avec le template</span>
+            <span class="n">_create_comparison_field</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+            <span class="c1"># Traiter la chaîne d&#39;erreurs pour affichage</span>
+            <span class="n">_process_error_chain</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+            <span class="c1"># S&#39;assurer que les champs requis existent avec des valeurs par défaut</span>
+            <span class="n">_set_default_fields</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+            <span class="c1"># NOUVELLE FONCTION : Enrichir le message avec les détails d&#39;erreur</span>
+            <span class="n">_enrich_error_message</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">url</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;identifiant&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;inconnu&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">* Erreur traitement données pour &#39;</span><span class="si">{</span><span class="n">url</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;nom&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;inconnu&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39; : </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_enrich_error_message">
+<a class="viewcode-back" href="../../../../source/modules/reporting/html_generator.html#src.smart_watch.reporting.GenererRapportHTML._enrich_error_message">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_enrich_error_message</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Enrichit le message d&#39;erreur avec les détails pertinents selon le type d&#39;erreur.&quot;&quot;&quot;</span>
+    <span class="n">statut</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;statut&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">current_message</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;message&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">erreurs_pipeline</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;erreurs_pipeline&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Pour les erreurs d&#39;accès, utiliser le message spécifique</span>
+    <span class="k">if</span> <span class="n">statut</span> <span class="o">==</span> <span class="s2">&quot;access_error&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">current_message</span> <span class="ow">and</span> <span class="n">current_message</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">]:</span>
+            <span class="c1"># Le message est déjà informatif (ex: &quot;URL non fournie&quot;, &quot;Domaine non résolu&quot;)</span>
+            <span class="k">pass</span>
+        <span class="k">elif</span> <span class="n">erreurs_pipeline</span><span class="p">:</span>
+            <span class="c1"># Utiliser le premier niveau d&#39;erreur de la pipeline</span>
+            <span class="n">url</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">erreurs_pipeline</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">erreurs_pipeline</span>
+                <span class="k">else</span> <span class="n">erreurs_pipeline</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">url</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Accès impossible&quot;</span>
+
+    <span class="c1"># Pour les erreurs d&#39;extraction, combiner le message et la première erreur</span>
+    <span class="k">elif</span> <span class="n">statut</span> <span class="o">==</span> <span class="s2">&quot;extraction_error&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">erreurs_pipeline</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">current_message</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Erreur&quot;</span><span class="p">):</span>
+            <span class="c1"># Extraire la première erreur significative</span>
+            <span class="n">first_error</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">erreurs_pipeline</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; | &quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">if</span> <span class="s2">&quot; | &quot;</span> <span class="ow">in</span> <span class="n">erreurs_pipeline</span>
+                <span class="k">else</span> <span class="n">erreurs_pipeline</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">first_error</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">first_error</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">:</span>  <span class="c1"># Éviter les messages trop longs</span>
+                <span class="n">url</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">first_error</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">url</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Extraction échouée&quot;</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">current_message</span> <span class="ow">or</span> <span class="n">current_message</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">]:</span>
+            <span class="n">url</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Extraction échouée&quot;</span>
+
+    <span class="c1"># Pour les erreurs de comparaison</span>
+    <span class="k">elif</span> <span class="n">statut</span> <span class="o">==</span> <span class="s2">&quot;compare_error&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">current_message</span> <span class="ow">or</span> <span class="n">current_message</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">]:</span>
+            <span class="n">url</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Comparaison impossible&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="_process_error_chain">
+<a class="viewcode-back" href="../../../../source/modules/reporting/html_generator.html#src.smart_watch.reporting.GenererRapportHTML._process_error_chain">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_process_error_chain</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Traite la chaîne d&#39;erreurs pour l&#39;affichage dans le rapport.&quot;&quot;&quot;</span>
+    <span class="n">erreurs_pipeline</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;erreurs_pipeline&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">erreurs_pipeline</span><span class="p">:</span>
+        <span class="c1"># Parser les erreurs individuelles</span>
+        <span class="n">erreurs_list</span> <span class="o">=</span> <span class="n">erreurs_pipeline</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; | &quot;</span><span class="p">)</span>
+        <span class="n">url</span><span class="p">[</span><span class="s2">&quot;erreurs_formatees&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">erreurs_list</span>
+        <span class="n">url</span><span class="p">[</span><span class="s2">&quot;nombre_erreurs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">erreurs_list</span><span class="p">)</span>
+
+        <span class="c1"># Créer un résumé court pour l&#39;affichage en tableau</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">erreurs_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">url</span><span class="p">[</span><span class="s2">&quot;erreurs_resume&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">erreurs_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">url</span><span class="p">[</span><span class="s2">&quot;erreurs_resume&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">erreurs_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> (et </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">erreurs_list</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> autre</span><span class="si">{</span><span class="s1">&#39;s&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="nb">len</span><span class="p">(</span><span class="n">erreurs_list</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="si">}</span><span class="s2">)&quot;</span>
+            <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">url</span><span class="p">[</span><span class="s2">&quot;erreurs_formatees&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">url</span><span class="p">[</span><span class="s2">&quot;nombre_erreurs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">url</span><span class="p">[</span><span class="s2">&quot;erreurs_resume&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="_create_comparison_field">
+<a class="viewcode-back" href="../../../../source/modules/reporting/html_generator.html#src.smart_watch.reporting.GenererRapportHTML._create_comparison_field">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_create_comparison_field</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Crée le champ de comparaison pour le template.&quot;&quot;&quot;</span>
+    <span class="n">horaires_identiques</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;horaires_identiques&quot;</span><span class="p">)</span>
+    <span class="n">differences_horaires</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;differences_horaires&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">erreurs_resume</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;erreurs_resume&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">horaires_identiques</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Ajouter les erreurs si disponibles</span>
+        <span class="k">if</span> <span class="n">erreurs_resume</span><span class="p">:</span>
+            <span class="n">url</span><span class="p">[</span><span class="s2">&quot;comparaison_horaires&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Non comparé - </span><span class="si">{</span><span class="n">erreurs_resume</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">elif</span> <span class="n">differences_horaires</span><span class="p">:</span>
+            <span class="n">url</span><span class="p">[</span><span class="s2">&quot;comparaison_horaires&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">differences_horaires</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">url</span><span class="p">[</span><span class="s2">&quot;comparaison_horaires&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Non comparé&quot;</span>
+    <span class="k">elif</span> <span class="n">horaires_identiques</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">url</span><span class="p">[</span><span class="s2">&quot;comparaison_horaires&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;IDENTIQUE - Aucune différence détectée&quot;</span>
+    <span class="k">elif</span> <span class="n">horaires_identiques</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">url</span><span class="p">[</span><span class="s2">&quot;comparaison_horaires&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;DIFFÉRENT - </span><span class="si">{</span><span class="n">differences_horaires</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">url</span><span class="p">[</span><span class="s2">&quot;comparaison_horaires&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">differences_horaires</span> <span class="k">if</span> <span class="n">differences_horaires</span> <span class="k">else</span> <span class="s2">&quot;Erreur de comparaison&quot;</span>
+        <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_set_default_fields">
+<a class="viewcode-back" href="../../../../source/modules/reporting/html_generator.html#src.smart_watch.reporting.GenererRapportHTML._set_default_fields">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_set_default_fields</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Définit les valeurs par défaut pour les champs requis.&quot;&quot;&quot;</span>
+    <span class="n">defaults</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;llm_horaires_json&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;llm_horaires_osm&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;horaires_data_gl&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;code_http&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;nom&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;identifiant&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;type_lieu&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;markdown_brut&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;markdown_nettoye&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;markdown_filtre&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;erreurs_pipeline&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;erreurs_formatees&quot;</span><span class="p">:</span> <span class="p">[],</span>
+        <span class="s2">&quot;nombre_erreurs&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;erreurs_resume&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;llm_consommation_requete&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">default_value</span> <span class="ow">in</span> <span class="n">defaults</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">url</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">default_value</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_group_by_status_and_calculate_stats">
+<a class="viewcode-back" href="../../../../source/modules/reporting/html_generator.html#src.smart_watch.reporting.GenererRapportHTML._group_by_status_and_calculate_stats">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_group_by_status_and_calculate_stats</span><span class="p">(</span><span class="n">donnees_urls</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">list</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Groupe les URLs par statut et calcule les statistiques globales en une seule passe.</span>
+<span class="sd">    Ceci garantit la cohérence entre les catégories et les comptes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Configuration des statuts</span>
+    <span class="n">statuts_config</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;success&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;nom&quot;</span><span class="p">:</span> <span class="s2">&quot;Succès&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;emoji&quot;</span><span class="p">:</span> <span class="s2">&quot;✅&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;URLs accessibles avec horaires OSM extraits et comparaison réussie (horaires identiques)&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;schedule_diff&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;nom&quot;</span><span class="p">:</span> <span class="s2">&quot;Différences horaires&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;emoji&quot;</span><span class="p">:</span> <span class="s2">&quot;⚠️&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;warning&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;URLs accessibles avec horaires extraits mais différences détectées lors de la comparaison&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;compare_error&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;nom&quot;</span><span class="p">:</span> <span class="s2">&quot;Erreurs de comparaison&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;emoji&quot;</span><span class="p">:</span> <span class="s2">&quot;❓&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;error&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Comparaison impossible ou non effectuée (ex: format de données incompatible)&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;access_error&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;nom&quot;</span><span class="p">:</span> <span class="s2">&quot;Erreurs d&#39;accès&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;emoji&quot;</span><span class="p">:</span> <span class="s2">&quot;⛔&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;error&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;URLs inaccessibles, codes d&#39;erreur HTTP, problèmes de connexion ou contenu indisponible&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;extraction_error&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;nom&quot;</span><span class="p">:</span> <span class="s2">&quot;Erreurs d&#39;extraction&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;emoji&quot;</span><span class="p">:</span> <span class="s2">&quot;❌&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;error&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;URLs accessibles mais échec de l&#39;extraction LLM (source non trouvée) ou de la conversion OSM&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Classification et comptage</span>
+    <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">donnees_urls</span><span class="p">:</span>
+        <span class="c1"># Critère 1: Vérifier l&#39;accessibilité de l&#39;URL</span>
+        <span class="n">url_accessible</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;statut&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;ok&quot;</span> <span class="ow">and</span> <span class="n">url</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;code_http&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span>
+            <span class="mi">200</span><span class="p">,</span> <span class="mi">300</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Critère 2: Vérifier si la source a été trouvée par le LLM</span>
+        <span class="n">llm_json</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;llm_horaires_json&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">source_found_llm</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">llm_json</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">source_found_llm</span> <span class="o">=</span> <span class="n">llm_json</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;extraction_info&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                <span class="s2">&quot;source_found&quot;</span><span class="p">,</span> <span class="kc">True</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Critère 3: Vérifier la présence d&#39;horaires de référence</span>
+        <span class="n">has_reference_hours</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;horaires_data_gl&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">url</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">&quot;horaires_data_gl&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Erreur&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Critère 4: Vérifier la présence d&#39;horaires LLM OSM extraits</span>
+        <span class="n">has_osm_hours</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">url</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;llm_horaires_osm&quot;</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="n">url</span><span class="p">[</span><span class="s2">&quot;llm_horaires_osm&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="ow">and</span> <span class="ow">not</span> <span class="n">url</span><span class="p">[</span><span class="s2">&quot;llm_horaires_osm&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Erreur&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Critère 5: Vérifier le résultat de la comparaison</span>
+        <span class="n">comparison_result</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;horaires_identiques&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Classification hiérarchique</span>
+        <span class="k">if</span> <span class="n">comparison_result</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">url</span><span class="p">[</span><span class="s2">&quot;statut&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;success&quot;</span>
+        <span class="k">elif</span> <span class="n">comparison_result</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">url</span><span class="p">[</span><span class="s2">&quot;statut&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;schedule_diff&quot;</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">url_accessible</span><span class="p">:</span>
+            <span class="n">url</span><span class="p">[</span><span class="s2">&quot;statut&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;access_error&quot;</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">source_found_llm</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">has_osm_hours</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">has_reference_hours</span><span class="p">:</span>
+            <span class="n">url</span><span class="p">[</span><span class="s2">&quot;statut&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;extraction_error&quot;</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># comparison_result is None et les autres conditions sont fausses</span>
+            <span class="n">url</span><span class="p">[</span><span class="s2">&quot;statut&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;compare_error&quot;</span>
+
+    <span class="c1"># Regroupement et calcul des statistiques</span>
+    <span class="n">statuts_disponibles</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">ordre_statuts</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;success&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;schedule_diff&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;compare_error&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;extraction_error&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;access_error&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">stats</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;total_urls&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">donnees_urls</span><span class="p">),</span>
+        <span class="s2">&quot;comparisons_done&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;comparisons_identical&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;comparisons_different&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;comparisons_not_done&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">for</span> <span class="n">statut_code</span> <span class="ow">in</span> <span class="n">ordre_statuts</span><span class="p">:</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">statuts_config</span><span class="p">[</span><span class="n">statut_code</span><span class="p">]</span>
+        <span class="n">urls_du_statut</span> <span class="o">=</span> <span class="p">[</span><span class="n">u</span> <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">donnees_urls</span> <span class="k">if</span> <span class="n">u</span><span class="p">[</span><span class="s2">&quot;statut&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">statut_code</span><span class="p">]</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">urls_du_statut</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">statuts_disponibles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="n">statut_code</span><span class="p">,</span>
+                    <span class="s2">&quot;nom&quot;</span><span class="p">:</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;nom&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;emoji&quot;</span><span class="p">:</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;emoji&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="n">count</span><span class="p">,</span>
+                    <span class="s2">&quot;urls&quot;</span><span class="p">:</span> <span class="n">urls_du_statut</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+        <span class="c1"># Mise à jour des statistiques globales basées sur la classification</span>
+        <span class="k">if</span> <span class="n">statut_code</span> <span class="o">==</span> <span class="s2">&quot;success&quot;</span><span class="p">:</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;comparisons_identical&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">count</span>
+        <span class="k">elif</span> <span class="n">statut_code</span> <span class="o">==</span> <span class="s2">&quot;schedule_diff&quot;</span><span class="p">:</span>
+            <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;comparisons_different&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">count</span>
+
+    <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;comparisons_done&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;comparisons_identical&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;comparisons_different&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;comparisons_not_done&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;total_urls&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;comparisons_done&quot;</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">stats</span><span class="p">,</span> <span class="n">statuts_disponibles</span></div>
+
+
+
+<div class="viewcode-block" id="_calculate_type_stats">
+<a class="viewcode-back" href="../../../../source/modules/reporting/html_generator.html#src.smart_watch.reporting.GenererRapportHTML._calculate_type_stats">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_calculate_type_stats</span><span class="p">(</span><span class="n">donnees_urls</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calcule les statistiques par type de lieu.&quot;&quot;&quot;</span>
+    <span class="n">type_counts</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">donnees_urls</span><span class="p">:</span>
+        <span class="n">type_lieu</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type_lieu&quot;</span><span class="p">,</span> <span class="s2">&quot;Non défini&quot;</span><span class="p">)</span>
+        <span class="n">type_counts</span><span class="p">[</span><span class="n">type_lieu</span><span class="p">]</span> <span class="o">=</span> <span class="n">type_counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">type_lieu</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">type_lieu</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="n">count</span><span class="p">}</span> <span class="k">for</span> <span class="n">type_lieu</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">type_counts</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="_calculate_http_stats">
+<a class="viewcode-back" href="../../../../source/modules/reporting/html_generator.html#src.smart_watch.reporting.GenererRapportHTML._calculate_http_stats">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_calculate_http_stats</span><span class="p">(</span><span class="n">donnees_urls</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calcule les statistiques par code HTTP.&quot;&quot;&quot;</span>
+    <span class="n">code_counts</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">donnees_urls</span><span class="p">:</span>
+        <span class="n">code_http</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;code_http&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">code_counts</span><span class="p">[</span><span class="n">code_http</span><span class="p">]</span> <span class="o">=</span> <span class="n">code_counts</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">code_http</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span>
+        <span class="p">[{</span><span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="n">code</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="n">count</span><span class="p">}</span> <span class="k">for</span> <span class="n">code</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">code_counts</span><span class="o">.</span><span class="n">items</span><span class="p">()],</span>
+        <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s2">&quot;code&quot;</span><span class="p">],</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="_save_report">
+<a class="viewcode-back" href="../../../../source/modules/reporting/html_generator.html#src.smart_watch.reporting.GenererRapportHTML._save_report">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_save_report</span><span class="p">(</span><span class="n">html_content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sauvegarde le rapport HTML et retourne le nom du fichier.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">fichier_rapport_html</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Rapport_SmartWatch_</span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">_%H%M&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">.html&quot;</span>
+        <span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fichier_rapport_html</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">html_content</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Rapport sauvegardé: </span><span class="si">{</span><span class="n">fichier_rapport_html</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">fichier_rapport_html</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur sauvegarde rapport: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur lors de la sauvegarde: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,545 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.smart_watch.processing.llm_processor &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.jpg"/>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=d2e4462e"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/translations.js?v=e6b791cb"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/introduction.html">Présentation du projet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/introduction.html#sommaire">Sommaire</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/docker.html">Utilisation avec Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/configuration.html">Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture technique</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/main.html">Orchestrateur</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/diagramme.html">Pipeline de traitement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/bdd.html">Base de données</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/stack.html">Stack technique</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/config/index.html">Modules Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/core/index.html">Modules Core</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/processing/index.html">Modules Processing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/utils/index.html">Modules Utils</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Reporting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html">Modules Reporting</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Code du module</a></li>
+      <li class="breadcrumb-item active">src.smart_watch.processing.llm_processor</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Code source de src.smart_watch.processing.llm_processor</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Processeur pour les extractions LLM.</span>
+<span class="c1"># Documentation : https://datagora-erasme.github.io/smart_watch/source/modules/processing/llm_processor.html</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">date</span><span class="p">,</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">cast</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..core.ConfigManager</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigManager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..core.GetPrompt</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_prompt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..core.LLMClient</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">MistralAPIClient</span><span class="p">,</span>
+    <span class="n">OpenAICompatibleClient</span><span class="p">,</span>
+    <span class="n">get_mistral_tool_format</span><span class="p">,</span>
+    <span class="n">get_structured_response_format</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..core.Logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">SmartWatchLogger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..data_models.schema_bdd</span><span class="w"> </span><span class="kn">import</span> <span class="n">Lieux</span><span class="p">,</span> <span class="n">ResultatsExtraction</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..processing.database_processor</span><span class="w"> </span><span class="kn">import</span> <span class="n">DatabaseProcessor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utils.CustomJsonToOSM</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsonToOsmConverter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utils.JoursFeries</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_jours_feries</span>
+
+
+<div class="viewcode-block" id="LLMProcessor">
+<a class="viewcode-back" href="../../../../source/modules/processing/llm_processor.html#src.smart_watch.processing.llm_processor.LLMProcessor">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LLMProcessor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Processeur pour les extractions LLM.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="LLMProcessor.__init__">
+<a class="viewcode-back" href="../../../../source/modules/processing/llm_processor.html#src.smart_watch.processing.llm_processor.LLMProcessor.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">ConfigManager</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">SmartWatchLogger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialise le processeur LLM.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            config (ConfigManager): L&#39;objet de gestion de la configuration.</span>
+<span class="sd">            logger (SmartWatchLogger): L&#39;objet logger pour l&#39;enregistrement des messages.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">json_converter</span> <span class="o">=</span> <span class="n">JsonToOsmConverter</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_init_llm_client</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_load_schema</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_co2_emissions</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># Accumulation des émissions pour l&#39;exécution</span></div>
+
+
+<div class="viewcode-block" id="LLMProcessor._init_llm_client">
+<a class="viewcode-back" href="../../../../source/modules/processing/llm_processor.html#src.smart_watch.processing.llm_processor.LLMProcessor._init_llm_client">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_init_llm_client</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialise le client LLM selon la configuration.&quot;&quot;&quot;</span>
+        <span class="n">llm_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">llm</span>
+
+        <span class="c1"># Vérifier que base_url et api_key ne sont pas None avant de les utiliser</span>
+        <span class="n">base_url</span> <span class="o">=</span> <span class="n">llm_config</span><span class="o">.</span><span class="n">base_url</span>
+        <span class="n">api_key</span> <span class="o">=</span> <span class="n">llm_config</span><span class="o">.</span><span class="n">api_key</span>
+
+        <span class="k">if</span> <span class="n">base_url</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;La configuration LLM doit définir une base_url.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">api_key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;La configuration LLM doit définir une api_key.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">llm_config</span><span class="o">.</span><span class="n">fournisseur</span> <span class="o">==</span> <span class="s2">&quot;OPENAI&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">llm_client</span> <span class="o">=</span> <span class="n">OpenAICompatibleClient</span><span class="p">(</span>
+                <span class="n">api_key</span><span class="o">=</span><span class="n">api_key</span><span class="p">,</span>
+                <span class="n">model</span><span class="o">=</span><span class="n">llm_config</span><span class="o">.</span><span class="n">modele</span><span class="p">,</span>
+                <span class="n">base_url</span><span class="o">=</span><span class="n">base_url</span><span class="p">,</span>
+                <span class="n">temperature</span><span class="o">=</span><span class="n">llm_config</span><span class="o">.</span><span class="n">temperature</span><span class="p">,</span>
+                <span class="n">timeout</span><span class="o">=</span><span class="n">llm_config</span><span class="o">.</span><span class="n">timeout</span><span class="p">,</span>
+                <span class="n">seed</span><span class="o">=</span><span class="n">llm_config</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">llm_config</span><span class="o">.</span><span class="n">fournisseur</span> <span class="o">==</span> <span class="s2">&quot;MISTRAL&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">llm_client</span> <span class="o">=</span> <span class="n">MistralAPIClient</span><span class="p">(</span>
+                <span class="n">api_key</span><span class="o">=</span><span class="n">api_key</span><span class="p">,</span>
+                <span class="n">model</span><span class="o">=</span><span class="n">llm_config</span><span class="o">.</span><span class="n">modele</span><span class="p">,</span>
+                <span class="n">temperature</span><span class="o">=</span><span class="n">llm_config</span><span class="o">.</span><span class="n">temperature</span><span class="p">,</span>
+                <span class="n">timeout</span><span class="o">=</span><span class="n">llm_config</span><span class="o">.</span><span class="n">timeout</span><span class="p">,</span>
+                <span class="n">seed</span><span class="o">=</span><span class="n">llm_config</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fournisseur LLM non supporté: </span><span class="si">{</span><span class="n">llm_config</span><span class="o">.</span><span class="n">fournisseur</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LLMProcessor._load_schema">
+<a class="viewcode-back" href="../../../../source/modules/processing/llm_processor.html#src.smart_watch.processing.llm_processor.LLMProcessor._load_schema">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_load_schema</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Charge le schéma JSON pour les structured outputs.&quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">schema_file</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">schema</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">llm</span><span class="o">.</span><span class="n">fournisseur</span> <span class="o">==</span> <span class="s2">&quot;OPENAI&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">structured_format</span> <span class="o">=</span> <span class="n">get_structured_response_format</span><span class="p">(</span>
+                <span class="n">schema</span><span class="o">=</span><span class="n">schema</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;opening_hours_extraction&quot;</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># MISTRAL</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">structured_format</span> <span class="o">=</span> <span class="n">get_mistral_tool_format</span><span class="p">(</span>
+                <span class="n">schema</span><span class="o">=</span><span class="n">schema</span><span class="p">,</span> <span class="n">function_name</span><span class="o">=</span><span class="s2">&quot;opening_hours_extraction&quot;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">opening_hours_schema</span> <span class="o">=</span> <span class="n">schema</span></div>
+
+
+<div class="viewcode-block" id="LLMProcessor._convert_to_osm">
+<a class="viewcode-back" href="../../../../source/modules/processing/llm_processor.html#src.smart_watch.processing.llm_processor.LLMProcessor._convert_to_osm">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_convert_to_osm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">llm_result</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">identifiant</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convertit le résultat LLM au format OSM.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">llm_result</span> <span class="ow">or</span> <span class="n">llm_result</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Erreur&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">llm_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">llm_result</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">identifiant</span><span class="si">}</span><span class="s2">* Le résultat LLM pour n&#39;est pas un JSON valide: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="s2">&quot;Erreur Conversion OSM: JSON invalide&quot;</span>
+
+        <span class="c1"># L&#39;appel à convert_to_osm est maintenant sécurisé par le @handle_errors</span>
+        <span class="c1"># Il ne lèvera plus d&#39;exception mais retournera un résultat vide en cas d&#39;erreur.</span>
+        <span class="n">conversion_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">json_converter</span><span class="o">.</span><span class="n">convert_to_osm</span><span class="p">(</span><span class="n">llm_data</span><span class="p">)</span>
+
+        <span class="c1"># Joindre les différentes périodes OSM en une seule chaîne</span>
+        <span class="n">osm_horaires</span> <span class="o">=</span> <span class="s2">&quot;; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">period_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">osm_string</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">for</span> <span class="n">period_name</span><span class="p">,</span> <span class="n">osm_string</span> <span class="ow">in</span> <span class="n">conversion_result</span><span class="o">.</span><span class="n">osm_periods</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">osm_string</span> <span class="ow">and</span> <span class="n">period_name</span> <span class="o">!=</span> <span class="s2">&quot;general&quot;</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Ajouter la période générale si elle existe</span>
+        <span class="n">general_schedule</span> <span class="o">=</span> <span class="n">conversion_result</span><span class="o">.</span><span class="n">osm_periods</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;general&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">general_schedule</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">osm_horaires</span><span class="p">:</span>
+                <span class="n">osm_horaires</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">general_schedule</span><span class="si">}</span><span class="s2">; </span><span class="si">{</span><span class="n">osm_horaires</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">osm_horaires</span> <span class="o">=</span> <span class="n">general_schedule</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">osm_horaires</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">identifiant</span><span class="si">}</span><span class="s2">* La conversion OSM n&#39;a produit aucun résultat.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">osm_horaires</span></div>
+
+
+<div class="viewcode-block" id="LLMProcessor._is_future_date">
+<a class="viewcode-back" href="../../../../source/modules/processing/llm_processor.html#src.smart_watch.processing.llm_processor.LLMProcessor._is_future_date">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_is_future_date</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">today</span><span class="p">:</span> <span class="n">date</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Vérifie si une chaîne est une date valide au format YYYY-MM-DD et si elle est dans le futur.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">date_str</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">today</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="LLMProcessor._process_special_days">
+<a class="viewcode-back" href="../../../../source/modules/processing/llm_processor.html#src.smart_watch.processing.llm_processor.LLMProcessor._process_special_days">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_process_special_days</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">llm_result</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">lieu</span><span class="p">:</span> <span class="n">Lieux</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Nettoie les jours spéciaux passés du JSON LLM et l&#39;enrichit avec les jours fériés</span>
+<span class="sd">        pour les types de lieux spécifiques. Retourne toujours une chaîne JSON valide.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">llm_result</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">llm_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">llm_result</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">:</span>
+            <span class="c1"># Si le résultat n&#39;est pas un JSON valide, retourner un JSON vide.</span>
+            <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span>
+
+        <span class="n">today</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+
+        <span class="c1"># Nettoyage des horaires spécifiques passés</span>
+        <span class="n">periodes</span> <span class="o">=</span> <span class="n">llm_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;horaires_ouverture&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;periodes&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="k">for</span> <span class="n">periode_data</span> <span class="ow">in</span> <span class="n">periodes</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s2">&quot;horaires_specifiques&quot;</span> <span class="ow">in</span> <span class="n">periode_data</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span>
+                <span class="n">periode_data</span><span class="p">[</span><span class="s2">&quot;horaires_specifiques&quot;</span><span class="p">],</span> <span class="nb">dict</span>
+            <span class="p">):</span>
+                <span class="n">horaires_originaux</span> <span class="o">=</span> <span class="n">periode_data</span><span class="p">[</span><span class="s2">&quot;horaires_specifiques&quot;</span><span class="p">]</span>
+                <span class="n">horaires_filtres</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="n">date_str</span><span class="p">:</span> <span class="n">value</span>
+                    <span class="k">for</span> <span class="n">date_str</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">horaires_originaux</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_future_date</span><span class="p">(</span><span class="n">date_str</span><span class="p">,</span> <span class="n">today</span><span class="p">)</span>
+                <span class="p">}</span>
+                <span class="n">periode_data</span><span class="p">[</span><span class="s2">&quot;horaires_specifiques&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">horaires_filtres</span>
+
+        <span class="c1"># Enrichissement avec les jours fériés pour certains types de lieux</span>
+        <span class="n">types_de_lieux_concernes</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;mairie&quot;</span><span class="p">,</span> <span class="s2">&quot;bibliothèque&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">lieu</span><span class="o">.</span><span class="n">type_lieu</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">types_de_lieux_concernes</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">annee_courante</span> <span class="o">=</span> <span class="n">today</span><span class="o">.</span><span class="n">year</span>
+                <span class="n">jours_feries_courants</span> <span class="o">=</span> <span class="n">get_jours_feries</span><span class="p">(</span><span class="n">annee</span><span class="o">=</span><span class="n">annee_courante</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+                <span class="n">jours_feries_suivants</span> <span class="o">=</span> <span class="n">get_jours_feries</span><span class="p">(</span><span class="n">annee</span><span class="o">=</span><span class="n">annee_courante</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
+
+                <span class="n">jours_feries_courants</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="n">date_ferie</span><span class="p">:</span> <span class="n">nom_ferie</span>
+                    <span class="k">for</span> <span class="n">date_ferie</span><span class="p">,</span> <span class="n">nom_ferie</span> <span class="ow">in</span> <span class="n">jours_feries_courants</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_future_date</span><span class="p">(</span><span class="n">date_ferie</span><span class="p">,</span> <span class="n">today</span><span class="p">)</span>
+                <span class="p">}</span>
+
+                <span class="n">tous_jours_feries</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">tous_jours_feries</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">jours_feries_courants</span><span class="p">)</span>
+                <span class="n">tous_jours_feries</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">jours_feries_suivants</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">tous_jours_feries</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="s2">&quot;jours_feries&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">periodes</span><span class="p">:</span>
+                        <span class="n">periodes</span><span class="p">[</span><span class="s2">&quot;jours_feries&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                            <span class="s2">&quot;source_found&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                            <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;Jours fériés&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;condition&quot;</span><span class="p">:</span> <span class="s2">&quot;PH&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;mode&quot;</span><span class="p">:</span> <span class="s2">&quot;ferme&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;horaires_specifiques&quot;</span><span class="p">:</span> <span class="p">{},</span>
+                            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Jours fériés français - mairie généralement fermée&quot;</span><span class="p">,</span>
+                        <span class="p">}</span>
+                    <span class="n">horaires_specifiques</span> <span class="o">=</span> <span class="n">periodes</span><span class="p">[</span><span class="s2">&quot;jours_feries&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                        <span class="s2">&quot;horaires_specifiques&quot;</span><span class="p">,</span> <span class="p">{}</span>
+                    <span class="p">)</span>
+                    <span class="k">for</span> <span class="n">date_ferie</span> <span class="ow">in</span> <span class="n">tous_jours_feries</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">date_ferie</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">horaires_specifiques</span><span class="p">:</span>
+                            <span class="n">horaires_specifiques</span><span class="p">[</span><span class="n">date_ferie</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;ferme&quot;</span>
+                    <span class="n">periodes</span><span class="p">[</span><span class="s2">&quot;jours_feries&quot;</span><span class="p">][</span><span class="s2">&quot;horaires_specifiques&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">horaires_specifiques</span>
+                    <span class="p">)</span>
+
+            <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">RequestException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">lieu</span><span class="o">.</span><span class="n">identifiant</span><span class="si">}</span><span class="s2">* Impossible de récupérer les jours fériés pour &#39;</span><span class="si">{</span><span class="n">lieu</span><span class="o">.</span><span class="n">nom</span><span class="si">}</span><span class="s2">&#39; (erreur réseau): </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">lieu</span><span class="o">.</span><span class="n">identifiant</span><span class="si">}</span><span class="s2">* Erreur lors de l&#39;enrichissement des jours fériés pour &#39;</span><span class="si">{</span><span class="n">lieu</span><span class="o">.</span><span class="n">nom</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">llm_data</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LLMProcessor._process_single_llm">
+<a class="viewcode-back" href="../../../../source/modules/processing/llm_processor.html#src.smart_watch.processing.llm_processor.LLMProcessor._process_single_llm">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_process_single_llm</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">resultat</span><span class="p">:</span> <span class="n">ResultatsExtraction</span><span class="p">,</span> <span class="n">lieu</span><span class="p">:</span> <span class="n">Lieux</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">total</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Traite une extraction LLM individuelle.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Préparation des données - utiliser le markdown filtré</span>
+            <span class="n">row_data</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;identifiant&quot;</span><span class="p">:</span> <span class="n">lieu</span><span class="o">.</span><span class="n">identifiant</span><span class="p">,</span>
+                <span class="s2">&quot;nom&quot;</span><span class="p">:</span> <span class="n">lieu</span><span class="o">.</span><span class="n">nom</span><span class="p">,</span>
+                <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">lieu</span><span class="o">.</span><span class="n">url</span><span class="p">,</span>
+                <span class="s2">&quot;type_lieu&quot;</span><span class="p">:</span> <span class="n">lieu</span><span class="o">.</span><span class="n">type_lieu</span><span class="p">,</span>
+                <span class="s2">&quot;markdown&quot;</span><span class="p">:</span> <span class="n">resultat</span><span class="o">.</span><span class="n">markdown_filtre</span>
+                <span class="ow">or</span> <span class="n">resultat</span><span class="o">.</span><span class="n">markdown_nettoye</span>
+                <span class="ow">or</span> <span class="n">resultat</span><span class="o">.</span><span class="n">markdown_brut</span><span class="p">,</span>
+            <span class="p">}</span>
+
+            <span class="n">messages</span> <span class="o">=</span> <span class="n">get_prompt</span><span class="p">(</span><span class="n">row_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">opening_hours_schema</span><span class="p">)</span>
+            <span class="n">prompt_message</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+            <span class="c1"># Préparer le résultat avec au minimum le prompt</span>
+            <span class="n">result_data</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;prompt_message&quot;</span><span class="p">:</span> <span class="n">prompt_message</span><span class="p">,</span>
+                <span class="s2">&quot;llm_horaires_json&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;llm_horaires_osm&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;llm_consommation_requete&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+            <span class="p">}</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Appel LLM</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">llm</span><span class="o">.</span><span class="n">fournisseur</span> <span class="o">==</span> <span class="s2">&quot;OPENAI&quot;</span><span class="p">:</span>
+                    <span class="n">llm_response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">llm_client</span><span class="o">.</span><span class="n">call_llm</span><span class="p">(</span>
+                        <span class="n">messages</span><span class="p">,</span>
+                        <span class="n">response_format</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">structured_format</span><span class="p">,</span>
+                        <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span>
+                        <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>  <span class="c1"># MISTRAL</span>
+                    <span class="n">llm_response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">llm_client</span><span class="o">.</span><span class="n">call_llm</span><span class="p">(</span>
+                        <span class="n">messages</span><span class="p">,</span>
+                        <span class="n">tool_params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">structured_format</span><span class="p">,</span>
+                        <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span>
+                        <span class="n">total</span><span class="o">=</span><span class="n">total</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+                <span class="c1"># Vérifier si la réponse est un objet LLMResponse ou une chaîne d&#39;erreur</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">llm_response</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                    <span class="c1"># La réponse est une chaîne d&#39;erreur</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">lieu</span><span class="o">.</span><span class="n">identifiant</span><span class="si">}</span><span class="s2">* Appel LLM échoué pour &#39;</span><span class="si">{</span><span class="n">lieu</span><span class="o">.</span><span class="n">nom</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">llm_response</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+                    <span class="n">result_data</span><span class="p">[</span><span class="s2">&quot;llm_horaires_json&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Erreur LLM: </span><span class="si">{</span><span class="n">llm_response</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="n">result_data</span><span class="p">[</span><span class="s2">&quot;llm_horaires_osm&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Erreur LLM: </span><span class="si">{</span><span class="n">llm_response</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="n">result_data</span><span class="p">[</span><span class="s2">&quot;llm_consommation_requete&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+                    <span class="k">return</span> <span class="n">result_data</span>
+
+                <span class="c1"># Vérifier si c&#39;est bien un objet LLMResponse</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">llm_response</span><span class="p">,</span> <span class="s2">&quot;co2_emissions&quot;</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">lieu</span><span class="o">.</span><span class="n">identifiant</span><span class="si">}</span><span class="s2">* Réponse LLM inattendue pour &#39;</span><span class="si">{</span><span class="n">lieu</span><span class="o">.</span><span class="n">nom</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">llm_response</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+                    <span class="n">result_data</span><span class="p">[</span><span class="s2">&quot;llm_horaires_json&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Erreur LLM: réponse inattendue&quot;</span>
+                    <span class="n">result_data</span><span class="p">[</span><span class="s2">&quot;llm_horaires_osm&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Erreur LLM: réponse inattendue&quot;</span>
+                    <span class="n">result_data</span><span class="p">[</span><span class="s2">&quot;llm_consommation_requete&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+                    <span class="k">return</span> <span class="n">result_data</span>
+
+                <span class="c1"># Enregistrer les émissions individuelles AVANT accumulation</span>
+                <span class="n">individual_emissions</span> <span class="o">=</span> <span class="n">llm_response</span><span class="o">.</span><span class="n">co2_emissions</span>
+                <span class="n">result_data</span><span class="p">[</span><span class="s2">&quot;llm_consommation_requete&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">individual_emissions</span>
+
+                <span class="c1"># Logger les émissions individuelles</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">lieu</span><span class="o">.</span><span class="n">identifiant</span><span class="si">}</span><span class="s2">* Émissions CO2 pour cette requête pour &#39;</span><span class="si">{</span><span class="n">lieu</span><span class="o">.</span><span class="n">nom</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">individual_emissions</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> kg&quot;</span>
+                <span class="p">)</span>
+
+                <span class="c1"># Puis accumuler pour le total</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">total_co2_emissions</span> <span class="o">+=</span> <span class="n">individual_emissions</span>
+
+                <span class="c1"># Vérifier si l&#39;appel LLM a réussi</span>
+                <span class="k">if</span> <span class="n">llm_response</span><span class="o">.</span><span class="n">content</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">str</span><span class="p">(</span><span class="n">llm_response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span>
+                    <span class="s2">&quot;Erreur&quot;</span>
+                <span class="p">):</span>
+                    <span class="c1"># Traitement des jours spéciaux (nettoyage et enrichissement)</span>
+                    <span class="n">processed_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_special_days</span><span class="p">(</span>
+                        <span class="n">llm_response</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">lieu</span>
+                    <span class="p">)</span>
+
+                    <span class="c1"># Conversion OSM (le try/except n&#39;est plus nécessaire ici)</span>
+                    <span class="n">osm_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert_to_osm</span><span class="p">(</span>
+                        <span class="n">processed_result</span><span class="p">,</span> <span class="n">cast</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">lieu</span><span class="o">.</span><span class="n">identifiant</span><span class="p">)</span>
+                    <span class="p">)</span>
+                    <span class="n">result_data</span><span class="p">[</span><span class="s2">&quot;llm_horaires_json&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">processed_result</span>
+                    <span class="n">result_data</span><span class="p">[</span><span class="s2">&quot;llm_horaires_osm&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">osm_result</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Gestion des erreurs LLM avec messages plus explicites</span>
+                    <span class="k">if</span> <span class="n">llm_response</span><span class="o">.</span><span class="n">content</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">error_msg</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">&quot;Erreur LLM: reçu &#39;</span><span class="si">{</span><span class="n">llm_response</span><span class="o">.</span><span class="n">content</span><span class="si">}</span><span class="s2">&#39; - réponse vide&quot;</span>
+                        <span class="p">)</span>
+                    <span class="k">elif</span> <span class="nb">str</span><span class="p">(</span><span class="n">llm_response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Erreur&quot;</span><span class="p">):</span>
+                        <span class="n">error_msg</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">llm_response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">error_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Erreur LLM: reçu &#39;</span><span class="si">{</span><span class="n">llm_response</span><span class="o">.</span><span class="n">content</span><span class="si">}</span><span class="s2">&#39; - réponse inattendue&quot;</span>
+
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">lieu</span><span class="o">.</span><span class="n">identifiant</span><span class="si">}</span><span class="s2">* Appel LLM échoué pour &#39;</span><span class="si">{</span><span class="n">lieu</span><span class="o">.</span><span class="n">nom</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">error_msg</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+                    <span class="n">result_data</span><span class="p">[</span><span class="s2">&quot;llm_horaires_json&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">error_msg</span>
+                    <span class="n">result_data</span><span class="p">[</span><span class="s2">&quot;llm_horaires_osm&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">error_msg</span>
+
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">lieu</span><span class="o">.</span><span class="n">identifiant</span><span class="si">}</span><span class="s2">* Erreur lors de l&#39;appel LLM pour &#39;</span><span class="si">{</span><span class="n">lieu</span><span class="o">.</span><span class="n">nom</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+                <span class="n">error_msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Erreur LLM: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="n">result_data</span><span class="p">[</span><span class="s2">&quot;llm_horaires_json&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">error_msg</span>
+                <span class="n">result_data</span><span class="p">[</span><span class="s2">&quot;llm_horaires_osm&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">error_msg</span>
+
+            <span class="k">return</span> <span class="n">result_data</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">lieu</span><span class="o">.</span><span class="n">identifiant</span><span class="si">}</span><span class="s2">* Erreur critique traitement LLM pour &#39;</span><span class="si">{</span><span class="n">lieu</span><span class="o">.</span><span class="n">nom</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+            <span class="c1"># Retourner un dictionnaire d&#39;erreur au lieu de None</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;prompt_message&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;llm_horaires_json&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Erreur: Aucun résultat LLM (</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;llm_horaires_osm&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Erreur: Aucun résultat LLM (</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;llm_consommation_requete&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+            <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="LLMProcessor.process_llm_extractions">
+<a class="viewcode-back" href="../../../../source/modules/processing/llm_processor.html#src.smart_watch.processing.llm_processor.LLMProcessor.process_llm_extractions">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">process_llm_extractions</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">db_processor</span><span class="p">:</span> <span class="n">DatabaseProcessor</span><span class="p">,</span> <span class="n">execution_id</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Traite toutes les extractions LLM pour une exécution donnée.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            db_processor (DatabaseProcessor): Processeur de base de données</span>
+<span class="sd">            execution_id (int): ID de l&#39;exécution</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Récupérer les résultats prêts pour l&#39;extraction LLM</span>
+        <span class="n">pending_llm</span> <span class="o">=</span> <span class="n">db_processor</span><span class="o">.</span><span class="n">get_pending_llm</span><span class="p">(</span><span class="n">execution_id</span><span class="p">)</span>
+        <span class="n">total_llm</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pending_llm</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">result_row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pending_llm</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">resultat</span><span class="p">,</span> <span class="n">lieu</span> <span class="o">=</span> <span class="n">result_row</span>
+
+            <span class="c1"># Extraction via LLM</span>
+            <span class="n">llm_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_single_llm</span><span class="p">(</span>
+                <span class="n">resultat</span><span class="p">,</span> <span class="n">lieu</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">total</span><span class="o">=</span><span class="n">total_llm</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Mettre à jour en base</span>
+            <span class="n">db_processor</span><span class="o">.</span><span class="n">update_llm_result</span><span class="p">(</span><span class="n">resultat</span><span class="o">.</span><span class="n">id_resultats_extraction</span><span class="p">,</span> <span class="n">llm_result</span><span class="p">)</span>
+
+            <span class="c1"># Mettre à jour les émissions totales de l&#39;exécution</span>
+            <span class="k">if</span> <span class="s2">&quot;llm_consommation_requete&quot;</span> <span class="ow">in</span> <span class="n">llm_result</span><span class="p">:</span>
+                <span class="n">db_processor</span><span class="o">.</span><span class="n">update_execution_emissions</span><span class="p">(</span>
+                    <span class="n">execution_id</span><span class="p">,</span> <span class="n">llm_result</span><span class="p">[</span><span class="s2">&quot;llm_consommation_requete&quot;</span><span class="p">]</span>
+                <span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

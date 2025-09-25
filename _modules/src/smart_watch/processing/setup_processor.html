@@ -1,0 +1,211 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.smart_watch.processing.setup_processor &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.jpg"/>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=d2e4462e"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/translations.js?v=e6b791cb"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/introduction.html">Présentation du projet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/introduction.html#sommaire">Sommaire</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/docker.html">Utilisation avec Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/configuration.html">Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture technique</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/main.html">Orchestrateur</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/diagramme.html">Pipeline de traitement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/bdd.html">Base de données</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/stack.html">Stack technique</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/config/index.html">Modules Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/core/index.html">Modules Core</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/processing/index.html">Modules Processing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/utils/index.html">Modules Utils</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Reporting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html">Modules Reporting</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Code du module</a></li>
+      <li class="breadcrumb-item active">src.smart_watch.processing.setup_processor</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Code source de src.smart_watch.processing.setup_processor</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Initialise une nouvelle exécution en chargeant la liste des lieux à traiter et en préparant la base de données.</span>
+<span class="c1"># Documentation : https://datagora-erasme.github.io/smart_watch/source/modules/processing/setup_processor.html</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.smart_watch.core.ConfigManager</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigManager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.smart_watch.core.ErrorHandler</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ErrorCategory</span><span class="p">,</span>
+    <span class="n">ErrorSeverity</span><span class="p">,</span>
+    <span class="n">handle_errors</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.smart_watch.core.Logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">SmartWatchLogger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.smart_watch.processing.database_processor</span><span class="w"> </span><span class="kn">import</span> <span class="n">DatabaseProcessor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.smart_watch.utils.CSVToPolars</span><span class="w"> </span><span class="kn">import</span> <span class="n">CSVToPolars</span>
+
+
+<div class="viewcode-block" id="SetupProcessor">
+<a class="viewcode-back" href="../../../../source/modules/processing/setup_processor.html#src.smart_watch.processing.setup_processor.SetupProcessor">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SetupProcessor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gestionnaire de l&#39;initialisation (chargement CSV et DB).&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="SetupProcessor.__init__">
+<a class="viewcode-back" href="../../../../source/modules/processing/setup_processor.html#src.smart_watch.processing.setup_processor.SetupProcessor.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">ConfigManager</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">SmartWatchLogger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialise le processeur avec la configuration et le logger spécifiés.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            config (ConfigManager): Objet de configuration contenant les paramètres nécessaires, y compris la base de données.</span>
+<span class="sd">            logger (Logger): Instance du logger pour la journalisation des événements.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span></div>
+
+
+<div class="viewcode-block" id="SetupProcessor.setup_execution">
+<a class="viewcode-back" href="../../../../source/modules/processing/setup_processor.html#src.smart_watch.processing.setup_processor.SetupProcessor.setup_execution">[docs]</a>
+    <span class="nd">@handle_errors</span><span class="p">(</span>
+        <span class="n">category</span><span class="o">=</span><span class="n">ErrorCategory</span><span class="o">.</span><span class="n">CONFIGURATION</span><span class="p">,</span>
+        <span class="n">severity</span><span class="o">=</span><span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">HIGH</span><span class="p">,</span>
+        <span class="n">user_message</span><span class="o">=</span><span class="s2">&quot;Erreur lors de la configuration du pipeline&quot;</span><span class="p">,</span>
+        <span class="n">reraise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_processor</span><span class="p">:</span> <span class="n">DatabaseProcessor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialise la pipeline de configuration en chargeant le CSV depuis la configuration</span>
+<span class="sd">        (variable CSV_URL_HORAIRES) et en initialisant la base de données avec les données chargées.</span>
+
+<span class="sd">        Étapes :</span>
+<span class="sd">            - Charge le fichier CSV : CSV_URL_HORAIRES.</span>
+<span class="sd">            - Vérifie le succès du chargement du CSV.</span>
+<span class="sd">            - Initialise la base de données avec le DataFrame obtenu.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: Si le chargement du CSV échoue.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">section</span><span class="p">(</span><span class="s2">&quot;CONFIGURATION PIPELINE&quot;</span><span class="p">)</span>
+        <span class="n">csv_loader</span> <span class="o">=</span> <span class="n">CSVToPolars</span><span class="p">(</span>
+            <span class="n">source</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">csv_url</span><span class="p">,</span>
+            <span class="n">separator</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+            <span class="n">has_header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">df_csv</span> <span class="o">=</span> <span class="n">csv_loader</span><span class="o">.</span><span class="n">load_csv</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">df_csv</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur chargement CSV: </span><span class="si">{</span><span class="n">df_csv</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Initialise la base avec DatabaseManager et le DataFrame chargé</span>
+        <span class="k">return</span> <span class="n">db_processor</span><span class="o">.</span><span class="n">setup_execution</span><span class="p">(</span><span class="n">df_csv</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

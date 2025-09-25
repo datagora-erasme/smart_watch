@@ -1,0 +1,960 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.smart_watch.processing.database_processor &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.jpg"/>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=d2e4462e"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/translations.js?v=e6b791cb"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/introduction.html">Présentation du projet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/introduction.html#sommaire">Sommaire</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/docker.html">Utilisation avec Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/configuration.html">Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture technique</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/main.html">Orchestrateur</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/diagramme.html">Pipeline de traitement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/bdd.html">Base de données</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/stack.html">Stack technique</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/config/index.html">Modules Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/core/index.html">Modules Core</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/processing/index.html">Modules Processing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/utils/index.html">Modules Utils</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Reporting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html">Modules Reporting</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Code du module</a></li>
+      <li class="breadcrumb-item active">src.smart_watch.processing.database_processor</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Code source de src.smart_watch.processing.database_processor</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Gestionnaire des opérations de base de données spécifiques à SmartWatch.</span>
+<span class="c1"># https://datagora-erasme.github.io/smart_watch/source/modules/processing/database_processor.html</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">text</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy.dialects.sqlite</span><span class="w"> </span><span class="kn">import</span> <span class="n">insert</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy.engine</span><span class="w"> </span><span class="kn">import</span> <span class="n">Row</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.smart_watch.core.DatabaseManager</span><span class="w"> </span><span class="kn">import</span> <span class="n">DatabaseManager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.smart_watch.core.Logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">SmartWatchLogger</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..core.ConfigManager</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigManager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..data_models.schema_bdd</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Base</span><span class="p">,</span>
+    <span class="n">Executions</span><span class="p">,</span>
+    <span class="n">Lieux</span><span class="p">,</span>
+    <span class="n">ResultatsExtraction</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utils.CSVToPolars</span><span class="w"> </span><span class="kn">import</span> <span class="n">CSVToPolars</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..utils.OSMToCustomJson</span><span class="w"> </span><span class="kn">import</span> <span class="n">OsmToJsonConverter</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="c1"># Type hints pour éviter les erreurs Pylance avec SQLAlchemy</span>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="DatabaseProcessor">
+<a class="viewcode-back" href="../../../../source/modules/processing/database_processor.html#src.smart_watch.processing.database_processor.DatabaseProcessor">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DatabaseProcessor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Crée la base de données et les tables nécessaires.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="DatabaseProcessor.__init__">
+<a class="viewcode-back" href="../../../../source/modules/processing/database_processor.html#src.smart_watch.processing.database_processor.DatabaseProcessor.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">ConfigManager</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">SmartWatchLogger</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialise le processeur de base de données.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
+        <span class="c1"># Le DatabaseManager est initialisé avec le chemin du fichier de la base de données.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db_manager</span> <span class="o">=</span> <span class="n">DatabaseManager</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">db_file</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DatabaseProcessor.create_database">
+<a class="viewcode-back" href="../../../../source/modules/processing/database_processor.html#src.smart_watch.processing.database_processor.DatabaseProcessor.create_database">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_database</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DatabaseManager</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Crée les tables de la base de données si elles n&#39;existent pas et retourne le manager.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Initialisation de la base de données </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">db_file</span><span class="si">}</span><span class="s2">...&quot;</span>
+        <span class="p">)</span>
+        <span class="c1"># Utiliser l&#39;engine du db_manager pour créer les tables</span>
+        <span class="n">Base</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">create_all</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">db_manager</span><span class="o">.</span><span class="n">engine</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Base de données et tables créées avec succès.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_manager</span></div>
+
+
+<div class="viewcode-block" id="DatabaseProcessor.execute_query">
+<a class="viewcode-back" href="../../../../source/modules/processing/database_processor.html#src.smart_watch.processing.database_processor.DatabaseProcessor.execute_query">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">execute_query</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Row</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Exécute une requête SQL sur la base de données et retourne les résultats.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            query (str): La requête SQL à exécuter.</span>
+<span class="sd">            params (Optional[dict], optionnel): Les paramètres à utiliser dans la requête SQL. Par défaut à None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Sequence[Row[Any]]: Une séquence de lignes retournées par la requête.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_manager</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span> <span class="k">as</span> <span class="n">connection</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">text</span><span class="p">(</span><span class="n">query</span><span class="p">),</span> <span class="n">params</span> <span class="ow">or</span> <span class="p">{})</span>
+                <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur exécution requête: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">raise</span></div>
+
+
+<div class="viewcode-block" id="DatabaseProcessor.setup_execution">
+<a class="viewcode-back" href="../../../../source/modules/processing/database_processor.html#src.smart_watch.processing.database_processor.DatabaseProcessor.setup_execution">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df_csv</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Configure et initialise une nouvelle exécution à partir d&#39;un DataFrame issu</span>
+<span class="sd">        du fichier CSV pris sur l&#39;URL indiqué dans CSV_URL_HORAIRES du fichier .env.</span>
+
+<span class="sd">        Etapes :</span>
+<span class="sd">        1. Met à jour les lieux dans la base de données à partir des données du DataFrame CSV.</span>
+<span class="sd">        2. Met à jour les horaires des lieux en se basant sur les références GL.</span>
+<span class="sd">        3. Crée une nouvelle entrée d&#39;exécution dans la base de données.</span>
+<span class="sd">        4. Configure les résultats d&#39;extraction associés à cette exécution en utilisant les données du DataFrame CSV.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            df_csv (pd.DataFrame): DataFrame contenant les données extraites du CSV.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: Identifiant unique de l&#39;exécution créée.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_manager</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># 1. Mise à jour des lieux</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_lieux_batch</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">df_csv</span><span class="p">)</span>
+
+            <span class="c1"># 2. Mise à jour des références GL</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_horaires_lieux_depuis_gl</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
+
+            <span class="c1"># 3. Création de l&#39;exécution</span>
+            <span class="n">execution_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_execution</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
+
+            <span class="c1"># 4. Configuration des résultats d&#39;extraction</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_setup_resultats_extraction</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">df_csv</span><span class="p">,</span> <span class="n">execution_id</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">execution_id</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="DatabaseProcessor._update_lieux_batch">
+<a class="viewcode-back" href="../../../../source/modules/processing/database_processor.html#src.smart_watch.processing.database_processor.DatabaseProcessor._update_lieux_batch">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_update_lieux_batch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">df_csv</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Met à jour en batch les enregistrements de lieux dans la base de données à partir du df issu de CSV_URL_HORAIRES.</span>
+
+<span class="sd">        Pour chaque ligne du DataFrame, extrait les informations du lieu (identifiant, nom, type_lieu, url, horaires_data_gl)</span>
+<span class="sd">        et prépare les données pour une insertion ou mise à jour efficace dans la table &#39;Lieux&#39;.</span>
+
+<span class="sd">        Utilise une opération &#39;merge&#39; (insert avec gestion des conflits) pour insérer les nouveaux lieux ou mettre à jour</span>
+<span class="sd">        ceux existants selon l&#39;identifiant.</span>
+
+<span class="sd">        Log le nombre d&#39;enregistrements mis à jour.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            session (Session): Session SQLAlchemy active pour effectuer les opérations sur la base de données.</span>
+<span class="sd">            df_csv (DataFrame): DataFrame contenant les données des lieux à insérer ou mettre à jour.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">lieux_data</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df_csv</span><span class="o">.</span><span class="n">iter_rows</span><span class="p">(</span><span class="n">named</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+            <span class="n">lieux_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;identifiant&quot;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;identifiant&quot;</span><span class="p">],</span>
+                    <span class="s2">&quot;nom&quot;</span><span class="p">:</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;nom&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;type_lieu&quot;</span><span class="p">:</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type_lieu&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;url&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;horaires_data_gl&quot;</span><span class="p">:</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;horaires_data_gl&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Utiliser merge pour insert efficace</span>
+        <span class="n">stmt</span> <span class="o">=</span> <span class="n">insert</span><span class="p">(</span><span class="n">Lieux</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">(</span><span class="n">lieux_data</span><span class="p">)</span>
+        <span class="n">stmt</span> <span class="o">=</span> <span class="n">stmt</span><span class="o">.</span><span class="n">on_conflict_do_update</span><span class="p">(</span>
+            <span class="n">index_elements</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;identifiant&quot;</span><span class="p">],</span>
+            <span class="n">set_</span><span class="o">=</span><span class="p">{</span>
+                <span class="s2">&quot;nom&quot;</span><span class="p">:</span> <span class="n">stmt</span><span class="o">.</span><span class="n">excluded</span><span class="o">.</span><span class="n">nom</span><span class="p">,</span>
+                <span class="s2">&quot;type_lieu&quot;</span><span class="p">:</span> <span class="n">stmt</span><span class="o">.</span><span class="n">excluded</span><span class="o">.</span><span class="n">type_lieu</span><span class="p">,</span>
+                <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">stmt</span><span class="o">.</span><span class="n">excluded</span><span class="o">.</span><span class="n">url</span><span class="p">,</span>
+                <span class="s2">&quot;horaires_data_gl&quot;</span><span class="p">:</span> <span class="n">stmt</span><span class="o">.</span><span class="n">excluded</span><span class="o">.</span><span class="n">horaires_data_gl</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">)</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">stmt</span><span class="p">)</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Lieux mis à jour: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">lieux_data</span><span class="p">)</span><span class="si">}</span><span class="s2"> enregistrements&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DatabaseProcessor._update_horaires_lieux_depuis_gl">
+<a class="viewcode-back" href="../../../../source/modules/processing/database_processor.html#src.smart_watch.processing.database_processor.DatabaseProcessor._update_horaires_lieux_depuis_gl">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_update_horaires_lieux_depuis_gl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Met à jour les horaires des lieux à partir des fichiers de référence CSV issus de data.grandlyon.com :</span>
+<span class="sd">        CSV_URL_PISCINES, CSV_URL_MAIRIES, CSV_URL_MEDIATHEQUES.</span>
+
+<span class="sd">        Pour chaque fichier de référence :</span>
+<span class="sd">            - Charge les données CSV en utilisant CSVToPolars.</span>
+<span class="sd">            - Parcourt chaque ligne pour trouver le lieu correspondant dans la base de données via son identifiant.</span>
+<span class="sd">            - Si le lieu existe et que des horaires sont présents :</span>
+<span class="sd">                - Met à jour le champ &#39;horaires_data_gl&#39; du lieu.</span>
+<span class="sd">                - Si le convertisseur OSM est disponible, tente de convertir les horaires au format JSON enrichi et met à jour le champ &#39;horaires_data_gl_json&#39;.</span>
+<span class="sd">            - Enregistre les modifications dans la base de données.</span>
+<span class="sd">            - Journalise le nombre de lieux mis à jour ou les erreurs rencontrées.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            session (Session): Session SQLAlchemy utilisée pour accéder et modifier les objets de la base de données.</span>
+
+<span class="sd">        Exceptions:</span>
+<span class="sd">            - Journalise les erreurs lors du chargement des fichiers CSV ou de la conversion des horaires.</span>
+<span class="sd">            - Si le convertisseur OSM n&#39;est pas disponible, journalise une erreur et ignore la conversion JSON.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">osm_converter</span> <span class="o">=</span> <span class="n">OsmToJsonConverter</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Convertisseur OSM non disponible&quot;</span><span class="p">)</span>
+            <span class="n">osm_converter</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">for</span> <span class="n">nom</span><span class="p">,</span> <span class="n">url</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">csv_file_ref</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Initialiser row à None avant la boucle</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">csv_loader</span> <span class="o">=</span> <span class="n">CSVToPolars</span><span class="p">(</span>
+                    <span class="n">source</span><span class="o">=</span><span class="n">url</span><span class="p">,</span>
+                    <span class="n">separator</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+                    <span class="n">has_header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">df_ref</span> <span class="o">=</span> <span class="n">csv_loader</span><span class="o">.</span><span class="n">load_csv</span><span class="p">()</span>
+                <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+
+                <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df_ref</span><span class="o">.</span><span class="n">iter_rows</span><span class="p">(</span><span class="n">named</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+                    <span class="n">lieu_existant</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Lieux</span><span class="p">)</span>
+                        <span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">identifiant</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;identifiant&quot;</span><span class="p">])</span>
+                        <span class="o">.</span><span class="n">first</span><span class="p">()</span>
+                    <span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">lieu_existant</span> <span class="ow">and</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;horaires&quot;</span><span class="p">):</span>
+                        <span class="n">lieu_existant</span><span class="o">.</span><span class="n">horaires_data_gl</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;horaires&quot;</span><span class="p">)</span>
+
+                        <span class="c1"># Conversion JSON si possible</span>
+                        <span class="k">if</span> <span class="n">osm_converter</span><span class="p">:</span>
+                            <span class="k">try</span><span class="p">:</span>
+                                <span class="n">horaires_gl_json</span> <span class="o">=</span> <span class="n">osm_converter</span><span class="o">.</span><span class="n">convert_osm_string</span><span class="p">(</span>
+                                    <span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;horaires&quot;</span><span class="p">),</span>
+                                    <span class="n">metadata</span><span class="o">=</span><span class="p">{</span>
+                                        <span class="s2">&quot;identifiant&quot;</span><span class="p">:</span> <span class="n">lieu_existant</span><span class="o">.</span><span class="n">identifiant</span><span class="p">,</span>
+                                        <span class="s2">&quot;nom&quot;</span><span class="p">:</span> <span class="n">lieu_existant</span><span class="o">.</span><span class="n">nom</span><span class="p">,</span>
+                                        <span class="s2">&quot;type_lieu&quot;</span><span class="p">:</span> <span class="n">lieu_existant</span><span class="o">.</span><span class="n">type_lieu</span><span class="p">,</span>
+                                        <span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="n">lieu_existant</span><span class="o">.</span><span class="n">url</span><span class="p">,</span>
+                                    <span class="p">},</span>
+                                <span class="p">)</span>
+                                <span class="n">lieu_existant</span><span class="o">.</span><span class="n">horaires_data_gl_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span>
+                                    <span class="n">horaires_gl_json</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span>
+                                <span class="p">)</span>
+                                <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+                            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                                    <span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;identifiant&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">* Erreur conversion pour &#39;</span><span class="si">{</span><span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;nom&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Nom Inconnu&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+                                <span class="p">)</span>
+
+                <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">row</span><span class="p">:</span>  <span class="c1"># S&#39;assurer que la boucle a été exécutée au moins une fois</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;identifiant&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">* Références pour &#39;</span><span class="si">{</span><span class="n">nom</span><span class="si">}</span><span class="s2">&#39; mises à jour: </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2"> lieux&quot;</span>
+                    <span class="p">)</span>
+
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">log_message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Erreur chargement &#39;</span><span class="si">{</span><span class="n">nom</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+                <span class="k">if</span> <span class="n">row</span> <span class="ow">and</span> <span class="s2">&quot;identifiant&quot;</span> <span class="ow">in</span> <span class="n">row</span><span class="p">:</span>
+                    <span class="n">log_message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;identifiant&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">* </span><span class="si">{</span><span class="n">log_message</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">log_message</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">log_message</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DatabaseProcessor._create_execution">
+<a class="viewcode-back" href="../../../../source/modules/processing/database_processor.html#src.smart_watch.processing.database_processor.DatabaseProcessor._create_execution">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Crée une nouvelle exécution et retourne son ID.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            session (Session): Session SQLAlchemy active.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: Identifiant unique de l&#39;exécution créée.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">nouvelle_execution</span> <span class="o">=</span> <span class="n">Executions</span><span class="p">(</span>
+                <span class="n">date_execution</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span>
+                <span class="n">llm_fournisseur</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">llm</span><span class="o">.</span><span class="n">fournisseur</span><span class="p">,</span>
+                <span class="n">llm_modele</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">llm</span><span class="o">.</span><span class="n">modele</span><span class="p">,</span>
+                <span class="n">llm_url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">llm</span><span class="o">.</span><span class="n">base_url</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">nouvelle_execution</span><span class="p">)</span>
+
+            <span class="c1"># Essayer flush + refresh d&#39;abord</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">session</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+                <span class="n">session</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span><span class="n">nouvelle_execution</span><span class="p">)</span>
+                <span class="n">execution_id</span> <span class="o">=</span> <span class="n">nouvelle_execution</span><span class="o">.</span><span class="n">id_execution</span>
+
+                <span class="c1"># Vérifier que c&#39;est bien un int</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">execution_id</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                    <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Nouvelle exécution créée avec ID: </span><span class="si">{</span><span class="n">execution_id</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
+                    <span class="k">return</span> <span class="n">execution_id</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="c1"># Si flush/refresh échoue, utiliser commit + requête</span>
+                <span class="k">pass</span>
+
+            <span class="c1"># Fallback : commit puis requête</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+            <span class="c1"># Récupérer le dernier enregistrement inséré</span>
+            <span class="n">last_execution</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Executions</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">Executions</span><span class="o">.</span><span class="n">id_execution</span><span class="o">.</span><span class="n">desc</span><span class="p">())</span>
+                <span class="o">.</span><span class="n">first</span><span class="p">()</span>
+            <span class="p">)</span>
+
+            <span class="n">execution_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">last_execution</span><span class="o">.</span><span class="n">id_execution</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Nouvelle exécution créée avec ID: </span><span class="si">{</span><span class="n">execution_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">execution_id</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur lors de la création de l&#39;exécution: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
+            <span class="k">raise</span></div>
+
+
+<div class="viewcode-block" id="DatabaseProcessor._setup_resultats_extraction">
+<a class="viewcode-back" href="../../../../source/modules/processing/database_processor.html#src.smart_watch.processing.database_processor.DatabaseProcessor._setup_resultats_extraction">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_setup_resultats_extraction</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">df_csv</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">execution_id</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prépare et gère les enregistrements de résultats d&#39;extraction pour une nouvelle exécution.</span>
+
+<span class="sd">        Cette méthode effectue les opérations suivantes :</span>
+<span class="sd">        - Vérifie la présence d&#39;enregistrements incomplets (statut URL, extraction LLM, conversion OSM) issus d&#39;exécutions précédentes,</span>
+<span class="sd">          et les assigne à l&#39;exécution courante pour reprise.</span>
+<span class="sd">        - Classe les enregistrements incomplets selon le type de données manquantes (URL, LLM, OSM)</span>
+<span class="sd">          et journalise le nombre d&#39;actions à effectuer pour chaque catégorie.</span>
+<span class="sd">        - Crée de nouveaux enregistrements de résultats d&#39;extraction pour les lieux présents dans le fichier CSV_URL_HORAIRES,</span>
+<span class="sd">          mais absents de la base de données, en initialisant les champs nécessaires.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            session (Session): Session SQLAlchemy active pour les opérations sur la base de données.</span>
+<span class="sd">            df_csv (DataFrame): Fichier CSV des lieux à traiter.</span>
+<span class="sd">            execution_id (int): Identifiant unique de l&#39;exécution en cours.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Vérification des exécutions incomplètes à reprendre</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">section</span><span class="p">(</span><span class="s2">&quot;VÉRIFICATION DES EXÉCUTIONS INCOMPLÈTES&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Chercher les enregistrements incomplets (URL, LLM, OSM) des exécutions précédentes</span>
+        <span class="n">enregistrements_incomplets</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">ResultatsExtraction</span><span class="p">,</span> <span class="n">Lieux</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Lieux</span><span class="p">,</span> <span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">lieu_id</span> <span class="o">==</span> <span class="n">Lieux</span><span class="o">.</span><span class="n">identifiant</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+                <span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">id_execution</span> <span class="o">!=</span> <span class="n">execution_id</span><span class="p">,</span>
+                <span class="c1"># Conditions pour définir un enregistrement comme incomplet (hors comparaison)</span>
+                <span class="p">(</span>
+                    <span class="p">(</span><span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">statut_url</span> <span class="o">!=</span> <span class="s2">&quot;ok&quot;</span><span class="p">)</span>
+                    <span class="o">|</span> <span class="p">(</span>
+                        <span class="p">(</span><span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">statut_url</span> <span class="o">==</span> <span class="s2">&quot;ok&quot;</span><span class="p">)</span>
+                        <span class="o">&amp;</span> <span class="p">(</span><span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">llm_horaires_json</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+                    <span class="p">)</span>
+                    <span class="o">|</span> <span class="p">(</span>
+                        <span class="p">(</span><span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">statut_url</span> <span class="o">==</span> <span class="s2">&quot;ok&quot;</span><span class="p">)</span>
+                        <span class="o">&amp;</span> <span class="p">(</span><span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">llm_horaires_json</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+                        <span class="o">&amp;</span> <span class="p">(</span><span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">llm_horaires_osm</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+            <span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">enregistrements_incomplets</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">enregistrements_incomplets</span><span class="p">)</span><span class="si">}</span><span class="s2"> enregistrements incomplets (URL/LLM/OSM) détectés - reprise&quot;</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Analyser et classer les enregistrements incomplets</span>
+            <span class="n">url_manquantes</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">llm_manquant</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">osm_manquant</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">for</span> <span class="n">resultat</span><span class="p">,</span> <span class="n">lieu</span> <span class="ow">in</span> <span class="n">enregistrements_incomplets</span><span class="p">:</span>
+                <span class="c1"># Mettre à jour l&#39;ID d&#39;exécution immédiatement</span>
+                <span class="n">resultat</span><span class="o">.</span><span class="n">id_execution</span> <span class="o">=</span> <span class="n">execution_id</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">lieu</span><span class="o">.</span><span class="n">identifiant</span><span class="si">}</span><span class="s2">* Enregistrement pour &#39;</span><span class="si">{</span><span class="n">lieu</span><span class="o">.</span><span class="n">nom</span><span class="si">}</span><span class="s2">&#39; assigné à l&#39;exécution </span><span class="si">{</span><span class="n">execution_id</span><span class="si">}</span><span class="s2"> pour reprise&quot;</span>
+                <span class="p">)</span>
+
+                <span class="c1"># Classifier selon ce qui manque</span>
+                <span class="k">if</span> <span class="n">resultat</span><span class="o">.</span><span class="n">statut_url</span> <span class="o">!=</span> <span class="s2">&quot;ok&quot;</span><span class="p">:</span>
+                    <span class="n">url_manquantes</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">resultat</span><span class="p">,</span> <span class="n">lieu</span><span class="p">))</span>
+                <span class="k">elif</span> <span class="n">resultat</span><span class="o">.</span><span class="n">llm_horaires_json</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                    <span class="n">llm_manquant</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">resultat</span><span class="p">,</span> <span class="n">lieu</span><span class="p">))</span>
+                <span class="k">elif</span> <span class="n">resultat</span><span class="o">.</span><span class="n">llm_horaires_osm</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                    <span class="n">osm_manquant</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">resultat</span><span class="p">,</span> <span class="n">lieu</span><span class="p">))</span>
+
+            <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">url_manquantes</span><span class="p">)</span><span class="si">}</span><span class="s2"> URLs à télécharger&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">llm_manquant</span><span class="p">)</span><span class="si">}</span><span class="s2"> extractions LLM à effectuer&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">osm_manquant</span><span class="p">)</span><span class="si">}</span><span class="s2"> conversions OSM à effectuer&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Les comparaisons manquantes seront traitées par le ComparisonProcessor</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="s2">&quot;  - Les comparaisons manquantes seront traitées globalement.&quot;</span>
+            <span class="p">)</span>
+
+            <span class="n">lieux_existants_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">resultat</span><span class="o">.</span><span class="n">lieu_id</span> <span class="k">for</span> <span class="n">resultat</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">enregistrements_incomplets</span><span class="p">]</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Aucun enregistrement incomplet (URL/LLM/OSM) détecté&quot;</span><span class="p">)</span>
+            <span class="n">lieux_existants_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="c1"># Créer les enregistrements de résultats d&#39;extraction pour cette exécution</span>
+        <span class="c1"># (seulement pour les nouveaux lieux qui ne sont pas dans la base)</span>
+        <span class="n">nouveaux_lieux_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df_csv</span><span class="o">.</span><span class="n">iter_rows</span><span class="p">(</span><span class="n">named</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;identifiant&quot;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">lieux_existants_ids</span><span class="p">:</span>
+                <span class="c1"># Vérifier qu&#39;il n&#39;existe pas déjà un enregistrement pour ce lieu</span>
+                <span class="n">enregistrement_existant</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">ResultatsExtraction</span><span class="p">)</span>
+                    <span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">lieu_id</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;identifiant&quot;</span><span class="p">])</span>
+                    <span class="o">.</span><span class="n">first</span><span class="p">()</span>
+                <span class="p">)</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">enregistrement_existant</span><span class="p">:</span>
+                    <span class="n">nouveau_resultat</span> <span class="o">=</span> <span class="n">ResultatsExtraction</span><span class="p">(</span>
+                        <span class="n">lieu_id</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;identifiant&quot;</span><span class="p">],</span>
+                        <span class="n">id_execution</span><span class="o">=</span><span class="n">execution_id</span><span class="p">,</span>
+                        <span class="n">statut_url</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+                        <span class="n">code_http</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                        <span class="n">message_url</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+                        <span class="n">markdown_brut</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+                        <span class="n">markdown_nettoye</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+                        <span class="n">markdown_filtre</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+                        <span class="n">prompt_message</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+                        <span class="n">llm_consommation_requete</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+                        <span class="n">llm_horaires_json</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+                        <span class="n">llm_horaires_osm</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+                        <span class="n">erreurs_pipeline</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">nouveau_resultat</span><span class="p">)</span>
+                    <span class="n">nouveaux_lieux_count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="n">nouveaux_lieux_count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">nouveaux_lieux_count</span><span class="si">}</span><span class="s2"> nouveaux enregistrements créés&quot;</span><span class="p">)</span>
+
+        <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="DatabaseProcessor.get_pending_urls">
+<a class="viewcode-back" href="../../../../source/modules/processing/database_processor.html#src.smart_watch.processing.database_processor.DatabaseProcessor.get_pending_urls">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_pending_urls</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">execution_id</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Row</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">ResultatsExtraction</span><span class="p">,</span> <span class="n">Lieux</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Récupère les URLs en attente de traitement.&quot;&quot;&quot;</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_manager</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">ResultatsExtraction</span><span class="p">,</span> <span class="n">Lieux</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Lieux</span><span class="p">,</span> <span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">lieu_id</span> <span class="o">==</span> <span class="n">Lieux</span><span class="o">.</span><span class="n">identifiant</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+                    <span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">id_execution</span> <span class="o">==</span> <span class="n">execution_id</span><span class="p">,</span>
+                    <span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">statut_url</span> <span class="o">!=</span> <span class="s2">&quot;ok&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="o">.</span><span class="n">all</span><span class="p">()</span>
+            <span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="DatabaseProcessor.get_pending_llm">
+<a class="viewcode-back" href="../../../../source/modules/processing/database_processor.html#src.smart_watch.processing.database_processor.DatabaseProcessor.get_pending_llm">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_pending_llm</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">execution_id</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Row</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">ResultatsExtraction</span><span class="p">,</span> <span class="n">Lieux</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Récupère les enregistrements en attente d&#39;extraction LLM.&quot;&quot;&quot;</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_manager</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">ResultatsExtraction</span><span class="p">,</span> <span class="n">Lieux</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Lieux</span><span class="p">,</span> <span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">lieu_id</span> <span class="o">==</span> <span class="n">Lieux</span><span class="o">.</span><span class="n">identifiant</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+                    <span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">id_execution</span> <span class="o">==</span> <span class="n">execution_id</span><span class="p">,</span>
+                    <span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">statut_url</span> <span class="o">==</span> <span class="s2">&quot;ok&quot;</span><span class="p">,</span>
+                    <span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">markdown_filtre</span>
+                    <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>  <span class="c1"># Utiliser le markdown filtré</span>
+                    <span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">llm_horaires_json</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="o">.</span><span class="n">all</span><span class="p">()</span>
+            <span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="DatabaseProcessor.get_results_with_raw_markdown">
+<a class="viewcode-back" href="../../../../source/modules/processing/database_processor.html#src.smart_watch.processing.database_processor.DatabaseProcessor.get_results_with_raw_markdown">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_results_with_raw_markdown</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">execution_id</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">ResultatsExtraction</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Récupère les résultats avec markdown brut à nettoyer.&quot;&quot;&quot;</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_manager</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">ResultatsExtraction</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+                    <span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">id_execution</span> <span class="o">==</span> <span class="n">execution_id</span><span class="p">,</span>
+                    <span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">statut_url</span> <span class="o">==</span> <span class="s2">&quot;ok&quot;</span><span class="p">,</span>
+                    <span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">markdown_brut</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                    <span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">markdown_nettoye</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="o">.</span><span class="n">all</span><span class="p">()</span>
+            <span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="DatabaseProcessor.get_results_with_cleaned_markdown">
+<a class="viewcode-back" href="../../../../source/modules/processing/database_processor.html#src.smart_watch.processing.database_processor.DatabaseProcessor.get_results_with_cleaned_markdown">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_results_with_cleaned_markdown</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">execution_id</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">ResultatsExtraction</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Récupère les résultats avec markdown nettoyé à filtrer.&quot;&quot;&quot;</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_manager</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">ResultatsExtraction</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+                    <span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">id_execution</span> <span class="o">==</span> <span class="n">execution_id</span><span class="p">,</span>
+                    <span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">markdown_nettoye</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                    <span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">markdown_filtre</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="o">.</span><span class="n">all</span><span class="p">()</span>
+            <span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="DatabaseProcessor.get_results_with_schedules">
+<a class="viewcode-back" href="../../../../source/modules/processing/database_processor.html#src.smart_watch.processing.database_processor.DatabaseProcessor.get_results_with_schedules">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_results_with_schedules</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">ResultatsExtraction</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Récupère les résultats avec horaires extraits pour comparaison.&quot;&quot;&quot;</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_manager</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">ResultatsExtraction</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">llm_horaires_json</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">all</span><span class="p">()</span>
+            <span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="DatabaseProcessor.get_pending_comparisons">
+<a class="viewcode-back" href="../../../../source/modules/processing/database_processor.html#src.smart_watch.processing.database_processor.DatabaseProcessor.get_pending_comparisons">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_pending_comparisons</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Row</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">ResultatsExtraction</span><span class="p">,</span> <span class="n">Lieux</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Récupère les enregistrements en attente de comparaison.&quot;&quot;&quot;</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_manager</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">ResultatsExtraction</span><span class="p">,</span> <span class="n">Lieux</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Lieux</span><span class="p">,</span> <span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">lieu_id</span> <span class="o">==</span> <span class="n">Lieux</span><span class="o">.</span><span class="n">identifiant</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+                    <span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">llm_horaires_json</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                    <span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">llm_horaires_json</span><span class="o">.</span><span class="n">notlike</span><span class="p">(</span><span class="s2">&quot;Erreur LLM:%&quot;</span><span class="p">),</span>
+                    <span class="p">(</span>
+                        <span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">horaires_identiques</span><span class="o">.</span><span class="n">is_</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+                        <span class="o">|</span> <span class="p">(</span><span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">horaires_identiques</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+                    <span class="p">),</span>
+                <span class="p">)</span>
+                <span class="o">.</span><span class="n">all</span><span class="p">()</span>
+            <span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="DatabaseProcessor.update_comparison_result">
+<a class="viewcode-back" href="../../../../source/modules/processing/database_processor.html#src.smart_watch.processing.database_processor.DatabaseProcessor.update_comparison_result">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_comparison_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resultat_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">comparison_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Met à jour le résultat d&#39;une comparaison.&quot;&quot;&quot;</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_manager</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">resultat</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ResultatsExtraction</span><span class="p">,</span> <span class="n">resultat_id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">resultat</span><span class="p">:</span>
+                <span class="nb">setattr</span><span class="p">(</span>
+                    <span class="n">resultat</span><span class="p">,</span> <span class="s2">&quot;horaires_identiques&quot;</span><span class="p">,</span> <span class="n">comparison_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;identique&quot;</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="nb">setattr</span><span class="p">(</span>
+                    <span class="n">resultat</span><span class="p">,</span>
+                    <span class="s2">&quot;differences_horaires&quot;</span><span class="p">,</span>
+                    <span class="n">comparison_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;differences&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">),</span>
+                <span class="p">)</span>
+
+                <span class="c1"># Ajouter erreur de comparaison si échec</span>
+                <span class="k">if</span> <span class="n">comparison_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;identique&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_add_error_to_result</span><span class="p">(</span>
+                        <span class="n">resultat</span><span class="p">,</span>
+                        <span class="s2">&quot;COMPARAISON&quot;</span><span class="p">,</span>
+                        <span class="n">comparison_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;differences&quot;</span><span class="p">,</span> <span class="s2">&quot;Erreur inconnue&quot;</span><span class="p">),</span>
+                    <span class="p">)</span>
+
+                <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="DatabaseProcessor.update_url_result">
+<a class="viewcode-back" href="../../../../source/modules/processing/database_processor.html#src.smart_watch.processing.database_processor.DatabaseProcessor.update_url_result">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_url_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resultat_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Met à jour le résultat d&#39;une extraction URL.&quot;&quot;&quot;</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_manager</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">resultat</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ResultatsExtraction</span><span class="p">,</span> <span class="n">resultat_id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">resultat</span><span class="p">:</span>
+                <span class="c1"># Utiliser setattr pour éviter les erreurs de typage Pylance</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">resultat</span><span class="p">,</span> <span class="s2">&quot;statut_url&quot;</span><span class="p">,</span> <span class="n">result_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;statut&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">))</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">resultat</span><span class="p">,</span> <span class="s2">&quot;code_http&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">result_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;code_http&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)))</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">resultat</span><span class="p">,</span> <span class="s2">&quot;message_url&quot;</span><span class="p">,</span> <span class="n">result_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;message&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">resultat</span><span class="p">,</span> <span class="s2">&quot;markdown_brut&quot;</span><span class="p">,</span> <span class="n">result_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;markdown&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span>
+
+                <span class="c1"># Ajouter erreur URL si échec</span>
+                <span class="k">if</span> <span class="n">result_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;statut&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;ok&quot;</span><span class="p">:</span>
+                    <span class="n">error_msg</span> <span class="o">=</span> <span class="n">result_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;message&quot;</span><span class="p">,</span> <span class="s2">&quot;Erreur inconnue&quot;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_add_error_to_result</span><span class="p">(</span><span class="n">resultat</span><span class="p">,</span> <span class="s2">&quot;URL&quot;</span><span class="p">,</span> <span class="n">error_msg</span><span class="p">)</span>
+
+                <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="DatabaseProcessor.update_cleaned_markdown">
+<a class="viewcode-back" href="../../../../source/modules/processing/database_processor.html#src.smart_watch.processing.database_processor.DatabaseProcessor.update_cleaned_markdown">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_cleaned_markdown</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resultat_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">cleaned_markdown</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Met à jour le markdown nettoyé.&quot;&quot;&quot;</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_manager</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">resultat</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ResultatsExtraction</span><span class="p">,</span> <span class="n">resultat_id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">resultat</span><span class="p">:</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">resultat</span><span class="p">,</span> <span class="s2">&quot;markdown_nettoye&quot;</span><span class="p">,</span> <span class="n">cleaned_markdown</span><span class="p">)</span>
+                <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="DatabaseProcessor.update_filtered_markdown">
+<a class="viewcode-back" href="../../../../source/modules/processing/database_processor.html#src.smart_watch.processing.database_processor.DatabaseProcessor.update_filtered_markdown">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_filtered_markdown</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">resultat_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">filtered_markdown</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">co2_emissions</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Met à jour le markdown filtré et ajoute les émissions CO2.&quot;&quot;&quot;</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_manager</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">resultat</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ResultatsExtraction</span><span class="p">,</span> <span class="n">resultat_id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">resultat</span><span class="p">:</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">resultat</span><span class="p">,</span> <span class="s2">&quot;markdown_filtre&quot;</span><span class="p">,</span> <span class="n">filtered_markdown</span><span class="p">)</span>
+                <span class="c1"># Ajouter les émissions de l&#39;embedding à la consommation existante</span>
+                <span class="n">current_emissions</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="nb">getattr</span><span class="p">(</span><span class="n">resultat</span><span class="p">,</span> <span class="s2">&quot;llm_consommation_requete&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="mf">0.0</span>
+                <span class="p">)</span>
+                <span class="nb">setattr</span><span class="p">(</span>
+                    <span class="n">resultat</span><span class="p">,</span>
+                    <span class="s2">&quot;llm_consommation_requete&quot;</span><span class="p">,</span>
+                    <span class="n">current_emissions</span> <span class="o">+</span> <span class="n">co2_emissions</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="DatabaseProcessor.update_llm_result">
+<a class="viewcode-back" href="../../../../source/modules/processing/database_processor.html#src.smart_watch.processing.database_processor.DatabaseProcessor.update_llm_result">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_llm_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resultat_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">llm_data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Met à jour le résultat d&#39;une extraction LLM.&quot;&quot;&quot;</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_manager</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">resultat</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ResultatsExtraction</span><span class="p">,</span> <span class="n">resultat_id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">resultat</span><span class="p">:</span>
+                <span class="c1"># Toujours mettre à jour le prompt s&#39;il est fourni</span>
+                <span class="k">if</span> <span class="n">llm_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;prompt_message&quot;</span><span class="p">):</span>
+                    <span class="nb">setattr</span><span class="p">(</span><span class="n">resultat</span><span class="p">,</span> <span class="s2">&quot;prompt_message&quot;</span><span class="p">,</span> <span class="n">llm_data</span><span class="p">[</span><span class="s2">&quot;prompt_message&quot;</span><span class="p">])</span>
+
+                <span class="c1"># Mettre à jour la consommation CO2 de la requête</span>
+                <span class="k">if</span> <span class="s2">&quot;llm_consommation_requete&quot;</span> <span class="ow">in</span> <span class="n">llm_data</span><span class="p">:</span>
+                    <span class="n">current_emissions</span> <span class="o">=</span> <span class="p">(</span>
+                        <span class="nb">getattr</span><span class="p">(</span><span class="n">resultat</span><span class="p">,</span> <span class="s2">&quot;llm_consommation_requete&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="mf">0.0</span>
+                    <span class="p">)</span>
+                    <span class="nb">setattr</span><span class="p">(</span>
+                        <span class="n">resultat</span><span class="p">,</span>
+                        <span class="s2">&quot;llm_consommation_requete&quot;</span><span class="p">,</span>
+                        <span class="n">current_emissions</span> <span class="o">+</span> <span class="n">llm_data</span><span class="p">[</span><span class="s2">&quot;llm_consommation_requete&quot;</span><span class="p">],</span>
+                    <span class="p">)</span>
+
+                <span class="c1"># Variable pour éviter les erreurs dupliquées</span>
+                <span class="n">error_added</span> <span class="o">=</span> <span class="kc">False</span>
+
+                <span class="c1"># Mettre à jour les résultats LLM (JSON et OSM), y compris les erreurs</span>
+                <span class="k">if</span> <span class="s2">&quot;llm_horaires_json&quot;</span> <span class="ow">in</span> <span class="n">llm_data</span><span class="p">:</span>
+                    <span class="nb">setattr</span><span class="p">(</span>
+                        <span class="n">resultat</span><span class="p">,</span> <span class="s2">&quot;llm_horaires_json&quot;</span><span class="p">,</span> <span class="n">llm_data</span><span class="p">[</span><span class="s2">&quot;llm_horaires_json&quot;</span><span class="p">]</span>
+                    <span class="p">)</span>
+                    <span class="c1"># Ajouter erreur LLM si échec (une seule fois)</span>
+                    <span class="k">if</span> <span class="p">(</span>
+                        <span class="n">llm_data</span><span class="p">[</span><span class="s2">&quot;llm_horaires_json&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Erreur&quot;</span><span class="p">)</span>
+                        <span class="ow">and</span> <span class="ow">not</span> <span class="n">error_added</span>
+                    <span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_add_error_to_result</span><span class="p">(</span>
+                            <span class="n">resultat</span><span class="p">,</span> <span class="s2">&quot;LLM&quot;</span><span class="p">,</span> <span class="n">llm_data</span><span class="p">[</span><span class="s2">&quot;llm_horaires_json&quot;</span><span class="p">]</span>
+                        <span class="p">)</span>
+                        <span class="n">error_added</span> <span class="o">=</span> <span class="kc">True</span>
+
+                <span class="k">if</span> <span class="s2">&quot;llm_horaires_osm&quot;</span> <span class="ow">in</span> <span class="n">llm_data</span><span class="p">:</span>
+                    <span class="nb">setattr</span><span class="p">(</span><span class="n">resultat</span><span class="p">,</span> <span class="s2">&quot;llm_horaires_osm&quot;</span><span class="p">,</span> <span class="n">llm_data</span><span class="p">[</span><span class="s2">&quot;llm_horaires_osm&quot;</span><span class="p">])</span>
+                    <span class="c1"># Ajouter erreur OSM seulement si c&#39;est différent de l&#39;erreur LLM</span>
+                    <span class="k">if</span> <span class="n">llm_data</span><span class="p">[</span><span class="s2">&quot;llm_horaires_osm&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Erreur&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">llm_data</span><span class="p">[</span>
+                        <span class="s2">&quot;llm_horaires_osm&quot;</span>
+                    <span class="p">]</span> <span class="o">!=</span> <span class="n">llm_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;llm_horaires_json&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_add_error_to_result</span><span class="p">(</span>
+                            <span class="n">resultat</span><span class="p">,</span> <span class="s2">&quot;OSM&quot;</span><span class="p">,</span> <span class="n">llm_data</span><span class="p">[</span><span class="s2">&quot;llm_horaires_osm&quot;</span><span class="p">]</span>
+                        <span class="p">)</span>
+
+                <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="DatabaseProcessor.update_execution_emissions">
+<a class="viewcode-back" href="../../../../source/modules/processing/database_processor.html#src.smart_watch.processing.database_processor.DatabaseProcessor.update_execution_emissions">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_execution_emissions</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">execution_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">total_emissions</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Met à jour les émissions CO2 totales d&#39;une exécution en les ajoutant au total existant.&quot;&quot;&quot;</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_manager</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">execution</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">Executions</span><span class="p">,</span> <span class="n">execution_id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">execution</span><span class="p">:</span>
+                <span class="n">current_emissions</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="nb">getattr</span><span class="p">(</span><span class="n">execution</span><span class="p">,</span> <span class="s2">&quot;llm_consommation_execution&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="mf">0.0</span>
+                <span class="p">)</span>
+                <span class="nb">setattr</span><span class="p">(</span>
+                    <span class="n">execution</span><span class="p">,</span>
+                    <span class="s2">&quot;llm_consommation_execution&quot;</span><span class="p">,</span>
+                    <span class="n">current_emissions</span> <span class="o">+</span> <span class="n">total_emissions</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Émissions ajoutées à l&#39;exécution </span><span class="si">{</span><span class="n">execution_id</span><span class="si">}</span><span class="s2">: +</span><span class="si">{</span><span class="n">total_emissions</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> kg CO2&quot;</span>
+                <span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="DatabaseProcessor.update_execution_embeddings">
+<a class="viewcode-back" href="../../../../source/modules/processing/database_processor.html#src.smart_watch.processing.database_processor.DatabaseProcessor.update_execution_embeddings">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_execution_embeddings</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">execution_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">embeddings_emissions</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Met à jour les émissions CO2 des embeddings d&#39;une exécution.&quot;&quot;&quot;</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_manager</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">execution</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">Executions</span><span class="p">,</span> <span class="n">execution_id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">execution</span><span class="p">:</span>
+                <span class="c1"># Ajouter aux émissions existantes (LLM + embeddings)</span>
+                <span class="n">current_emissions</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="nb">getattr</span><span class="p">(</span><span class="n">execution</span><span class="p">,</span> <span class="s2">&quot;llm_consommation_execution&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="mf">0.0</span>
+                <span class="p">)</span>
+                <span class="nb">setattr</span><span class="p">(</span>
+                    <span class="n">execution</span><span class="p">,</span>
+                    <span class="s2">&quot;llm_consommation_execution&quot;</span><span class="p">,</span>
+                    <span class="n">current_emissions</span> <span class="o">+</span> <span class="n">embeddings_emissions</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Émissions embeddings ajoutées à l&#39;exécution </span><span class="si">{</span><span class="n">execution_id</span><span class="si">}</span><span class="s2">: +</span><span class="si">{</span><span class="n">embeddings_emissions</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> kg CO2&quot;</span>
+                <span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="DatabaseProcessor.add_pipeline_error">
+<a class="viewcode-back" href="../../../../source/modules/processing/database_processor.html#src.smart_watch.processing.database_processor.DatabaseProcessor.add_pipeline_error">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_pipeline_error</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">resultat_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">error_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">error_message</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Ajoute une erreur à la chaîne d&#39;erreurs du pipeline.&quot;&quot;&quot;</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_manager</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">resultat</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ResultatsExtraction</span><span class="p">,</span> <span class="n">resultat_id</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">resultat</span><span class="p">:</span>
+                <span class="c1"># Créer l&#39;entrée d&#39;erreur avec timestamp</span>
+                <span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+
+                <span class="n">timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%H:%M:%S&quot;</span><span class="p">)</span>
+                <span class="n">error_entry</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">error_type</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">error_message</span><span class="si">}</span><span class="s2">&quot;</span>
+
+                <span class="c1"># Ajouter à la chaîne existante en utilisant getattr/setattr</span>
+                <span class="n">current_errors</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">resultat</span><span class="p">,</span> <span class="s2">&quot;erreurs_pipeline&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+                <span class="k">if</span> <span class="n">current_errors</span><span class="p">:</span>
+                    <span class="n">new_errors</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">current_errors</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">error_entry</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">new_errors</span> <span class="o">=</span> <span class="n">error_entry</span>
+
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">resultat</span><span class="p">,</span> <span class="s2">&quot;erreurs_pipeline&quot;</span><span class="p">,</span> <span class="n">new_errors</span><span class="p">)</span>
+                <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="DatabaseProcessor._add_error_to_result">
+<a class="viewcode-back" href="../../../../source/modules/processing/database_processor.html#src.smart_watch.processing.database_processor.DatabaseProcessor._add_error_to_result">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_add_error_to_result</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">resultat</span><span class="p">:</span> <span class="n">ResultatsExtraction</span><span class="p">,</span> <span class="n">error_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">error_message</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Ajoute une erreur à la chaîne d&#39;erreurs (méthode interne).&quot;&quot;&quot;</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+
+        <span class="n">timestamp</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%H:%M:%S&quot;</span><span class="p">)</span>
+        <span class="n">error_entry</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">timestamp</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">error_type</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">error_message</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="c1"># Utiliser getattr/setattr pour éviter les erreurs de typage</span>
+        <span class="n">current_errors</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">resultat</span><span class="p">,</span> <span class="s2">&quot;erreurs_pipeline&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">current_errors</span><span class="p">:</span>
+            <span class="n">new_errors</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">current_errors</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">error_entry</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_errors</span> <span class="o">=</span> <span class="n">error_entry</span>
+
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">resultat</span><span class="p">,</span> <span class="s2">&quot;erreurs_pipeline&quot;</span><span class="p">,</span> <span class="n">new_errors</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

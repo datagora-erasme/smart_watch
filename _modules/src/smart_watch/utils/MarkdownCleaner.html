@@ -1,0 +1,489 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.smart_watch.utils.MarkdownCleaner &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.jpg"/>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=d2e4462e"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/translations.js?v=e6b791cb"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/introduction.html">Présentation du projet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/introduction.html#sommaire">Sommaire</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/docker.html">Utilisation avec Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/configuration.html">Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture technique</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/main.html">Orchestrateur</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/diagramme.html">Pipeline de traitement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/bdd.html">Base de données</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/stack.html">Stack technique</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/config/index.html">Modules Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/core/index.html">Modules Core</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/processing/index.html">Modules Processing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/utils/index.html">Modules Utils</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Reporting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html">Modules Reporting</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Code du module</a></li>
+      <li class="breadcrumb-item active">src.smart_watch.utils.MarkdownCleaner</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Code source de src.smart_watch.utils.MarkdownCleaner</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Documentation:</span>
+<span class="c1"># https://datagora-erasme.github.io/smart_watch/source/modules/utils/MarkdownCleaner.html</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TYPE_CHECKING</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy.engine</span><span class="w"> </span><span class="kn">import</span> <span class="n">Row</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..core.DatabaseManager</span><span class="w"> </span><span class="kn">import</span> <span class="n">DatabaseManager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..core.ErrorHandler</span><span class="w"> </span><span class="kn">import</span> <span class="n">ErrorCategory</span><span class="p">,</span> <span class="n">ErrorSeverity</span><span class="p">,</span> <span class="n">handle_errors</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..core.Logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">SmartWatchLogger</span><span class="p">,</span> <span class="n">create_logger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..data_models.schema_bdd</span><span class="w"> </span><span class="kn">import</span> <span class="n">Lieux</span><span class="p">,</span> <span class="n">ResultatsExtraction</span>
+
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">..processing.database_processor</span><span class="w"> </span><span class="kn">import</span> <span class="n">DatabaseProcessor</span>
+
+<span class="n">logger</span><span class="p">:</span> <span class="n">SmartWatchLogger</span> <span class="o">=</span> <span class="n">create_logger</span><span class="p">(</span><span class="n">module_name</span><span class="o">=</span><span class="s2">&quot;MarkdownCleaner&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="CleaningStats">
+<a class="viewcode-back" href="../../../../source/modules/utils/MarkdownCleaner.html#src.smart_watch.utils.MarkdownCleaner.CleaningStats">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CleaningStats</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Dataclass pour stocker les statistiques de nettoyage du Markdown.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        texts_processed (int) : nombre total de textes traités.</span>
+<span class="sd">        texts_successful (int) : nombre de textes nettoyés avec succès.</span>
+<span class="sd">        chars_replaced (int) : nombre total de caractères remplacés.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">texts_processed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">texts_successful</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">chars_replaced</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="CleaningStats.get_summary">
+<a class="viewcode-back" href="../../../../source/modules/utils/MarkdownCleaner.html#src.smart_watch.utils.MarkdownCleaner.CleaningStats.get_summary">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retourne un résumé des statistiques de nettoyage.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, int] : un dictionnaire contenant les statistiques.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;texts_processed&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">texts_processed</span><span class="p">,</span>
+            <span class="s2">&quot;texts_successful&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">texts_successful</span><span class="p">,</span>
+            <span class="s2">&quot;chars_replaced&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">chars_replaced</span><span class="p">,</span>
+        <span class="p">}</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="MarkdownCleaner">
+<a class="viewcode-back" href="../../../../source/modules/utils/MarkdownCleaner.html#src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MarkdownCleaner</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Classe pour nettoyer et normaliser le contenu Markdown brut.</span>
+
+<span class="sd">    Cette classe fournit un pipeline de nettoyage configurable pour préparer</span>
+<span class="sd">    le texte Markdown à un traitement ultérieur, notamment par des modèles de langage.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Regex pour supprimer les liens markdown (avec ou sans titre)</span>
+    <span class="c1"># [texte](url) ou [texte](url &quot;titre&quot;)</span>
+    <span class="n">_RE_MARKDOWN_LINKS</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\[([^\]]*)\]\([^)]*(?: </span><span class="se">\&quot;</span><span class="s2">[^</span><span class="se">\&quot;</span><span class="s2">]*</span><span class="se">\&quot;</span><span class="s2">)?\)&quot;</span><span class="p">)</span>
+
+    <span class="c1"># &lt;http://example.com&gt;</span>
+    <span class="n">_RE_AUTO_LINKS</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;&lt;(https?://[^&gt;]+)&gt;&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Regex pour les liens avec images (liens complexes)</span>
+    <span class="c1"># [![alt](img_url)](link_url &quot;titre&quot;)</span>
+    <span class="n">_RE_IMAGE_LINKS</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\[!\[[^\]]*\]\([^)]*\)\]\([^)]*(?: </span><span class="se">\&quot;</span><span class="s2">[^</span><span class="se">\&quot;</span><span class="s2">]*</span><span class="se">\&quot;</span><span class="s2">)?\)&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Regex pour les images standalone</span>
+    <span class="c1"># ![alt](img_url)</span>
+    <span class="n">_RE_STANDALONE_IMAGES</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;!\[[^\]]*\]\([^)]*\)&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Regex pour les sauts de ligne multiples</span>
+    <span class="c1"># 3 sauts de ligne ou plus</span>
+    <span class="n">_RE_MULTI_NEWLINES</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;(\r\n|\n|\r){3,}&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Regex pour les lignes composées uniquement de caractères de formatage</span>
+    <span class="n">_RE_FORMATTING_LINES</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^[\s#\-</span><span class="se">\&quot;</span><span class="s2">=_\(\[\]\)\.]+$&quot;</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">)</span>
+
+<div class="viewcode-block" id="MarkdownCleaner.__init__">
+<a class="viewcode-back" href="../../../../source/modules/utils/MarkdownCleaner.html#src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">SmartWatchLogger</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialise le MarkdownCleaner.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            config (Any) : l&#39;objet de configuration de l&#39;application.</span>
+<span class="sd">            logger (SmartWatchLogger) : l&#39;instance du logger à utiliser.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">:</span> <span class="n">SmartWatchLogger</span> <span class="o">=</span> <span class="n">logger</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">char_replacements</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">processing</span><span class="o">.</span><span class="n">char_replacements</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MarkdownCleaner._get_pending_cleaning">
+<a class="viewcode-back" href="../../../../source/modules/utils/MarkdownCleaner.html#src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner._get_pending_cleaning">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_pending_cleaning</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">db_manager</span><span class="p">:</span> <span class="n">DatabaseManager</span><span class="p">,</span> <span class="n">execution_id</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Row</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">ResultatsExtraction</span><span class="p">,</span> <span class="n">Lieux</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Récupère les enregistrements nécessitant un nettoyage du markdown.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            db_manager (DatabaseManager) : le gestionnaire de base de données.</span>
+<span class="sd">            execution_id (int) : l&#39;ID de l&#39;exécution à traiter.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Sequence[Row[Tuple[ResultatsExtraction, Lieux]]] : une séquence de résultats à nettoyer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="n">db_manager</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">ResultatsExtraction</span><span class="p">,</span> <span class="n">Lieux</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Lieux</span><span class="p">,</span> <span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">lieu_id</span> <span class="o">==</span> <span class="n">Lieux</span><span class="o">.</span><span class="n">identifiant</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">filter</span><span class="p">(</span>
+                    <span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">id_execution</span> <span class="o">==</span> <span class="n">execution_id</span><span class="p">,</span>
+                    <span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">statut_url</span> <span class="o">==</span> <span class="s2">&quot;ok&quot;</span><span class="p">,</span>
+                    <span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">markdown_brut</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                    <span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">markdown_brut</span><span class="o">.</span><span class="n">isnot</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span>
+                    <span class="n">ResultatsExtraction</span><span class="o">.</span><span class="n">markdown_nettoye</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="o">.</span><span class="n">all</span><span class="p">()</span>
+            <span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="MarkdownCleaner.process_markdown_cleaning">
+<a class="viewcode-back" href="../../../../source/modules/utils/MarkdownCleaner.html#src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner.process_markdown_cleaning">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">process_markdown_cleaning</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">db_processor</span><span class="p">:</span> <span class="s2">&quot;DatabaseProcessor&quot;</span><span class="p">,</span> <span class="n">execution_id</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Nettoie le markdown brut pour tous les résultats d&#39;une exécution donnée.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            db_processor (DatabaseProcessor) : le processeur de base de données.</span>
+<span class="sd">            execution_id (int) : l&#39;ID de l&#39;exécution.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pending_results</span> <span class="o">=</span> <span class="n">db_processor</span><span class="o">.</span><span class="n">get_results_with_raw_markdown</span><span class="p">(</span><span class="n">execution_id</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">pending_results</span><span class="p">:</span>
+            <span class="n">markdown_content</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s2">&quot;markdown_brut&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+            <span class="n">cleaned_markdown</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">clean_markdown_content</span><span class="p">(</span><span class="n">markdown_content</span><span class="p">)</span>
+            <span class="n">resultat_id</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s2">&quot;id_resultats_extraction&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">resultat_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">resultat_id</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                    <span class="n">resultat_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">resultat_id</span><span class="p">)</span>
+                <span class="n">db_processor</span><span class="o">.</span><span class="n">update_cleaned_markdown</span><span class="p">(</span><span class="n">resultat_id</span><span class="p">,</span> <span class="n">cleaned_markdown</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="s2">&quot;Impossible de trouver l&#39;ID pour un résultat de nettoyage&quot;</span>
+                <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MarkdownCleaner.clean_markdown_content">
+<a class="viewcode-back" href="../../../../source/modules/utils/MarkdownCleaner.html#src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner.clean_markdown_content">[docs]</a>
+    <span class="nd">@handle_errors</span><span class="p">(</span>
+        <span class="n">category</span><span class="o">=</span><span class="n">ErrorCategory</span><span class="o">.</span><span class="n">CONVERSION</span><span class="p">,</span>
+        <span class="n">severity</span><span class="o">=</span><span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">LOW</span><span class="p">,</span>
+        <span class="n">user_message</span><span class="o">=</span><span class="s2">&quot;Erreur lors du nettoyage du contenu Markdown.&quot;</span><span class="p">,</span>
+        <span class="n">reraise</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">clean_markdown_content</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Applique un pipeline complet de nettoyage sur un contenu Markdown.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            text (str) : le contenu Markdown à nettoyer.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str : le contenu Markdown nettoyé et normalisé.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">text</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="c1"># 1. Supprimer les liens markdown</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remove_markdown_links</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+        <span class="c1"># 2. Supprimer les lignes de formatage</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remove_formatting_lines</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+        <span class="c1"># 3. Appliquer les remplacements de caractères</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_char_replacements</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+        <span class="c1"># 4. Nettoyer les sauts de ligne multiples</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clean_multiple_newlines</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+        <span class="c1"># 5. Supprimer les lignes en double successives</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remove_consecutive_duplicate_lines</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="MarkdownCleaner._remove_markdown_links">
+<a class="viewcode-back" href="../../../../source/modules/utils/MarkdownCleaner.html#src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner._remove_markdown_links">[docs]</a>
+    <span class="nd">@handle_errors</span><span class="p">(</span>
+        <span class="n">category</span><span class="o">=</span><span class="n">ErrorCategory</span><span class="o">.</span><span class="n">CONVERSION</span><span class="p">,</span> <span class="n">severity</span><span class="o">=</span><span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">LOW</span><span class="p">,</span> <span class="n">reraise</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_remove_markdown_links</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Supprime tous les types de liens Markdown, en ne conservant que le texte visible.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            text (str) : le texte contenant des liens Markdown.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str : le texte sans les liens Markdown.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">text</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="c1"># 1. Liens complexes avec images</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_RE_IMAGE_LINKS</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+
+        <span class="c1"># 2. Images standalone</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_RE_STANDALONE_IMAGES</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+
+        <span class="c1"># 3. Liens texte simples</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_RE_MARKDOWN_LINKS</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+
+        <span class="c1"># 4. Liens automatiques &lt;http://...&gt;</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_RE_AUTO_LINKS</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">text</span></div>
+
+
+<div class="viewcode-block" id="MarkdownCleaner._apply_char_replacements">
+<a class="viewcode-back" href="../../../../source/modules/utils/MarkdownCleaner.html#src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner._apply_char_replacements">[docs]</a>
+    <span class="nd">@handle_errors</span><span class="p">(</span>
+        <span class="n">category</span><span class="o">=</span><span class="n">ErrorCategory</span><span class="o">.</span><span class="n">CONVERSION</span><span class="p">,</span> <span class="n">severity</span><span class="o">=</span><span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">LOW</span><span class="p">,</span> <span class="n">reraise</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_apply_char_replacements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Applique les remplacements de caractères définis dans la configuration.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            text (str) : le texte à traiter.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str : le texte avec les caractères remplacés.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">char_replacements</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">text</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">text</span>
+
+        <span class="n">replacements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">char_replacements</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">keys_to_preserve</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;    &quot;</span><span class="p">,</span> <span class="s2">&quot;   &quot;</span><span class="p">,</span> <span class="s2">&quot;  &quot;</span><span class="p">,</span> <span class="s2">&quot; </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys_to_preserve</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">replacements</span><span class="p">:</span>
+                <span class="k">del</span> <span class="n">replacements</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">source</span><span class="p">,</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">replacements</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">text</span></div>
+
+
+<div class="viewcode-block" id="MarkdownCleaner._clean_multiple_newlines">
+<a class="viewcode-back" href="../../../../source/modules/utils/MarkdownCleaner.html#src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner._clean_multiple_newlines">[docs]</a>
+    <span class="nd">@handle_errors</span><span class="p">(</span>
+        <span class="n">category</span><span class="o">=</span><span class="n">ErrorCategory</span><span class="o">.</span><span class="n">CONVERSION</span><span class="p">,</span> <span class="n">severity</span><span class="o">=</span><span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">LOW</span><span class="p">,</span> <span class="n">reraise</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_clean_multiple_newlines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Remplace les séquences de 3 sauts de ligne ou plus par exactement 2.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            text (str) : le texte à nettoyer.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str : le texte avec des sauts de ligne normalisés.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_RE_MULTI_NEWLINES</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span> <span class="k">if</span> <span class="n">text</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="MarkdownCleaner._remove_formatting_lines">
+<a class="viewcode-back" href="../../../../source/modules/utils/MarkdownCleaner.html#src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner._remove_formatting_lines">[docs]</a>
+    <span class="nd">@handle_errors</span><span class="p">(</span>
+        <span class="n">category</span><span class="o">=</span><span class="n">ErrorCategory</span><span class="o">.</span><span class="n">CONVERSION</span><span class="p">,</span> <span class="n">severity</span><span class="o">=</span><span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">LOW</span><span class="p">,</span> <span class="n">reraise</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_remove_formatting_lines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Supprime les lignes composées uniquement de caractères de formatage.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            text (str) : le texte à nettoyer.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str : le texte sans les lignes de formatage inutiles.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">text</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">cleaned_lines</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">line</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span> <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_RE_FORMATTING_LINES</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cleaned_lines</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MarkdownCleaner._remove_consecutive_duplicate_lines">
+<a class="viewcode-back" href="../../../../source/modules/utils/MarkdownCleaner.html#src.smart_watch.utils.MarkdownCleaner.MarkdownCleaner._remove_consecutive_duplicate_lines">[docs]</a>
+    <span class="nd">@handle_errors</span><span class="p">(</span>
+        <span class="n">category</span><span class="o">=</span><span class="n">ErrorCategory</span><span class="o">.</span><span class="n">CONVERSION</span><span class="p">,</span> <span class="n">severity</span><span class="o">=</span><span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">LOW</span><span class="p">,</span> <span class="n">reraise</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_remove_consecutive_duplicate_lines</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Supprime les lignes consécutives qui sont identiques après nettoyage des espaces.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            text (str) : le texte à nettoyer.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str : le texte sans les lignes dupliquées consécutives.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">text</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="n">lines</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">cleaned_lines</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">last_non_empty_line</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="n">stripped_line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">stripped_line</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">cleaned_lines</span> <span class="ow">and</span> <span class="n">cleaned_lines</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                    <span class="n">cleaned_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">stripped_line</span> <span class="o">!=</span> <span class="n">last_non_empty_line</span><span class="p">:</span>
+                    <span class="n">cleaned_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+                    <span class="n">last_non_empty_line</span> <span class="o">=</span> <span class="n">stripped_line</span>
+
+        <span class="k">while</span> <span class="n">cleaned_lines</span> <span class="ow">and</span> <span class="n">cleaned_lines</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="n">cleaned_lines</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cleaned_lines</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

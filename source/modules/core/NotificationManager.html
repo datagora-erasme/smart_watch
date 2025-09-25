@@ -86,13 +86,6 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../reporting/index.html">Modules Reporting</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Module d'évaluation</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../evaluation/index.html">Module d’évaluation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../evaluation/index.html#vue-d-ensemble">Vue d’ensemble</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../evaluation/index.html#workflow-d-evaluation">Workflow d’évaluation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../evaluation/index.html#metriques-et-comparaisons">Métriques et comparaisons</a></li>
-</ul>
 
         </div>
       </div>
@@ -135,8 +128,113 @@
 <li><p>Gère le cycle de vie des fichiers temporaires (création, nettoyage).</p></li>
 </ul>
 </section>
-<section id="modules">
-<h2>Modules<a class="headerlink" href="#modules" title="Lien vers cette rubrique"></a></h2>
+<section id="module-src.smart_watch.core.NotificationManager">
+<span id="modules"></span><h2>Modules<a class="headerlink" href="#module-src.smart_watch.core.NotificationManager" title="Lien vers cette rubrique"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.smart_watch.core.NotificationManager.NotificationManager">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.smart_watch.core.NotificationManager.</span></span><span class="sig-name descname"><span class="pre">NotificationManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_manager</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ConfigManager.html#src.smart_watch.core.ConfigManager.ConfigManager" title="src.smart_watch.core.ConfigManager.ConfigManager"><span class="pre">ConfigManager</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_manager</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="DatabaseManager.html#src.smart_watch.core.DatabaseManager.DatabaseManager" title="src.smart_watch.core.DatabaseManager.DatabaseManager"><span class="pre">DatabaseManager</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="logger.html#src.smart_watch.core.Logger.SmartWatchLogger" title="src.smart_watch.core.Logger.SmartWatchLogger"><span class="pre">SmartWatchLogger</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/NotificationManager.html#NotificationManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.NotificationManager.NotificationManager" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(disponible dans Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Gère la création et l’envoi de notifications par email avec pièces jointes.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.NotificationManager.NotificationManager.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_manager</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ConfigManager.html#src.smart_watch.core.ConfigManager.ConfigManager" title="src.smart_watch.core.ConfigManager.ConfigManager"><span class="pre">ConfigManager</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_manager</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="DatabaseManager.html#src.smart_watch.core.DatabaseManager.DatabaseManager" title="src.smart_watch.core.DatabaseManager.DatabaseManager"><span class="pre">DatabaseManager</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="logger.html#src.smart_watch.core.Logger.SmartWatchLogger" title="src.smart_watch.core.Logger.SmartWatchLogger"><span class="pre">SmartWatchLogger</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/NotificationManager.html#NotificationManager.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.NotificationManager.NotificationManager.__init__" title="Lien vers cette définition"></a></dt>
+<dd><p>Initialise le NotificationManager.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config_manager</strong> (<a class="reference internal" href="ConfigManager.html#src.smart_watch.core.ConfigManager.ConfigManager" title="src.smart_watch.core.ConfigManager.ConfigManager"><em>ConfigManager</em></a>) – Gestionnaire de configuration de l’application.</p></li>
+<li><p><strong>db_manager</strong> (<a class="reference internal" href="DatabaseManager.html#src.smart_watch.core.DatabaseManager.DatabaseManager" title="src.smart_watch.core.DatabaseManager.DatabaseManager"><em>DatabaseManager</em></a>) – Gestionnaire de la base de données.</p></li>
+<li><p><strong>logger</strong> (<a class="reference internal" href="logger.html#src.smart_watch.core.Logger.SmartWatchLogger" title="src.smart_watch.core.Logger.SmartWatchLogger"><em>SmartWatchLogger</em></a>) – Instance de journalisation pour enregistrer les événements.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.NotificationManager.NotificationManager.config_manager">
+<span class="sig-name descname"><span class="pre">config_manager</span></span><a class="headerlink" href="#src.smart_watch.core.NotificationManager.NotificationManager.config_manager" title="Lien vers cette définition"></a></dt>
+<dd><p>Le gestionnaire de configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="ConfigManager.html#src.smart_watch.core.ConfigManager.ConfigManager" title="src.smart_watch.core.ConfigManager.ConfigManager">ConfigManager</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.NotificationManager.NotificationManager.db_manager">
+<span class="sig-name descname"><span class="pre">db_manager</span></span><a class="headerlink" href="#src.smart_watch.core.NotificationManager.NotificationManager.db_manager" title="Lien vers cette définition"></a></dt>
+<dd><p>Le gestionnaire de base de données.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="DatabaseManager.html#src.smart_watch.core.DatabaseManager.DatabaseManager" title="src.smart_watch.core.DatabaseManager.DatabaseManager">DatabaseManager</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.NotificationManager.NotificationManager.logger">
+<span class="sig-name descname"><span class="pre">logger</span></span><a class="headerlink" href="#src.smart_watch.core.NotificationManager.NotificationManager.logger" title="Lien vers cette définition"></a></dt>
+<dd><p>Le logger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="logger.html#src.smart_watch.core.Logger.SmartWatchLogger" title="src.smart_watch.core.Logger.SmartWatchLogger">SmartWatchLogger</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.NotificationManager.NotificationManager.email_sender">
+<span class="sig-name descname"><span class="pre">email_sender</span></span><a class="headerlink" href="#src.smart_watch.core.NotificationManager.NotificationManager.email_sender" title="Lien vers cette définition"></a></dt>
+<dd><p>L’expéditeur d’email.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="EnvoyerMail.html#src.smart_watch.core.EnvoyerMail.EmailSender" title="src.smart_watch.core.EnvoyerMail.EmailSender">EmailSender</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.NotificationManager.NotificationManager.send_report_email">
+<span class="sig-name descname"><span class="pre">send_report_email</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stats</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(disponible dans Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/NotificationManager.html#NotificationManager.send_report_email"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.NotificationManager.NotificationManager.send_report_email" title="Lien vers cette définition"></a></dt>
+<dd><p>Génère le rapport, compresse les logs et envoie l’email.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>stats</strong> (<em>Dict</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><em>str</em></a><em>, </em><em>Any</em><em>]</em>) – Statistiques à inclure dans le rapport.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.NotificationManager.NotificationManager._generate_report">
+<span class="sig-name descname"><span class="pre">_generate_report</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/NotificationManager.html#NotificationManager._generate_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.NotificationManager.NotificationManager._generate_report" title="Lien vers cette définition"></a></dt>
+<dd><p>Génère le rapport HTML.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Chemin du fichier HTML généré, ou une chaîne vide en cas d’erreur.</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.NotificationManager.NotificationManager._zip_log_file">
+<span class="sig-name descname"><span class="pre">_zip_log_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/NotificationManager.html#NotificationManager._zip_log_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.NotificationManager.NotificationManager._zip_log_file" title="Lien vers cette définition"></a></dt>
+<dd><p>Compresse le fichier de log et retourne le chemin du fichier zip.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Chemin du fichier zip créé, ou une chaîne vide en cas d’erreur.</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 </section>
 

@@ -1,0 +1,557 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.smart_watch.processing.markdown_processor &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.jpg"/>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=d2e4462e"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/translations.js?v=e6b791cb"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/introduction.html">Présentation du projet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/introduction.html#sommaire">Sommaire</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/docker.html">Utilisation avec Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/configuration.html">Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture technique</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/main.html">Orchestrateur</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/diagramme.html">Pipeline de traitement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/bdd.html">Base de données</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/stack.html">Stack technique</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/config/index.html">Modules Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/core/index.html">Modules Core</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/processing/index.html">Modules Processing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/utils/index.html">Modules Utils</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Reporting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html">Modules Reporting</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Code du module</a></li>
+      <li class="breadcrumb-item active">src.smart_watch.processing.markdown_processor</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Code source de src.smart_watch.processing.markdown_processor</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Documentation:</span>
+<span class="c1"># https://datagora-erasme.github.io/smart_watch/source/modules/processing/markdown_processor.html</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..config.llm_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLMConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..config.markdown_filtering_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">MarkdownFilteringConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..core.ConfigManager</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigManager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..core.ErrorHandler</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ErrorCategory</span><span class="p">,</span>
+    <span class="n">ErrorHandler</span><span class="p">,</span>
+    <span class="n">ErrorSeverity</span><span class="p">,</span>
+    <span class="n">handle_errors</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..core.LLMClient</span><span class="w"> </span><span class="kn">import</span> <span class="n">EmbeddingModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..core.Logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">SmartWatchLogger</span><span class="p">,</span> <span class="n">create_logger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..processing.database_processor</span><span class="w"> </span><span class="kn">import</span> <span class="n">DatabaseProcessor</span>
+
+<span class="n">logger</span><span class="p">:</span> <span class="n">SmartWatchLogger</span> <span class="o">=</span> <span class="n">create_logger</span><span class="p">(</span><span class="n">module_name</span><span class="o">=</span><span class="s2">&quot;MarkdownProcessor&quot;</span><span class="p">)</span>
+<span class="n">error_handler</span> <span class="o">=</span> <span class="n">ErrorHandler</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="MarkdownProcessor">
+<a class="viewcode-back" href="../../../../source/modules/processing/markdown_processor.html#src.smart_watch.processing.markdown_processor.MarkdownProcessor">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MarkdownProcessor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Classe pour traiter et filtrer le contenu Markdown en se basant sur la pertinence sémantique.</span>
+
+<span class="sd">    Cette classe utilise des embeddings pour identifier et extraire les sections d&#39;un document</span>
+<span class="sd">    Markdown qui sont les plus pertinentes par rapport à un ensemble de phrases de référence.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="MarkdownProcessor.__init__">
+<a class="viewcode-back" href="../../../../source/modules/processing/markdown_processor.html#src.smart_watch.processing.markdown_processor.MarkdownProcessor.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">config_manager</span><span class="p">:</span> <span class="n">ConfigManager</span><span class="p">,</span>
+        <span class="n">logger_instance</span><span class="p">:</span> <span class="n">SmartWatchLogger</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialise le processeur de markdown.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            config_manager (ConfigManager): Le gestionnaire de configuration global.</span>
+<span class="sd">            logger_instance (SmartWatchLogger): L&#39;instance de logger à utiliser.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">:</span> <span class="n">MarkdownFilteringConfig</span> <span class="o">=</span> <span class="n">config_manager</span><span class="o">.</span><span class="n">markdown_filtering</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">llm_config</span><span class="p">:</span> <span class="n">LLMConfig</span> <span class="o">=</span> <span class="n">config_manager</span><span class="o">.</span><span class="n">llm</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">:</span> <span class="n">SmartWatchLogger</span> <span class="o">=</span> <span class="n">logger_instance</span>
+
+        <span class="c1"># Création interne du modèle d&#39;embedding pour rester cohérent avec main.py</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">embedding_model</span> <span class="o">=</span> <span class="n">EmbeddingModel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">reference_embeddings</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="MarkdownProcessor._get_embeddings">
+<a class="viewcode-back" href="../../../../source/modules/processing/markdown_processor.html#src.smart_watch.processing.markdown_processor.MarkdownProcessor._get_embeddings">[docs]</a>
+    <span class="nd">@handle_errors</span><span class="p">(</span>
+        <span class="n">category</span><span class="o">=</span><span class="n">ErrorCategory</span><span class="o">.</span><span class="n">EMBEDDINGS</span><span class="p">,</span>
+        <span class="n">severity</span><span class="o">=</span><span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">HIGH</span><span class="p">,</span>
+        <span class="n">default_return</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_embeddings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Génère les embeddings pour une liste de textes.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            texts (List[str]) : la liste des textes à encoder.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple[Optional[np.ndarray], float] : un tuple contenant les embeddings sous forme de tableau NumPy</span>
+<span class="sd">                                                 et les émissions de CO2 estimées.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError : si aucun client d&#39;embedding n&#39;est initialisé.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">texts</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="mf">0.0</span>
+
+        <span class="n">valid_texts</span> <span class="o">=</span> <span class="p">[</span><span class="n">text</span> <span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">texts</span> <span class="k">if</span> <span class="n">text</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">text</span><span class="o">.</span><span class="n">isspace</span><span class="p">()]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">valid_texts</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="mf">0.0</span>
+
+        <span class="c1"># Utiliser directement le client embedding_model qui gère déjà la logique</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">embeddings</span><span class="p">,</span> <span class="n">co2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">embedding_model</span><span class="o">.</span><span class="n">get_text_embedding</span><span class="p">(</span>
+                <span class="n">valid_texts</span><span class="p">,</span> <span class="n">with_co2</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">embeddings</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">embeddings</span><span class="p">),</span> <span class="n">co2</span>
+            <span class="k">return</span> <span class="n">embeddings</span><span class="p">,</span> <span class="n">co2</span>  <span class="c1"># Peut déjà être un np.array</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Erreur lors du calcul des embeddings via EmbeddingModel: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+            <span class="k">raise</span></div>
+
+
+<div class="viewcode-block" id="MarkdownProcessor._calculate_reference_embeddings">
+<a class="viewcode-back" href="../../../../source/modules/processing/markdown_processor.html#src.smart_watch.processing.markdown_processor.MarkdownProcessor._calculate_reference_embeddings">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_calculate_reference_embeddings</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calcule et met en cache les embeddings pour les phrases de référence définies dans la configuration.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError : si aucune phrase de référence n&#39;est configurée.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference_embeddings</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">reference_phrases</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Aucune phrase de référence configurée&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Calcul des embeddings pour les phrases de référence.&quot;</span><span class="p">)</span>
+            <span class="n">embeddings</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_embeddings</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">reference_phrases</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">embeddings</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">reference_embeddings</span> <span class="o">=</span> <span class="n">embeddings</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Impossible de calculer les embeddings de référence.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MarkdownProcessor.process_markdown_filtering">
+<a class="viewcode-back" href="../../../../source/modules/processing/markdown_processor.html#src.smart_watch.processing.markdown_processor.MarkdownProcessor.process_markdown_filtering">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">process_markdown_filtering</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">db_processor</span><span class="p">:</span> <span class="n">DatabaseProcessor</span><span class="p">,</span> <span class="n">execution_id</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Filtre le contenu markdown pour tous les résultats d&#39;une exécution donnée.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            db_processor (DatabaseProcessor) : l&#39;instance du processeur de base de données.</span>
+<span class="sd">            execution_id (int) : l&#39;ID de l&#39;exécution à traiter.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_calculate_reference_embeddings</span><span class="p">()</span>
+        <span class="n">pending_results</span> <span class="o">=</span> <span class="n">db_processor</span><span class="o">.</span><span class="n">get_results_with_cleaned_markdown</span><span class="p">(</span><span class="n">execution_id</span><span class="p">)</span>
+        <span class="n">total_results</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pending_results</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pending_results</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">markdown_content</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s2">&quot;markdown_nettoye&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+                <span class="n">counter</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">total_results</span><span class="p">)</span>
+                <span class="n">filtered_markdown</span><span class="p">,</span> <span class="n">co2_emissions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_markdown</span><span class="p">(</span>
+                    <span class="n">markdown_content</span><span class="p">,</span> <span class="n">counter</span>
+                <span class="p">)</span>
+                <span class="n">resultat_id</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="s2">&quot;id_resultats_extraction&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">resultat_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">db_processor</span><span class="o">.</span><span class="n">update_filtered_markdown</span><span class="p">(</span>
+                        <span class="n">resultat_id</span><span class="p">,</span> <span class="n">filtered_markdown</span><span class="p">,</span> <span class="n">co2_emissions</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                        <span class="s2">&quot;ID de résultat non trouvé pour le filtrage markdown&quot;</span>
+                    <span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Erreur lors du filtrage markdown pour résultat </span><span class="si">{</span><span class="nb">getattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;id_resultats_extraction&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;inconnu&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+                <span class="k">continue</span></div>
+
+
+<div class="viewcode-block" id="MarkdownProcessor.filter_markdown">
+<a class="viewcode-back" href="../../../../source/modules/processing/markdown_processor.html#src.smart_watch.processing.markdown_processor.MarkdownProcessor.filter_markdown">[docs]</a>
+    <span class="nd">@handle_errors</span><span class="p">(</span>
+        <span class="n">category</span><span class="o">=</span><span class="n">ErrorCategory</span><span class="o">.</span><span class="n">PARSING</span><span class="p">,</span>
+        <span class="n">severity</span><span class="o">=</span><span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">HIGH</span><span class="p">,</span>
+        <span class="n">default_return</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">filter_markdown</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">markdown_content</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">counter</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Filtre un contenu Markdown pour n&#39;en conserver que les sections sémantiquement pertinentes.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            markdown_content (str) : le contenu Markdown à filtrer.</span>
+<span class="sd">            counter (Optional[Tuple[int, int]]) : un compteur (ex: (1, 10)) pour le logging.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple[str, float] : le contenu Markdown filtré et les émissions de CO2 associées.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">counter</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">counter</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">* &quot;</span> <span class="k">if</span> <span class="n">counter</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">min_len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">min_content_length</span> <span class="ow">or</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">markdown_content</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">min_len</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">Contenu trop court, filtrage ignoré.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">markdown_content</span><span class="p">,</span> <span class="mf">0.0</span>
+
+        <span class="n">all_lines</span> <span class="o">=</span> <span class="n">markdown_content</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logical_blocks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_identify_logical_blocks</span><span class="p">(</span><span class="n">all_lines</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">logical_blocks</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="mf">0.0</span>
+
+        <span class="n">chunks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_chunk_blocks</span><span class="p">(</span><span class="n">logical_blocks</span><span class="p">)</span>
+        <span class="n">relevant_chunks</span><span class="p">,</span> <span class="n">co2_emissions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter_chunks</span><span class="p">(</span><span class="n">chunks</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">relevant_chunks</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">Aucune section pertinente trouvée après filtrage.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">co2_emissions</span>
+
+        <span class="n">relevant_line_ranges</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span><span class="n">block</span><span class="p">[</span><span class="s2">&quot;start_line&quot;</span><span class="p">],</span> <span class="n">block</span><span class="p">[</span><span class="s2">&quot;end_line&quot;</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">relevant_chunks</span>
+            <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">chunk</span><span class="p">[</span><span class="s2">&quot;blocks&quot;</span><span class="p">]</span>
+        <span class="p">]</span>
+
+        <span class="n">merged_ranges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_merge_ranges</span><span class="p">(</span><span class="n">relevant_line_ranges</span><span class="p">)</span>
+
+        <span class="n">expansion_lines</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">context_window_size</span>
+        <span class="n">expanded_ranges</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">(</span>
+                <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">start</span> <span class="o">-</span> <span class="n">expansion_lines</span><span class="p">),</span>
+                <span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">all_lines</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">end</span> <span class="o">+</span> <span class="n">expansion_lines</span><span class="p">),</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="ow">in</span> <span class="n">merged_ranges</span>
+        <span class="p">]</span>
+
+        <span class="n">final_ranges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_merge_ranges</span><span class="p">(</span><span class="n">expanded_ranges</span><span class="p">)</span>
+
+        <span class="n">final_sections</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">all_lines</span><span class="p">[</span><span class="n">start</span> <span class="p">:</span> <span class="n">end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="ow">in</span> <span class="n">final_ranges</span>
+        <span class="p">]</span>
+        <span class="n">final_content</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">final_sections</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">Filtrage terminé. Contenu réduit de </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">markdown_content</span><span class="p">)</span><span class="si">}</span><span class="s2"> à </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">final_content</span><span class="p">)</span><span class="si">}</span><span class="s2"> car.&quot;</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">final_content</span><span class="p">,</span> <span class="n">co2_emissions</span></div>
+
+
+<div class="viewcode-block" id="MarkdownProcessor._classify_line">
+<a class="viewcode-back" href="../../../../source/modules/processing/markdown_processor.html#src.smart_watch.processing.markdown_processor.MarkdownProcessor._classify_line">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_classify_line</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Classifie une ligne de texte en catégories structurelles (paragraphe, tabulaire, etc.).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            line (str) : la ligne à classifier.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str : le type de la ligne (&#39;empty&#39;, &#39;tabular&#39;, &#39;indented&#39;, &#39;paragraph&#39;).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+            <span class="k">return</span> <span class="s2">&quot;empty&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s{2,}&quot;</span><span class="p">,</span> <span class="n">line</span><span class="p">))</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;tabular&quot;</span>
+        <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="s2">&quot;indented&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;paragraph&quot;</span></div>
+
+
+<div class="viewcode-block" id="MarkdownProcessor._identify_logical_blocks">
+<a class="viewcode-back" href="../../../../source/modules/processing/markdown_processor.html#src.smart_watch.processing.markdown_processor.MarkdownProcessor._identify_logical_blocks">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_identify_logical_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lines</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Segmente une liste de lignes en blocs logiques (paragraphes, tableaux, etc.).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            lines (List[str]) : les lignes de texte à analyser.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List[Dict[str, Any]] : une liste de dictionnaires, chaque dictionnaire représentant un bloc.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">blocks</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">blocks</span>
+
+        <span class="n">current_block_lines</span><span class="p">,</span> <span class="n">start_line_num</span> <span class="o">=</span> <span class="p">[],</span> <span class="mi">0</span>
+        <span class="n">current_block_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_classify_line</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lines</span><span class="p">):</span>
+            <span class="n">line_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_classify_line</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+            <span class="n">is_new_block</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">line_type</span> <span class="o">!=</span> <span class="n">current_block_type</span> <span class="ow">and</span> <span class="n">line_type</span> <span class="o">!=</span> <span class="s2">&quot;empty&quot;</span>
+            <span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">line_type</span> <span class="o">==</span> <span class="s2">&quot;empty&quot;</span> <span class="ow">and</span> <span class="n">current_block_type</span> <span class="o">!=</span> <span class="s2">&quot;empty&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">is_new_block</span> <span class="ow">and</span> <span class="n">current_block_lines</span><span class="p">:</span>
+                <span class="n">blocks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">current_block_type</span><span class="p">,</span>
+                        <span class="s2">&quot;lines&quot;</span><span class="p">:</span> <span class="n">current_block_lines</span><span class="p">,</span>
+                        <span class="s2">&quot;start_line&quot;</span><span class="p">:</span> <span class="n">start_line_num</span><span class="p">,</span>
+                        <span class="s2">&quot;end_line&quot;</span><span class="p">:</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+                    <span class="p">}</span>
+                <span class="p">)</span>
+                <span class="n">current_block_lines</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">if</span> <span class="n">line_type</span> <span class="o">!=</span> <span class="s2">&quot;empty&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">current_block_lines</span><span class="p">:</span>
+                    <span class="n">start_line_num</span><span class="p">,</span> <span class="n">current_block_type</span> <span class="o">=</span> <span class="n">i</span><span class="p">,</span> <span class="n">line_type</span>
+                <span class="n">current_block_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">current_block_lines</span><span class="p">:</span>
+            <span class="n">blocks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">current_block_type</span><span class="p">,</span>
+                    <span class="s2">&quot;lines&quot;</span><span class="p">:</span> <span class="n">current_block_lines</span><span class="p">,</span>
+                    <span class="s2">&quot;start_line&quot;</span><span class="p">:</span> <span class="n">start_line_num</span><span class="p">,</span>
+                    <span class="s2">&quot;end_line&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">blocks</span></div>
+
+
+<div class="viewcode-block" id="MarkdownProcessor._chunk_blocks">
+<a class="viewcode-back" href="../../../../source/modules/processing/markdown_processor.html#src.smart_watch.processing.markdown_processor.MarkdownProcessor._chunk_blocks">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_chunk_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">blocks</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Regroupe les blocs logiques en &#39;chunks&#39; de taille définie pour l&#39;analyse sémantique.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            blocks (List[Dict[str, Any]]) : la liste des blocs logiques à regrouper.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List[Dict[str, Any]] : une liste de chunks, chaque chunk contenant un ou plusieurs blocs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">chunks</span><span class="p">,</span> <span class="n">current_chunk_blocks</span><span class="p">,</span> <span class="n">current_size</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="mi">0</span>
+        <span class="n">chunk_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">chunk_size</span> <span class="ow">or</span> <span class="mi">100</span>
+        <span class="n">chunk_overlap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">chunk_overlap</span> <span class="ow">or</span> <span class="mi">15</span>
+
+        <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">blocks</span><span class="p">:</span>
+            <span class="n">block_content</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">block</span><span class="p">[</span><span class="s2">&quot;lines&quot;</span><span class="p">])</span>
+            <span class="n">block_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">block_content</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">current_size</span> <span class="o">+</span> <span class="n">block_size</span> <span class="o">&gt;</span> <span class="n">chunk_size</span> <span class="ow">and</span> <span class="n">current_chunk_blocks</span><span class="p">:</span>
+                <span class="n">chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                            <span class="n">b</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">current_chunk_blocks</span>
+                        <span class="p">),</span>
+                        <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="n">current_chunk_blocks</span><span class="p">,</span>
+                    <span class="p">}</span>
+                <span class="p">)</span>
+                <span class="n">overlap_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">chunk_overlap</span> <span class="o">/</span> <span class="mi">100</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">current_chunk_blocks</span><span class="p">))</span>
+                <span class="n">current_chunk_blocks</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">current_chunk_blocks</span><span class="p">[</span><span class="o">-</span><span class="n">overlap_count</span><span class="p">:]</span> <span class="k">if</span> <span class="n">overlap_count</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">[]</span>
+                <span class="p">)</span>
+                <span class="n">current_size</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span>
+                    <span class="nb">len</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="s2">&quot;lines&quot;</span><span class="p">]))</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">current_chunk_blocks</span>
+                <span class="p">)</span>
+            <span class="n">block</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">block_content</span>
+            <span class="n">current_chunk_blocks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+            <span class="n">current_size</span> <span class="o">+=</span> <span class="n">block_size</span>
+        <span class="k">if</span> <span class="n">current_chunk_blocks</span><span class="p">:</span>
+            <span class="n">chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">current_chunk_blocks</span><span class="p">),</span>
+                    <span class="s2">&quot;blocks&quot;</span><span class="p">:</span> <span class="n">current_chunk_blocks</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">chunks</span></div>
+
+
+<div class="viewcode-block" id="MarkdownProcessor._filter_chunks">
+<a class="viewcode-back" href="../../../../source/modules/processing/markdown_processor.html#src.smart_watch.processing.markdown_processor.MarkdownProcessor._filter_chunks">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_filter_chunks</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">chunks</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Filtre les chunks en fonction de leur similarité sémantique avec les phrases de référence.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            chunks (List[Dict[str, Any]]) : la liste des chunks à filtrer.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple[List[Dict[str, Any]], float] : une liste des chunks pertinents et les émissions de CO2.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">relevant_chunks</span><span class="p">,</span> <span class="n">total_co2</span> <span class="o">=</span> <span class="p">[],</span> <span class="mf">0.0</span>
+        <span class="n">chunk_contents</span> <span class="o">=</span> <span class="p">[</span><span class="n">chunk</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">chunks</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">chunk_contents</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[],</span> <span class="mf">0.0</span>
+
+        <span class="n">chunk_embeddings</span><span class="p">,</span> <span class="n">co2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_embeddings</span><span class="p">(</span><span class="n">chunk_contents</span><span class="p">)</span>
+        <span class="n">total_co2</span> <span class="o">+=</span> <span class="n">co2</span>
+
+        <span class="k">if</span> <span class="n">chunk_embeddings</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference_embeddings</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[],</span> <span class="n">total_co2</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">chunk_embedding</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">chunk_embeddings</span><span class="p">):</span>
+            <span class="n">max_dot_product</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">chunk_embedding</span><span class="p">,</span> <span class="n">ref_embedding</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">ref_embedding</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference_embeddings</span>
+            <span class="p">)</span>
+            <span class="n">similarity_threshold</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">similarity_threshold</span> <span class="ow">or</span> <span class="mf">0.0</span>
+            <span class="k">if</span> <span class="n">max_dot_product</span> <span class="o">&gt;=</span> <span class="n">similarity_threshold</span><span class="p">:</span>
+                <span class="n">relevant_chunks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chunks</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">relevant_chunks</span><span class="p">,</span> <span class="n">total_co2</span></div>
+
+
+<div class="viewcode-block" id="MarkdownProcessor._merge_ranges">
+<a class="viewcode-back" href="../../../../source/modules/processing/markdown_processor.html#src.smart_watch.processing.markdown_processor.MarkdownProcessor._merge_ranges">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_merge_ranges</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">ranges</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span> <span class="n">gap</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Fusionne des plages de nombres (intervalles) qui se chevauchent ou sont proches.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            ranges (List[Tuple[int, int]]) : une liste de tuples représentant les plages (début, fin).</span>
+<span class="sd">            gap (int) : l&#39;écart maximal entre deux plages pour qu&#39;elles soient fusionnées.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List[Tuple[int, int]] : une liste de plages fusionnées.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ranges</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="n">sorted_ranges</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">ranges</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">merged</span> <span class="o">=</span> <span class="p">[</span><span class="n">sorted_ranges</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="k">for</span> <span class="n">current_start</span><span class="p">,</span> <span class="n">current_end</span> <span class="ow">in</span> <span class="n">sorted_ranges</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+            <span class="n">last_start</span><span class="p">,</span> <span class="n">last_end</span> <span class="o">=</span> <span class="n">merged</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">current_start</span> <span class="o">&lt;=</span> <span class="n">last_end</span> <span class="o">+</span> <span class="n">gap</span><span class="p">:</span>
+                <span class="n">merged</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">last_start</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">last_end</span><span class="p">,</span> <span class="n">current_end</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">merged</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">current_start</span><span class="p">,</span> <span class="n">current_end</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">merged</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

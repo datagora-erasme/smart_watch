@@ -86,13 +86,6 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../reporting/index.html">Modules Reporting</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Module d'évaluation</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../evaluation/index.html">Module d’évaluation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../evaluation/index.html#vue-d-ensemble">Vue d’ensemble</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../evaluation/index.html#workflow-d-evaluation">Workflow d’évaluation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../evaluation/index.html#metriques-et-comparaisons">Métriques et comparaisons</a></li>
-</ul>
 
         </div>
       </div>
@@ -135,8 +128,437 @@
 <li><p>Calcule des métriques de performance (taux de réussite, temps de traitement, etc.).</p></li>
 </ul>
 </section>
-<section id="modules">
-<h2>Modules<a class="headerlink" href="#modules" title="Lien vers cette rubrique"></a></h2>
+<section id="module-src.smart_watch.core.StatsManager">
+<span id="modules"></span><h2>Modules<a class="headerlink" href="#module-src.smart_watch.core.StatsManager" title="Lien vers cette rubrique"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.smart_watch.core.StatsManager.StatItem">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.smart_watch.core.StatsManager.</span></span><span class="sig-name descname"><span class="pre">StatItem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(disponible dans Python v3.13)"><span class="pre">Any</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'{}'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/StatsManager.html#StatItem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.StatsManager.StatItem" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(disponible dans Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Représente un élément de statistique avec sa valeur, son libellé et son unité.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.StatsManager.StatItem.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(disponible dans Python v3.13)"><span class="pre">Any</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'{}'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/StatsManager.html#StatItem.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.StatsManager.StatItem.__init__" title="Lien vers cette définition"></a></dt>
+<dd><p>Initialise un élément de statistique.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<em>Any</em>) – La valeur de la statistique.</p></li>
+<li><p><strong>label</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><em>str</em></a>) – Le libellé descriptif de la statistique.</p></li>
+<li><p><strong>unit</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><em>str</em></a><em>, </em><em>optionnel</em>) – L’unité de mesure de la statistique. Par défaut « « .</p></li>
+<li><p><strong>format_str</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><em>str</em></a><em>, </em><em>optionnel</em>) – La chaîne de formatage pour la valeur. Par défaut « {} ».</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.StatsManager.StatItem.value">
+<span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#src.smart_watch.core.StatsManager.StatItem.value" title="Lien vers cette définition"></a></dt>
+<dd><p>La valeur brute de la statistique.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.StatsManager.StatItem.label">
+<span class="sig-name descname"><span class="pre">label</span></span><a class="headerlink" href="#src.smart_watch.core.StatsManager.StatItem.label" title="Lien vers cette définition"></a></dt>
+<dd><p>Le libellé de la statistique.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.StatsManager.StatItem.unit">
+<span class="sig-name descname"><span class="pre">unit</span></span><a class="headerlink" href="#src.smart_watch.core.StatsManager.StatItem.unit" title="Lien vers cette définition"></a></dt>
+<dd><p>L’unité de la statistique.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.StatsManager.StatItem.format_str">
+<span class="sig-name descname"><span class="pre">format_str</span></span><a class="headerlink" href="#src.smart_watch.core.StatsManager.StatItem.format_str" title="Lien vers cette définition"></a></dt>
+<dd><p>La chaîne de formatage pour l’affichage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.StatsManager.StatItem.formatted_value">
+<span class="sig-name descname"><span class="pre">formatted_value</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/StatsManager.html#StatItem.formatted_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.StatsManager.StatItem.formatted_value" title="Lien vers cette définition"></a></dt>
+<dd><p>Retourne la valeur de la statistique formatée pour l’affichage.</p>
+<p>La valeur est formatée en utilisant <cite>format_str</cite> et l’unité est ajoutée si elle est définie.
+Si la valeur est <cite>None</cite>, la méthode retourne « N/A ».</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p>La valeur formatée, incluant l’unité si disponible.</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="src.smart_watch.core.StatsManager.StatsSection">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.smart_watch.core.StatsManager.</span></span><span class="sig-name descname"><span class="pre">StatsSection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">items</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#src.smart_watch.core.StatsManager.StatItem" title="src.smart_watch.core.StatsManager.StatItem"><span class="pre">StatItem</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/StatsManager.html#StatsSection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.StatsManager.StatsSection" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(disponible dans Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Représente une section de statistiques.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.StatsManager.StatsSection.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">items</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#src.smart_watch.core.StatsManager.StatItem" title="src.smart_watch.core.StatsManager.StatItem"><span class="pre">StatItem</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/StatsManager.html#StatsSection.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.StatsManager.StatsSection.__init__" title="Lien vers cette définition"></a></dt>
+<dd><p>Initialise une section de statistiques, qui regroupe plusieurs <cite>StatItem</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><em>str</em></a>) – Le titre de la section (ex: « URLs », « LLM »).</p></li>
+<li><p><strong>items</strong> (<em>Dict</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><em>str</em></a><em>, </em><a class="reference internal" href="#src.smart_watch.core.StatsManager.StatItem" title="src.smart_watch.core.StatsManager.StatItem"><em>StatItem</em></a><em>]</em>) – Un dictionnaire d’éléments de statistique.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.StatsManager.StatsSection.title">
+<span class="sig-name descname"><span class="pre">title</span></span><a class="headerlink" href="#src.smart_watch.core.StatsManager.StatsSection.title" title="Lien vers cette définition"></a></dt>
+<dd><p>Le titre de la section.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.StatsManager.StatsSection.items">
+<span class="sig-name descname"><span class="pre">items</span></span><a class="headerlink" href="#src.smart_watch.core.StatsManager.StatsSection.items" title="Lien vers cette définition"></a></dt>
+<dd><p>Les éléments de statistique de la section.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a>, <a class="reference internal" href="#src.smart_watch.core.StatsManager.StatItem" title="src.smart_watch.core.StatsManager.StatItem">StatItem</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.StatsManager.StatsSection.get_item_value">
+<span class="sig-name descname"><span class="pre">get_item_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(disponible dans Python v3.13)"><span class="pre">Any</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/StatsManager.html#StatsSection.get_item_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.StatsManager.StatsSection.get_item_value" title="Lien vers cette définition"></a></dt>
+<dd><p>Récupère la valeur brute d’un élément de statistique par sa clé.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><em>str</em></a>) – La clé de l’élément de statistique à récupérer.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>La valeur brute de l’élément, ou « N/A » si la clé n’existe pas.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.StatsManager.StatsSection.get_formatted_value">
+<span class="sig-name descname"><span class="pre">get_formatted_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/StatsManager.html#StatsSection.get_formatted_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.StatsManager.StatsSection.get_formatted_value" title="Lien vers cette définition"></a></dt>
+<dd><p>Récupère la valeur formatée d’un élément de statistique par sa clé.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><em>str</em></a>) – La clé de l’élément de statistique à récupérer.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>La valeur formatée de l’élément, ou « N/A » si la clé n’existe pas.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="src.smart_watch.core.StatsManager.StatsManager">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.smart_watch.core.StatsManager.</span></span><span class="sig-name descname"><span class="pre">StatsManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ConfigManager.html#src.smart_watch.core.ConfigManager.ConfigManager" title="src.smart_watch.core.ConfigManager.ConfigManager"><span class="pre">ConfigManager</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="logger.html#src.smart_watch.core.Logger.SmartWatchLogger" title="src.smart_watch.core.Logger.SmartWatchLogger"><span class="pre">SmartWatchLogger</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/core/StatsManager.html#StatsManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.StatsManager.StatsManager" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(disponible dans Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Gestionnaire de statistiques basé sur les requêtes SQL.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.StatsManager.StatsManager.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="ConfigManager.html#src.smart_watch.core.ConfigManager.ConfigManager" title="src.smart_watch.core.ConfigManager.ConfigManager"><span class="pre">ConfigManager</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="logger.html#src.smart_watch.core.Logger.SmartWatchLogger" title="src.smart_watch.core.Logger.SmartWatchLogger"><span class="pre">SmartWatchLogger</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/StatsManager.html#StatsManager.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.StatsManager.StatsManager.__init__" title="Lien vers cette définition"></a></dt>
+<dd><p>Initialise le gestionnaire de statistiques.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<a class="reference internal" href="ConfigManager.html#src.smart_watch.core.ConfigManager.ConfigManager" title="src.smart_watch.core.ConfigManager.ConfigManager"><em>ConfigManager</em></a>) – L’instance du gestionnaire de configuration.</p></li>
+<li><p><strong>logger</strong> (<a class="reference internal" href="logger.html#src.smart_watch.core.Logger.SmartWatchLogger" title="src.smart_watch.core.Logger.SmartWatchLogger"><em>SmartWatchLogger</em></a>) – L’instance du logger pour l’enregistrement des messages.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.StatsManager.StatsManager.config">
+<span class="sig-name descname"><span class="pre">config</span></span><a class="headerlink" href="#src.smart_watch.core.StatsManager.StatsManager.config" title="Lien vers cette définition"></a></dt>
+<dd><p>Le gestionnaire de configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="ConfigManager.html#src.smart_watch.core.ConfigManager.ConfigManager" title="src.smart_watch.core.ConfigManager.ConfigManager">ConfigManager</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.StatsManager.StatsManager.logger">
+<span class="sig-name descname"><span class="pre">logger</span></span><a class="headerlink" href="#src.smart_watch.core.StatsManager.StatsManager.logger" title="Lien vers cette définition"></a></dt>
+<dd><p>Le logger.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="logger.html#src.smart_watch.core.Logger.SmartWatchLogger" title="src.smart_watch.core.Logger.SmartWatchLogger">SmartWatchLogger</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="src.smart_watch.core.StatsManager.StatsManager.db_manager">
+<span class="sig-name descname"><span class="pre">db_manager</span></span><a class="headerlink" href="#src.smart_watch.core.StatsManager.StatsManager.db_manager" title="Lien vers cette définition"></a></dt>
+<dd><p>Le gestionnaire de base de données pour exécuter les requêtes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="DatabaseManager.html#src.smart_watch.core.DatabaseManager.DatabaseManager" title="src.smart_watch.core.DatabaseManager.DatabaseManager">DatabaseManager</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.StatsManager.StatsManager.get_pipeline_stats">
+<span class="sig-name descname"><span class="pre">get_pipeline_stats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#src.smart_watch.core.StatsManager.StatsSection" title="src.smart_watch.core.StatsManager.StatsSection"><span class="pre">StatsSection</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/StatsManager.html#StatsManager.get_pipeline_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.StatsManager.StatsManager.get_pipeline_stats" title="Lien vers cette définition"></a></dt>
+<dd><p>Génère un rapport complet des statistiques du pipeline.</p>
+<p>Cette méthode agrège les statistiques de chaque étape du pipeline (URLs, Markdown, LLM, etc.)
+en appelant les méthodes dédiées pour chaque section.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>Un dictionnaire où chaque clé est le nom d’une section</dt><dd><p>et la valeur est un objet <cite>StatsSection</cite> contenant les statistiques.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a>, <a class="reference internal" href="#src.smart_watch.core.StatsManager.StatsSection" title="src.smart_watch.core.StatsManager.StatsSection">StatsSection</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.StatsManager.StatsManager._get_header_stats">
+<span class="sig-name descname"><span class="pre">_get_header_stats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#src.smart_watch.core.StatsManager.StatsSection" title="src.smart_watch.core.StatsManager.StatsSection"><span class="pre">StatsSection</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/StatsManager.html#StatsManager._get_header_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.StatsManager.StatsManager._get_header_stats" title="Lien vers cette définition"></a></dt>
+<dd><p>Crée la section de statistiques pour l’en-tête du rapport.</p>
+<p>Cette section contient des informations générales sur l’exécution, comme son ID et l’horodatage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>Un objet <cite>StatsSection</cite> contenant les statistiques de l’en-tête.</dt><dd><p>Les clés disponibles sont :
+- <cite>execution_id</cite>
+- <cite>timestamp</cite></p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#src.smart_watch.core.StatsManager.StatsSection" title="src.smart_watch.core.StatsManager.StatsSection">StatsSection</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.StatsManager.StatsManager._get_url_stats">
+<span class="sig-name descname"><span class="pre">_get_url_stats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#src.smart_watch.core.StatsManager.StatsSection" title="src.smart_watch.core.StatsManager.StatsSection"><span class="pre">StatsSection</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/StatsManager.html#StatsManager._get_url_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.StatsManager.StatsManager._get_url_stats" title="Lien vers cette définition"></a></dt>
+<dd><p>Calcule et retourne les statistiques sur le traitement des URLs.</p>
+<p>Interroge la base de données pour obtenir des métriques telles que le nombre total d’URLs,
+les succès, les échecs, le taux de réussite, la taille moyenne du contenu, et les types d’erreurs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>Un objet <cite>StatsSection</cite> contenant les statistiques des URLs.</dt><dd><p>Les clés disponibles sont :
+- <cite>total</cite>
+- <cite>successful</cite>
+- <cite>failed</cite>
+- <cite>success_rate</cite>
+- <cite>avg_content_length</cite>
+- <cite>http_errors</cite>
+- <cite>timeout_errors</cite></p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#src.smart_watch.core.StatsManager.StatsSection" title="src.smart_watch.core.StatsManager.StatsSection">StatsSection</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.StatsManager.StatsManager._get_markdown_stats">
+<span class="sig-name descname"><span class="pre">_get_markdown_stats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#src.smart_watch.core.StatsManager.StatsSection" title="src.smart_watch.core.StatsManager.StatsSection"><span class="pre">StatsSection</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/StatsManager.html#StatsManager._get_markdown_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.StatsManager.StatsManager._get_markdown_stats" title="Lien vers cette définition"></a></dt>
+<dd><p>Calcule et retourne les statistiques sur le traitement des contenus Markdown.</p>
+<p>Fournit des informations sur le nombre de documents traités, nettoyés et filtrés,
+la taille moyenne après filtrage, et le volume de caractères supprimés.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>Un objet <cite>StatsSection</cite> contenant les statistiques Markdown.</dt><dd><p>Les clés disponibles sont :
+- <cite>processed</cite>
+- <cite>cleaned</cite>
+- <cite>filtered</cite>
+- <cite>avg_filtered_length</cite>
+- <cite>chars_cleaned</cite></p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#src.smart_watch.core.StatsManager.StatsSection" title="src.smart_watch.core.StatsManager.StatsSection">StatsSection</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.StatsManager.StatsManager._get_llm_stats">
+<span class="sig-name descname"><span class="pre">_get_llm_stats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#src.smart_watch.core.StatsManager.StatsSection" title="src.smart_watch.core.StatsManager.StatsSection"><span class="pre">StatsSection</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/StatsManager.html#StatsManager._get_llm_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.StatsManager.StatsManager._get_llm_stats" title="Lien vers cette définition"></a></dt>
+<dd><p>Calcule et retourne les statistiques sur les extractions du LLM.</p>
+<p>Analyse les performances du LLM, incluant le nombre d’extractions tentées, réussies (JSON et OSM),
+et échouées, le taux de réussite, la taille moyenne des extractions et les émissions de CO2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>Un objet <cite>StatsSection</cite> contenant les statistiques du LLM.</dt><dd><p>Les clés disponibles sont :
+- <cite>attempted</cite>
+- <cite>successful_json</cite>
+- <cite>successful_osm</cite>
+- <cite>failed</cite>
+- <cite>success_rate</cite>
+- <cite>avg_schedule_length</cite>
+- <cite>total_co2_emissions</cite></p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#src.smart_watch.core.StatsManager.StatsSection" title="src.smart_watch.core.StatsManager.StatsSection">StatsSection</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.StatsManager.StatsManager._get_comparison_stats">
+<span class="sig-name descname"><span class="pre">_get_comparison_stats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#src.smart_watch.core.StatsManager.StatsSection" title="src.smart_watch.core.StatsManager.StatsSection"><span class="pre">StatsSection</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/StatsManager.html#StatsManager._get_comparison_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.StatsManager.StatsManager._get_comparison_stats" title="Lien vers cette définition"></a></dt>
+<dd><p>Calcule et retourne les statistiques sur la comparaison des horaires.</p>
+<p>Évalue la précision des extractions en comparant les horaires générés avec les données de référence,
+en comptabilisant les correspondances identiques, différentes et les cas non comparés.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>Un objet <cite>StatsSection</cite> contenant les statistiques de comparaison.</dt><dd><p>Les clés disponibles sont :
+- <cite>total</cite>
+- <cite>identical</cite>
+- <cite>different</cite>
+- <cite>not_compared</cite>
+- <cite>accuracy_rate</cite></p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#src.smart_watch.core.StatsManager.StatsSection" title="src.smart_watch.core.StatsManager.StatsSection">StatsSection</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.StatsManager.StatsManager._get_global_stats">
+<span class="sig-name descname"><span class="pre">_get_global_stats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#src.smart_watch.core.StatsManager.StatsSection" title="src.smart_watch.core.StatsManager.StatsSection"><span class="pre">StatsSection</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/StatsManager.html#StatsManager._get_global_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.StatsManager.StatsManager._get_global_stats" title="Lien vers cette définition"></a></dt>
+<dd><p>Calcule et retourne les statistiques globales de l’exécution.</p>
+<p>Récapitule les informations clés de l’ensemble du pipeline, telles que le nombre total
+d’enregistrements, les erreurs, la date, le modèle LLM utilisé et les émissions de CO2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>Un objet <cite>StatsSection</cite> contenant les statistiques globales.</dt><dd><p>Les clés disponibles sont :
+- <cite>execution_id</cite>
+- <cite>total_records</cite>
+- <cite>records_with_errors</cite>
+- <cite>execution_date</cite>
+- <cite>llm_model</cite>
+- <cite>llm_provider</cite>
+- <cite>total_co2_emissions</cite></p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#src.smart_watch.core.StatsManager.StatsSection" title="src.smart_watch.core.StatsManager.StatsSection">StatsSection</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.StatsManager.StatsManager.display_stats">
+<span class="sig-name descname"><span class="pre">display_stats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/StatsManager.html#StatsManager.display_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.StatsManager.StatsManager.display_stats" title="Lien vers cette définition"></a></dt>
+<dd><p>Affiche les statistiques complètes du pipeline dans le logger.</p>
+<p>Cette méthode récupère toutes les sections de statistiques et les affiche de manière
+formatée et lisible dans les logs.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.StatsManager.StatsManager.generate_custom_text">
+<span class="sig-name descname"><span class="pre">generate_custom_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/StatsManager.html#StatsManager.generate_custom_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.StatsManager.StatsManager.generate_custom_text" title="Lien vers cette définition"></a></dt>
+<dd><p>Génère un texte personnalisé à partir d’un template et des statistiques.</p>
+<p>Remplace les placeholders dans la chaîne de template (ex: <cite>{urls.total}</cite>) par les valeurs
+de statistiques correspondantes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>template</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><em>str</em></a>) – La chaîne de template contenant des placeholders.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>Le texte généré avec les valeurs des statistiques insérées.</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.core.StatsManager.StatsManager.get_stats_for_api">
+<span class="sig-name descname"><span class="pre">get_stats_for_api</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(disponible dans Python v3.13)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/core/StatsManager.html#StatsManager.get_stats_for_api"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.core.StatsManager.StatsManager.get_stats_for_api" title="Lien vers cette définition"></a></dt>
+<dd><p>Formate les statistiques pour une utilisation via une API.</p>
+<p>Convertit les objets <cite>StatsSection</cite> et <cite>StatItem</cite> en un dictionnaire sérialisable (JSON),
+facilitant ainsi leur exposition via un endpoint d’API.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Renvoie<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Un dictionnaire contenant toutes les statistiques formatées pour l’API.</p>
+</dd>
+<dt class="field-even">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)">str</a>, Any]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 </section>
 

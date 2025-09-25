@@ -1,0 +1,858 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.smart_watch.core.StatsManager &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.jpg"/>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=d2e4462e"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/translations.js?v=e6b791cb"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/introduction.html">Présentation du projet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/introduction.html#sommaire">Sommaire</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/docker.html">Utilisation avec Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/configuration.html">Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture technique</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/main.html">Orchestrateur</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/diagramme.html">Pipeline de traitement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/bdd.html">Base de données</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/stack.html">Stack technique</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/config/index.html">Modules Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/core/index.html">Modules Core</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/processing/index.html">Modules Processing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/utils/index.html">Modules Utils</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Reporting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html">Modules Reporting</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Code du module</a></li>
+      <li class="breadcrumb-item active">src.smart_watch.core.StatsManager</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Code source de src.smart_watch.core.StatsManager</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Gestionnaire de statistiques pour le projet smart_watch</span>
+<span class="c1"># Documentation: https://datagora-erasme.github.io/smart_watch/source/modules/core/StatsManager.html</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.ConfigManager</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigManager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.DatabaseManager</span><span class="w"> </span><span class="kn">import</span> <span class="n">DatabaseManager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.Logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">SmartWatchLogger</span><span class="p">,</span> <span class="n">create_logger</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">create_logger</span><span class="p">(</span><span class="s2">&quot;StatsManager&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="StatItem">
+<a class="viewcode-back" href="../../../../source/modules/core/StatsManager.html#src.smart_watch.core.StatsManager.StatItem">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">StatItem</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Représente un élément de statistique avec sa valeur, son libellé et son unité.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="StatItem.__init__">
+<a class="viewcode-back" href="../../../../source/modules/core/StatsManager.html#src.smart_watch.core.StatsManager.StatItem.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+        <span class="n">label</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">format_str</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialise un élément de statistique.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value (Any): La valeur de la statistique.</span>
+<span class="sd">            label (str): Le libellé descriptif de la statistique.</span>
+<span class="sd">            unit (str, optionnel): L&#39;unité de mesure de la statistique. Par défaut &quot;&quot;.</span>
+<span class="sd">            format_str (str, optionnel): La chaîne de formatage pour la valeur. Par défaut &quot;{}&quot;.</span>
+
+<span class="sd">        Attributes:</span>
+<span class="sd">            value (Any): La valeur brute de la statistique.</span>
+<span class="sd">            label (str): Le libellé de la statistique.</span>
+<span class="sd">            unit (str): L&#39;unité de la statistique.</span>
+<span class="sd">            format_str (str): La chaîne de formatage pour l&#39;affichage.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">label</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unit</span> <span class="o">=</span> <span class="n">unit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">format_str</span> <span class="o">=</span> <span class="n">format_str</span></div>
+
+
+<div class="viewcode-block" id="StatItem.formatted_value">
+<a class="viewcode-back" href="../../../../source/modules/core/StatsManager.html#src.smart_watch.core.StatsManager.StatItem.formatted_value">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">formatted_value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retourne la valeur de la statistique formatée pour l&#39;affichage.</span>
+
+<span class="sd">        La valeur est formatée en utilisant `format_str` et l&#39;unité est ajoutée si elle est définie.</span>
+<span class="sd">        Si la valeur est `None`, la méthode retourne &quot;N/A&quot;.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: La valeur formatée, incluant l&#39;unité si disponible.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;N/A&quot;</span>
+        <span class="n">formatted</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format_str</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">formatted</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">unit</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit</span> <span class="k">else</span> <span class="n">formatted</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retourne une représentation textuelle de l&#39;élément de statistique.</span>
+
+<span class="sd">        Le format est &quot;Libellé: Valeur formatée&quot;.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: La représentation de l&#39;élément sous forme de chaîne de caractères.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">formatted_value</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="StatsSection">
+<a class="viewcode-back" href="../../../../source/modules/core/StatsManager.html#src.smart_watch.core.StatsManager.StatsSection">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">StatsSection</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Représente une section de statistiques.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="StatsSection.__init__">
+<a class="viewcode-back" href="../../../../source/modules/core/StatsManager.html#src.smart_watch.core.StatsManager.StatsSection.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">items</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">StatItem</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialise une section de statistiques, qui regroupe plusieurs `StatItem`.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            title (str): Le titre de la section (ex: &quot;URLs&quot;, &quot;LLM&quot;).</span>
+<span class="sd">            items (Dict[str, StatItem]): Un dictionnaire d&#39;éléments de statistique.</span>
+
+<span class="sd">        Attributes:</span>
+<span class="sd">            title (str): Le titre de la section.</span>
+<span class="sd">            items (Dict[str, StatItem]): Les éléments de statistique de la section.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">items</span> <span class="o">=</span> <span class="n">items</span></div>
+
+
+<div class="viewcode-block" id="StatsSection.get_item_value">
+<a class="viewcode-back" href="../../../../source/modules/core/StatsManager.html#src.smart_watch.core.StatsManager.StatsSection.get_item_value">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_item_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Récupère la valeur brute d&#39;un élément de statistique par sa clé.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            key (str): La clé de l&#39;élément de statistique à récupérer.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Any: La valeur brute de l&#39;élément, ou &quot;N/A&quot; si la clé n&#39;existe pas.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">StatItem</span><span class="p">(</span><span class="s2">&quot;N/A&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="StatsSection.get_formatted_value">
+<a class="viewcode-back" href="../../../../source/modules/core/StatsManager.html#src.smart_watch.core.StatsManager.StatsSection.get_formatted_value">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_formatted_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Récupère la valeur formatée d&#39;un élément de statistique par sa clé.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            key (str): La clé de l&#39;élément de statistique à récupérer.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: La valeur formatée de l&#39;élément, ou &quot;N/A&quot; si la clé n&#39;existe pas.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">StatItem</span><span class="p">(</span><span class="s2">&quot;N/A&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">formatted_value</span><span class="p">()</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="StatsManager">
+<a class="viewcode-back" href="../../../../source/modules/core/StatsManager.html#src.smart_watch.core.StatsManager.StatsManager">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">StatsManager</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gestionnaire de statistiques basé sur les requêtes SQL.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="StatsManager.__init__">
+<a class="viewcode-back" href="../../../../source/modules/core/StatsManager.html#src.smart_watch.core.StatsManager.StatsManager.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">ConfigManager</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">SmartWatchLogger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialise le gestionnaire de statistiques.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            config (ConfigManager): L&#39;instance du gestionnaire de configuration.</span>
+<span class="sd">            logger (SmartWatchLogger): L&#39;instance du logger pour l&#39;enregistrement des messages.</span>
+
+<span class="sd">        Attributes:</span>
+<span class="sd">            config (ConfigManager): Le gestionnaire de configuration.</span>
+<span class="sd">            logger (SmartWatchLogger): Le logger.</span>
+<span class="sd">            db_manager (DatabaseManager): Le gestionnaire de base de données pour exécuter les requêtes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db_manager</span> <span class="o">=</span> <span class="n">DatabaseManager</span><span class="p">(</span><span class="n">db_file</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">db_file</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="StatsManager.get_pipeline_stats">
+<a class="viewcode-back" href="../../../../source/modules/core/StatsManager.html#src.smart_watch.core.StatsManager.StatsManager.get_pipeline_stats">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_pipeline_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">StatsSection</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Génère un rapport complet des statistiques du pipeline.</span>
+
+<span class="sd">        Cette méthode agrège les statistiques de chaque étape du pipeline (URLs, Markdown, LLM, etc.)</span>
+<span class="sd">        en appelant les méthodes dédiées pour chaque section.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, StatsSection]: Un dictionnaire où chaque clé est le nom d&#39;une section</span>
+<span class="sd">                                     et la valeur est un objet `StatsSection` contenant les statistiques.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Génération des statistiques globales depuis la base de données...&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;header&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_header_stats</span><span class="p">(),</span>
+            <span class="s2">&quot;urls&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_url_stats</span><span class="p">(),</span>
+            <span class="s2">&quot;markdown&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_markdown_stats</span><span class="p">(),</span>
+            <span class="s2">&quot;llm&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_llm_stats</span><span class="p">(),</span>
+            <span class="s2">&quot;comparisons&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_comparison_stats</span><span class="p">(),</span>
+            <span class="s2">&quot;global&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_global_stats</span><span class="p">(),</span>
+        <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="StatsManager._get_header_stats">
+<a class="viewcode-back" href="../../../../source/modules/core/StatsManager.html#src.smart_watch.core.StatsManager.StatsManager._get_header_stats">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_header_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StatsSection</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Crée la section de statistiques pour l&#39;en-tête du rapport.</span>
+
+<span class="sd">        Cette section contient des informations générales sur l&#39;exécution, comme son ID et l&#39;horodatage.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            StatsSection: Un objet `StatsSection` contenant les statistiques de l&#39;en-tête.</span>
+<span class="sd">                          Les clés disponibles sont :</span>
+<span class="sd">                          - `execution_id`</span>
+<span class="sd">                          - `timestamp`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">StatsSection</span><span class="p">(</span>
+            <span class="s2">&quot;En-tête&quot;</span><span class="p">,</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;execution_id&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="s2">&quot;global&quot;</span><span class="p">,</span> <span class="s2">&quot;ID d&#39;exécution&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(),</span> <span class="s2">&quot;Horodatage&quot;</span><span class="p">),</span>
+            <span class="p">},</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="StatsManager._get_url_stats">
+<a class="viewcode-back" href="../../../../source/modules/core/StatsManager.html#src.smart_watch.core.StatsManager.StatsManager._get_url_stats">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_url_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StatsSection</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calcule et retourne les statistiques sur le traitement des URLs.</span>
+
+<span class="sd">        Interroge la base de données pour obtenir des métriques telles que le nombre total d&#39;URLs,</span>
+<span class="sd">        les succès, les échecs, le taux de réussite, la taille moyenne du contenu, et les types d&#39;erreurs.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            StatsSection: Un objet `StatsSection` contenant les statistiques des URLs.</span>
+<span class="sd">                          Les clés disponibles sont :</span>
+<span class="sd">                          - `total`</span>
+<span class="sd">                          - `successful`</span>
+<span class="sd">                          - `failed`</span>
+<span class="sd">                          - `success_rate`</span>
+<span class="sd">                          - `avg_content_length`</span>
+<span class="sd">                          - `http_errors`</span>
+<span class="sd">                          - `timeout_errors`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            SELECT </span>
+<span class="s2">                COUNT(*) as total_urls,</span>
+<span class="s2">                COUNT(CASE WHEN statut_url = &#39;ok&#39; THEN 1 END) as successful_urls,</span>
+<span class="s2">                COUNT(CASE WHEN statut_url != &#39;ok&#39; THEN 1 END) as failed_urls,</span>
+<span class="s2">                AVG(CASE WHEN statut_url = &#39;ok&#39; AND markdown_brut IS NOT NULL THEN </span>
+<span class="s2">                    LENGTH(markdown_brut) END) as avg_content_length,</span>
+<span class="s2">                COUNT(CASE WHEN code_http &gt;= 400 THEN 1 END) as http_errors,</span>
+<span class="s2">                COUNT(CASE WHEN code_http = 0 THEN 1 END) as timeout_errors</span>
+<span class="s2">            FROM resultats_extraction</span>
+<span class="s2">            &quot;&quot;&quot;</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_manager</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">result</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">row</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">total</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="mi">0</span>
+                <span class="n">successful</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">or</span> <span class="mi">0</span>
+                <span class="n">success_rate</span> <span class="o">=</span> <span class="p">(</span><span class="n">successful</span> <span class="o">/</span> <span class="n">total</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span> <span class="k">if</span> <span class="n">total</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+
+                <span class="k">return</span> <span class="n">StatsSection</span><span class="p">(</span>
+                    <span class="s2">&quot;URLs&quot;</span><span class="p">,</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;total&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="n">total</span><span class="p">,</span> <span class="s2">&quot;Total des URLs&quot;</span><span class="p">),</span>
+                        <span class="s2">&quot;successful&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="n">successful</span><span class="p">,</span> <span class="s2">&quot;URLs réussies&quot;</span><span class="p">),</span>
+                        <span class="s2">&quot;failed&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;URLs échouées&quot;</span><span class="p">),</span>
+                        <span class="s2">&quot;success_rate&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span>
+                            <span class="n">success_rate</span><span class="p">,</span> <span class="s2">&quot;Taux de réussite&quot;</span><span class="p">,</span> <span class="s2">&quot;%&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{:.1f}</span><span class="s2">&quot;</span>
+                        <span class="p">),</span>
+                        <span class="s2">&quot;avg_content_length&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span>
+                            <span class="n">row</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">,</span>
+                            <span class="s2">&quot;Taille moyenne du contenu&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot; caractères&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;</span><span class="si">{:.0f}</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="p">),</span>
+                        <span class="s2">&quot;http_errors&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Erreurs HTTP&quot;</span><span class="p">),</span>
+                        <span class="s2">&quot;timeout_errors&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Erreurs de timeout&quot;</span><span class="p">),</span>
+                    <span class="p">},</span>
+                <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur lors du calcul des stats URLs: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">StatsSection</span><span class="p">(</span>
+            <span class="s2">&quot;URLs&quot;</span><span class="p">,</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;total&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Total des URLs&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;successful&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;URLs réussies&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;failed&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;URLs échouées&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;success_rate&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Taux de réussite&quot;</span><span class="p">,</span> <span class="s2">&quot;%&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{:.1f}</span><span class="s2">&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;avg_content_length&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span>
+                    <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Taille moyenne du contenu&quot;</span><span class="p">,</span> <span class="s2">&quot; caractères&quot;</span>
+                <span class="p">),</span>
+                <span class="s2">&quot;http_errors&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Erreurs HTTP&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;timeout_errors&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Erreurs de timeout&quot;</span><span class="p">),</span>
+            <span class="p">},</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="StatsManager._get_markdown_stats">
+<a class="viewcode-back" href="../../../../source/modules/core/StatsManager.html#src.smart_watch.core.StatsManager.StatsManager._get_markdown_stats">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_markdown_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StatsSection</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calcule et retourne les statistiques sur le traitement des contenus Markdown.</span>
+
+<span class="sd">        Fournit des informations sur le nombre de documents traités, nettoyés et filtrés,</span>
+<span class="sd">        la taille moyenne après filtrage, et le volume de caractères supprimés.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            StatsSection: Un objet `StatsSection` contenant les statistiques Markdown.</span>
+<span class="sd">                          Les clés disponibles sont :</span>
+<span class="sd">                          - `processed`</span>
+<span class="sd">                          - `cleaned`</span>
+<span class="sd">                          - `filtered`</span>
+<span class="sd">                          - `avg_filtered_length`</span>
+<span class="sd">                          - `chars_cleaned`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            SELECT </span>
+<span class="s2">                COUNT(CASE WHEN markdown_brut IS NOT NULL AND markdown_brut != &#39;&#39; THEN 1 END) as processed,</span>
+<span class="s2">                COUNT(CASE WHEN markdown_nettoye IS NOT NULL AND markdown_nettoye != &#39;&#39; THEN 1 END) as cleaned,</span>
+<span class="s2">                COUNT(CASE WHEN markdown_filtre IS NOT NULL AND markdown_filtre != &#39;&#39; THEN 1 END) as filtered,</span>
+<span class="s2">                AVG(CASE WHEN markdown_filtre IS NOT NULL AND markdown_filtre != &#39;&#39; THEN </span>
+<span class="s2">                    LENGTH(markdown_filtre) END) as avg_filtered_length,</span>
+<span class="s2">                SUM(CASE WHEN markdown_brut IS NOT NULL AND markdown_nettoye IS NOT NULL THEN</span>
+<span class="s2">                    LENGTH(markdown_brut) - LENGTH(markdown_nettoye) ELSE 0 END) as chars_cleaned</span>
+<span class="s2">            FROM resultats_extraction</span>
+<span class="s2">            &quot;&quot;&quot;</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_manager</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">result</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">row</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">return</span> <span class="n">StatsSection</span><span class="p">(</span>
+                    <span class="s2">&quot;Markdown&quot;</span><span class="p">,</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;processed&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Documents traités&quot;</span><span class="p">),</span>
+                        <span class="s2">&quot;cleaned&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Documents nettoyés&quot;</span><span class="p">),</span>
+                        <span class="s2">&quot;filtered&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Documents filtrés&quot;</span><span class="p">),</span>
+                        <span class="s2">&quot;avg_filtered_length&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span>
+                            <span class="n">row</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">,</span>
+                            <span class="s2">&quot;Taille moyenne après filtrage&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot; caractères&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;</span><span class="si">{:.0f}</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="p">),</span>
+                        <span class="s2">&quot;chars_cleaned&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span>
+                            <span class="n">row</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Caractères supprimés lors du nettoyage&quot;</span>
+                        <span class="p">),</span>
+                    <span class="p">},</span>
+                <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur lors du calcul des stats Markdown: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">StatsSection</span><span class="p">(</span>
+            <span class="s2">&quot;Markdown&quot;</span><span class="p">,</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;processed&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Documents traités&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;cleaned&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Documents nettoyés&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;filtered&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Documents filtrés&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;avg_filtered_length&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span>
+                    <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Taille moyenne après filtrage&quot;</span><span class="p">,</span> <span class="s2">&quot; caractères&quot;</span>
+                <span class="p">),</span>
+                <span class="s2">&quot;chars_cleaned&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Caractères supprimés lors du nettoyage&quot;</span><span class="p">),</span>
+            <span class="p">},</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="StatsManager._get_llm_stats">
+<a class="viewcode-back" href="../../../../source/modules/core/StatsManager.html#src.smart_watch.core.StatsManager.StatsManager._get_llm_stats">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_llm_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StatsSection</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calcule et retourne les statistiques sur les extractions du LLM.</span>
+
+<span class="sd">        Analyse les performances du LLM, incluant le nombre d&#39;extractions tentées, réussies (JSON et OSM),</span>
+<span class="sd">        et échouées, le taux de réussite, la taille moyenne des extractions et les émissions de CO2.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            StatsSection: Un objet `StatsSection` contenant les statistiques du LLM.</span>
+<span class="sd">                          Les clés disponibles sont :</span>
+<span class="sd">                          - `attempted`</span>
+<span class="sd">                          - `successful_json`</span>
+<span class="sd">                          - `successful_osm`</span>
+<span class="sd">                          - `failed`</span>
+<span class="sd">                          - `success_rate`</span>
+<span class="sd">                          - `avg_schedule_length`</span>
+<span class="sd">                          - `total_co2_emissions`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            SELECT </span>
+<span class="s2">                COUNT(CASE WHEN markdown_filtre IS NOT NULL AND markdown_filtre != &#39;&#39; THEN 1 END) as attempted_extractions,</span>
+<span class="s2">                COUNT(CASE WHEN llm_horaires_json IS NOT NULL AND llm_horaires_json != &#39;&#39; </span>
+<span class="s2">                    AND NOT llm_horaires_json LIKE &#39;Erreur%&#39; THEN 1 END) as successful_json,</span>
+<span class="s2">                COUNT(CASE WHEN llm_horaires_osm IS NOT NULL AND llm_horaires_osm != &#39;&#39; </span>
+<span class="s2">                    AND NOT llm_horaires_osm LIKE &#39;Erreur%&#39; THEN 1 END) as successful_osm,</span>
+<span class="s2">                AVG(CASE WHEN llm_horaires_osm IS NOT NULL AND llm_horaires_osm != &#39;&#39; </span>
+<span class="s2">                    AND NOT llm_horaires_osm LIKE &#39;Erreur%&#39; THEN </span>
+<span class="s2">                    LENGTH(llm_horaires_osm) END) as avg_schedule_length,</span>
+<span class="s2">                SUM(llm_consommation_requete) as total_co2_emissions</span>
+<span class="s2">            FROM resultats_extraction</span>
+<span class="s2">            &quot;&quot;&quot;</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_manager</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">result</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">row</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">attempted</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="mi">0</span>
+                <span class="n">successful_json</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">or</span> <span class="mi">0</span>
+                <span class="n">successful_osm</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="ow">or</span> <span class="mi">0</span>
+                <span class="n">success_rate</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="p">(</span><span class="n">successful_osm</span> <span class="o">/</span> <span class="n">attempted</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span> <span class="k">if</span> <span class="n">attempted</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+                <span class="p">)</span>
+
+                <span class="k">return</span> <span class="n">StatsSection</span><span class="p">(</span>
+                    <span class="s2">&quot;LLM&quot;</span><span class="p">,</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;attempted&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="n">attempted</span><span class="p">,</span> <span class="s2">&quot;Extractions tentées&quot;</span><span class="p">),</span>
+                        <span class="s2">&quot;successful_json&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span>
+                            <span class="n">successful_json</span><span class="p">,</span> <span class="s2">&quot;Extractions JSON réussies&quot;</span>
+                        <span class="p">),</span>
+                        <span class="s2">&quot;successful_osm&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span>
+                            <span class="n">successful_osm</span><span class="p">,</span> <span class="s2">&quot;Extractions OSM réussies&quot;</span>
+                        <span class="p">),</span>
+                        <span class="s2">&quot;failed&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span>
+                            <span class="n">attempted</span> <span class="o">-</span> <span class="n">successful_osm</span><span class="p">,</span> <span class="s2">&quot;Extractions échouées&quot;</span>
+                        <span class="p">),</span>
+                        <span class="s2">&quot;success_rate&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span>
+                            <span class="n">success_rate</span><span class="p">,</span> <span class="s2">&quot;Taux de réussite&quot;</span><span class="p">,</span> <span class="s2">&quot;%&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{:.1f}</span><span class="s2">&quot;</span>
+                        <span class="p">),</span>
+                        <span class="s2">&quot;avg_schedule_length&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span>
+                            <span class="n">row</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">,</span>
+                            <span class="s2">&quot;Taille moyenne des horaires&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot; caractères&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;</span><span class="si">{:.0f}</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="p">),</span>
+                        <span class="s2">&quot;total_co2_emissions&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span>
+                            <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span>
+                            <span class="s2">&quot;Émissions totales de CO2&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;g&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;</span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="p">),</span>
+                    <span class="p">},</span>
+                <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur lors du calcul des stats LLM: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">StatsSection</span><span class="p">(</span>
+            <span class="s2">&quot;LLM&quot;</span><span class="p">,</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;attempted&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Extractions tentées&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;successful_json&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Extractions JSON réussies&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;successful_osm&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Extractions OSM réussies&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;failed&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Extractions échouées&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;success_rate&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Taux de réussite&quot;</span><span class="p">,</span> <span class="s2">&quot;%&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{:.1f}</span><span class="s2">&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;avg_schedule_length&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span>
+                    <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Taille moyenne des horaires&quot;</span><span class="p">,</span> <span class="s2">&quot; caractères&quot;</span>
+                <span class="p">),</span>
+                <span class="s2">&quot;total_co2_emissions&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span>
+                    <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Émissions totales de CO2&quot;</span><span class="p">,</span> <span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{:.3f}</span><span class="s2">&quot;</span>
+                <span class="p">),</span>
+            <span class="p">},</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="StatsManager._get_comparison_stats">
+<a class="viewcode-back" href="../../../../source/modules/core/StatsManager.html#src.smart_watch.core.StatsManager.StatsManager._get_comparison_stats">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_comparison_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StatsSection</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calcule et retourne les statistiques sur la comparaison des horaires.</span>
+
+<span class="sd">        Évalue la précision des extractions en comparant les horaires générés avec les données de référence,</span>
+<span class="sd">        en comptabilisant les correspondances identiques, différentes et les cas non comparés.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            StatsSection: Un objet `StatsSection` contenant les statistiques de comparaison.</span>
+<span class="sd">                          Les clés disponibles sont :</span>
+<span class="sd">                          - `total`</span>
+<span class="sd">                          - `identical`</span>
+<span class="sd">                          - `different`</span>
+<span class="sd">                          - `not_compared`</span>
+<span class="sd">                          - `accuracy_rate`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            SELECT </span>
+<span class="s2">                COUNT(CASE WHEN horaires_identiques IS NOT NULL THEN 1 END) as total_comparisons,</span>
+<span class="s2">                COUNT(CASE WHEN horaires_identiques = 1 THEN 1 END) as identical,</span>
+<span class="s2">                COUNT(CASE WHEN horaires_identiques = 0 THEN 1 END) as different,</span>
+<span class="s2">                COUNT(CASE WHEN horaires_identiques IS NULL AND llm_horaires_osm IS NOT NULL </span>
+<span class="s2">                    AND llm_horaires_osm != &#39;&#39; AND NOT llm_horaires_osm LIKE &#39;Erreur%&#39; THEN 1 END) as not_compared</span>
+<span class="s2">            FROM resultats_extraction</span>
+<span class="s2">            &quot;&quot;&quot;</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_manager</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">result</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">row</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">total</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="mi">0</span>
+                <span class="n">identical</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">or</span> <span class="mi">0</span>
+                <span class="n">different</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="ow">or</span> <span class="mi">0</span>
+                <span class="n">not_compared</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="ow">or</span> <span class="mi">0</span>
+                <span class="n">accuracy_rate</span> <span class="o">=</span> <span class="p">(</span><span class="n">identical</span> <span class="o">/</span> <span class="n">total</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span> <span class="k">if</span> <span class="n">total</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+
+                <span class="k">return</span> <span class="n">StatsSection</span><span class="p">(</span>
+                    <span class="s2">&quot;Comparaisons&quot;</span><span class="p">,</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;total&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="n">total</span><span class="p">,</span> <span class="s2">&quot;Total des comparaisons&quot;</span><span class="p">),</span>
+                        <span class="s2">&quot;identical&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="n">identical</span><span class="p">,</span> <span class="s2">&quot;Horaires identiques&quot;</span><span class="p">),</span>
+                        <span class="s2">&quot;different&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="n">different</span><span class="p">,</span> <span class="s2">&quot;Horaires différents&quot;</span><span class="p">),</span>
+                        <span class="s2">&quot;not_compared&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="n">not_compared</span><span class="p">,</span> <span class="s2">&quot;Non comparés&quot;</span><span class="p">),</span>
+                        <span class="s2">&quot;accuracy_rate&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span>
+                            <span class="n">accuracy_rate</span><span class="p">,</span> <span class="s2">&quot;Taux de précision&quot;</span><span class="p">,</span> <span class="s2">&quot;%&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{:.1f}</span><span class="s2">&quot;</span>
+                        <span class="p">),</span>
+                    <span class="p">},</span>
+                <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur lors du calcul des stats de comparaison: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">StatsSection</span><span class="p">(</span>
+            <span class="s2">&quot;Comparaisons&quot;</span><span class="p">,</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;total&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Total des comparaisons&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;identical&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Horaires identiques&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;different&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Horaires différents&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;not_compared&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Non comparés&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;accuracy_rate&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Taux de précision&quot;</span><span class="p">,</span> <span class="s2">&quot;%&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{:.1f}</span><span class="s2">&quot;</span><span class="p">),</span>
+            <span class="p">},</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="StatsManager._get_global_stats">
+<a class="viewcode-back" href="../../../../source/modules/core/StatsManager.html#src.smart_watch.core.StatsManager.StatsManager._get_global_stats">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_global_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">StatsSection</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calcule et retourne les statistiques globales de l&#39;exécution.</span>
+
+<span class="sd">        Récapitule les informations clés de l&#39;ensemble du pipeline, telles que le nombre total</span>
+<span class="sd">        d&#39;enregistrements, les erreurs, la date, le modèle LLM utilisé et les émissions de CO2.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            StatsSection: Un objet `StatsSection` contenant les statistiques globales.</span>
+<span class="sd">                          Les clés disponibles sont :</span>
+<span class="sd">                          - `execution_id`</span>
+<span class="sd">                          - `total_records`</span>
+<span class="sd">                          - `records_with_errors`</span>
+<span class="sd">                          - `execution_date`</span>
+<span class="sd">                          - `llm_model`</span>
+<span class="sd">                          - `llm_provider`</span>
+<span class="sd">                          - `total_co2_emissions`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Statistiques d&#39;exécution</span>
+            <span class="n">exec_query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            SELECT </span>
+<span class="s2">                MAX(date_execution),</span>
+<span class="s2">                (SELECT llm_modele FROM executions ORDER BY date_execution DESC LIMIT 1),</span>
+<span class="s2">                (SELECT llm_fournisseur FROM executions ORDER BY date_execution DESC LIMIT 1),</span>
+<span class="s2">                SUM(llm_consommation_execution)</span>
+<span class="s2">            FROM executions</span>
+<span class="s2">            &quot;&quot;&quot;</span>
+            <span class="n">exec_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_manager</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span><span class="n">exec_query</span><span class="p">)</span>
+
+            <span class="c1"># Statistiques des résultats</span>
+            <span class="n">results_query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            SELECT </span>
+<span class="s2">                COUNT(*) as total_records,</span>
+<span class="s2">                COUNT(CASE WHEN erreurs_pipeline IS NOT NULL AND erreurs_pipeline != &#39;&#39; THEN 1 END) as records_with_errors</span>
+<span class="s2">            FROM resultats_extraction</span>
+<span class="s2">            &quot;&quot;&quot;</span>
+            <span class="n">results_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_manager</span><span class="o">.</span><span class="n">execute_query</span><span class="p">(</span><span class="n">results_query</span><span class="p">)</span>
+
+            <span class="n">items</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;execution_id&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="s2">&quot;global&quot;</span><span class="p">,</span> <span class="s2">&quot;ID d&#39;exécution&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;total_records&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Total des enregistrements&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;records_with_errors&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Enregistrements avec erreurs&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;execution_date&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="s2">&quot;N/A&quot;</span><span class="p">,</span> <span class="s2">&quot;Date d&#39;exécution&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;llm_model&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="s2">&quot;N/A&quot;</span><span class="p">,</span> <span class="s2">&quot;Modèle LLM&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;llm_provider&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="s2">&quot;N/A&quot;</span><span class="p">,</span> <span class="s2">&quot;Fournisseur LLM&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;total_co2_emissions&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span>
+                    <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Émissions totales de CO2&quot;</span><span class="p">,</span> <span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{:.3f}</span><span class="s2">&quot;</span>
+                <span class="p">),</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span> <span class="n">exec_result</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">exec_result</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">exec_row</span> <span class="o">=</span> <span class="n">exec_result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">items</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;execution_date&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span>
+                            <span class="n">exec_row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="s2">&quot;N/A&quot;</span><span class="p">,</span> <span class="s2">&quot;Date d&#39;exécution&quot;</span>
+                        <span class="p">),</span>
+                        <span class="s2">&quot;llm_model&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="n">exec_row</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">or</span> <span class="s2">&quot;N/A&quot;</span><span class="p">,</span> <span class="s2">&quot;Modèle LLM&quot;</span><span class="p">),</span>
+                        <span class="s2">&quot;llm_provider&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span>
+                            <span class="n">exec_row</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="ow">or</span> <span class="s2">&quot;N/A&quot;</span><span class="p">,</span> <span class="s2">&quot;Fournisseur LLM&quot;</span>
+                        <span class="p">),</span>
+                        <span class="s2">&quot;total_co2_emissions&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span>
+                            <span class="p">(</span><span class="n">exec_row</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span>
+                            <span class="s2">&quot;Émissions totales de CO2&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;g&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;</span><span class="si">{:.3f}</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="p">),</span>
+                    <span class="p">}</span>
+                <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">results_result</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">results_result</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">results_row</span> <span class="o">=</span> <span class="n">results_result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">items</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;total_records&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span>
+                            <span class="n">results_row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Total des enregistrements&quot;</span>
+                        <span class="p">),</span>
+                        <span class="s2">&quot;records_with_errors&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span>
+                            <span class="n">results_row</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Enregistrements avec erreurs&quot;</span>
+                        <span class="p">),</span>
+                    <span class="p">}</span>
+                <span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">StatsSection</span><span class="p">(</span><span class="s2">&quot;Global&quot;</span><span class="p">,</span> <span class="n">items</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur lors du calcul des stats globales: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">StatsSection</span><span class="p">(</span>
+                <span class="s2">&quot;Global&quot;</span><span class="p">,</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;execution_id&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="s2">&quot;global&quot;</span><span class="p">,</span> <span class="s2">&quot;ID d&#39;exécution&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;total_records&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Total des enregistrements&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;records_with_errors&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Enregistrements avec erreurs&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;execution_date&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="s2">&quot;N/A&quot;</span><span class="p">,</span> <span class="s2">&quot;Date d&#39;exécution&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;llm_model&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="s2">&quot;N/A&quot;</span><span class="p">,</span> <span class="s2">&quot;Modèle LLM&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;llm_provider&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span><span class="s2">&quot;N/A&quot;</span><span class="p">,</span> <span class="s2">&quot;Fournisseur LLM&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;total_co2_emissions&quot;</span><span class="p">:</span> <span class="n">StatItem</span><span class="p">(</span>
+                        <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Émissions totales de CO2&quot;</span><span class="p">,</span> <span class="s2">&quot;g&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{:.3f}</span><span class="s2">&quot;</span>
+                    <span class="p">),</span>
+                <span class="p">},</span>
+            <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="StatsManager.display_stats">
+<a class="viewcode-back" href="../../../../source/modules/core/StatsManager.html#src.smart_watch.core.StatsManager.StatsManager.display_stats">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">display_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Affiche les statistiques complètes du pipeline dans le logger.</span>
+
+<span class="sd">        Cette méthode récupère toutes les sections de statistiques et les affiche de manière</span>
+<span class="sd">        formatée et lisible dans les logs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">stats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_pipeline_stats</span><span class="p">()</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;=== STATISTIQUES DU PIPELINE ===&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Affichage de l&#39;en-tête</span>
+        <span class="n">header</span> <span class="o">=</span> <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;header&quot;</span><span class="p">]</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Exécution: </span><span class="si">{</span><span class="n">header</span><span class="o">.</span><span class="n">get_formatted_value</span><span class="p">(</span><span class="s1">&#39;execution_id&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Timestamp: </span><span class="si">{</span><span class="n">header</span><span class="o">.</span><span class="n">get_formatted_value</span><span class="p">(</span><span class="s1">&#39;timestamp&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Affichage des autres sections</span>
+        <span class="k">for</span> <span class="n">section_key</span><span class="p">,</span> <span class="n">section</span> <span class="ow">in</span> <span class="n">stats</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">section_key</span> <span class="o">==</span> <span class="s2">&quot;header&quot;</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--- </span><span class="si">{</span><span class="n">section</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2"> ---&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">item_key</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">section</span><span class="o">.</span><span class="n">items</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">item</span><span class="o">.</span><span class="n">label</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">item</span><span class="o">.</span><span class="n">formatted_value</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;=== FIN STATISTIQUES ===&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="StatsManager.generate_custom_text">
+<a class="viewcode-back" href="../../../../source/modules/core/StatsManager.html#src.smart_watch.core.StatsManager.StatsManager.generate_custom_text">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_custom_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Génère un texte personnalisé à partir d&#39;un template et des statistiques.</span>
+
+<span class="sd">        Remplace les placeholders dans la chaîne de template (ex: `{urls.total}`) par les valeurs</span>
+<span class="sd">        de statistiques correspondantes.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            template (str): La chaîne de template contenant des placeholders.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Le texte généré avec les valeurs des statistiques insérées.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">stats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_pipeline_stats</span><span class="p">()</span>
+
+        <span class="c1"># Dictionnaire pour les remplacements</span>
+        <span class="n">replacements</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">section_key</span><span class="p">,</span> <span class="n">section</span> <span class="ow">in</span> <span class="n">stats</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">item_key</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">section</span><span class="o">.</span><span class="n">items</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="c1"># Clé au format section.item</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">section_key</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">item_key</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="n">replacements</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">formatted_value</span><span class="p">()</span>
+
+                <span class="c1"># Clé au format section.item_value pour avoir juste la valeur</span>
+                <span class="n">key_value</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">section_key</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">item_key</span><span class="si">}</span><span class="s2">_value&quot;</span>
+                <span class="n">replacements</span><span class="p">[</span><span class="n">key_value</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="c1"># Remplacements dans le template</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">replacements</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Variable manquante dans le template: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">template</span></div>
+
+
+<div class="viewcode-block" id="StatsManager.get_stats_for_api">
+<a class="viewcode-back" href="../../../../source/modules/core/StatsManager.html#src.smart_watch.core.StatsManager.StatsManager.get_stats_for_api">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_stats_for_api</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Formate les statistiques pour une utilisation via une API.</span>
+
+<span class="sd">        Convertit les objets `StatsSection` et `StatItem` en un dictionnaire sérialisable (JSON),</span>
+<span class="sd">        facilitant ainsi leur exposition via un endpoint d&#39;API.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dict[str, Any]: Un dictionnaire contenant toutes les statistiques formatées pour l&#39;API.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">stats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_pipeline_stats</span><span class="p">()</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">section_key</span><span class="p">,</span> <span class="n">section</span> <span class="ow">in</span> <span class="n">stats</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">result</span><span class="p">[</span><span class="n">section_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="n">section</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="s2">&quot;items&quot;</span><span class="p">:</span> <span class="p">{}}</span>
+
+            <span class="k">for</span> <span class="n">item_key</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">section</span><span class="o">.</span><span class="n">items</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">result</span><span class="p">[</span><span class="n">section_key</span><span class="p">][</span><span class="s2">&quot;items&quot;</span><span class="p">][</span><span class="n">item_key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">item</span><span class="o">.</span><span class="n">label</span><span class="p">,</span>
+                    <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">item</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                    <span class="s2">&quot;formatted_value&quot;</span><span class="p">:</span> <span class="n">item</span><span class="o">.</span><span class="n">formatted_value</span><span class="p">(),</span>
+                    <span class="s2">&quot;unit&quot;</span><span class="p">:</span> <span class="n">item</span><span class="o">.</span><span class="n">unit</span><span class="p">,</span>
+                <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

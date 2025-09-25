@@ -87,13 +87,6 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../reporting/index.html">Modules Reporting</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Module d'évaluation</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../evaluation/index.html">Module d’évaluation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../evaluation/index.html#vue-d-ensemble">Vue d’ensemble</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../evaluation/index.html#workflow-d-evaluation">Workflow d’évaluation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../evaluation/index.html#metriques-et-comparaisons">Métriques et comparaisons</a></li>
-</ul>
 
         </div>
       </div>
@@ -143,8 +136,68 @@
 <p>Ce processeur s’exécute à la fin du pipeline. Ses résultats sont essentiels pour le rapport final, car ils permettent de quantifier la fiabilité des extractions et d’identifier les changements d’horaires.</p>
 </div>
 </section>
-<section id="modules">
-<h2>Modules<a class="headerlink" href="#modules" title="Lien vers cette rubrique"></a></h2>
+<section id="module-src.smart_watch.processing.comparison_processor">
+<span id="modules"></span><h2>Modules<a class="headerlink" href="#module-src.smart_watch.processing.comparison_processor" title="Lien vers cette rubrique"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="src.smart_watch.processing.comparison_processor.ComparisonProcessor">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.smart_watch.processing.comparison_processor.</span></span><span class="sig-name descname"><span class="pre">ComparisonProcessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../core/ConfigManager.html#src.smart_watch.core.ConfigManager.ConfigManager" title="src.smart_watch.core.ConfigManager.ConfigManager"><span class="pre">ConfigManager</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../core/logger.html#src.smart_watch.core.Logger.SmartWatchLogger" title="src.smart_watch.core.Logger.SmartWatchLogger"><span class="pre">SmartWatchLogger</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/src/smart_watch/processing/comparison_processor.html#ComparisonProcessor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.processing.comparison_processor.ComparisonProcessor" title="Lien vers cette définition"></a></dt>
+<dd><p>Bases : <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(disponible dans Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Processeur pour les comparaisons d’horaires.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.processing.comparison_processor.ComparisonProcessor.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../core/ConfigManager.html#src.smart_watch.core.ConfigManager.ConfigManager" title="src.smart_watch.core.ConfigManager.ConfigManager"><span class="pre">ConfigManager</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../core/logger.html#src.smart_watch.core.Logger.SmartWatchLogger" title="src.smart_watch.core.Logger.SmartWatchLogger"><span class="pre">SmartWatchLogger</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/processing/comparison_processor.html#ComparisonProcessor.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.processing.comparison_processor.ComparisonProcessor.__init__" title="Lien vers cette définition"></a></dt>
+<dd><p>Initialise le processeur de comparaisons.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<a class="reference internal" href="../core/ConfigManager.html#src.smart_watch.core.ConfigManager.ConfigManager" title="src.smart_watch.core.ConfigManager.ConfigManager"><em>ConfigManager</em></a>) – Le gestionnaire de configuration.</p></li>
+<li><p><strong>logger</strong> (<a class="reference internal" href="../core/logger.html#src.smart_watch.core.Logger.SmartWatchLogger" title="src.smart_watch.core.Logger.SmartWatchLogger"><em>SmartWatchLogger</em></a>) – L’instance du logger pour la journalisation.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.processing.comparison_processor.ComparisonProcessor._compare_single">
+<span class="sig-name descname"><span class="pre">_compare_single</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">comparator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../core/ComparateurHoraires.html#src.smart_watch.core.ComparateurHoraires.HorairesComparator" title="src.smart_watch.core.ComparateurHoraires.HorairesComparator"><span class="pre">HorairesComparator</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">resultat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ResultatsExtraction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lieu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Lieux</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(disponible dans Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(disponible dans Python v3.13)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(disponible dans Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/processing/comparison_processor.html#ComparisonProcessor._compare_single"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.processing.comparison_processor.ComparisonProcessor._compare_single" title="Lien vers cette définition"></a></dt>
+<dd><p>Compare les horaires d’un lieu à partir de différentes sources.</p>
+<p>Cette méthode prend un résultat d’extraction et un lieu, puis compare les
+horaires obtenus par le LLM avec les horaires de référence (data.grandlyon.com).
+Elle gère les erreurs de parsing JSON et les cas où les données sont absentes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>comparator</strong> (<a class="reference internal" href="../core/ComparateurHoraires.html#src.smart_watch.core.ComparateurHoraires.HorairesComparator" title="src.smart_watch.core.ComparateurHoraires.HorairesComparator"><em>HorairesComparator</em></a>) – L’instance du comparateur d’horaires.</p></li>
+<li><p><strong>resultat</strong> (<em>ResultatsExtraction</em>) – L’objet contenant les horaires extraits par le LLM.</p></li>
+<li><p><strong>lieu</strong> (<em>Lieux</em>) – L’objet représentant le lieu, contenant les horaires de référence.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>Un dictionnaire contenant le résultat de la comparaison, avec les clés</dt><dd><p> »identique » (booléen ou None) et « differences » (chaîne de caractères).</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Type renvoyé<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(disponible dans Python v3.13)">dict</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.smart_watch.processing.comparison_processor.ComparisonProcessor.process_comparisons">
+<span class="sig-name descname"><span class="pre">process_comparisons</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db_processor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="database_processor.html#src.smart_watch.processing.database_processor.DatabaseProcessor" title="src.smart_watch.processing.database_processor.DatabaseProcessor"><span class="pre">DatabaseProcessor</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(disponible dans Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../../_modules/src/smart_watch/processing/comparison_processor.html#ComparisonProcessor.process_comparisons"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.smart_watch.processing.comparison_processor.ComparisonProcessor.process_comparisons" title="Lien vers cette définition"></a></dt>
+<dd><p>Compare les horaires extraits avec les références.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>db_processor</strong> (<a class="reference internal" href="database_processor.html#src.smart_watch.processing.database_processor.DatabaseProcessor" title="src.smart_watch.processing.database_processor.DatabaseProcessor"><em>DatabaseProcessor</em></a>) – Processeur de base de données</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 </section>
 

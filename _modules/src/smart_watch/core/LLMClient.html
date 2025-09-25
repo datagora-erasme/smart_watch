@@ -1,0 +1,882 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.smart_watch.core.LLMClient &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.jpg"/>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=d2e4462e"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/translations.js?v=e6b791cb"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/introduction.html">Présentation du projet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/introduction.html#sommaire">Sommaire</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/docker.html">Utilisation avec Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../guide/configuration.html">Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture technique</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/main.html">Orchestrateur</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/diagramme.html">Pipeline de traitement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/bdd.html">Base de données</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../architecture/stack.html">Stack technique</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/config/index.html">Modules Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/core/index.html">Modules Core</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/processing/index.html">Modules Processing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/utils/index.html">Modules Utils</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Reporting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../source/modules/reporting/index.html">Modules Reporting</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Code du module</a></li>
+      <li class="breadcrumb-item active">src.smart_watch.core.LLMClient</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Code source de src.smart_watch.core.LLMClient</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Client LLM et gestionnaire d&#39;embeddings pour le projet smart_watch</span>
+<span class="c1"># Documentation: https://datagora-erasme.github.io/smart_watch/source/modules/core/LLMClient.html</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">codecarbon</span><span class="w"> </span><span class="kn">import</span> <span class="n">EmissionsTracker</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fastembed</span><span class="w"> </span><span class="kn">import</span> <span class="n">TextEmbedding</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..config.markdown_filtering_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">MarkdownFilteringConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.ErrorHandler</span><span class="w"> </span><span class="kn">import</span> <span class="n">ErrorCategory</span><span class="p">,</span> <span class="n">ErrorHandler</span><span class="p">,</span> <span class="n">ErrorSeverity</span><span class="p">,</span> <span class="n">handle_errors</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.Logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">SmartWatchLogger</span><span class="p">,</span> <span class="n">create_logger</span>
+
+<span class="c1"># Initialize logger for this module</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">create_logger</span><span class="p">(</span>
+    <span class="n">module_name</span><span class="o">=</span><span class="s2">&quot;LLMClient&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="LLMResponse">
+<a class="viewcode-back" href="../../../../source/modules/core/LLMClient.html#src.smart_watch.core.LLMClient.LLMResponse">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LLMResponse</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Réponse enrichie d&#39;un appel LLM avec mesure de consommation.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        content (Union[str, List[Any]]): contenu de la réponse, texte ou liste (pour les embeddings).</span>
+<span class="sd">        co2_emissions (float): émissions de CO2 en kg.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">content</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]]</span>
+    <span class="n">co2_emissions</span><span class="p">:</span> <span class="nb">float</span></div>
+
+
+
+<div class="viewcode-block" id="LLMMessage">
+<a class="viewcode-back" href="../../../../source/modules/core/LLMClient.html#src.smart_watch.core.LLMClient.LLMMessage">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LLMMessage</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Représente un message dans une conversation avec le LLM.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        role (str): rôle du message (&quot;user&quot;, &quot;assistant&quot;, &quot;system&quot;).</span>
+<span class="sd">        content (str): contenu textuel du message.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">role</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">content</span><span class="p">:</span> <span class="nb">str</span></div>
+
+
+
+<div class="viewcode-block" id="BaseLLMClient">
+<a class="viewcode-back" href="../../../../source/modules/core/LLMClient.html#src.smart_watch.core.LLMClient.BaseLLMClient">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">BaseLLMClient</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Classe de base abstraite pour les clients LLM.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="BaseLLMClient.__init__">
+<a class="viewcode-back" href="../../../../source/modules/core/LLMClient.html#src.smart_watch.core.LLMClient.BaseLLMClient.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">api_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">base_url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialise le client LLM avec les paramètres de base.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            model (str): le nom du modèle LLM.</span>
+<span class="sd">            temperature (float): la température pour la génération de texte.</span>
+<span class="sd">            timeout (int): le délai d&#39;attente pour les requêtes API, en secondes.</span>
+<span class="sd">            api_key (Optional[str]): clé API pour l&#39;authentification.</span>
+<span class="sd">            base_url (Optional[str]): URL de base de l&#39;API LLM.</span>
+
+<span class="sd">        Attributes:</span>
+<span class="sd">            model (str): nom du modèle LLM.</span>
+<span class="sd">            temperature (float): température pour la génération.</span>
+<span class="sd">            timeout (int): délai d&#39;attente pour les requêtes.</span>
+<span class="sd">            api_key (Optional[str]): clé API.</span>
+<span class="sd">            base_url (Optional[str]): URL de base de l&#39;API.</span>
+<span class="sd">            session (requests.Session): session HTTP pour les requêtes.</span>
+<span class="sd">            error_handler (ErrorHandler): gestionnaire d&#39;erreurs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span> <span class="o">=</span> <span class="n">temperature</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timeout</span> <span class="o">=</span> <span class="n">timeout</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">api_key</span> <span class="o">=</span> <span class="n">api_key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">=</span> <span class="n">base_url</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">base_url</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_session</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">error_handler</span> <span class="o">=</span> <span class="n">ErrorHandler</span><span class="p">()</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Client </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> initialisé pour le modèle </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BaseLLMClient._create_session">
+<a class="viewcode-back" href="../../../../source/modules/core/LLMClient.html#src.smart_watch.core.LLMClient.BaseLLMClient._create_session">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_session</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Crée et configure une session requests avec les en-têtes appropriés.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            requests.Session: la session HTTP configurée.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">session</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">})</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">api_key</span><span class="p">:</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Bearer </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">api_key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">})</span>
+        <span class="k">return</span> <span class="n">session</span></div>
+
+
+<div class="viewcode-block" id="BaseLLMClient._normalize_messages">
+<a class="viewcode-back" href="../../../../source/modules/core/LLMClient.html#src.smart_watch.core.LLMClient.BaseLLMClient._normalize_messages">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_normalize_messages</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">LLMMessage</span><span class="p">]]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convertit les objets LLMMessage en dictionnaires pour l&#39;appel API.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            messages (List[Union[Dict[str, str], LLMMessage]]): liste de messages à normaliser.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List[Dict[str, str]]: liste de messages normalisés au format dictionnaire.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="p">{</span><span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="n">msg</span><span class="o">.</span><span class="n">role</span><span class="p">,</span> <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">msg</span><span class="o">.</span><span class="n">content</span><span class="p">}</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">LLMMessage</span><span class="p">)</span>
+            <span class="k">else</span> <span class="n">msg</span>
+            <span class="k">for</span> <span class="n">msg</span> <span class="ow">in</span> <span class="n">messages</span>
+        <span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="BaseLLMClient.call_llm">
+<a class="viewcode-back" href="../../../../source/modules/core/LLMClient.html#src.smart_watch.core.LLMClient.BaseLLMClient.call_llm">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">call_llm</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">messages</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">LLMMessage</span><span class="p">]],</span>
+        <span class="n">index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">total</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LLMResponse</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Méthode abstraite pour effectuer un appel au LLM avec mesure d&#39;émissions.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            messages (List[Union[Dict[str, str], LLMMessage]]): liste de messages à envoyer au LLM.</span>
+<span class="sd">            index (int): index de l&#39;appel dans une liste, utilisé pour le logging.</span>
+<span class="sd">            total (int): nombre total d&#39;appels à traiter, utilisé pour le logging.</span>
+<span class="sd">            **kwargs (Any): arguments supplémentaires pour l&#39;appel LLM.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            LLMResponse: réponse du LLM enrichie avec les émissions de CO2.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="BaseLLMClient.send_message">
+<a class="viewcode-back" href="../../../../source/modules/core/LLMClient.html#src.smart_watch.core.LLMClient.BaseLLMClient.send_message">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">send_message</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">content</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">role</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;user&quot;</span><span class="p">,</span>
+        <span class="n">system_prompt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LLMResponse</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Envoie un message simple au LLM.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            content (str): le contenu du message à envoyer.</span>
+<span class="sd">            role (str): le rôle de l&#39;expéditeur du message (&quot;user&quot;, &quot;assistant&quot;, &quot;system&quot;).</span>
+<span class="sd">            system_prompt (Optional[str]): un prompt système optionnel pour initialiser la conversation.</span>
+<span class="sd">            **kwargs (Any): paramètres supplémentaires pour l&#39;appel LLM.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            LLMResponse: réponse du LLM enrichie avec les émissions de CO2.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">messages</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">system_prompt</span><span class="p">:</span>
+            <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">LLMMessage</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="s2">&quot;system&quot;</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="n">system_prompt</span><span class="p">))</span>
+        <span class="n">messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">LLMMessage</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="n">role</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="n">content</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_llm</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BaseLLMClient.conversation">
+<a class="viewcode-back" href="../../../../source/modules/core/LLMClient.html#src.smart_watch.core.LLMClient.BaseLLMClient.conversation">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">conversation</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">LLMMessage</span><span class="p">]],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LLMResponse</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Raccourci pour `call_llm`.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            messages (List[Union[Dict[str, str], LLMMessage]]): liste de messages.</span>
+<span class="sd">            **kwargs (Any): arguments supplémentaires.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            LLMResponse: réponse du LLM.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_llm</span><span class="p">(</span><span class="n">messages</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BaseLLMClient.call_embeddings">
+<a class="viewcode-back" href="../../../../source/modules/core/LLMClient.html#src.smart_watch.core.LLMClient.BaseLLMClient.call_embeddings">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">call_embeddings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">LLMResponse</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Appel des embeddings via l&#39;API LLM avec mesure d&#39;émissions.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            texts (List[str]): liste de textes pour lesquels générer des embeddings.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            LLMResponse: réponse contenant les embeddings et les émissions de CO2.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Créer un tracker à la volée pour une mesure isolée</span>
+        <span class="n">tracker</span> <span class="o">=</span> <span class="n">EmissionsTracker</span><span class="p">(</span>
+            <span class="n">measure_power_secs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">tracking_mode</span><span class="o">=</span><span class="s2">&quot;machine&quot;</span><span class="p">,</span>
+            <span class="n">log_level</span><span class="o">=</span><span class="s2">&quot;error&quot;</span><span class="p">,</span>
+            <span class="n">save_to_file</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">tracker</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># URL de l&#39;endpoint embeddings</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base_url</span><span class="si">}</span><span class="s2">/embeddings&quot;</span>
+
+            <span class="c1"># Préparer la requête</span>
+            <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+                <span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="n">texts</span><span class="p">,</span>
+            <span class="p">}</span>
+
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">timeout</span><span class="p">)</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+
+            <span class="n">result</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+            <span class="n">embeddings</span> <span class="o">=</span> <span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;embedding&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]]</span>
+
+            <span class="c1"># Arrêter le tracking et récupérer les émissions</span>
+            <span class="n">emissions</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span> <span class="ow">or</span> <span class="mf">0.0</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Embeddings API: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">embeddings</span><span class="p">)</span><span class="si">}</span><span class="s2"> vecteurs, </span><span class="si">{</span><span class="n">emissions</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> kg CO2&quot;</span>
+            <span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">LLMResponse</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">embeddings</span><span class="p">,</span> <span class="n">co2_emissions</span><span class="o">=</span><span class="n">emissions</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># S&#39;assurer que le tracker est arrêté même en cas d&#39;erreur</span>
+            <span class="n">tracker</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur calcul embeddings: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="OpenAICompatibleClient">
+<a class="viewcode-back" href="../../../../source/modules/core/LLMClient.html#src.smart_watch.core.LLMClient.OpenAICompatibleClient">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">OpenAICompatibleClient</span><span class="p">(</span><span class="n">BaseLLMClient</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Client pour interagir avec des API compatibles OpenAI (Ollama, etc.).&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="OpenAICompatibleClient.__init__">
+<a class="viewcode-back" href="../../../../source/modules/core/LLMClient.html#src.smart_watch.core.LLMClient.OpenAICompatibleClient.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">api_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">base_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialise le client pour les API compatibles OpenAI.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            api_key (str): la clé API pour l&#39;authentification.</span>
+<span class="sd">            model (str): le nom du modèle LLM.</span>
+<span class="sd">            base_url (str): l&#39;URL de base de l&#39;API.</span>
+<span class="sd">            temperature (float): la température pour la génération de texte.</span>
+<span class="sd">            timeout (int): le délai d&#39;attente pour les requêtes API.</span>
+<span class="sd">            seed (Optional[int]): graine aléatoire pour la génération (optionnel).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">temperature</span><span class="p">,</span> <span class="n">timeout</span><span class="p">,</span> <span class="n">api_key</span><span class="p">,</span> <span class="n">base_url</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span>  <span class="c1"># Stocker le seed</span></div>
+
+
+<div class="viewcode-block" id="OpenAICompatibleClient.call_llm">
+<a class="viewcode-back" href="../../../../source/modules/core/LLMClient.html#src.smart_watch.core.LLMClient.OpenAICompatibleClient.call_llm">[docs]</a>
+    <span class="nd">@handle_errors</span><span class="p">(</span>
+        <span class="n">category</span><span class="o">=</span><span class="n">ErrorCategory</span><span class="o">.</span><span class="n">LLM</span><span class="p">,</span>
+        <span class="n">severity</span><span class="o">=</span><span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">MEDIUM</span><span class="p">,</span>
+        <span class="n">user_message</span><span class="o">=</span><span class="s2">&quot;Erreur lors de l&#39;appel au LLM (compatible OpenAI)&quot;</span><span class="p">,</span>
+        <span class="n">default_return</span><span class="o">=</span><span class="n">LLMResponse</span><span class="p">(</span>
+            <span class="n">content</span><span class="o">=</span><span class="s2">&quot;Erreur Timeout ou API indisponible&quot;</span><span class="p">,</span> <span class="n">co2_emissions</span><span class="o">=</span><span class="mf">0.0</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">call_llm</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">messages</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">LLMMessage</span><span class="p">]],</span>
+        <span class="n">response_format</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">total</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LLMResponse</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Effectue un appel au LLM.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            messages (List[Union[Dict[str, str], LLMMessage]]): liste de messages à envoyer au LLM.</span>
+<span class="sd">            response_format (Optional[Dict[str, Any]]): format de réponse structuré (si nécessaire).</span>
+<span class="sd">            index (int): index de l&#39;appel dans une liste, utilisé pour le logging.</span>
+<span class="sd">            total (int): nombre total d&#39;appels à traiter, utilisé pour le logging.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            LLMResponse: réponse du LLM enrichie avec les émissions de CO2.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">formatted_messages</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalize_messages</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
+        <span class="n">log_message_prefix</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">total</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">log_message_prefix</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Appel LLM </span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">total</span><span class="si">}</span><span class="s2"> &quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">log_message_prefix</span><span class="si">}</span><span class="s2">Compatible OpenAI </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">formatted_messages</span><span class="p">)</span><span class="si">}</span><span class="s2"> messages&quot;</span>
+        <span class="p">)</span>
+        <span class="n">tracker</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Initialiser le tracker</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Construire le payload de base</span>
+            <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+                <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="n">formatted_messages</span><span class="p">,</span>
+                <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span><span class="p">,</span>
+            <span class="p">}</span>
+
+            <span class="c1"># Ajouter le seed s&#39;il est défini</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;seed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">seed</span>
+
+            <span class="c1"># Ajouter le format de réponse si spécifié</span>
+            <span class="k">if</span> <span class="n">response_format</span><span class="p">:</span>
+                <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;response_format&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">response_format</span>
+
+            <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base_url</span><span class="si">}</span><span class="s2">/chat/completions&quot;</span>
+
+            <span class="c1"># Créer un tracker à la volée pour une mesure isolée</span>
+            <span class="n">tracker</span> <span class="o">=</span> <span class="n">EmissionsTracker</span><span class="p">(</span>
+                <span class="n">measure_power_secs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="n">tracking_mode</span><span class="o">=</span><span class="s2">&quot;machine&quot;</span><span class="p">,</span>
+                <span class="n">log_level</span><span class="o">=</span><span class="s2">&quot;error&quot;</span><span class="p">,</span>
+                <span class="n">save_to_file</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">tracker</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">timeout</span><span class="p">)</span>
+
+            <span class="c1"># Log de la réponse en cas d&#39;erreur avant de lever une exception</span>
+            <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Erreur API compatible OpenAI (</span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">): </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+
+            <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+            <span class="n">response_data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">response_data</span><span class="p">[</span><span class="s2">&quot;choices&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;message&quot;</span><span class="p">][</span><span class="s2">&quot;content&quot;</span><span class="p">]</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Réponse OpenAI reçue: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span><span class="si">}</span><span class="s2"> caractères&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Arrêter le tracking et récupérer les émissions</span>
+            <span class="n">emissions</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span> <span class="ow">or</span> <span class="mf">0.0</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;LLM API: </span><span class="si">{</span><span class="n">emissions</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> kg CO2&quot;</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">LLMResponse</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">result</span><span class="p">,</span> <span class="n">co2_emissions</span><span class="o">=</span><span class="n">emissions</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">Timeout</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">tracker</span><span class="p">:</span>
+                <span class="n">tracker</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Timeout après </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">timeout</span><span class="si">}</span><span class="s2"> secondes&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">ConnectionError</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">tracker</span><span class="p">:</span>
+                <span class="n">tracker</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Erreur de connexion à l&#39;API&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">HTTPError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">tracker</span><span class="p">:</span>
+                <span class="n">tracker</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">429</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Limite de taux API atteinte&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">401</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Clé API invalide&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur HTTP </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">KeyError</span><span class="p">,</span> <span class="ne">IndexError</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">tracker</span><span class="p">:</span>
+                <span class="n">tracker</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Format de réponse API invalide&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">tracker</span><span class="p">:</span>
+                <span class="n">tracker</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+            <span class="c1"># Log de l&#39;exception détaillée pour un meilleur débogage</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Exception détaillée lors de l&#39;appel au LLM compatible OpenAI: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+            <span class="k">raise</span> <span class="n">e</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="MistralAPIClient">
+<a class="viewcode-back" href="../../../../source/modules/core/LLMClient.html#src.smart_watch.core.LLMClient.MistralAPIClient">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MistralAPIClient</span><span class="p">(</span><span class="n">BaseLLMClient</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Client pour interagir avec l&#39;API officielle de Mistral AI.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="MistralAPIClient.__init__">
+<a class="viewcode-back" href="../../../../source/modules/core/LLMClient.html#src.smart_watch.core.LLMClient.MistralAPIClient.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">api_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">model</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">temperature</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
+        <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialise le client pour l&#39;API Mistral.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            api_key (str): la clé API pour l&#39;authentification.</span>
+<span class="sd">            model (str): le nom du modèle LLM.</span>
+<span class="sd">            temperature (float): la température pour la génération de texte.</span>
+<span class="sd">            timeout (int): le délai d&#39;attente pour les requêtes API.</span>
+<span class="sd">            seed (Optional[int]): graine aléatoire pour la génération (optionnel).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Initialiser la classe de base avec une URL fixe pour Mistral</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+            <span class="n">temperature</span><span class="o">=</span><span class="n">temperature</span><span class="p">,</span>
+            <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span>
+            <span class="n">api_key</span><span class="o">=</span><span class="n">api_key</span><span class="p">,</span>
+            <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://api.mistral.ai/v1&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span></div>
+
+
+<div class="viewcode-block" id="MistralAPIClient.call_llm">
+<a class="viewcode-back" href="../../../../source/modules/core/LLMClient.html#src.smart_watch.core.LLMClient.MistralAPIClient.call_llm">[docs]</a>
+    <span class="nd">@handle_errors</span><span class="p">(</span>
+        <span class="n">category</span><span class="o">=</span><span class="n">ErrorCategory</span><span class="o">.</span><span class="n">LLM</span><span class="p">,</span>
+        <span class="n">severity</span><span class="o">=</span><span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">MEDIUM</span><span class="p">,</span>
+        <span class="n">user_message</span><span class="o">=</span><span class="s2">&quot;Erreur lors de l&#39;appel à l&#39;API Mistral&quot;</span><span class="p">,</span>
+        <span class="n">default_return</span><span class="o">=</span><span class="n">LLMResponse</span><span class="p">(</span>
+            <span class="n">content</span><span class="o">=</span><span class="s2">&quot;Erreur API Mistral indisponible&quot;</span><span class="p">,</span> <span class="n">co2_emissions</span><span class="o">=</span><span class="mf">0.0</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">call_llm</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">messages</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">LLMMessage</span><span class="p">]],</span>
+        <span class="n">tool_params</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">total</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LLMResponse</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Effectue un appel vers l&#39;API Mistral.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            messages (List[Union[Dict[str, str], LLMMessage]]): liste des messages à envoyer.</span>
+<span class="sd">            tool_params (Optional[Dict[str, Any]]): paramètres pour l&#39;utilisation d&#39;outils.</span>
+<span class="sd">            index (int): index de l&#39;appel pour le logging.</span>
+<span class="sd">            total (int): nombre total d&#39;appels pour le logging.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            LLMResponse: réponse du LLM enrichie avec les émissions de CO2.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">formatted_messages</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalize_messages</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
+        <span class="n">log_message_prefix</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">total</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">log_message_prefix</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Appel LLM </span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">total</span><span class="si">}</span><span class="s2"> &quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">log_message_prefix</span><span class="si">}</span><span class="s2">Mistral </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">formatted_messages</span><span class="p">)</span><span class="si">}</span><span class="s2"> messages&quot;</span>
+        <span class="p">)</span>
+        <span class="n">tracker</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Initialiser le tracker</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Préparer les paramètres de base</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+                <span class="s2">&quot;messages&quot;</span><span class="p">:</span> <span class="n">messages</span><span class="p">,</span>
+                <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span><span class="p">,</span>
+            <span class="p">}</span>
+
+            <span class="c1"># Ajouter le seed s&#39;il est défini</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">params</span><span class="p">[</span><span class="s2">&quot;random_seed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">seed</span>  <span class="c1"># Mistral utilise &quot;random_seed&quot;</span>
+
+            <span class="c1"># Ajouter les outils si spécifiés</span>
+            <span class="k">if</span> <span class="n">tool_params</span><span class="p">:</span>
+                <span class="n">params</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">tool_params</span><span class="p">)</span>
+
+            <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base_url</span><span class="si">}</span><span class="s2">/chat/completions&quot;</span>
+
+            <span class="c1"># Créer un tracker à la volée pour une mesure isolée</span>
+            <span class="n">tracker</span> <span class="o">=</span> <span class="n">EmissionsTracker</span><span class="p">(</span>
+                <span class="n">measure_power_secs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                <span class="n">tracking_mode</span><span class="o">=</span><span class="s2">&quot;machine&quot;</span><span class="p">,</span>
+                <span class="n">log_level</span><span class="o">=</span><span class="s2">&quot;error&quot;</span><span class="p">,</span>
+                <span class="n">save_to_file</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">tracker</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">timeout</span><span class="p">)</span>
+
+            <span class="c1"># Log de la réponse en cas d&#39;erreur avant de lever une exception</span>
+            <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Erreur API Mistral (</span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">): </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">)</span>
+
+            <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+            <span class="n">response_data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+            <span class="n">choice</span> <span class="o">=</span> <span class="n">response_data</span><span class="p">[</span><span class="s2">&quot;choices&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="s2">&quot;tool_calls&quot;</span> <span class="ow">in</span> <span class="n">choice</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">choice</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">][</span><span class="s2">&quot;tool_calls&quot;</span><span class="p">]:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">choice</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">][</span><span class="s2">&quot;tool_calls&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;function&quot;</span><span class="p">][</span><span class="s2">&quot;arguments&quot;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">choice</span><span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">][</span><span class="s2">&quot;content&quot;</span><span class="p">]</span>
+
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Réponse Mistral reçue: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span><span class="si">}</span><span class="s2"> caractères&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Arrêter le tracking et récupérer les émissions</span>
+            <span class="n">emissions</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span> <span class="ow">or</span> <span class="mf">0.0</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Émissions CO2 mesurées: </span><span class="si">{</span><span class="n">emissions</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> kg&quot;</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">LLMResponse</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">result</span><span class="p">,</span> <span class="n">co2_emissions</span><span class="o">=</span><span class="n">emissions</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="p">(</span><span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">RequestException</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">,</span> <span class="ne">IndexError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">tracker</span><span class="p">:</span>
+                <span class="n">tracker</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+            <span class="c1"># Log de l&#39;exception détaillée pour un meilleur débogage</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Exception détaillée lors de l&#39;appel Mistral: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="c1"># Laisse le décorateur @handle_errors gérer l&#39;exception</span>
+            <span class="k">raise</span> <span class="n">e</span></div>
+
+
+<div class="viewcode-block" id="MistralAPIClient.call_embeddings">
+<a class="viewcode-back" href="../../../../source/modules/core/LLMClient.html#src.smart_watch.core.LLMClient.MistralAPIClient.call_embeddings">[docs]</a>
+    <span class="nd">@handle_errors</span><span class="p">(</span>
+        <span class="n">category</span><span class="o">=</span><span class="n">ErrorCategory</span><span class="o">.</span><span class="n">LLM</span><span class="p">,</span>
+        <span class="n">severity</span><span class="o">=</span><span class="n">ErrorSeverity</span><span class="o">.</span><span class="n">MEDIUM</span><span class="p">,</span>
+        <span class="n">user_message</span><span class="o">=</span><span class="s2">&quot;Erreur lors de l&#39;appel aux embeddings Mistral&quot;</span><span class="p">,</span>
+        <span class="n">default_return</span><span class="o">=</span><span class="n">LLMResponse</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="s2">&quot;Erreur API Mistral&quot;</span><span class="p">,</span> <span class="n">co2_emissions</span><span class="o">=</span><span class="mf">0.0</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">call_embeddings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">LLMResponse</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Appel d&#39;embeddings via API Mistral avec mesure d&#39;émissions.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            texts (List[str]): liste de textes pour lesquels générer des embeddings.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            LLMResponse: réponse contenant les embeddings et les émissions de CO2.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            Utilise l&#39;API embeddings de Mistral qui est compatible avec l&#39;API OpenAI.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Créer un tracker à la volée pour une mesure isolée</span>
+        <span class="n">tracker</span> <span class="o">=</span> <span class="n">EmissionsTracker</span><span class="p">(</span>
+            <span class="n">measure_power_secs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">tracking_mode</span><span class="o">=</span><span class="s2">&quot;machine&quot;</span><span class="p">,</span>
+            <span class="n">log_level</span><span class="o">=</span><span class="s2">&quot;error&quot;</span><span class="p">,</span>
+            <span class="n">save_to_file</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">tracker</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># URL de l&#39;endpoint embeddings (compatible OpenAI)</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">base_url</span><span class="si">}</span><span class="s2">/embeddings&quot;</span>
+
+            <span class="c1"># Préparer la requête</span>
+            <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+                <span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="n">texts</span><span class="p">,</span>
+            <span class="p">}</span>
+
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">timeout</span><span class="p">)</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+
+            <span class="n">result</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+            <span class="n">embeddings</span> <span class="o">=</span> <span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;embedding&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]]</span>
+
+            <span class="c1"># Arrêter le tracking et récupérer les émissions</span>
+            <span class="n">emissions</span> <span class="o">=</span> <span class="n">tracker</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span> <span class="ow">or</span> <span class="mf">0.0</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Embeddings API Mistral: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">embeddings</span><span class="p">)</span><span class="si">}</span><span class="s2"> vecteurs, </span><span class="si">{</span><span class="n">emissions</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2"> kg CO2&quot;</span>
+            <span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">LLMResponse</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="n">embeddings</span><span class="p">,</span> <span class="n">co2_emissions</span><span class="o">=</span><span class="n">emissions</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># S&#39;assurer que le tracker est arrêté même en cas d&#39;erreur</span>
+            <span class="n">tracker</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur calcul embeddings Mistral: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span></div>
+</div>
+
+
+
+<span class="c1"># Fonctions utilitaires pour les formats de réponse structurés</span>
+<div class="viewcode-block" id="get_structured_response_format">
+<a class="viewcode-back" href="../../../../source/modules/core/LLMClient.html#src.smart_watch.core.LLMClient.get_structured_response_format">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_structured_response_format</span><span class="p">(</span>
+    <span class="n">schema</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;response&quot;</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Formate un schéma pour les structured outputs OpenAI.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        schema (Dict[str, Any]): le schéma JSON que la réponse doit suivre.</span>
+<span class="sd">        name (str): le nom de la réponse.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Dict[str, Any]: format de réponse pour l&#39;API.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;json_object&quot;</span><span class="p">,</span> <span class="s2">&quot;json_schema&quot;</span><span class="p">:</span> <span class="n">schema</span><span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="get_mistral_tool_format">
+<a class="viewcode-back" href="../../../../source/modules/core/LLMClient.html#src.smart_watch.core.LLMClient.get_mistral_tool_format">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_mistral_tool_format</span><span class="p">(</span>
+    <span class="n">schema</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">function_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;extract_info&quot;</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Crée le dictionnaire pour le tool calling avec Mistral.</span>
+
+<span class="sd">    Cette fonction force une réponse structurée.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        schema (Dict[str, Any]): le schéma JSON que la réponse doit suivre.</span>
+<span class="sd">        function_name (str): le nom de la fonction à appeler.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Dict[str, Any]: format de réponse pour l&#39;API Mistral avec tool calling.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;tools&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;function&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;function&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">function_name</span><span class="p">,</span>
+                    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Extraire les informations structurées du texte en suivant le schéma JSON.&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="n">schema</span><span class="p">,</span>
+                <span class="p">},</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;tool_choice&quot;</span><span class="p">:</span> <span class="s2">&quot;any&quot;</span><span class="p">,</span>  <span class="c1"># Force le modèle à appeler l&#39;outil</span>
+    <span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="EmbeddingModel">
+<a class="viewcode-back" href="../../../../source/modules/core/LLMClient.html#src.smart_watch.core.LLMClient.EmbeddingModel">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">EmbeddingModel</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Classe d&#39;abstraction pour gérer la génération d&#39;embeddings,</span>
+<span class="sd">    qu&#39;elle soit locale ou via une API distante.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="EmbeddingModel.__init__">
+<a class="viewcode-back" href="../../../../source/modules/core/LLMClient.html#src.smart_watch.core.LLMClient.EmbeddingModel.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">md_config</span><span class="p">:</span> <span class="n">MarkdownFilteringConfig</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="n">SmartWatchLogger</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialise le client d&#39;embedding en fonction de la configuration fournie.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            md_config (MarkdownFilteringConfig): Configuration pour le filtrage Markdown et les embeddings.</span>
+<span class="sd">            logger (SmartWatchLogger): Logger pour enregistrer les messages d&#39;information, de débogage et d&#39;erreur.</span>
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: Si le nom du modèle est manquant pour un fournisseur local, si la clé API est manquante pour les fournisseurs distants, si le nom du modèle est manquant pour les fournisseurs distants, ou si l&#39;URL de base est manquante pour OpenAI ou Ollama, ou si le fournisseur n&#39;est pas supporté.</span>
+<span class="sd">            Exception: Si une erreur survient lors du chargement du modèle local.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">md_config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Pour accepter TextEmbedding ou BaseLLMClient</span>
+
+        <span class="n">provider</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">embed_fournisseur</span>
+        <span class="n">model_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">embed_modele</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Initialisation de EmbeddingModel avec le fournisseur: </span><span class="si">{</span><span class="n">provider</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">provider</span> <span class="o">==</span> <span class="s2">&quot;LOCAL&quot;</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">model_name</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="s2">&quot;Le nom du modèle local (EMBED_MODELE_LOCAL) est manquant.&quot;</span>
+                    <span class="p">)</span>
+                <span class="n">cpu_count</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span> <span class="ow">or</span> <span class="mi">1</span>
+                <span class="n">threads</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">cpu_count</span> <span class="o">//</span> <span class="mi">4</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">TextEmbedding</span><span class="p">(</span><span class="n">model_name</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="n">threads</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Modèle d&#39;embedding local chargé: </span><span class="si">{</span><span class="n">model_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur lors du chargement du modèle local: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">raise</span>
+        <span class="k">elif</span> <span class="n">provider</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;MISTRAL&quot;</span><span class="p">,</span> <span class="s2">&quot;OPENAI&quot;</span><span class="p">,</span> <span class="s2">&quot;OLLAMA&quot;</span><span class="p">]:</span>
+            <span class="n">api_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">embed_api_key</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">api_key</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;La clé API (EMBED_API_KEY) est manquante pour le fournisseur </span><span class="si">{</span><span class="n">provider</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">model_name</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Le nom du modèle (EMBED_MODELE_*) est manquant pour le fournisseur </span><span class="si">{</span><span class="n">provider</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">provider</span> <span class="o">==</span> <span class="s2">&quot;MISTRAL&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">MistralAPIClient</span><span class="p">(</span><span class="n">api_key</span><span class="o">=</span><span class="n">api_key</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="n">model_name</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">provider</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;OPENAI&quot;</span><span class="p">,</span> <span class="s2">&quot;OLLAMA&quot;</span><span class="p">]:</span>
+                <span class="n">base_url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">embed_base_url</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">base_url</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;L&#39;URL de base (EMBED_BASE_URL) est manquante pour le fournisseur </span><span class="si">{</span><span class="n">provider</span><span class="si">}</span><span class="s2">.&quot;</span>
+                    <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span class="n">OpenAICompatibleClient</span><span class="p">(</span>
+                    <span class="n">api_key</span><span class="o">=</span><span class="n">api_key</span><span class="p">,</span>
+                    <span class="n">model</span><span class="o">=</span><span class="n">model_name</span><span class="p">,</span>
+                    <span class="n">base_url</span><span class="o">=</span><span class="n">base_url</span><span class="p">,</span>
+                <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Fournisseur d&#39;embedding non supporté: </span><span class="si">{</span><span class="n">provider</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="EmbeddingModel.get_text_embedding">
+<a class="viewcode-back" href="../../../../source/modules/core/LLMClient.html#src.smart_watch.core.LLMClient.EmbeddingModel.get_text_embedding">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_text_embedding</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">texts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">with_co2</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Génère les embeddings pour une liste de textes.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Client d&#39;embedding non initialisé.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">embed_fournisseur</span> <span class="o">==</span> <span class="s2">&quot;LOCAL&quot;</span><span class="p">:</span>
+            <span class="n">embeddings</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">embed</span><span class="p">(</span><span class="n">texts</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">embeddings</span><span class="p">),</span> <span class="mf">0.0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Les clients API retournent un LLMResponse</span>
+            <span class="n">response</span><span class="p">:</span> <span class="n">LLMResponse</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">call_embeddings</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">),</span> <span class="n">response</span><span class="o">.</span><span class="n">co2_emissions</span>
+            <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="mf">0.0</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
