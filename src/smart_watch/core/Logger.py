@@ -1,5 +1,5 @@
 # Système de logging pour le projet smart_watch
-# https://datagora-erasme.github.io/smart_watch/source/modules/core/logger.html
+# Documentation : https://datagora-erasme.github.io/smart_watch/source/modules/core/logger.html
 
 import logging
 import os
@@ -146,7 +146,7 @@ class SmartWatchLogger:
         except Exception as e:
             print(f"Erreur lors de l'écriture du log: {e}")
 
-    def log(self, level: LogLevel, message: str):
+    def log(self, level: LogLevel, message: str) -> None:
         """
         Enregistre un message de journalisation avec un niveau spécifié.
 
@@ -160,7 +160,7 @@ class SmartWatchLogger:
     # Elles permettent d'utiliser les niveaux de log directement, exemple :
     # logger.debug("Ceci est un message de débogage")
     # logger.info("Ceci est un message d'information")
-    def debug(self, message: str):
+    def debug(self, message: str) -> None:
         """
         Enregistre un message de débogage dans le journal.
 
@@ -169,7 +169,7 @@ class SmartWatchLogger:
         """
         self._log(LogLevel.DEBUG, message)
 
-    def info(self, message: str):
+    def info(self, message: str) -> None:
         """
         Enregistre un message d'information dans le journal.
 
@@ -178,7 +178,7 @@ class SmartWatchLogger:
         """
         self._log(LogLevel.INFO, message)
 
-    def warning(self, message: str):
+    def warning(self, message: str) -> None:
         """
         Enregistre un message d'alerte dans le journal.
 
@@ -187,7 +187,7 @@ class SmartWatchLogger:
         """
         self._log(LogLevel.WARNING, message)
 
-    def error(self, message: str):
+    def error(self, message: str) -> None:
         """
         Enregistre un message d'erreur dans le journal.
 
@@ -196,7 +196,7 @@ class SmartWatchLogger:
         """
         self._log(LogLevel.ERROR, message)
 
-    def critical(self, message: str):
+    def critical(self, message: str) -> None:
         """
         Enregistre un message d'alerte critique dans le journal.
 
@@ -205,7 +205,7 @@ class SmartWatchLogger:
         """
         self._log(LogLevel.CRITICAL, message)
 
-    def section(self, title: str, level: LogLevel = LogLevel.INFO):
+    def section(self, title: str, level: LogLevel = LogLevel.INFO) -> None:
         """
         Affiche une section formatée dans les logs, entourée de séparateurs pour mettre en valeur le titre.
 

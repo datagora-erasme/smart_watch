@@ -1,5 +1,5 @@
-# Documentation:
-# https://datagora-erasme.github.io/smart_watch/source/modules/core/GetPrompt.html
+# Constructeur de prompts pour l'extraction d'horaires d'ouverture
+# Documentation : https://datagora-erasme.github.io/smart_watch/source/modules/core/GetPrompt.html
 
 import json
 from datetime import datetime

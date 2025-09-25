@@ -1,3 +1,4 @@
+# Gestionnaire de notifications par email pour le projet smart_watch
 # Documentation: https://datagora-erasme.github.io/smart_watch/source/modules/core/NotificationManager.html
 
 import os

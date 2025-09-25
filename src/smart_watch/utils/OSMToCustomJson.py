@@ -444,6 +444,12 @@ class OsmToJsonConverter:
     """Convertisseur principal d'OSM vers JSON personnalisé."""
 
     def __init__(self):
+        """Initialise une instance de la classe OSMToCustomJson.
+
+        Cette méthode configure l'objet en créant et assignant un analyseur OSM
+        (OSMParser) à l'attribut 'parser'. Cet analyseur est utilisé pour traiter
+        les données OpenStreetMap et les convertir en format JSON personnalisé.
+        """
         self.parser = OSMParser()
 
     @handle_errors(

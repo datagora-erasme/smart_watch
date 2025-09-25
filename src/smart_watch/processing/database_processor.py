@@ -70,7 +70,7 @@ class DatabaseProcessor:
                 self.logger.error(f"Erreur exécution requête: {e}")
                 raise
 
-    def setup_execution(self, df_csv) -> int:
+    def setup_execution(self, df_csv: Any) -> int:
         """
         Configure et initialise une nouvelle exécution à partir d'un DataFrame issu
         du fichier CSV pris sur l'URL indiqué dans CSV_URL_HORAIRES du fichier .env.
@@ -105,7 +105,7 @@ class DatabaseProcessor:
         finally:
             session.close()
 
-    def _update_lieux_batch(self, session, df_csv):
+    def _update_lieux_batch(self, session: Any, df_csv: Any) -> None:
         """
         Met à jour en batch les enregistrements de lieux dans la base de données à partir du df issu de CSV_URL_HORAIRES.
 
@@ -148,7 +148,7 @@ class DatabaseProcessor:
         session.commit()
         self.logger.info(f"Lieux mis à jour: {len(lieux_data)} enregistrements")
 
-    def _update_horaires_lieux_depuis_gl(self, session):
+    def _update_horaires_lieux_depuis_gl(self, session: Any) -> None:
         """
         Met à jour les horaires des lieux à partir des fichiers de référence CSV issus de data.grandlyon.com :
         CSV_URL_PISCINES, CSV_URL_MAIRIES, CSV_URL_MEDIATHEQUES.
@@ -231,7 +231,7 @@ class DatabaseProcessor:
                     log_message += f": {e}"
                 self.logger.error(log_message)
 
-    def _create_execution(self, session) -> int:
+    def _create_execution(self, session: Any) -> int:
         """
         Crée une nouvelle exécution et retourne son ID.
 
@@ -287,7 +287,9 @@ class DatabaseProcessor:
             session.rollback()
             raise
 
-    def _setup_resultats_extraction(self, session, df_csv, execution_id):
+    def _setup_resultats_extraction(
+        self, session: Any, df_csv: Any, execution_id: int
+    ) -> None:
         """
         Prépare et gère les enregistrements de résultats d'extraction pour une nouvelle exécution.
 
@@ -410,7 +412,7 @@ class DatabaseProcessor:
         session.commit()
 
     def get_pending_urls(
-        self, execution_id
+        self, execution_id: int
     ) -> Sequence[Row[Tuple[ResultatsExtraction, Lieux]]]:
         """Récupère les URLs en attente de traitement."""
         session = self.db_manager.Session()
@@ -428,7 +430,7 @@ class DatabaseProcessor:
             session.close()
 
     def get_pending_llm(
-        self, execution_id
+        self, execution_id: int
     ) -> Sequence[Row[Tuple[ResultatsExtraction, Lieux]]]:
         """Récupère les enregistrements en attente d'extraction LLM."""
         session = self.db_manager.Session()
@@ -519,7 +521,7 @@ class DatabaseProcessor:
         finally:
             session.close()
 
-    def update_comparison_result(self, resultat_id: int, comparison_data: dict):
+    def update_comparison_result(self, resultat_id: int, comparison_data: dict) -> None:
         """Met à jour le résultat d'une comparaison."""
         session = self.db_manager.Session()
         try:
@@ -546,7 +548,7 @@ class DatabaseProcessor:
         finally:
             session.close()
 
-    def update_url_result(self, resultat_id: int, result_data: dict):
+    def update_url_result(self, resultat_id: int, result_data: dict) -> None:
         """Met à jour le résultat d'une extraction URL."""
         session = self.db_manager.Session()
         try:
@@ -567,7 +569,7 @@ class DatabaseProcessor:
         finally:
             session.close()
 
-    def update_cleaned_markdown(self, resultat_id: int, cleaned_markdown: str):
+    def update_cleaned_markdown(self, resultat_id: int, cleaned_markdown: str) -> None:
         """Met à jour le markdown nettoyé."""
         session = self.db_manager.Session()
         try:
@@ -580,7 +582,7 @@ class DatabaseProcessor:
 
     def update_filtered_markdown(
         self, resultat_id: int, filtered_markdown: str, co2_emissions: float = 0.0
-    ):
+    ) -> None:
         """Met à jour le markdown filtré et ajoute les émissions CO2."""
         session = self.db_manager.Session()
         try:
@@ -600,7 +602,7 @@ class DatabaseProcessor:
         finally:
             session.close()
 
-    def update_llm_result(self, resultat_id: int, llm_data: dict):
+    def update_llm_result(self, resultat_id: int, llm_data: dict) -> None:
         """Met à jour le résultat d'une extraction LLM."""
         session = self.db_manager.Session()
         try:
@@ -653,7 +655,9 @@ class DatabaseProcessor:
         finally:
             session.close()
 
-    def update_execution_emissions(self, execution_id: int, total_emissions: float):
+    def update_execution_emissions(
+        self, execution_id: int, total_emissions: float
+    ) -> None:
         """Met à jour les émissions CO2 totales d'une exécution en les ajoutant au total existant."""
         session = self.db_manager.Session()
         try:
@@ -676,7 +680,7 @@ class DatabaseProcessor:
 
     def update_execution_embeddings(
         self, execution_id: int, embeddings_emissions: float
-    ):
+    ) -> None:
         """Met à jour les émissions CO2 des embeddings d'une exécution."""
         session = self.db_manager.Session()
         try:
@@ -698,7 +702,9 @@ class DatabaseProcessor:
         finally:
             session.close()
 
-    def add_pipeline_error(self, resultat_id: int, error_type: str, error_message: str):
+    def add_pipeline_error(
+        self, resultat_id: int, error_type: str, error_message: str
+    ) -> None:
         """Ajoute une erreur à la chaîne d'erreurs du pipeline."""
         session = self.db_manager.Session()
         try:
@@ -722,7 +728,9 @@ class DatabaseProcessor:
         finally:
             session.close()
 
-    def _add_error_to_result(self, resultat, error_type: str, error_message: str):
+    def _add_error_to_result(
+        self, resultat: ResultatsExtraction, error_type: str, error_message: str
+    ) -> None:
         """Ajoute une erreur à la chaîne d'erreurs (méthode interne)."""
         from datetime import datetime
 

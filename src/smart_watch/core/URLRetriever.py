@@ -1,3 +1,4 @@
+# Récupérateur de contenu URL pour le projet smart_watch
 # Documentation: https://datagora-erasme.github.io/smart_watch/source/modules/core/URLRetriever.html
 import time
 from typing import Any, Dict, Optional

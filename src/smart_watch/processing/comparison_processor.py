@@ -1,30 +1,54 @@
-"""
-Processeur pour les comparaisons d'horaires.
-"""
+# Processeur pour les comparaisons d'horaires.
+# https://datagora-erasme.github.io/smart_watch/source/modules/processing/comparison_processor.html
 
 import json
-from typing import Dict
+from typing import Dict, Optional, Union, cast
 
 from ..core.ComparateurHoraires import HorairesComparator
 from ..core.ConfigManager import ConfigManager
+from ..core.Logger import SmartWatchLogger
+from ..data_models.schema_bdd import Lieux, ResultatsExtraction
 from .database_processor import DatabaseProcessor
 
 
 class ComparisonProcessor:
     """Processeur pour les comparaisons d'horaires."""
 
-    def __init__(self, config: ConfigManager, logger):
+    def __init__(self, config: ConfigManager, logger: SmartWatchLogger) -> None:
+        """Initialise le processeur de comparaisons.
+
+        Args:
+            config (ConfigManager): Le gestionnaire de configuration.
+            logger (SmartWatchLogger): L'instance du logger pour la journalisation.
+        """
         self.config = config
         self.logger = logger
 
-    def _compare_single(self, comparator, resultat, lieu) -> Dict:
-        """Compare un seul enregistrement et retourne les résultats structurés."""
+    def _compare_single(
+        self,
+        comparator: HorairesComparator,
+        resultat: ResultatsExtraction,
+        lieu: Lieux,
+    ) -> Dict[str, Union[Optional[bool], str]]:
+        """Compare les horaires d'un lieu à partir de différentes sources.
+
+        Cette méthode prend un résultat d'extraction et un lieu, puis compare les
+        horaires obtenus par le LLM avec les horaires de référence (data.grandlyon.com).
+        Elle gère les erreurs de parsing JSON et les cas où les données sont absentes.
+
+        Args:
+            comparator (HorairesComparator): L'instance du comparateur d'horaires.
+            resultat (ResultatsExtraction): L'objet contenant les horaires extraits par le LLM.
+            lieu (Lieux): L'objet représentant le lieu, contenant les horaires de référence.
+
+        Returns:
+            dict: Un dictionnaire contenant le résultat de la comparaison, avec les clés
+                  "identique" (booléen ou None) et "differences" (chaîne de caractères).
+        """
         try:
+            horaires_gl = cast(Optional[str], lieu.horaires_data_gl_json)
             # Vérifier si on a des horaires data.grandlyon.com JSON pour ce lieu
-            if (
-                not lieu.horaires_data_gl_json
-                or lieu.horaires_data_gl_json.strip() == ""
-            ):
+            if horaires_gl is None or horaires_gl.strip() == "":
                 return {
                     "identique": None,
                     "differences": "Pas d'horaires de référence data.grandlyon.com disponibles",
@@ -32,12 +56,12 @@ class ComparisonProcessor:
 
             # Charger les horaires data.grandlyon.com (déjà en format JSON)
             try:
-                if lieu.horaires_data_gl_json.startswith("Erreur conversion:"):
+                if horaires_gl.startswith("Erreur conversion:"):
                     return {
                         "identique": None,
-                        "differences": f"Erreur dans les données GL: {lieu.horaires_data_gl_json}",
+                        "differences": f"Erreur dans les données GL: {horaires_gl}",
                     }
-                horaires_gl_json = json.loads(lieu.horaires_data_gl_json)
+                horaires_gl_json = json.loads(horaires_gl)
             except json.JSONDecodeError as e:
                 return {
                     "identique": None,
@@ -45,8 +69,14 @@ class ComparisonProcessor:
                 }
 
             # Charger les horaires extraits par LLM
+            horaires_llm = cast(Optional[str], resultat.llm_horaires_json)
+            if horaires_llm is None or horaires_llm.strip() == "":
+                return {
+                    "identique": None,
+                    "differences": "Horaires LLM non disponibles (None ou vide).",
+                }
             try:
-                horaires_llm_json = json.loads(resultat.llm_horaires_json)
+                horaires_llm_json = json.loads(horaires_llm)
             except json.JSONDecodeError as e:
                 return {
                     "identique": None,
@@ -90,7 +120,7 @@ class ComparisonProcessor:
                 "differences": f"Erreur générale: {str(e)}",
             }
 
-    def process_comparisons(self, db_processor: DatabaseProcessor):
+    def process_comparisons(self, db_processor: DatabaseProcessor) -> None:
         """
         Compare les horaires extraits avec les références.
 
@@ -114,9 +144,13 @@ class ComparisonProcessor:
             )
 
             # Afficher la répartition par execution_id pour debug
-            executions_stats = {}
+            executions_stats: Dict[Union[int, str], int] = {}
             for resultat, lieu in resultats_pour_comparaison:
-                exec_id = getattr(resultat, "id_execution", "unknown")
+                exec_id = (
+                    resultat.id_execution
+                    if hasattr(resultat, "id_execution")
+                    else "unknown"
+                )
                 executions_stats[exec_id] = executions_stats.get(exec_id, 0) + 1
 
             for exec_id, count in executions_stats.items():
@@ -124,9 +158,15 @@ class ComparisonProcessor:
 
             successful_count = 0
             for i, (resultat, lieu) in enumerate(resultats_pour_comparaison, 1):
-                lieu_id = getattr(lieu, "identifiant", "unknown")
-                lieu_nom = getattr(lieu, "nom", "unknown")
-                exec_id = getattr(resultat, "id_execution", "unknown")
+                lieu_id = (
+                    lieu.identifiant if hasattr(lieu, "identifiant") else "unknown"
+                )
+                lieu_nom = lieu.nom if hasattr(lieu, "nom") else "unknown"
+                exec_id = (
+                    resultat.id_execution
+                    if hasattr(resultat, "id_execution")
+                    else "unknown"
+                )
 
                 self.logger.info(
                     f"*{lieu_id}* Comparaison {i}/{len(resultats_pour_comparaison)} pour '{lieu_nom}' (exec: {exec_id})"
@@ -138,11 +178,7 @@ class ComparisonProcessor:
                     # On vérifie simplement que le résultat est un dictionnaire valide
                     if isinstance(comparison_result, dict):
                         # Essayer différents noms d'attributs pour l'ID
-                        resultat_id = (
-                            getattr(resultat, "id_resultats_extraction", None)
-                            or getattr(resultat, "id", None)
-                            or getattr(resultat, "resultat_id", None)
-                        )
+                        resultat_id = resultat.id_resultats_extraction
 
                         if resultat_id is not None:
                             try:

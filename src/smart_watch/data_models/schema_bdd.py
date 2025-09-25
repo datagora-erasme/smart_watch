@@ -1,11 +1,8 @@
+# Définition du schéma de la base de données
+
 from sqlalchemy import Boolean, Column, DateTime, Float, ForeignKey, Integer, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
-
-"""
-Définition du schéma de la base de données
-"""
-
 
 Base = declarative_base()
 

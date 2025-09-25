@@ -1,6 +1,5 @@
-"""
-Gestionnaire pour la génération et l'envoi de rapports.
-"""
+# Gestionnaire pour la génération et l'envoi de rapports.
+# Documentation : https://datagora-erasme.github.io/smart_watch/source/modules/reporting/report_manager.html
 
 import zipfile
 from datetime import datetime
@@ -10,7 +9,7 @@ from typing import Optional
 from ..core.ConfigManager import ConfigManager
 from ..core.EnvoyerMail import EmailSender
 from ..core.ErrorHandler import ErrorCategory, ErrorSeverity, handle_errors
-from ..core.Logger import create_logger
+from ..core.Logger import SmartWatchLogger, create_logger
 from ..reporting.GenererRapportHTML import generer_rapport_html
 
 # Initialize logger for this module
@@ -22,7 +21,17 @@ logger = create_logger(
 class ReportManager:
     """Gestionnaire pour la génération et l'envoi de rapports."""
 
-    def __init__(self, config: ConfigManager, logger):
+    def __init__(self, config: ConfigManager, logger: SmartWatchLogger) -> None:
+        """
+        Initialise le gestionnaire de rapports avec la configuration et le logger.
+
+        Cette méthode configure les composants nécessaires pour générer et envoyer
+        les rapports : configuration du système et logger pour le suivi des opérations.
+
+        Args:
+            config (ConfigManager): gestionnaire de configuration du système.
+            logger: instance de logger pour la journalisation des événements.
+        """
         self.config = config
         self.logger = logger
 
@@ -74,7 +83,7 @@ class ReportManager:
                 zip_path.unlink()  # Supprimer le zip vide
             return None
 
-    def generate_and_send_report(self, execution_id: int):
+    def generate_and_send_report(self, execution_id: int) -> None:
         """Génère et envoie le rapport par email."""
         self.logger.section("GÉNÉRATION ET ENVOI RAPPORT")
 

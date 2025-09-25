@@ -1,5 +1,5 @@
-# Documentation:
-# https://datagora-erasme.github.io/smart_watch/source/modules/core/EnvoyerMail.html
+# Gestionnaire d'envoi d'emails pour le projet smart_watch
+# Documentation : https://datagora-erasme.github.io/smart_watch/source/modules/core/EnvoyerMail.html
 
 import os
 import smtplib

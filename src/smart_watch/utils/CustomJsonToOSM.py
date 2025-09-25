@@ -27,7 +27,8 @@ class ConversionResult:
 
     osm_periods: Dict[str, str]
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
+        """Initialise le résultat de conversion après la création de la dataclass."""
         pass
 
 
@@ -39,7 +40,8 @@ class TimeSlot:
     end: str
     occurence: Optional[Union[int, List[int]]] = None  # Ajout du champ occurence
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
+        """Valide le format du créneau horaire après la création de la dataclass."""
         if not self._validate_time_format(self.start):
             raise ValueError(f"Format d'heure de début invalide : {self.start}")
         if not self._validate_time_format(self.end):
@@ -55,7 +57,12 @@ class TimeSlot:
             if len(parts) != 2:
                 return False
             hour, minute = int(parts[0]), int(parts[1])
-            return 0 <= hour <= 23 and 0 <= minute <= 59 and len(parts[0]) == 2 and len(parts[1]) == 2
+            return (
+                0 <= hour <= 23
+                and 0 <= minute <= 59
+                and len(parts[0]) == 2
+                and len(parts[1]) == 2
+            )
         except (ValueError, IndexError):
             return False
 
@@ -506,7 +513,11 @@ class JsonToOsmConverter:
                 break
 
         # Si tout est fermé, retourne une fermeture définitive
-        if all_periods_closed and has_any_period and not any("jours_feries" in p for p in periods):
+        if (
+            all_periods_closed
+            and has_any_period
+            and not any("jours_feries" in p for p in periods)
+        ):
             logger.info("Établissement définitivement fermé")
             return ConversionResult(osm_periods={"general": "off"})
 

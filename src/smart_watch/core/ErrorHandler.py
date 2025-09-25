@@ -1,5 +1,5 @@
-# Documentation :
-# https://datagora-erasme.github.io/smart_watch/source/modules/core/error_handler.html
+# Gestionnaire centralisé d'erreurs pour le projet smart_watch
+# Documentation : https://datagora-erasme.github.io/smart_watch/source/modules/core/ErrorHandler.html
 
 import datetime
 import functools
@@ -568,7 +568,7 @@ class ErrorHandler:
             ],
         }
 
-    def clear_error_registry(self):
+    def clear_error_registry(self) -> None:
         """
         Efface tous les enregistrements d'erreurs du registre interne.
 
@@ -588,7 +588,7 @@ def handle_errors(
     reraise: bool = False,
     default_return: Any = None,
     user_message: Optional[str] = None,
-):
+) -> Callable[[Callable], Callable]:
     """
     Décorateur pour gérer les erreurs lors de l'exécution d'une fonction, en utilisant un gestionnaire d'erreurs centralisé.
 
@@ -608,8 +608,35 @@ def handle_errors(
     """
 
     def decorator(func: Callable) -> Callable:
+        """
+        Fonction décorateur interne qui enveloppe la fonction cible.
+
+        Cette fonction interne applique le décorateur handle_errors à la fonction fournie. Elle capture les exceptions levées lors de l'exécution de la fonction décorée et les traite via le gestionnaire d'erreurs approprié.
+
+        Args:
+            func (Callable): la fonction à décorer.
+
+        Returns:
+            Callable: la fonction décorée enveloppée.
+        """
+
         @functools.wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args, **kwargs) -> Any:
+            """
+            Fonction wrapper qui exécute la fonction décorée et gère les erreurs.
+
+            Cette fonction enveloppe l'exécution de la fonction décorée, capture les exceptions, et les traite via le gestionnaire d'erreurs approprié. Elle gère spécifiquement les erreurs critiques avec capture complète du traceback et diagnostic spécialisé.
+
+            Args:
+                *args: arguments positionnels passés à la fonction décorée.
+                **kwargs: arguments nommés passés à la fonction décorée.
+
+            Returns:
+                Any: le résultat de la fonction décorée si elle s'exécute sans erreur.
+
+            Raises:
+                Exception: relance l'exception d'origine si le paramètre reraise est True.
+            """
             try:
                 return func(*args, **kwargs)
             except Exception as e:

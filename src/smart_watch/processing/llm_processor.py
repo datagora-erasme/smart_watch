@@ -1,10 +1,9 @@
-"""
-Processeur pour les extractions LLM.
-"""
+# Processeur pour les extractions LLM.
+# Documentation : https://datagora-erasme.github.io/smart_watch/source/modules/processing/llm_processor.html
 
 import json
-from datetime import datetime
-from typing import Any, Dict
+from datetime import date, datetime
+from typing import Any, Dict, cast
 
 import requests
 
@@ -16,6 +15,8 @@ from ..core.LLMClient import (
     get_mistral_tool_format,
     get_structured_response_format,
 )
+from ..core.Logger import SmartWatchLogger
+from ..data_models.schema_bdd import Lieux, ResultatsExtraction
 from ..processing.database_processor import DatabaseProcessor
 from ..utils.CustomJsonToOSM import JsonToOsmConverter
 from ..utils.JoursFeries import get_jours_feries
@@ -24,7 +25,14 @@ from ..utils.JoursFeries import get_jours_feries
 class LLMProcessor:
     """Processeur pour les extractions LLM."""
 
-    def __init__(self, config: ConfigManager, logger):
+    def __init__(self, config: ConfigManager, logger: SmartWatchLogger) -> None:
+        """
+        Initialise le processeur LLM.
+
+        Args:
+            config (ConfigManager): L'objet de gestion de la configuration.
+            logger (SmartWatchLogger): L'objet logger pour l'enregistrement des messages.
+        """
         self.config = config
         self.logger = logger
         self.json_converter = JsonToOsmConverter()
@@ -120,14 +128,14 @@ class LLMProcessor:
 
         return osm_horaires
 
-    def _is_future_date(self, date_str: str, today) -> bool:
+    def _is_future_date(self, date_str: str, today: date) -> bool:
         """Vérifie si une chaîne est une date valide au format YYYY-MM-DD et si elle est dans le futur."""
         try:
             return datetime.strptime(date_str, "%Y-%m-%d").date() > today
         except ValueError:
             return False
 
-    def _process_special_days(self, llm_result: str, lieu) -> str:
+    def _process_special_days(self, llm_result: str, lieu: Lieux) -> str:
         """
         Nettoie les jours spéciaux passés du JSON LLM et l'enrichit avec les jours fériés
         pour les types de lieux spécifiques. Retourne toujours une chaîne JSON valide.
@@ -207,7 +215,7 @@ class LLMProcessor:
         return json.dumps(llm_data, ensure_ascii=False)
 
     def _process_single_llm(
-        self, resultat, lieu, index: int = 0, total: int = 0
+        self, resultat: ResultatsExtraction, lieu: Lieux, index: int = 0, total: int = 0
     ) -> Dict[str, Any]:
         """Traite une extraction LLM individuelle."""
         try:
@@ -294,7 +302,7 @@ class LLMProcessor:
 
                     # Conversion OSM (le try/except n'est plus nécessaire ici)
                     osm_result = self._convert_to_osm(
-                        processed_result, lieu.identifiant
+                        processed_result, cast(str, lieu.identifiant)
                     )
                     result_data["llm_horaires_json"] = processed_result
                     result_data["llm_horaires_osm"] = osm_result
@@ -339,7 +347,7 @@ class LLMProcessor:
 
     def process_llm_extractions(
         self, db_processor: DatabaseProcessor, execution_id: int
-    ):
+    ) -> None:
         """
         Traite toutes les extractions LLM pour une exécution donnée.
 

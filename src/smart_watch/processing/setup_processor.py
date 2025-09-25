@@ -1,20 +1,26 @@
+# Initialise une nouvelle exécution en chargeant la liste des lieux à traiter et en préparant la base de données.
+# Documentation : https://datagora-erasme.github.io/smart_watch/source/modules/processing/setup_processor.html
+
+from src.smart_watch.core.ConfigManager import ConfigManager
 from src.smart_watch.core.ErrorHandler import (
     ErrorCategory,
     ErrorSeverity,
     handle_errors,
 )
+from src.smart_watch.core.Logger import SmartWatchLogger
+from src.smart_watch.processing.database_processor import DatabaseProcessor
 from src.smart_watch.utils.CSVToPolars import CSVToPolars
 
 
 class SetupProcessor:
     """Gestionnaire de l'initialisation (chargement CSV et DB)."""
 
-    def __init__(self, config, logger):
+    def __init__(self, config: ConfigManager, logger: SmartWatchLogger) -> None:
         """
         Initialise le processeur avec la configuration et le logger spécifiés.
 
         Args:
-            config (Config): Objet de configuration contenant les paramètres nécessaires, y compris la base de données.
+            config (ConfigManager): Objet de configuration contenant les paramètres nécessaires, y compris la base de données.
             logger (Logger): Instance du logger pour la journalisation des événements.
         """
         self.config = config
@@ -26,7 +32,7 @@ class SetupProcessor:
         user_message="Erreur lors de la configuration du pipeline",
         reraise=True,
     )
-    def setup_execution(self, db_manager):
+    def setup_execution(self, db_processor: DatabaseProcessor) -> int:
         """
         Initialise la pipeline de configuration en chargeant le CSV depuis la configuration
         (variable CSV_URL_HORAIRES) et en initialisant la base de données avec les données chargées.
@@ -52,4 +58,4 @@ class SetupProcessor:
             raise ValueError(f"Erreur chargement CSV: {df_csv}")
 
         # Initialise la base avec DatabaseManager et le DataFrame chargé
-        return db_manager.setup_execution(df_csv)
+        return db_processor.setup_execution(df_csv)

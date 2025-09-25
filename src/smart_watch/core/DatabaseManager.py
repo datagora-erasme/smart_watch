@@ -1,5 +1,5 @@
 # Module de gestion de base de données SQLite.
-# https://datagora-erasme.github.io/smart_watch/source/modules/core/databasemanager.html
+# Documentation : https://datagora-erasme.github.io/smart_watch/source/modules/core/DatabaseManager.html
 
 import sqlite3
 from pathlib import Path
@@ -42,11 +42,11 @@ class DatabaseManager:
 
         logger.debug(f"DatabaseManager initialisé avec {self.db_file}")
 
-    def get_session(self):
+    def get_session(self) -> Any:
         """Retourne une nouvelle session."""
         return self.Session()
 
-    def close(self):
+    def close(self) -> None:
         """Ferme le moteur de base de données."""
         self.engine.dispose()
 

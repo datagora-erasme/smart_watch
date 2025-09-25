@@ -1,15 +1,11 @@
-"""
-Générateur de rapport HTML pour l'analyse des extractions d'horaires.
-
-Ce module génère des rapports HTML détaillés à partir des données stockées
-en base de données, avec support des comparaisons d'horaires.
-"""
+# Générateur de rapport HTML pour l'analyse des extractions d'horaires.
+# Documentation : https://datagora-erasme.github.io/smart_watch/source/modules/reporting/html_generator.html
 
 import base64
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Optional, Tuple
+from typing import Any, Dict, Optional, Tuple
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -23,7 +19,7 @@ logger = create_logger(
 )
 
 
-def to_json(value) -> Optional[str]:
+def to_json(value: Any) -> Optional[str]:
     """
     Convertit une valeur en chaîne JSON encodée en base64.
 

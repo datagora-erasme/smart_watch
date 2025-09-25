@@ -1,3 +1,4 @@
+# Client LLM et gestionnaire d'embeddings pour le projet smart_watch
 # Documentation: https://datagora-erasme.github.io/smart_watch/source/modules/core/LLMClient.html
 
 import os
@@ -596,6 +597,15 @@ class EmbeddingModel:
     """
 
     def __init__(self, md_config: MarkdownFilteringConfig, logger: SmartWatchLogger):
+        """
+        Initialise le client d'embedding en fonction de la configuration fournie.
+        Args:
+            md_config (MarkdownFilteringConfig): Configuration pour le filtrage Markdown et les embeddings.
+            logger (SmartWatchLogger): Logger pour enregistrer les messages d'information, de débogage et d'erreur.
+        Raises:
+            ValueError: Si le nom du modèle est manquant pour un fournisseur local, si la clé API est manquante pour les fournisseurs distants, si le nom du modèle est manquant pour les fournisseurs distants, ou si l'URL de base est manquante pour OpenAI ou Ollama, ou si le fournisseur n'est pas supporté.
+            Exception: Si une erreur survient lors du chargement du modèle local.
+        """
         self.config = md_config
         self.logger = logger
         self.client: Any = None  # Pour accepter TextEmbedding ou BaseLLMClient
@@ -628,7 +638,7 @@ class EmbeddingModel:
                 )
             if not model_name:
                 raise ValueError(
-                    f"Le nom du modèle (EMBED_MODELE) est manquant pour le fournisseur {provider}."
+                    f"Le nom du modèle (EMBED_MODELE_*) est manquant pour le fournisseur {provider}."
                 )
 
             if provider == "MISTRAL":

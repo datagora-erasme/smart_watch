@@ -1,3 +1,4 @@
+# Gestionnaire de statistiques pour le projet smart_watch
 # Documentation: https://datagora-erasme.github.io/smart_watch/source/modules/core/StatsManager.html
 
 from datetime import datetime
@@ -570,7 +571,7 @@ class StatsManager:
                 },
             )
 
-    def display_stats(self):
+    def display_stats(self) -> None:
         """
         Affiche les statistiques complètes du pipeline dans le logger.
 

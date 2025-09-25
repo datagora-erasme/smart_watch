@@ -1,5 +1,5 @@
 # Comparateur d'horaires d'ouverture au format JSON personnalisé
-# https://datagora-erasme.github.io/smart_watch/source/modules/core/comparateur_horaires.html
+# Documentation : https://datagora-erasme.github.io/smart_watch/source/modules/core/ComparateurHoraires.html
 
 from dataclasses import dataclass
 from typing import Any, Dict, List
@@ -28,6 +28,13 @@ class ComparisonResult:
     details: Dict[str, Any]
 
     def __str__(self) -> str:
+        """
+        Retourne une représentation sous forme de chaîne de caractères du résultat de la comparaison.
+
+        Returns:
+            str: Une chaîne indiquant le statut de la comparaison ("IDENTIQUE" ou "DIFFÉRENT")
+                 suivi des différences.
+        """
         status = "IDENTIQUE" if self.identical else "DIFFÉRENT"
         return f"Statut: {status}\n{self.differences}"
 

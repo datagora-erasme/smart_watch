@@ -1,5 +1,5 @@
 # Gestionnaire de configuration centralisé simplifié
-# https://datagora-erasme.github.io/smart_watch/source/modules/core/config_manager.html
+# Documentation : https://datagora-erasme.github.io/smart_watch/source/modules/core/ConfigManager.html
 
 from pathlib import Path
 from typing import Optional
@@ -133,7 +133,7 @@ class ConfigManager:
         logger.info("Configuration validée avec succès")
         return True
 
-    def display_summary(self):
+    def display_summary(self) -> None:
         """
         Affiche un résumé détaillé de la configuration actuelle du système dans les logs.
 

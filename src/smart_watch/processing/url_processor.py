@@ -1,10 +1,10 @@
-"""
-Processeur pour les extractions d'URLs.
-"""
+# Processeur pour les extractions d'URLs.
+# https://datagora-erasme.github.io/smart_watch/source/modules/processing/url_processor.html
 
 from typing import Dict
 
 from ..core.ConfigManager import ConfigManager
+from ..core.Logger import SmartWatchLogger
 from ..core.URLRetriever import retrieve_url
 from .database_processor import DatabaseProcessor
 
@@ -12,11 +12,21 @@ from .database_processor import DatabaseProcessor
 class URLProcessor:
     """Processeur pour les extractions d'URLs."""
 
-    def __init__(self, config: ConfigManager, logger):
+    def __init__(self, config: ConfigManager, logger: SmartWatchLogger) -> None:
+        """
+        Initialise le processeur d'URLs avec la configuration et le logger.
+
+        Cette méthode configure les composants nécessaires pour traiter les URLs :
+        configuration du système et logger pour le suivi des opérations.
+
+        Args:
+            config (ConfigManager): gestionnaire de configuration du système.
+            logger: instance de logger pour la journalisation des événements.
+        """
         self.config = config
         self.logger = logger
 
-    def process_urls(self, db_processor: DatabaseProcessor, execution_id: int):
+    def process_urls(self, db_processor: DatabaseProcessor, execution_id: int) -> None:
         """
         Traite toutes les URLs en attente pour une exécution donnée.
 
