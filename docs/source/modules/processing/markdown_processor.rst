@@ -20,7 +20,7 @@ Fonctionnalités
 Modules
 -------
 
-.. automodule:: src.smart_watch.processing.markdownprocessor
+.. automodule:: src.smart_watch.processing.markdown_processor
    :members:
    :undoc-members:
    :private-members:
