@@ -47,7 +47,7 @@ Intelligence artificielle
     Proposé en tant qu'alternative aux interfaces compatibles OpenAI. Utilise la librairie `mistralai` native.
 
 `Embeddings <https://platform.openai.com/docs/guides/embeddings>`__
-    Utilisés pour filtrer le contenu Markdown. Fonctionne avec un modèle accessible via la même API compatible OpenAI que le LLM.
+    Les embeddings sont utilisés pour filtrer le contenu Markdown de manière sémantique. L'application peut fonctionner avec un modèle local via ``fast-embed``, ou avec un modèle distant via une API (compatible OpenAI ou Mistral). Pour un guide détaillé sur le choix du modèle le plus adapté, consultez la page :doc:`/guide/choosing_embeddings`.
 
 Configuration et environnement
 ------------------------------

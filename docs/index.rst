@@ -15,6 +15,7 @@ SmartWatch : extracteur d'horaires intelligent
    :caption: Introduction
 
    guide/introduction
+   guide/sommaire
 
 .. toctree::
    :maxdepth: 1
@@ -23,6 +24,7 @@ SmartWatch : extracteur d'horaires intelligent
    guide/installation
    guide/docker
    guide/configuration
+   guide/choosing_embeddings
 
 .. toctree::
    :maxdepth: 1

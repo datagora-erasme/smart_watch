@@ -50,7 +50,9 @@ Ces paramètres contrôlent la manière dont le contenu HTML (converti en Markdo
 Configuration des modèles d'embeddings
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Configurez ici le modèle à utiliser pour le filtrage sémantique du contenu. Vous pouvez utiliser soit une API compatible OpenAI, soit l'API Mistral, indépendamment du LLM principal.
+Pour un guide détaillé sur le choix du modèle d'embedding le plus adapté à votre cas d'usage, consultez la page :doc:`choosing_embeddings`.
+
+Configurez ici le modèle à utiliser pour le filtrage sémantique du contenu. Vous pouvez utiliser soit une API compatible OpenAI, soit l'API Mistral (indépendamment du LLM principal), ou bien utiliser un modèle d'embedding local, via fast-embed.
 
 **Pour embeddings via API compatible OpenAI :**
 
@@ -63,7 +65,7 @@ Configurez ici le modèle à utiliser pour le filtrage sémantique du contenu. V
 *   ``EMBED_API_KEY_MISTRAL``: Votre clé d'API Mistral pour les embeddings.
 *   ``EMBED_MODELE_MISTRAL``: Le nom du modèle (ex: ``nomic-embed-text``).
 
-**Pour embeddings locaux avec sentence-transformers :**
+**Pour embeddings locaux avec fast-embed :**
 
 *   ``EMBED_MODELE_LOCAL``: Le nom du modèle à utiliser (ex: ``paraphrase-multilingual-MiniLM-L12-v2``).
 

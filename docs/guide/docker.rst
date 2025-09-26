@@ -29,3 +29,6 @@ L'utilisation de ``docker-compose`` est la méthode recommandée car elle simpli
     - Injecter les variables d'environnement depuis le fichier ``.env`` de manière sécurisée.
 
 L'application s'exécutera alors dans le conteneur, en utilisant votre configuration locale, décrite dans la page :doc:`configuration`.
+
+.. warning::
+   Le choix du modèle d'embedding est particulièrement important lors de l'utilisation avec Docker. Le modèle le plus performant, ``jinaai/jina-embeddings-v3``, consomme beaucoup de RAM et peut entraîner des problèmes de performance ou de stabilité dans un conteneur. Pour une utilisation avec Docker, il est recommandé d'opter pour des modèles plus légers comme ceux de la série ``sentence-transformers``. Pour plus de détails, consultez le guide sur le :doc:`choix des embeddings <choosing_embeddings>`.
