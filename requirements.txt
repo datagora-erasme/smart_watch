@@ -9,7 +9,7 @@ nltk
 pandas
 playwright
 playwright-stealth
-polars
+polars-lts-cpu
 pyarrow
 pytest
 requests
