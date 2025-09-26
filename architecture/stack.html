@@ -47,13 +47,14 @@
               <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../guide/introduction.html">Présentation du projet</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../guide/introduction.html#sommaire">Sommaire</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/sommaire.html">Sommaire</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../guide/installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guide/docker.html">Utilisation avec Docker</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guide/choosing_embeddings.html">Choix des embeddings</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Architecture technique</span></p>
 <ul class="current">
@@ -155,7 +156,7 @@
 </dd>
 <dt><a class="reference external" href="https://docs.mistral.ai/">Mistral AI</a></dt><dd><p>Proposé en tant qu’alternative aux interfaces compatibles OpenAI. Utilise la librairie <cite>mistralai</cite> native.</p>
 </dd>
-<dt><a class="reference external" href="https://platform.openai.com/docs/guides/embeddings">Embeddings</a></dt><dd><p>Utilisés pour filtrer le contenu Markdown. Fonctionne avec un modèle accessible via la même API compatible OpenAI que le LLM.</p>
+<dt><a class="reference external" href="https://platform.openai.com/docs/guides/embeddings">Embeddings</a></dt><dd><p>Les embeddings sont utilisés pour filtrer le contenu Markdown de manière sémantique. L’application peut fonctionner avec un modèle local via <code class="docutils literal notranslate"><span class="pre">fast-embed</span></code>, ou avec un modèle distant via une API (compatible OpenAI ou Mistral). Pour un guide détaillé sur le choix du modèle le plus adapté, consultez la page <a class="reference internal" href="../guide/choosing_embeddings.html"><span class="doc">Choix des embeddings</span></a>.</p>
 </dd>
 </dl>
 </section>

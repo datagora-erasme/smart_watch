@@ -21,7 +21,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Recherche" href="../search.html" />
-    <link rel="next" title="Orchestrateur" href="../source/main.html" />
+    <link rel="next" title="Choix des embeddings" href="choosing_embeddings.html" />
     <link rel="prev" title="Utilisation avec Docker" href="docker.html" /> 
 </head>
 
@@ -47,7 +47,7 @@
               <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Présentation du projet</a></li>
-<li class="toctree-l1"><a class="reference internal" href="introduction.html#sommaire">Sommaire</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sommaire.html">Sommaire</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
 <ul class="current">
@@ -58,6 +58,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#detail-des-variables">Détail des variables</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="choosing_embeddings.html">Choix des embeddings</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Architecture technique</span></p>
 <ul>
@@ -156,7 +157,8 @@
 </section>
 <section id="configuration-des-modeles-d-embeddings">
 <h3>Configuration des modèles d’embeddings<a class="headerlink" href="#configuration-des-modeles-d-embeddings" title="Lien vers cette rubrique"></a></h3>
-<p>Configurez ici le modèle à utiliser pour le filtrage sémantique du contenu. Vous pouvez utiliser soit une API compatible OpenAI, soit l’API Mistral, indépendamment du LLM principal.</p>
+<p>Pour un guide détaillé sur le choix du modèle d’embedding le plus adapté à votre cas d’usage, consultez la page <a class="reference internal" href="choosing_embeddings.html"><span class="doc">Choix des embeddings</span></a>.</p>
+<p>Configurez ici le modèle à utiliser pour le filtrage sémantique du contenu. Vous pouvez utiliser soit une API compatible OpenAI, soit l’API Mistral (indépendamment du LLM principal), ou bien utiliser un modèle d’embedding local, via fast-embed.</p>
 <p><strong>Pour embeddings via API compatible OpenAI :</strong></p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">EMBED_API_KEY_OPENAI</span></code>: Votre clé d’API pour les embeddings.</p></li>
@@ -168,7 +170,7 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">EMBED_API_KEY_MISTRAL</span></code>: Votre clé d’API Mistral pour les embeddings.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">EMBED_MODELE_MISTRAL</span></code>: Le nom du modèle (ex: <code class="docutils literal notranslate"><span class="pre">nomic-embed-text</span></code>).</p></li>
 </ul>
-<p><strong>Pour embeddings locaux avec sentence-transformers :</strong></p>
+<p><strong>Pour embeddings locaux avec fast-embed :</strong></p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">EMBED_MODELE_LOCAL</span></code>: Le nom du modèle à utiliser (ex: <code class="docutils literal notranslate"><span class="pre">paraphrase-multilingual-MiniLM-L12-v2</span></code>).</p></li>
 </ul>
@@ -215,7 +217,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pied de page">
         <a href="docker.html" class="btn btn-neutral float-left" title="Utilisation avec Docker" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Précédent</a>
-        <a href="../source/main.html" class="btn btn-neutral float-right" title="Orchestrateur" accesskey="n" rel="next">Suivant <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="choosing_embeddings.html" class="btn btn-neutral float-right" title="Choix des embeddings" accesskey="n" rel="next">Suivant <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

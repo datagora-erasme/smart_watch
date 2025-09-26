@@ -1,0 +1,261 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Choix des embeddings &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.jpg"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=3afee5ec"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/translations.js?v=e6b791cb"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Recherche" href="../search.html" />
+    <link rel="next" title="Orchestrateur" href="../source/main.html" />
+    <link rel="prev" title="Configuration" href="configuration.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Présentation du projet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sommaire.html">Sommaire</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docker.html">Utilisation avec Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Choix des embeddings</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#tableau-de-compatibilite-des-modeles">Tableau de compatibilité des modèles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#variables-d-environnement">Variables d’environnement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#utilisation-de-fastembed-en-local">Utilisation de <code class="docutils literal notranslate"><span class="pre">fastembed</span></code> en local</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#comment-configurer-votre-modele">Comment configurer votre modèle</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture technique</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/main.html">Orchestrateur</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/diagramme.html">Pipeline de traitement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/bdd.html">Base de données</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture/stack.html">Stack technique</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/config/index.html">Modules Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/core/index.html">Modules Core</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/processing/index.html">Modules Processing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Reporting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/reporting/index.html">Modules Reporting</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/modules/utils/index.html">Modules Utils</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Choix des embeddings</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/guide/choosing_embeddings.rst.txt" rel="nofollow"> Afficher la source de la page</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="choix-des-embeddings">
+<span id="choosing-embeddings"></span><h1>Choix des embeddings<a class="headerlink" href="#choix-des-embeddings" title="Lien vers cette rubrique"></a></h1>
+<p>Le choix du modèle d’embeddings est un élément crucial pour la performance et l’efficacité du filtrage sémantique dans l’application. Cette page vous guide pour sélectionner le modèle le plus adapté à votre cas d’usage, en fonction de votre environnement d’exécution (Docker ou ligne de commande) et de vos contraintes matérielles.</p>
+<section id="tableau-de-compatibilite-des-modeles">
+<h2>Tableau de compatibilité des modèles<a class="headerlink" href="#tableau-de-compatibilite-des-modeles" title="Lien vers cette rubrique"></a></h2>
+<p>Le tableau ci-dessous résume les modèles d’embedding recommandés, leur compatibilité et les réglages associés.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 40.0%" />
+<col style="width: 15.0%" />
+<col style="width: 10.0%" />
+<col style="width: 15.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Fournisseur</p></th>
+<th class="head"><p>Modèle</p></th>
+<th class="head"><p>Seuil de <br /> similarité <br /> conseillé</p></th>
+<th class="head"><p>CLI</p></th>
+<th class="head"><p>Docker</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Local</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">jinaai/jina-embeddings-v3</span></code></p></td>
+<td><p>0.5</p></td>
+<td><p>Recommandé</p></td>
+<td><p>Consommation <br /> RAM élevée</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sentence-transformers/</span></code> <br /> <code class="docutils literal notranslate"><span class="pre">paraphrase-multilingual-mpnet-base-v2</span></code></p></td>
+<td><p>0.6 - 0.8</p></td>
+<td><p>Oui</p></td>
+<td><p>Oui</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sentence-transformers/</span></code> <br /> <code class="docutils literal notranslate"><span class="pre">paraphrase-multilingual-MiniLM-L12-v2</span></code></p></td>
+<td><p>0.6 - 0.8</p></td>
+<td><p>Oui</p></td>
+<td><p>Oui</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Compatible OpenAI</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">nomic-embed-text</span></code></p></td>
+<td><p>0.6 - 0.8</p></td>
+<td><p>Oui</p></td>
+<td><p>Oui</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Mistral</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mistral-embed</span></code></p></td>
+<td><p>0.6 - 0.8</p></td>
+<td><p>Oui</p></td>
+<td><p>Oui</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Le modèle <code class="docutils literal notranslate"><span class="pre">jinaai/jina-embeddings-v3</span></code> est le plus performant mais aussi le plus gourmand en ressources. Il est donc recommandé de l’utiliser en local sur une machine disposant de suffisamment de mémoire RAM. Pour une utilisation avec Docker, les modèles de la série <code class="docutils literal notranslate"><span class="pre">sentence-transformers</span></code> sont plus adaptés.</p>
+</div>
+</section>
+<section id="variables-d-environnement">
+<h2>Variables d’environnement<a class="headerlink" href="#variables-d-environnement" title="Lien vers cette rubrique"></a></h2>
+<p>Activez le modèle d’embedding de votre choix en configurant les variables d’environnement appropriées dans votre fichier <code class="docutils literal notranslate"><span class="pre">.env</span></code>. Le tableau ci-dessous récapitule les variables à définir selon le fournisseur choisi. Désactivez les variables <code class="docutils literal notranslate"><span class="pre">EMBED_API_KEY_*</span></code> non utilisées en les commentant ou en les supprimant.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 70.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Fournisseur</p></th>
+<th class="head"><p>Variables</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Local</strong></p></td>
+<td><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">EMBED_MODELE_LOCAL</span></code></p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p><strong>Compatible OpenAI</strong></p></td>
+<td><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">EMBED_API_KEY_OPENAI</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EMBED_BASE_URL_OPENAI</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EMBED_MODELE_OPENAI</span></code></p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p><strong>Mistral</strong></p></td>
+<td><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">EMBED_API_KEY_MISTRAL</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">EMBED_MODELE_MISTRAL</span></code></p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="utilisation-de-fastembed-en-local">
+<h2>Utilisation de <code class="docutils literal notranslate"><span class="pre">fastembed</span></code> en local<a class="headerlink" href="#utilisation-de-fastembed-en-local" title="Lien vers cette rubrique"></a></h2>
+<p>Lorsque vous utilisez un modèle d’embedding local, l’application s’appuie sur la bibliothèque <code class="docutils literal notranslate"><span class="pre">fastembed</span></code> pour gérer le calcul des embeddings. Afin d’optimiser les performances sans surcharger le système, <code class="docutils literal notranslate"><span class="pre">fastembed</span></code> est configuré pour utiliser un quart des cœurs de processeur (CPU) disponibles, avec un minimum d’un thread.</p>
+<p>Cette configuration permet de garantir un traitement efficace des textes tout en laissant suffisamment de ressources pour les autres processus de l’application.</p>
+</section>
+<section id="comment-configurer-votre-modele">
+<h2>Comment configurer votre modèle<a class="headerlink" href="#comment-configurer-votre-modele" title="Lien vers cette rubrique"></a></h2>
+<p>Pour sélectionner le modèle d’embedding que vous souhaitez utiliser, vous devez définir les variables d’environnement correspondantes dans votre fichier <code class="docutils literal notranslate"><span class="pre">.env</span></code>. Vous trouverez des exemples et des instructions détaillées dans la section <span class="xref std std-ref">configuration</span> de la documentation.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pied de page">
+        <a href="configuration.html" class="btn btn-neutral float-left" title="Configuration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Précédent</a>
+        <a href="../source/main.html" class="btn btn-neutral float-right" title="Orchestrateur" accesskey="n" rel="next">Suivant <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
