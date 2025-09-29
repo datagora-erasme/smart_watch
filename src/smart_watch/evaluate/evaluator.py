@@ -17,6 +17,28 @@ from .metrics import EvaluationMetrics
 from .scorer import Scorer, ScoreResult
 
 
+# Définition des classes mock au niveau du module pour éviter les redéfinitions
+class MockLieu(Lieux):
+    """Classe mock pour Lieux."""
+
+    def __init__(self, p_url):
+        """Initialise MockLieu."""
+        self.identifiant = "eval"
+        self.nom = "Lieu d'évaluation"
+        self.url = p_url
+        self.type_lieu = "inconnu"
+
+
+class MockResultForLLM(ResultatsExtraction):
+    """Classe mock pour ResultatsExtraction."""
+
+    def __init__(self, p_md_filtre, p_md_nettoye, p_md_brut):
+        """Initialise MockResultForLLM."""
+        self.markdown_filtre = p_md_filtre
+        self.markdown_nettoye = p_md_nettoye
+        self.markdown_brut = p_md_brut
+
+
 class Evaluator:
     """Orchestre l'évaluation du pipeline sur un jeu de données."""
 
@@ -93,21 +115,7 @@ class Evaluator:
             )
 
         # 4. Extraction LLM
-        # Création des objets simulés nécessaires pour l'appel au processeur LLM
-        class MockLieu(Lieux):
-            def __init__(self, p_url):
-                self.identifiant = "eval"
-                self.nom = "Lieu d'évaluation"
-                self.url = p_url
-                self.type_lieu = "inconnu"
-
-        class MockResultForLLM(ResultatsExtraction):
-            def __init__(self, p_md_filtre, p_md_nettoye, p_md_brut):
-                self.markdown_filtre = p_md_filtre
-                self.markdown_nettoye = p_md_nettoye
-                self.markdown_brut = p_md_brut
-
-        # Instancier les classes mock avec les variables de la fonction
+        # Instancier les classes mock (définies au niveau du module)
         mock_lieu = MockLieu(url)
         mock_result = MockResultForLLM(
             filtered_markdown, cleaned_markdown, markdown_brut
