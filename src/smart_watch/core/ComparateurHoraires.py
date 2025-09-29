@@ -191,18 +191,18 @@ class HorairesComparator:
                     differences="Aucune différence détectée.",
                     details={"both_permanently_closed": True},
                 )
-            elif closed1 and not closed2:
-                return ComparisonResult(
-                    identical=False,
-                    differences="Établissement 1 définitivement fermé, établissement 2 ouvert",
-                    details={"schedule1_permanently_closed": True},
+
+            # Gère les cas de fermeture sans interrompre la comparaison détaillée
+            if closed1 and not closed2:
+                differences.append(
+                    "ATTENTION: L'établissement 1 (attendu) semble définitivement fermé, alors que l'établissement 2 (prédit) est ouvert."
                 )
+                details["schedule1_permanently_closed"] = True
             elif not closed1 and closed2:
-                return ComparisonResult(
-                    identical=False,
-                    differences="Établissement 1 ouvert, établissement 2 définitivement fermé",
-                    details={"schedule2_permanently_closed": True},
+                differences.append(
+                    "ATTENTION: L'établissement 1 (attendu) est ouvert, alors que l'établissement 2 (prédit) semble définitivement fermé."
                 )
+                details["schedule2_permanently_closed"] = True
 
             # Compare les périodes
             periods1 = horaires1.get("periodes", {})
