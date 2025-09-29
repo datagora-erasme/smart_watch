@@ -43,19 +43,19 @@ class LLMProcessor:
     def _init_llm_client(self):
         """Initialise le client LLM selon la configuration."""
         llm_config = self.config.llm
-
-        # Vérifier que base_url et api_key ne sont pas None avant de les utiliser
-        base_url = llm_config.base_url
         api_key = llm_config.api_key
 
-        if base_url is None:
-            raise ValueError("La configuration LLM doit définir une base_url.")
-        if api_key is None:
+        if api_key is None and llm_config.fournisseur != "LOCAL":
             raise ValueError("La configuration LLM doit définir une api_key.")
 
         if llm_config.fournisseur == "OPENAI":
+            base_url = llm_config.base_url
+            if base_url is None:
+                raise ValueError(
+                    "La configuration pour OPENAI doit définir une base_url."
+                )
             self.llm_client = OpenAICompatibleClient(
-                api_key=api_key,
+                api_key=cast(str, api_key),
                 model=llm_config.modele,
                 base_url=base_url,
                 temperature=llm_config.temperature,
@@ -64,7 +64,7 @@ class LLMProcessor:
             )
         elif llm_config.fournisseur == "MISTRAL":
             self.llm_client = MistralAPIClient(
-                api_key=api_key,
+                api_key=cast(str, api_key),
                 model=llm_config.modele,
                 temperature=llm_config.temperature,
                 timeout=llm_config.timeout,
