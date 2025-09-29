@@ -14,6 +14,7 @@ dependencies = [
     "ipykernel>=6.29.5",
     "jinja2>=3.1.6",
     "matplotlib>=3.10.3",
+    "mistralai>=1.5.2",
     "nltk>=3.9.1",
     "pandas>=2.3.1",
     "playwright>=1.54.0",

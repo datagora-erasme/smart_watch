@@ -1,6 +1,7 @@
 # Client LLM et gestionnaire d'embeddings pour le projet smart_watch
 # Documentation: https://datagora-erasme.github.io/smart_watch/source/modules/core/LLMClient.html
 
+import json
 import os
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
@@ -10,6 +11,7 @@ import numpy as np
 import requests
 from codecarbon import EmissionsTracker
 from fastembed import TextEmbedding
+from mistralai import Mistral
 
 from ..config.markdown_filtering_config import MarkdownFilteringConfig
 from .ErrorHandler import ErrorCategory, ErrorHandler, ErrorSeverity, handle_errors
@@ -102,14 +104,14 @@ class BaseLLMClient(ABC):
 
     def _normalize_messages(
         self, messages: List[Union[Dict[str, str], LLMMessage]]
-    ) -> List[Dict[str, str]]:
+    ) -> List[Any]:
         """Convertit les objets LLMMessage en dictionnaires pour l'appel API.
 
         Args:
             messages (List[Union[Dict[str, str], LLMMessage]]): liste de messages à normaliser.
 
         Returns:
-            List[Dict[str, str]]: liste de messages normalisés au format dictionnaire.
+            List[Any]: liste de messages normalisés au format dictionnaire.
         """
 
         return [
@@ -383,15 +385,16 @@ class MistralAPIClient(BaseLLMClient):
             timeout (int): le délai d'attente pour les requêtes API.
             seed (Optional[int]): graine aléatoire pour la génération (optionnel).
         """
-        # Initialiser la classe de base avec une URL fixe pour Mistral
+        # Initialiser la classe de base sans base_url car la lib le gère
         super().__init__(
             model=model,
             temperature=temperature,
             timeout=timeout,
             api_key=api_key,
-            base_url="https://api.mistral.ai/v1",
+            base_url=None,
         )
         self.seed = seed
+        self.client = Mistral(api_key=self.api_key)
 
     @handle_errors(
         category=ErrorCategory.LLM,
@@ -419,32 +422,17 @@ class MistralAPIClient(BaseLLMClient):
         Returns:
             LLMResponse: réponse du LLM enrichie avec les émissions de CO2.
         """
+        # La librairie Mistral attend une liste de dictionnaires
         formatted_messages = self._normalize_messages(messages)
+
         log_message_prefix = ""
         if total > 0:
             log_message_prefix = f"Appel LLM {index}/{total} "
         logger.debug(
             f"{log_message_prefix}Mistral {self.model}: {len(formatted_messages)} messages"
         )
-        tracker = None  # Initialiser le tracker
+        tracker = None
         try:
-            # Préparer les paramètres de base
-            params = {
-                "model": self.model,
-                "messages": messages,
-                "temperature": self.temperature,
-            }
-
-            # Ajouter le seed s'il est défini
-            if self.seed is not None:
-                params["random_seed"] = self.seed  # Mistral utilise "random_seed"
-
-            # Ajouter les outils si spécifiés
-            if tool_params:
-                params.update(tool_params)
-
-            url = f"{self.base_url}/chat/completions"
-
             # Créer un tracker à la volée pour une mesure isolée
             tracker = EmissionsTracker(
                 measure_power_secs=1,
@@ -454,37 +442,36 @@ class MistralAPIClient(BaseLLMClient):
             )
             tracker.start()
 
-            response = self.session.post(url, json=params, timeout=self.timeout)
+            # Appel via la librairie officielle
+            response = self.client.chat.complete(
+                model=self.model,
+                messages=formatted_messages,
+                temperature=self.temperature,
+                random_seed=self.seed,
+                tools=tool_params.get("tools") if tool_params else None,
+                tool_choice=tool_params.get("tool_choice") if tool_params else None,
+            )
 
-            # Log de la réponse en cas d'erreur avant de lever une exception
-            if response.status_code != 200:
-                logger.error(
-                    f"Erreur API Mistral ({response.status_code}): {response.text}"
-                )
+            result = ""
+            if response.choices:
+                choice = response.choices[0]
+                if choice.message.tool_calls:
+                    # The arguments are a dict, convert to JSON string
+                    result = json.dumps(choice.message.tool_calls[0].function.arguments)
+                else:
+                    result = choice.message.content or ""
 
-            response.raise_for_status()
-            response_data = response.json()
-            choice = response_data["choices"][0]
+            logger.debug(f"Réponse Mistral reçue: {len(str(result))} caractères")
 
-            if "tool_calls" in choice["message"] and choice["message"]["tool_calls"]:
-                result = choice["message"]["tool_calls"][0]["function"]["arguments"]
-            else:
-                result = choice["message"]["content"]
-
-            logger.debug(f"Réponse Mistral reçue: {len(result)} caractères")
-
-            # Arrêter le tracking et récupérer les émissions
             emissions = tracker.stop() or 0.0
             logger.debug(f"Émissions CO2 mesurées: {emissions:.6f} kg")
 
             return LLMResponse(content=result, co2_emissions=emissions)
 
-        except (requests.exceptions.RequestException, KeyError, IndexError) as e:
+        except Exception as e:
             if tracker:
                 tracker.stop()
-            # Log de l'exception détaillée pour un meilleur débogage
             logger.error(f"Exception détaillée lors de l'appel Mistral: {e}")
-            # Laisse le décorateur @handle_errors gérer l'exception
             raise e
 
     @handle_errors(
@@ -501,11 +488,7 @@ class MistralAPIClient(BaseLLMClient):
 
         Returns:
             LLMResponse: réponse contenant les embeddings et les émissions de CO2.
-
-        Note:
-            Utilise l'API embeddings de Mistral qui est compatible avec l'API OpenAI.
         """
-        # Créer un tracker à la volée pour une mesure isolée
         tracker = EmissionsTracker(
             measure_power_secs=1,
             tracking_mode="machine",
@@ -515,22 +498,10 @@ class MistralAPIClient(BaseLLMClient):
         tracker.start()
 
         try:
-            # URL de l'endpoint embeddings (compatible OpenAI)
-            url = f"{self.base_url}/embeddings"
+            # Utiliser la librairie officielle pour les embeddings
+            response = self.client.embeddings.create(model=self.model, inputs=texts)
+            embeddings = [data.embedding for data in response.data]
 
-            # Préparer la requête
-            payload = {
-                "model": self.model,
-                "input": texts,
-            }
-
-            response = self.session.post(url, json=payload, timeout=self.timeout)
-            response.raise_for_status()
-
-            result = response.json()
-            embeddings = [data["embedding"] for data in result["data"]]
-
-            # Arrêter le tracking et récupérer les émissions
             emissions = tracker.stop() or 0.0
             logger.debug(
                 f"Embeddings API Mistral: {len(embeddings)} vecteurs, {emissions:.6f} kg CO2"
@@ -539,8 +510,8 @@ class MistralAPIClient(BaseLLMClient):
             return LLMResponse(content=embeddings, co2_emissions=emissions)
 
         except Exception as e:
-            # S'assurer que le tracker est arrêté même en cas d'erreur
-            tracker.stop()
+            if tracker:
+                tracker.stop()
             logger.error(f"Erreur calcul embeddings Mistral: {e}")
             raise
 

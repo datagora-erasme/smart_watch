@@ -18,3 +18,5 @@ sentence-transformers
 sphinx
 sphinx_rtd_theme
 sqlalchemy
+mistralai
+fastembed
