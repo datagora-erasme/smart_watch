@@ -130,6 +130,34 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">.scorer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Scorer</span><span class="p">,</span> <span class="n">ScoreResult</span>
 
 
+<span class="c1"># Définition des classes mock au niveau du module pour éviter les redéfinitions</span>
+<div class="viewcode-block" id="MockLieu">
+<a class="viewcode-back" href="../../../../source/modules/evaluate/evaluator.html#src.smart_watch.evaluate.evaluator.MockLieu">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MockLieu</span><span class="p">(</span><span class="n">Lieux</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Classe mock pour Lieux.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p_url</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialise MockLieu.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">identifiant</span> <span class="o">=</span> <span class="s2">&quot;eval&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nom</span> <span class="o">=</span> <span class="s2">&quot;Lieu d&#39;évaluation&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">p_url</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type_lieu</span> <span class="o">=</span> <span class="s2">&quot;inconnu&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="MockResultForLLM">
+<a class="viewcode-back" href="../../../../source/modules/evaluate/evaluator.html#src.smart_watch.evaluate.evaluator.MockResultForLLM">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MockResultForLLM</span><span class="p">(</span><span class="n">ResultatsExtraction</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Classe mock pour ResultatsExtraction.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p_md_filtre</span><span class="p">,</span> <span class="n">p_md_nettoye</span><span class="p">,</span> <span class="n">p_md_brut</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialise MockResultForLLM.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">markdown_filtre</span> <span class="o">=</span> <span class="n">p_md_filtre</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">markdown_nettoye</span> <span class="o">=</span> <span class="n">p_md_nettoye</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">markdown_brut</span> <span class="o">=</span> <span class="n">p_md_brut</span></div>
+
+
+
 <div class="viewcode-block" id="Evaluator">
 <a class="viewcode-back" href="../../../../source/modules/evaluate/evaluator.html#src.smart_watch.evaluate.evaluator.Evaluator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Evaluator</span><span class="p">:</span>
@@ -213,21 +241,7 @@
             <span class="p">)</span>
 
         <span class="c1"># 4. Extraction LLM</span>
-        <span class="c1"># Création des objets simulés nécessaires pour l&#39;appel au processeur LLM</span>
-        <span class="k">class</span><span class="w"> </span><span class="nc">MockLieu</span><span class="p">(</span><span class="n">Lieux</span><span class="p">):</span>
-            <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p_url</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">identifiant</span> <span class="o">=</span> <span class="s2">&quot;eval&quot;</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">nom</span> <span class="o">=</span> <span class="s2">&quot;Lieu d&#39;évaluation&quot;</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">p_url</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">type_lieu</span> <span class="o">=</span> <span class="s2">&quot;inconnu&quot;</span>
-
-        <span class="k">class</span><span class="w"> </span><span class="nc">MockResultForLLM</span><span class="p">(</span><span class="n">ResultatsExtraction</span><span class="p">):</span>
-            <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p_md_filtre</span><span class="p">,</span> <span class="n">p_md_nettoye</span><span class="p">,</span> <span class="n">p_md_brut</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">markdown_filtre</span> <span class="o">=</span> <span class="n">p_md_filtre</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">markdown_nettoye</span> <span class="o">=</span> <span class="n">p_md_nettoye</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">markdown_brut</span> <span class="o">=</span> <span class="n">p_md_brut</span>
-
-        <span class="c1"># Instancier les classes mock avec les variables de la fonction</span>
+        <span class="c1"># Instancier les classes mock (définies au niveau du module)</span>
         <span class="n">mock_lieu</span> <span class="o">=</span> <span class="n">MockLieu</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
         <span class="n">mock_result</span> <span class="o">=</span> <span class="n">MockResultForLLM</span><span class="p">(</span>
             <span class="n">filtered_markdown</span><span class="p">,</span> <span class="n">cleaned_markdown</span><span class="p">,</span> <span class="n">markdown_brut</span>
