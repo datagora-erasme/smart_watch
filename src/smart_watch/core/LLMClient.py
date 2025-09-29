@@ -456,8 +456,12 @@ class MistralAPIClient(BaseLLMClient):
             if response.choices:
                 choice = response.choices[0]
                 if choice.message.tool_calls:
-                    # The arguments are a dict, convert to JSON string
-                    result = json.dumps(choice.message.tool_calls[0].function.arguments)
+                    # The arguments can be a dict or a JSON string. Ensure it's a string.
+                    arguments = choice.message.tool_calls[0].function.arguments
+                    if isinstance(arguments, dict):
+                        result = json.dumps(arguments)
+                    else:
+                        result = str(arguments)
                 else:
                     result = choice.message.content or ""
 
