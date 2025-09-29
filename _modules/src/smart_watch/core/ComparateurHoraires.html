@@ -326,18 +326,18 @@
                     <span class="n">differences</span><span class="o">=</span><span class="s2">&quot;Aucune différence détectée.&quot;</span><span class="p">,</span>
                     <span class="n">details</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;both_permanently_closed&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
                 <span class="p">)</span>
-            <span class="k">elif</span> <span class="n">closed1</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">closed2</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">ComparisonResult</span><span class="p">(</span>
-                    <span class="n">identical</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                    <span class="n">differences</span><span class="o">=</span><span class="s2">&quot;Établissement 1 définitivement fermé, établissement 2 ouvert&quot;</span><span class="p">,</span>
-                    <span class="n">details</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;schedule1_permanently_closed&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+
+            <span class="c1"># Gère les cas de fermeture sans interrompre la comparaison détaillée</span>
+            <span class="k">if</span> <span class="n">closed1</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">closed2</span><span class="p">:</span>
+                <span class="n">differences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="s2">&quot;ATTENTION: L&#39;établissement 1 (attendu) semble définitivement fermé, alors que l&#39;établissement 2 (prédit) est ouvert.&quot;</span>
                 <span class="p">)</span>
+                <span class="n">details</span><span class="p">[</span><span class="s2">&quot;schedule1_permanently_closed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
             <span class="k">elif</span> <span class="ow">not</span> <span class="n">closed1</span> <span class="ow">and</span> <span class="n">closed2</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">ComparisonResult</span><span class="p">(</span>
-                    <span class="n">identical</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                    <span class="n">differences</span><span class="o">=</span><span class="s2">&quot;Établissement 1 ouvert, établissement 2 définitivement fermé&quot;</span><span class="p">,</span>
-                    <span class="n">details</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;schedule2_permanently_closed&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+                <span class="n">differences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="s2">&quot;ATTENTION: L&#39;établissement 1 (attendu) est ouvert, alors que l&#39;établissement 2 (prédit) semble définitivement fermé.&quot;</span>
                 <span class="p">)</span>
+                <span class="n">details</span><span class="p">[</span><span class="s2">&quot;schedule2_permanently_closed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 
             <span class="c1"># Compare les périodes</span>
             <span class="n">periods1</span> <span class="o">=</span> <span class="n">horaires1</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;periodes&quot;</span><span class="p">,</span> <span class="p">{})</span>
