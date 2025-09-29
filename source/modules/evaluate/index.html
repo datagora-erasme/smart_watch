@@ -1,0 +1,204 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module d’Évaluation &mdash; SmartWatch Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.jpg"/>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=3afee5ec"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/translations.js?v=e6b791cb"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../../search.html" />
+    <link rel="next" title="Évaluateur du Pipeline" href="evaluator.html" />
+    <link rel="prev" title="Vacances Scolaires" href="../utils/VacancesScolaires.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SmartWatch
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/introduction.html">Présentation du projet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/sommaire.html">Sommaire</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Démarrage</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/docker.html">Utilisation avec Docker</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../guide/choosing_embeddings.html">Choix des embeddings</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Architecture technique</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../main.html">Orchestrateur</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/diagramme.html">Pipeline de traitement</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/modules.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/bdd.html">Base de données</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture/stack.html">Stack technique</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Configuration</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../config/index.html">Modules Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Core</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../core/index.html">Modules Core</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Processing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../processing/index.html">Modules Processing</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Reporting</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../reporting/index.html">Modules Reporting</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Modules Utils</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../utils/index.html">Modules Utils</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Module Évaluation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Module d’Évaluation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#principe-de-fonctionnement">Principe de fonctionnement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#comment-l-utiliser">Comment l’utiliser ?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#composition-du-module">Composition du Module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SmartWatch</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Module d’Évaluation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/source/modules/evaluate/index.rst.txt" rel="nofollow"> Afficher la source de la page</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-d-evaluation">
+<h1>Module d’Évaluation<a class="headerlink" href="#module-d-evaluation" title="Lien vers cette rubrique"></a></h1>
+<p>Le module <code class="docutils literal notranslate"><span class="pre">evaluate</span></code> fournit un ensemble d’outils pour mesurer la performance du pipeline d’extraction d’horaires de SmartWatch par rapport à un jeu de données de référence (vérité terrain).</p>
+<section id="principe-de-fonctionnement">
+<h2>Principe de fonctionnement<a class="headerlink" href="#principe-de-fonctionnement" title="Lien vers cette rubrique"></a></h2>
+<p>L’évaluation se base sur un fichier CSV contenant des URLs et les horaires de référence au format OSM. Pour chaque ligne du fichier, le module va :</p>
+<ol class="arabic simple">
+<li><p><strong>Exécuter le pipeline</strong> : Simuler le pipeline principal (récupération URL, conversion Markdown, nettoyage, filtrage, extraction LLM) pour obtenir une prédiction d’horaires.</p></li>
+<li><p><strong>Comparer</strong> : Comparer la prédiction avec la vérité terrain en utilisant le même comparateur que le projet.</p></li>
+<li><p><strong>Compter les erreurs</strong> : Analyser les différences pour obtenir un décompte fin des erreurs.</p></li>
+<li><p><strong>Agréger les résultats</strong> : Calculer des métriques de performance sur l’ensemble du jeu de données et afficher un rapport détaillé.</p></li>
+</ol>
+</section>
+<section id="comment-l-utiliser">
+<h2>Comment l’utiliser ?<a class="headerlink" href="#comment-l-utiliser" title="Lien vers cette rubrique"></a></h2>
+<p>Le module est conçu pour être lancé via le script <code class="docutils literal notranslate"><span class="pre">evaluate_pipeline.py</span></code> situé à la racine du projet.</p>
+<ol class="arabic simple">
+<li><p><strong>Préparez votre fichier d’évaluation</strong></p></li>
+</ol>
+<p>Créez un fichier CSV (par exemple, <code class="docutils literal notranslate"><span class="pre">evaluation_data.csv</span></code>) avec au minimum les colonnes <code class="docutils literal notranslate"><span class="pre">url</span></code> et <code class="docutils literal notranslate"><span class="pre">ground_truth_osm</span></code>.</p>
+<div class="highlight-csv notranslate"><div class="highlight"><pre><span></span>url;ground_truth_osm
+&quot;https://www.exemple.com/lieu1&quot;;&quot;Mo-Fr 09:00-17:00&quot;
+&quot;https://www.exemple.com/lieu2&quot;;&quot;Tu-Sa 10:00-18:00, Su 10:00-13:00&quot;
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p><strong>Lancez le script d’évaluation</strong></p></li>
+</ol>
+<p>Exécutez la commande suivante depuis la racine du projet :</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>evaluate_pipeline.py<span class="w"> </span>chemin/vers/votre/evaluation_data.csv
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p><strong>Analysez le rapport</strong></p></li>
+</ol>
+<p>Le script affichera un rapport complet dans la console, incluant le taux de concordance, le nombre moyen de différences, et le détail de chaque erreur.</p>
+</section>
+<section id="composition-du-module">
+<h2>Composition du Module<a class="headerlink" href="#composition-du-module" title="Lien vers cette rubrique"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="evaluator.html">Évaluateur du Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scorer.html">Scorer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="metrics.html">Métriques d’Évaluation</a></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pied de page">
+        <a href="../utils/VacancesScolaires.html" class="btn btn-neutral float-left" title="Vacances Scolaires" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Précédent</a>
+        <a href="evaluator.html" class="btn btn-neutral float-right" title="Évaluateur du Pipeline" accesskey="n" rel="next">Suivant <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <div class="custom-footer">
+    <p><a href="https://github.com/datagora-erasme/smart_watch" target="_blank">SmartWatch</a> est développé par <a href="https://github.com/berangerthomas" target="_blank">Béranger THOMAS</a> 
+        pour <a href="https://erasme.org/" target="_blank">ERASME</a> / <a href="https://www.grandlyon.com/" target="_blank">Métropole de Lyon</a></p>
+    </div>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

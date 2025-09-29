@@ -20,3 +20,4 @@ Cette documentation détaille les divers modules du projet Smart Watch, leurs in
     * :doc:`Processing <../source/modules/processing/index>`
     * :doc:`Reporting <../source/modules/reporting/index>`
     * :doc:`Utils <../source/modules/utils/index>`
+    * :doc:`Évaluation <../source/modules/evaluate/index>`
